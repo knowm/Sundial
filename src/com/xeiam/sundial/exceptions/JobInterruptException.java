@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * This Exception is only used by the Job class to abort a running Job. Do not use this elsewhere.
  * 
  * @author timothy.molter
- * @version $Revision: 1.1 $ $Date: 2010/08/23 05:29:14 $ $Author: xeiam $
  */
 public class JobInterruptException extends RuntimeException {
 

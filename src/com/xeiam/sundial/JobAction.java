@@ -19,7 +19,6 @@ package com.xeiam.sundial;
  * A JobAction encapsulates business logic that can be reused in more than one place. Extenders of JobAction have access to the JobContext and Job logging functions.
  * 
  * @author timothy.molter
- * @version $Revision: 1.2 $ $Date: 2010/11/20 21:49:27 $ $Author: xeiam $
  */
 public abstract class JobAction extends JobContainer {
 

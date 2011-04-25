@@ -32,7 +32,6 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
  * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and any key/value pairs the user wishes to add.
  * 
  * @author timothy.molter
- * @version $Revision: 1.2 $ $Date: 2010/09/04 22:39:01 $ $Author: xeiam $
  */
 public class JobContext {
 

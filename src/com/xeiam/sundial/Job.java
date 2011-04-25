@@ -25,7 +25,6 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
 
 /**
  * @author timmolter
- * @version $Revision: $ $Date: $ $Author: $
  */
 public abstract class Job extends JobContainer implements InterruptableJob {
 

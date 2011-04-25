@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author timmolter
- * @version $Revision: 1.1 $ $Date: 2010/08/23 05:29:14 $ $Author: xeiam $
  */
 public class GenericJobException extends RuntimeException {
 

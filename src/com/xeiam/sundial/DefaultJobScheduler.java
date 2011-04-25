@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
  * Main entry-point to the default Quartz scheduler
  * 
  * @author timmolter
- * @version $Revision: $ $Date: $ $Author: $
  */
 public class DefaultJobScheduler {
 

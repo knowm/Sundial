@@ -25,7 +25,6 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  * The highest class of the Job hierarchy which contains the ThreadLocal instance, the JobContext, the logging methods, and handles terminating of Jobs.
  * 
  * @author timmolter
- * @version $Revision: $ $Date: $ $Author: $
  */
 public abstract class JobContainer {
 

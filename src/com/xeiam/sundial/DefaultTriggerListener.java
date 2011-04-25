@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author timothy.molter
- * @version $Revision: 1.3 $ $Date: 2010/09/04 22:39:01 $ $Author: xeiam $
  */
 public class DefaultTriggerListener implements TriggerListener {
 
@@ -35,7 +34,7 @@ public class DefaultTriggerListener implements TriggerListener {
     Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
 
     /**
-     * The default behavior is to veto any job is currently running. However, conncurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
+     * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
      */
     @Override
     public boolean vetoJobExecution(Trigger pTrigger, JobExecutionContext pJobExecutionContext) {
