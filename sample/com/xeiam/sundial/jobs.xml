@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<job-scheduling-data xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd"
+  version="2.0">
+
+    <schedule>
+        <job>
+            <name>SampleJob</name>
+            <group>DEFAULT</group>
+            <job-class>com.xeiam.sundial.SampleJob</job-class>
+<!--    add these if you remove the trigger        -->
+<!--            <durability>true</durability> -->
+<!--            <recover>false</recover> -->
+<!--             -->
+            <job-data-map>
+                <entry>
+                    <key>Concurrency</key>
+                    <value>Y</value>
+                </entry>
+            </job-data-map>
+        </job>
+        <trigger>
+            <cron>
+                <name>SampleJob-Trigger</name>
+                <group>CRON</group>
+                <job-name>SampleJob</job-name>
+                <job-group>DEFAULT</job-group>
+                <cron-expression>0/45 * * * * ?</cron-expression>
+            </cron>
+        </trigger>
+
+    </schedule>
+    
+</job-scheduling-data>
