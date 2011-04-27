@@ -32,6 +32,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
      * Required no-arg constructor
      */
     public Job() {
+        // this is a comment.
     }
 
     @Override
