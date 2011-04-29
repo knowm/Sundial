@@ -52,7 +52,6 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.JobStore;
 import org.quartz.spi.SchedulerPlugin;
 import org.quartz.spi.ThreadPool;
-import org.quartz.utils.DBConnectionManager;
 import org.quartz.utils.PropertiesParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -472,7 +471,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
         JobStore jobstore = null;
         ThreadPool threadpool = null;
         QuartzScheduler qs = null;
-        DBConnectionManager dbMgr = null;
         String instanceIdGeneratorClass = null;
         Properties tProps = null;
         String userTXLocation = null;
@@ -974,10 +972,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             // prevents the repository from being garbage collected
             qs.addNoGCObject(schedRep);
-            // prevents the db manager from being garbage collected
-            if (dbMgr != null) {
-                qs.addNoGCObject(dbMgr);
-            }
 
             schedRep.bind(scheduler);
             return scheduler;
