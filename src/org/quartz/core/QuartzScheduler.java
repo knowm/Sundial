@@ -18,10 +18,6 @@
 package org.quartz.core;
 
 import java.io.InputStream;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -160,7 +156,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
 
     private volatile boolean closed = false;
     private volatile boolean shuttingDown = false;
-    private boolean boundRemotely = false;
 
     private Date initialStart = null;
 
@@ -203,18 +198,12 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
 
     public void initialize() throws SchedulerException {
 
-        try {
-            bind();
-        } catch (Exception re) {
-            throw new SchedulerException("Unable to bind scheduler to RMI Registry.", re);
-        }
-
         this.schedThread.start();
 
         getLog().info(
                 "Scheduler meta-data: "
-                        + (new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), boundRemotely, runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(),
-                                getJobStoreClass(), supportsPersistence(), isClustered(), getThreadPoolClass(), getThreadPoolSize(), getVersion())).toString());
+                        + (new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(),
+                                supportsPersistence(), isClustered(), getThreadPoolClass(), getThreadPoolSize(), getVersion())).toString());
     }
 
     /*
@@ -244,89 +233,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
 
     public Logger getLog() {
         return log;
-    }
-
-    /**
-     * <p>
-     * Bind the scheduler to an RMI registry.
-     * </p>
-     */
-    private void bind() throws RemoteException {
-        String host = resources.getRMIRegistryHost();
-        // don't export if we're not configured to do so...
-        if (host == null || host.length() == 0) {
-            return;
-        }
-
-        RemotableQuartzScheduler exportable = null;
-
-        if (resources.getRMIServerPort() > 0) {
-            exportable = (RemotableQuartzScheduler) UnicastRemoteObject.exportObject(this, resources.getRMIServerPort());
-        } else {
-            exportable = (RemotableQuartzScheduler) UnicastRemoteObject.exportObject(this);
-        }
-
-        Registry registry = null;
-
-        if (resources.getRMICreateRegistryStrategy().equals(QuartzSchedulerResources.CREATE_REGISTRY_AS_NEEDED)) {
-            try {
-                // First try to get an existing one, instead of creating it,
-                // since if
-                // we're in a web-app being 'hot' re-depoloyed, then the JVM
-                // still
-                // has the registry that we created above the first time...
-                registry = LocateRegistry.getRegistry(resources.getRMIRegistryPort());
-                registry.list();
-            } catch (Exception e) {
-                registry = LocateRegistry.createRegistry(resources.getRMIRegistryPort());
-            }
-        } else if (resources.getRMICreateRegistryStrategy().equals(QuartzSchedulerResources.CREATE_REGISTRY_ALWAYS)) {
-            try {
-                registry = LocateRegistry.createRegistry(resources.getRMIRegistryPort());
-            } catch (Exception e) {
-                // Fall back to an existing one, instead of creating it, since
-                // if
-                // we're in a web-app being 'hot' re-depoloyed, then the JVM
-                // still
-                // has the registry that we created above the first time...
-                registry = LocateRegistry.getRegistry(resources.getRMIRegistryPort());
-            }
-        } else {
-            registry = LocateRegistry.getRegistry(resources.getRMIRegistryHost(), resources.getRMIRegistryPort());
-        }
-
-        String bindName = resources.getRMIBindName();
-
-        registry.rebind(bindName, exportable);
-
-        boundRemotely = true;
-
-        getLog().info("Scheduler bound to RMI registry under name '" + bindName + "'");
-    }
-
-    /**
-     * <p>
-     * Un-bind the scheduler from an RMI registry.
-     * </p>
-     */
-    private void unBind() throws RemoteException {
-        String host = resources.getRMIRegistryHost();
-        // don't un-export if we're not configured to do so...
-        if (host == null || host.length() == 0) {
-            return;
-        }
-
-        Registry registry = LocateRegistry.getRegistry(resources.getRMIRegistryHost(), resources.getRMIRegistryPort());
-
-        String bindName = resources.getRMIBindName();
-
-        try {
-            registry.unbind(bindName);
-            UnicastRemoteObject.unexportObject(this, true);
-        } catch (java.rmi.NotBoundException nbe) {
-        }
-
-        getLog().info("Scheduler un-bound from name '" + bindName + "' in RMI registry");
     }
 
     /**
@@ -582,13 +488,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         }
 
         closed = true;
-
-        if (boundRemotely) {
-            try {
-                unBind();
-            } catch (RemoteException re) {
-            }
-        }
 
         shutdownPlugins();
 

@@ -33,50 +33,38 @@ import org.quartz.SchedulerContext;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerMetaData;
 import org.quartz.Trigger;
+import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerKey;
 import org.quartz.UnableToInterruptJobException;
-import org.quartz.Trigger.TriggerState;
 import org.quartz.core.QuartzScheduler;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.JobFactory;
 
 /**
  * <p>
- * An implementation of the <code>Scheduler</code> interface that directly
- * proxies all method calls to the equivalent call on a given <code>QuartzScheduler</code>
- * instance.
+ * An implementation of the <code>Scheduler</code> interface that directly proxies all method calls to the equivalent call on a given <code>QuartzScheduler</code> instance.
  * </p>
  * 
  * @see org.quartz.Scheduler
  * @see org.quartz.core.QuartzScheduler
  * @see org.quartz.core.SchedulingContext
- * 
  * @author James House
  */
 public class StdScheduler implements Scheduler {
 
     /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
     private QuartzScheduler sched;
 
     /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
     /**
      * <p>
-     * Construct a <code>StdScheduler</code> instance to proxy the given
-     * <code>QuartzScheduler</code> instance, and with the given <code>SchedulingContext</code>.
+     * Construct a <code>StdScheduler</code> instance to proxy the given <code>QuartzScheduler</code> instance, and with the given <code>SchedulingContext</code>.
      * </p>
      */
     public StdScheduler(QuartzScheduler sched) {
@@ -84,11 +72,7 @@ public class StdScheduler implements Scheduler {
     }
 
     /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
     /**
@@ -96,6 +80,7 @@ public class StdScheduler implements Scheduler {
      * Returns the name of the <code>Scheduler</code>.
      * </p>
      */
+    @Override
     public String getSchedulerName() {
         return sched.getSchedulerName();
     }
@@ -105,17 +90,15 @@ public class StdScheduler implements Scheduler {
      * Returns the instance Id of the <code>Scheduler</code>.
      * </p>
      */
+    @Override
     public String getSchedulerInstanceId() {
         return sched.getSchedulerInstanceId();
     }
 
+    @Override
     public SchedulerMetaData getMetaData() {
-        return new SchedulerMetaData(getSchedulerName(),
-                getSchedulerInstanceId(), getClass(), false, isStarted(), 
-                isInStandbyMode(), isShutdown(), sched.runningSince(), 
-                sched.numJobsExecuted(), sched.getJobStoreClass(), 
-                sched.supportsPersistence(), sched.isClustered(), sched.getThreadPoolClass(), 
-                sched.getThreadPoolSize(), sched.getVersion());
+        return new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), isStarted(), isInStandbyMode(), isShutdown(), sched.runningSince(), sched.numJobsExecuted(), sched.getJobStoreClass(),
+                sched.supportsPersistence(), sched.isClustered(), sched.getThreadPoolClass(), sched.getThreadPoolSize(), sched.getVersion());
 
     }
 
@@ -124,21 +107,23 @@ public class StdScheduler implements Scheduler {
      * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
      * </p>
      */
+    @Override
     public SchedulerContext getContext() throws SchedulerException {
         return sched.getSchedulerContext();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///
-    /// Schedululer State Management Methods
-    ///
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
+    // /
+    // / Schedululer State Management Methods
+    // /
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void start() throws SchedulerException {
         sched.start();
     }
@@ -148,43 +133,42 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void startDelayed(int seconds) throws SchedulerException {
         sched.startDelayed(seconds);
     }
-
 
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void standby() {
         sched.standby();
     }
-    
+
     /**
-     * Whether the scheduler has been started.  
-     * 
+     * Whether the scheduler has been started.
      * <p>
-     * Note: This only reflects whether <code>{@link #start()}</code> has ever
-     * been called on this Scheduler, so it will return <code>true</code> even 
-     * if the <code>Scheduler</code> is currently in standby mode or has been 
-     * since shutdown.
+     * Note: This only reflects whether <code>{@link #start()}</code> has ever been called on this Scheduler, so it will return <code>true</code> even if the <code>Scheduler</code> is currently in standby mode or has been since shutdown.
      * </p>
      * 
      * @see #start()
      * @see #isShutdown()
      * @see #isInStandbyMode()
-     */    
+     */
+    @Override
     public boolean isStarted() {
         return (sched.runningSince() != null);
     }
-    
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public boolean isInStandbyMode() {
         return sched.isInStandbyMode();
     }
@@ -194,6 +178,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void shutdown() {
         sched.shutdown();
     }
@@ -203,6 +188,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void shutdown(boolean waitForJobsToComplete) {
         sched.shutdown(waitForJobsToComplete);
     }
@@ -212,6 +198,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public boolean isShutdown() {
         return sched.isShutdown();
     }
@@ -221,32 +208,34 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public List<JobExecutionContext> getCurrentlyExecutingJobs() {
         return sched.getCurrentlyExecutingJobs();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///
-    /// Scheduling-related Methods
-    ///
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
+    // /
+    // / Scheduling-related Methods
+    // /
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void clear() throws SchedulerException {
         sched.clear();
     }
-    
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public Date scheduleJob(JobDetail jobDetail, Trigger trigger)
-        throws SchedulerException {
+    @Override
+    public Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException {
         return sched.scheduleJob(jobDetail, trigger);
     }
 
@@ -255,6 +244,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public Date scheduleJob(Trigger trigger) throws SchedulerException {
         return sched.scheduleJob(trigger);
     }
@@ -264,31 +254,33 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void addJob(JobDetail jobDetail, boolean replace)
-        throws SchedulerException {
+    @Override
+    public void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException {
         sched.addJob(jobDetail, replace);
     }
 
+    @Override
     public boolean deleteJobs(List<JobKey> jobKeys) throws SchedulerException {
         return sched.deleteJobs(jobKeys);
     }
 
+    @Override
     public void scheduleJobs(Map<JobDetail, List<Trigger>> triggersAndJobs, boolean replace) throws SchedulerException {
         sched.scheduleJobs(triggersAndJobs, replace);
     }
 
-    public boolean unscheduleJobs(List<TriggerKey> triggerKeys)
-            throws SchedulerException {
+    @Override
+    public boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException {
         return sched.unscheduleJobs(triggerKeys);
-    }    
-    
+    }
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public boolean deleteJob(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public boolean deleteJob(JobKey jobKey) throws SchedulerException {
         return sched.deleteJob(jobKey);
     }
 
@@ -297,18 +289,18 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public boolean unscheduleJob(TriggerKey triggerKey)
-        throws SchedulerException {
+    @Override
+    public boolean unscheduleJob(TriggerKey triggerKey) throws SchedulerException {
         return sched.unscheduleJob(triggerKey);
     }
-    
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public Date rescheduleJob(TriggerKey triggerKey,
-            Trigger newTrigger) throws SchedulerException {
+    @Override
+    public Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException {
         return sched.rescheduleJob(triggerKey, newTrigger);
     }
 
@@ -317,18 +309,18 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void triggerJob(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public void triggerJob(JobKey jobKey) throws SchedulerException {
         triggerJob(jobKey, null);
     }
-    
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void triggerJob(JobKey jobKey, JobDataMap data)
-        throws SchedulerException {
+    @Override
+    public void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException {
         sched.triggerJob(jobKey, data);
     }
 
@@ -337,8 +329,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void pauseTrigger(TriggerKey triggerKey)
-        throws SchedulerException {
+    @Override
+    public void pauseTrigger(TriggerKey triggerKey) throws SchedulerException {
         sched.pauseTrigger(triggerKey);
     }
 
@@ -347,6 +339,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void pauseTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         sched.pauseTriggers(matcher);
     }
@@ -356,23 +349,25 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void pauseJob(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public void pauseJob(JobKey jobKey) throws SchedulerException {
         sched.pauseJob(jobKey);
     }
 
-    /** 
+    /**
      * @see org.quartz.Scheduler#getPausedTriggerGroups()
      */
+    @Override
     public Set getPausedTriggerGroups() throws SchedulerException {
         return sched.getPausedTriggerGroups();
     }
-    
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void pauseJobs(GroupMatcher<JobKey> matcher) throws SchedulerException {
         sched.pauseJobs(matcher);
     }
@@ -382,8 +377,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void resumeTrigger(TriggerKey triggerKey)
-        throws SchedulerException {
+    @Override
+    public void resumeTrigger(TriggerKey triggerKey) throws SchedulerException {
         sched.resumeTrigger(triggerKey);
     }
 
@@ -392,6 +387,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         sched.resumeTriggers(matcher);
     }
@@ -401,8 +397,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void resumeJob(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public void resumeJob(JobKey jobKey) throws SchedulerException {
         sched.resumeJob(jobKey);
     }
 
@@ -411,6 +407,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void resumeJobs(GroupMatcher<JobKey> matcher) throws SchedulerException {
         sched.resumeJobs(matcher);
     }
@@ -420,6 +417,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void pauseAll() throws SchedulerException {
         sched.pauseAll();
     }
@@ -429,6 +427,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public void resumeAll() throws SchedulerException {
         sched.resumeAll();
     }
@@ -438,6 +437,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public List<String> getJobGroupNames() throws SchedulerException {
         return sched.getJobGroupNames();
     }
@@ -447,8 +447,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public List<? extends Trigger> getTriggersOfJob(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException {
         return sched.getTriggersOfJob(jobKey);
     }
 
@@ -457,6 +457,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException {
         return sched.getJobKeys(matcher);
     }
@@ -466,6 +467,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public List<String> getTriggerGroupNames() throws SchedulerException {
         return sched.getTriggerGroupNames();
     }
@@ -475,6 +477,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         return sched.getTriggerKeys(matcher);
     }
@@ -484,8 +487,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public JobDetail getJobDetail(JobKey jobKey)
-        throws SchedulerException {
+    @Override
+    public JobDetail getJobDetail(JobKey jobKey) throws SchedulerException {
         return sched.getJobDetail(jobKey);
     }
 
@@ -494,8 +497,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public Trigger getTrigger(TriggerKey triggerKey)
-        throws SchedulerException {
+    @Override
+    public Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException {
         return sched.getTrigger(triggerKey);
     }
 
@@ -504,8 +507,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public TriggerState getTriggerState(TriggerKey triggerKey)
-        throws SchedulerException {
+    @Override
+    public TriggerState getTriggerState(TriggerKey triggerKey) throws SchedulerException {
         return sched.getTriggerState(triggerKey);
     }
 
@@ -514,8 +517,8 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
-    public void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers)
-        throws SchedulerException {
+    @Override
+    public void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers) throws SchedulerException {
         sched.addCalendar(calName, calendar, replace, updateTriggers);
     }
 
@@ -524,6 +527,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public boolean deleteCalendar(String calName) throws SchedulerException {
         return sched.deleteCalendar(calName);
     }
@@ -533,6 +537,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public Calendar getCalendar(String calName) throws SchedulerException {
         return sched.getCalendar(calName);
     }
@@ -542,6 +547,7 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public List<String> getCalendarNames() throws SchedulerException {
         return sched.getCalendarNames();
     }
@@ -551,31 +557,31 @@ public class StdScheduler implements Scheduler {
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public boolean checkExists(JobKey jobKey) throws SchedulerException {
         return sched.checkExists(jobKey);
     }
-    
-   
+
     /**
      * <p>
      * Calls the equivalent method on the 'proxied' <code>QuartzScheduler</code>.
      * </p>
      */
+    @Override
     public boolean checkExists(TriggerKey triggerKey) throws SchedulerException {
         return sched.checkExists(triggerKey);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    ///
-    /// Other Methods
-    ///
-    ///////////////////////////////////////////////////////////////////////////
-
-    
+    // /////////////////////////////////////////////////////////////////////////
+    // /
+    // / Other Methods
+    // /
+    // /////////////////////////////////////////////////////////////////////////
 
     /**
      * @see org.quartz.Scheduler#setJobFactory(org.quartz.spi.JobFactory)
      */
+    @Override
     public void setJobFactory(JobFactory factory) throws SchedulerException {
         sched.setJobFactory(factory);
     }
@@ -583,13 +589,14 @@ public class StdScheduler implements Scheduler {
     /**
      * @see org.quartz.Scheduler#getListenerManager()
      */
+    @Override
     public ListenerManager getListenerManager() throws SchedulerException {
         return sched.getListenerManager();
     }
 
+    @Override
     public boolean interrupt(JobKey jobKey) throws UnableToInterruptJobException {
         return sched.interrupt(jobKey);
     }
 
-  
 }
