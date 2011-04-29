@@ -110,14 +110,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_SCHED_MAX_BATCH_SIZE = "org.quartz.scheduler.batchTriggerAcquisitionMaxCount";
 
-    public static final String PROP_SCHED_JMX_EXPORT = "org.quartz.scheduler.jmx.export";
-
-    public static final String PROP_SCHED_JMX_OBJECT_NAME = "org.quartz.scheduler.jmx.objectName";
-
-    public static final String PROP_SCHED_JMX_PROXY = "org.quartz.scheduler.jmx.proxy";
-
-    public static final String PROP_SCHED_JMX_PROXY_CLASS = "org.quartz.scheduler.jmx.proxy.class";
-
     public static final String PROP_SCHED_RMI_EXPORT = "org.quartz.scheduler.rmi.export";
 
     public static final String PROP_SCHED_RMI_PROXY = "org.quartz.scheduler.rmi.proxy";
@@ -493,8 +485,8 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw initException;
         }
 
-        JobStore js = null;
-        ThreadPool tp = null;
+        JobStore jobstore = null;
+        ThreadPool threadpool = null;
         QuartzScheduler qs = null;
         DBConnectionManager dbMgr = null;
         String instanceIdGeneratorClass = null;
@@ -549,9 +541,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         boolean interruptJobsOnShutdown = cfg.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
         boolean interruptJobsOnShutdownWithWait = cfg.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
-
-        boolean jmxExport = cfg.getBooleanProperty(PROP_SCHED_JMX_EXPORT);
-        String jmxObjectName = cfg.getStringProperty(PROP_SCHED_JMX_OBJECT_NAME);
 
         boolean rmiExport = cfg.getBooleanProperty(PROP_SCHED_RMI_EXPORT, false);
         boolean rmiProxy = cfg.getBooleanProperty(PROP_SCHED_RMI_PROXY, false);
@@ -617,14 +606,14 @@ public class StdSchedulerFactory implements SchedulerFactory {
         }
 
         try {
-            tp = (ThreadPool) loadHelper.loadClass(tpClass).newInstance();
+            threadpool = (ThreadPool) loadHelper.loadClass(tpClass).newInstance();
         } catch (Exception e) {
             initException = new SchedulerException("ThreadPool class '" + tpClass + "' could not be instantiated.", e);
             throw initException;
         }
         tProps = cfg.getPropertyGroup(PROP_THREAD_POOL_PREFIX, true);
         try {
-            setBeanProps(tp, tProps);
+            setBeanProps(threadpool, tProps);
         } catch (Exception e) {
             initException = new SchedulerException("ThreadPool class '" + tpClass + "' props could not be configured.", e);
             throw initException;
@@ -641,17 +630,17 @@ public class StdSchedulerFactory implements SchedulerFactory {
         }
 
         try {
-            js = (JobStore) loadHelper.loadClass(jsClass).newInstance();
+            jobstore = (JobStore) loadHelper.loadClass(jsClass).newInstance();
         } catch (Exception e) {
             initException = new SchedulerException("JobStore class '" + jsClass + "' could not be instantiated.", e);
             throw initException;
         }
 
-        SchedulerDetailsSetter.setDetails(js, schedName, schedInstId);
+        SchedulerDetailsSetter.setDetails(jobstore, schedName, schedInstId);
 
         tProps = cfg.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
         try {
-            setBeanProps(js, tProps);
+            setBeanProps(jobstore, tProps);
         } catch (Exception e) {
             initException = new SchedulerException("JobStore class '" + jsClass + "' props could not be configured.", e);
             throw initException;
@@ -922,7 +911,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
             if (autoId) {
                 try {
                     schedInstId = DEFAULT_INSTANCE_ID;
-                    if (js.isClustered()) {
+                    if (jobstore.isClustered()) {
                         schedInstId = instanceIdGenerator.generateInstanceId();
                     }
                 } catch (Exception e) {
@@ -930,34 +919,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
                     throw new IllegalStateException("Cannot run without an instance id.");
                 }
             }
-
-            if (js.getClass().getName().startsWith("org.terracotta.quartz")) {
-                try {
-                    String uuid = (String) js.getClass().getMethod("getUUID").invoke(js);
-                    if (schedInstId.equals(DEFAULT_INSTANCE_ID)) {
-                        schedInstId = "TERRACOTTA_CLUSTERED,node=" + uuid;
-                        if (jmxObjectName == null) {
-                            jmxObjectName = QuartzSchedulerResources.generateJMXObjectName(schedName, schedInstId);
-                        }
-                    } else if (jmxObjectName == null) {
-                        jmxObjectName = QuartzSchedulerResources.generateJMXObjectName(schedName, schedInstId + ",node=" + uuid);
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException("Problem obtaining node id from TerracottaJobStore.", e);
-                }
-
-                if (null == cfg.getStringProperty(PROP_SCHED_JMX_EXPORT)) {
-                    jmxExport = true;
-                }
-            }
-
-            // if (js instanceof JobStoreSupport) {
-            // JobStoreSupport jjs = (JobStoreSupport) js;
-            // jjs.setDbRetryInterval(dbFailureRetry);
-            // if (threadsInheritInitalizersClassLoader) {
-            // jjs.setThreadsInheritInitializersClassLoadContext(threadsInheritInitalizersClassLoader);
-            // }
-            // }
 
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
             rsrcs.setName(schedName);
@@ -971,8 +932,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             rsrcs.setMaxBatchSize(maxBatchSize);
             rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
             rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
-            rsrcs.setJMXExport(jmxExport);
-            rsrcs.setJMXObjectName(jmxObjectName);
 
             if (rmiExport) {
                 rsrcs.setRMIRegistryHost(rmiHost);
@@ -982,19 +941,19 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 rsrcs.setRMIBindName(rmiBindName);
             }
 
-            SchedulerDetailsSetter.setDetails(tp, schedName, schedInstId);
+            SchedulerDetailsSetter.setDetails(threadpool, schedName, schedInstId);
 
-            rsrcs.setThreadPool(tp);
-            if (tp instanceof SimpleThreadPool) {
-                ((SimpleThreadPool) tp).setThreadNamePrefix(schedName + "_Worker");
+            rsrcs.setThreadPool(threadpool);
+            if (threadpool instanceof SimpleThreadPool) {
+                ((SimpleThreadPool) threadpool).setThreadNamePrefix(schedName + "_Worker");
                 if (threadsInheritInitalizersClassLoader) {
-                    ((SimpleThreadPool) tp).setThreadsInheritContextClassLoaderOfInitializingThread(threadsInheritInitalizersClassLoader);
+                    ((SimpleThreadPool) threadpool).setThreadsInheritContextClassLoaderOfInitializingThread(threadsInheritInitalizersClassLoader);
                 }
             }
-            tp.initialize();
+            threadpool.initialize();
             tpInited = true;
 
-            rsrcs.setJobStore(js);
+            rsrcs.setJobStore(jobstore);
 
             // add plugins
             for (int i = 0; i < plugins.length; i++) {
@@ -1034,10 +993,10 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             // fire up job store, and runshell factory
 
-            js.setInstanceId(schedInstId);
-            js.setInstanceName(schedName);
-            js.initialize(loadHelper, qs.getSchedulerSignaler());
-            js.setThreadPoolSize(tp.getPoolSize());
+            jobstore.setInstanceId(schedInstId);
+            jobstore.setInstanceName(schedName);
+            jobstore.initialize(loadHelper, qs.getSchedulerSignaler());
+            jobstore.setThreadPoolSize(threadpool.getPoolSize());
 
             jrsf.initialize(scheduler);
 
@@ -1060,21 +1019,21 @@ public class StdSchedulerFactory implements SchedulerFactory {
             if (qsInited) {
                 qs.shutdown(false);
             } else if (tpInited) {
-                tp.shutdown(false);
+                threadpool.shutdown(false);
             }
             throw e;
         } catch (RuntimeException re) {
             if (qsInited) {
                 qs.shutdown(false);
             } else if (tpInited) {
-                tp.shutdown(false);
+                threadpool.shutdown(false);
             }
             throw re;
         } catch (Error re) {
             if (qsInited) {
                 qs.shutdown(false);
             } else if (tpInited) {
-                tp.shutdown(false);
+                threadpool.shutdown(false);
             }
             throw re;
         }
