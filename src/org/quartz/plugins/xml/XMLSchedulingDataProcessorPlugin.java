@@ -36,10 +36,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.TriggerKey;
-import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
-import org.quartz.jobs.FileScanJob;
-import org.quartz.jobs.FileScanListener;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.SchedulerPlugin;
@@ -65,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * @author Pierre Awaragi
  * @author pl47ypus
  */
-public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin, FileScanListener {
+public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
     private String name;
     private Scheduler scheduler;
@@ -225,13 +222,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin, FileSc
                         trig.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
                         trig.setRepeatInterval(scanInterval);
 
-                        // TODO: convert to use builder
-                        JobDetailImpl job = new JobDetailImpl(jobTriggerName, JOB_INITIALIZATION_PLUGIN_NAME, FileScanJob.class);
-                        job.getJobDataMap().put(FileScanJob.FILE_NAME, jobFile.getFileName());
-                        job.getJobDataMap().put(FileScanJob.FILE_SCAN_LISTENER_NAME, JOB_INITIALIZATION_PLUGIN_NAME + '_' + getName());
-
-                        getScheduler().scheduleJob(job, trig);
-                        log.debug("Scheduled file scan job for data file: {}, at interval: {}", jobFile.getFileName(), scanInterval);
                     }
 
                     processFile(jobFile);
@@ -310,16 +300,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin, FileSc
 
     public void processFile(String filePath) {
         processFile(jobFiles.get(filePath));
-    }
-
-    /**
-     * @see org.quartz.jobs.FileScanListener#fileUpdated(java.lang.String)
-     */
-    @Override
-    public void fileUpdated(String fileName) {
-        if (started) {
-            processFile(fileName);
-        }
     }
 
     class JobFile {
