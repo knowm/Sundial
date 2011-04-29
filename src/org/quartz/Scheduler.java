@@ -1,6 +1,5 @@
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
- * Copyright 2011 Xeiam, LLC 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
@@ -74,7 +73,6 @@ import org.quartz.utils.Key;
  * @see SchedulerListener
  * @author James House
  * @author Sharada Jambula
- * @author timmolter
  */
 public interface Scheduler {
 

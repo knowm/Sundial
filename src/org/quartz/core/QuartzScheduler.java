@@ -1,6 +1,5 @@
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
- * Copyright 2011 Xeiam, LLC 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
@@ -84,7 +83,6 @@ import org.slf4j.LoggerFactory;
  * @see org.quartz.spi.JobStore
  * @see org.quartz.spi.ThreadPool
  * @author James House
- * @author timmolter
  */
 public class QuartzScheduler implements RemotableQuartzScheduler {
 
