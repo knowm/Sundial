@@ -77,7 +77,7 @@ import org.slf4j.LoggerFactory;
  * @see org.quartz.spi.ThreadPool
  * @author James House
  */
-public class QuartzScheduler implements RemotableQuartzScheduler {
+public class QuartzScheduler {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -210,7 +210,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    @Override
     public String getVersion() {
         return getVersionMajor() + "." + getVersionMinor() + "." + getVersionIteration();
     }
@@ -240,7 +239,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Returns the name of the <code>QuartzScheduler</code>.
      * </p>
      */
-    @Override
     public String getSchedulerName() {
         return resources.getName();
     }
@@ -250,7 +248,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Returns the instance Id of the <code>QuartzScheduler</code>.
      * </p>
      */
-    @Override
     public String getSchedulerInstanceId() {
         return resources.getInstanceId();
     }
@@ -284,7 +281,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
      * </p>
      */
-    @Override
     public SchedulerContext getSchedulerContext() throws SchedulerException {
         return context;
     }
@@ -311,7 +307,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * All <code>{@link org.quartz.Trigger}s</code> that have misfired will be passed to the appropriate TriggerListener(s).
      * </p>
      */
-    @Override
     public void start() throws SchedulerException {
 
         if (shuttingDown || closed) {
@@ -331,7 +326,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         notifySchedulerListenersStarted();
     }
 
-    @Override
     public void startDelayed(final int seconds) throws SchedulerException {
         if (shuttingDown || closed) {
             throw new SchedulerException("The Scheduler cannot be restarted after shutdown() has been called.");
@@ -362,7 +356,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * The scheduler is not destroyed, and can be re-started at any time.
      * </p>
      */
-    @Override
     public void standby() {
         schedThread.togglePause(true);
         getLog().info("Scheduler " + resources.getUniqueIdentifier() + " paused.");
@@ -374,42 +367,34 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Reports whether the <code>Scheduler</code> is paused.
      * </p>
      */
-    @Override
     public boolean isInStandbyMode() {
         return schedThread.isPaused();
     }
 
-    @Override
     public Date runningSince() {
         return initialStart;
     }
 
-    @Override
     public int numJobsExecuted() {
         return jobMgr.getNumJobsFired();
     }
 
-    @Override
     public Class getJobStoreClass() {
         return resources.getJobStore().getClass();
     }
 
-    @Override
     public boolean supportsPersistence() {
         return resources.getJobStore().supportsPersistence();
     }
 
-    @Override
     public boolean isClustered() {
         return resources.getJobStore().isClustered();
     }
 
-    @Override
     public Class getThreadPoolClass() {
         return resources.getThreadPool().getClass();
     }
 
-    @Override
     public int getThreadPoolSize() {
         return resources.getThreadPool().getPoolSize();
     }
@@ -422,7 +407,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * The scheduler cannot be re-started.
      * </p>
      */
-    @Override
     public void shutdown() {
         shutdown(false);
     }
@@ -437,7 +421,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
      */
-    @Override
     public void shutdown(boolean waitForJobsToComplete) {
 
         if (shuttingDown || closed) {
@@ -507,7 +490,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Reports whether the <code>Scheduler</code> has been shutdown.
      * </p>
      */
-    @Override
     public boolean isShutdown() {
         return closed;
     }
@@ -539,7 +521,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Note that the list returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the true list of executing jobs may be different.
      * </p>
      */
-    @Override
     public List<JobExecutionContext> getCurrentlyExecutingJobs() {
         return jobMgr.getExecutingJobs();
     }
@@ -560,7 +541,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
      */
-    @Override
     public Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException {
         validateState();
 
@@ -615,7 +595,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
      */
-    @Override
+
     public Date scheduleJob(Trigger trigger) throws SchedulerException {
         validateState();
 
@@ -657,7 +637,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @throws SchedulerException if there is an internal Scheduler error, or if the Job is not durable, or a Job with the same name already exists, and <code>replace</code> is <code>false</code>.
      */
-    @Override
+
     public void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException {
         validateState();
 
@@ -678,7 +658,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @return true if the Job was found and deleted.
      * @throws SchedulerException if there is an internal Scheduler error.
      */
-    @Override
+
     public boolean deleteJob(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -701,7 +681,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         return result;
     }
 
-    @Override
     public boolean deleteJobs(List<JobKey> jobKeys) throws SchedulerException {
         validateState();
 
@@ -715,7 +694,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         return result;
     }
 
-    @Override
     public void scheduleJobs(Map<JobDetail, List<Trigger>> triggersAndJobs, boolean replace) throws SchedulerException {
         validateState();
 
@@ -758,7 +736,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         }
     }
 
-    @Override
     public boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException {
         validateState();
 
@@ -777,7 +754,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Remove the indicated <code>{@link org.quartz.Trigger}</code> from the scheduler.
      * </p>
      */
-    @Override
+
     public boolean unscheduleJob(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -799,7 +776,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @param newTrigger The new <code>Trigger</code> to be stored.
      * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first fire time of the newly scheduled trigger.
      */
-    @Override
+
     public Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException {
         validateState();
 
@@ -854,7 +831,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Trigger the identified <code>{@link org.quartz.Job}</code> (execute it now) - with a non-volatile trigger.
      * </p>
      */
-    @Override
+
     public void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException {
         validateState();
 
@@ -884,7 +861,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Store and schedule the identified <code>{@link org.quartz.spi.OperableTrigger}</code>
      * </p>
      */
-    @Override
+
     public void triggerJob(OperableTrigger trig) throws SchedulerException {
         validateState();
 
@@ -909,7 +886,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Pause the <code>{@link Trigger}</code> with the given name.
      * </p>
      */
-    @Override
+
     public void pauseTrigger(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -923,7 +900,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Pause all of the <code>{@link Trigger}s</code> in the matching groups.
      * </p>
      */
-    @Override
+
     public void pauseTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         validateState();
 
@@ -943,7 +920,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Pause the <code>{@link org.quartz.JobDetail}</code> with the given name - by pausing all of its current <code>Trigger</code>s.
      * </p>
      */
-    @Override
+
     public void pauseJob(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -957,7 +934,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Pause all of the <code>{@link org.quartz.JobDetail}s</code> in the matching groups - by pausing all of their <code>Trigger</code>s.
      * </p>
      */
-    @Override
+
     public void pauseJobs(GroupMatcher<JobKey> groupMatcher) throws SchedulerException {
         validateState();
 
@@ -980,7 +957,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
      * </p>
      */
-    @Override
+
     public void resumeTrigger(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -997,7 +974,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
      * </p>
      */
-    @Override
+
     public void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         validateState();
 
@@ -1012,7 +989,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         }
     }
 
-    @Override
     public Set getPausedTriggerGroups() throws SchedulerException {
         return resources.getJobStore().getPausedTriggerGroups();
     }
@@ -1025,7 +1001,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * If any of the <code>Job</code>'s<code>Trigger</code> s missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
      * </p>
      */
-    @Override
+
     public void resumeJob(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -1042,7 +1018,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * If any of the <code>Job</code> s had <code>Trigger</code> s that missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
      * </p>
      */
-    @Override
+
     public void resumeJobs(GroupMatcher<JobKey> matcher) throws SchedulerException {
         validateState();
 
@@ -1069,7 +1045,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
      * @see #standby()
      */
-    @Override
+
     public void pauseAll() throws SchedulerException {
         validateState();
 
@@ -1088,7 +1064,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @see #pauseAll()
      */
-    @Override
+
     public void resumeAll() throws SchedulerException {
         validateState();
 
@@ -1102,7 +1078,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the names of all known <code>{@link org.quartz.Job}</code> groups.
      * </p>
      */
-    @Override
+
     public List<String> getJobGroupNames() throws SchedulerException {
         validateState();
 
@@ -1114,7 +1090,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the names of all the <code>{@link org.quartz.Job}s</code> in the matching groups.
      * </p>
      */
-    @Override
+
     public Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException {
         validateState();
 
@@ -1130,7 +1106,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
      * </p>
      */
-    @Override
+
     public List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -1142,7 +1118,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the names of all known <code>{@link org.quartz.Trigger}</code> groups.
      * </p>
      */
-    @Override
+
     public List<String> getTriggerGroupNames() throws SchedulerException {
         validateState();
 
@@ -1154,7 +1130,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the names of all the <code>{@link org.quartz.Trigger}s</code> in the matching groups.
      * </p>
      */
-    @Override
+
     public Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
         validateState();
 
@@ -1170,7 +1146,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given name and group.
      * </p>
      */
-    @Override
+
     public JobDetail getJobDetail(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -1182,7 +1158,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the <code>{@link Trigger}</code> instance with the given name and group.
      * </p>
      */
-    @Override
+
     public Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -1196,7 +1172,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @return true if a Job exists with the given identifier
      * @throws SchedulerException
      */
-    @Override
+
     public boolean checkExists(JobKey jobKey) throws SchedulerException {
         validateState();
 
@@ -1211,7 +1187,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @return true if a Trigger exists with the given identifier
      * @throws SchedulerException
      */
-    @Override
+
     public boolean checkExists(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -1224,7 +1200,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @throws SchedulerException
      */
-    @Override
+
     public void clear() throws SchedulerException {
         validateState();
 
@@ -1239,7 +1215,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @see Trigger.TriggerState
      */
-    @Override
+
     public TriggerState getTriggerState(TriggerKey triggerKey) throws SchedulerException {
         validateState();
 
@@ -1253,7 +1229,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @throws SchedulerException if there is an internal Scheduler error, or a Calendar with the same name already exists, and <code>replace</code> is <code>false</code>.
      */
-    @Override
+
     public void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers) throws SchedulerException {
         validateState();
 
@@ -1268,7 +1244,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * @return true if the Calendar was found and deleted.
      * @throws SchedulerException if there is an internal Scheduler error.
      */
-    @Override
+
     public boolean deleteCalendar(String calName) throws SchedulerException {
         validateState();
 
@@ -1280,7 +1256,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the <code>{@link Calendar}</code> instance with the given name.
      * </p>
      */
-    @Override
+
     public Calendar getCalendar(String calName) throws SchedulerException {
         validateState();
 
@@ -1292,7 +1268,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * Get the names of all registered <code>{@link Calendar}s</code>.
      * </p>
      */
-    @Override
+
     public List<String> getCalendarNames() throws SchedulerException {
         validateState();
 
@@ -1901,7 +1877,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
      * 
      * @see org.quartz.core.RemotableQuartzScheduler#interrupt(JobKey)
      */
-    @Override
+
     public boolean interrupt(JobKey jobKey) throws UnableToInterruptJobException {
 
         List jobs = getCurrentlyExecutingJobs();
