@@ -553,9 +553,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
         boolean jmxExport = cfg.getBooleanProperty(PROP_SCHED_JMX_EXPORT);
         String jmxObjectName = cfg.getStringProperty(PROP_SCHED_JMX_OBJECT_NAME);
 
-        boolean jmxProxy = cfg.getBooleanProperty(PROP_SCHED_JMX_PROXY);
-        String jmxProxyClass = cfg.getStringProperty(PROP_SCHED_JMX_PROXY_CLASS);
-
         boolean rmiExport = cfg.getBooleanProperty(PROP_SCHED_RMI_EXPORT, false);
         boolean rmiProxy = cfg.getBooleanProperty(PROP_SCHED_RMI_PROXY, false);
         String rmiHost = cfg.getStringProperty(PROP_SCHED_RMI_HOST, "localhost");
@@ -564,28 +561,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         String rmiCreateRegistry = cfg.getStringProperty(PROP_SCHED_RMI_CREATE_REGISTRY, QuartzSchedulerResources.CREATE_REGISTRY_NEVER);
         String rmiBindName = cfg.getStringProperty(PROP_SCHED_RMI_BIND_NAME);
 
-        if (jmxProxy && rmiProxy) {
-            throw new SchedulerConfigException("Cannot proxy both RMI and JMX.");
-        }
-
         Properties schedCtxtProps = cfg.getPropertyGroup(PROP_SCHED_CONTEXT_PREFIX, true);
-
-        // If Proxying to remote scheduler, short-circuit here...
-        // ~~~~~~~~~~~~~~~~~~
-        if (rmiProxy) {
-
-            if (autoId) {
-                schedInstId = DEFAULT_INSTANCE_ID;
-            }
-
-            String uid = (rmiBindName == null) ? QuartzSchedulerResources.getUniqueIdentifier(schedName, schedInstId) : rmiBindName;
-
-            RemoteScheduler remoteScheduler = new RemoteScheduler(uid, rmiHost, rmiPort);
-
-            schedRep.bind(remoteScheduler);
-
-            return remoteScheduler;
-        }
 
         // Create class load helper
         ClassLoadHelper loadHelper = null;
@@ -595,45 +571,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw new SchedulerConfigException("Unable to instantiate class load helper class: " + e.getMessage(), e);
         }
         loadHelper.initialize();
-
-        // If Proxying to remote JMX scheduler, short-circuit here...
-        // ~~~~~~~~~~~~~~~~~~
-        if (jmxProxy) {
-            if (autoId) {
-                schedInstId = DEFAULT_INSTANCE_ID;
-            }
-
-            if (jmxProxyClass == null) {
-                throw new SchedulerConfigException("No JMX Proxy Scheduler class provided");
-            }
-
-            RemoteMBeanScheduler jmxScheduler = null;
-            try {
-                jmxScheduler = (RemoteMBeanScheduler) loadHelper.loadClass(jmxProxyClass).newInstance();
-            } catch (Exception e) {
-                throw new SchedulerConfigException("Unable to instantiate RemoteMBeanScheduler class.", e);
-            }
-
-            if (jmxObjectName == null) {
-                jmxObjectName = QuartzSchedulerResources.generateJMXObjectName(schedName, schedInstId);
-            }
-
-            jmxScheduler.setSchedulerObjectName(jmxObjectName);
-
-            tProps = cfg.getPropertyGroup(PROP_SCHED_JMX_PROXY, true);
-            try {
-                setBeanProps(jmxScheduler, tProps);
-            } catch (Exception e) {
-                initException = new SchedulerException("RemoteMBeanScheduler class '" + jmxProxyClass + "' props could not be configured.", e);
-                throw initException;
-            }
-
-            jmxScheduler.initialize();
-
-            schedRep.bind(jmxScheduler);
-
-            return jmxScheduler;
-        }
 
         JobFactory jobFactory = null;
         if (jobFactoryClass != null) {
