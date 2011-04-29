@@ -32,7 +32,6 @@ public class Sample {
     public static void main(String[] args) {
 
         System.out.println("Starting scheduler...");
-        System.out.println("STARTING QUARTZ FROM JUNIT");
         try {
             SchedulerFactory lSchedulerFactory = new org.quartz.impl.StdSchedulerFactory("quartz.properties");
             System.out.println("Getting scheduler.");
