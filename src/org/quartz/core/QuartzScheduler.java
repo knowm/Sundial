@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
-import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.quartz.Calendar;
@@ -59,7 +58,6 @@ import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.quartz.UnableToInterruptJobException;
-import org.quartz.core.jmx.QuartzSchedulerMBean;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.listeners.SchedulerListenerSupport;
@@ -68,7 +66,6 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.SchedulerPlugin;
 import org.quartz.spi.SchedulerSignaler;
-import org.quartz.utils.UpdateChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,12 +162,7 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
     private volatile boolean shuttingDown = false;
     private boolean boundRemotely = false;
 
-    private QuartzSchedulerMBean jmxBean = null;
-
     private Date initialStart = null;
-
-    /** Update timer that must be cancelled upon shutdown. */
-    private final Timer updateTimer;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -205,12 +197,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         addInternalSchedulerListener(errLogger);
 
         signaler = new SchedulerSignalerImpl(this, this.schedThread);
-
-        if (resources.isRunUpdateCheck() && !Boolean.getBoolean("org.terracotta.quartz.skipUpdateCheck")) {
-            updateTimer = scheduleUpdateCheck();
-        } else {
-            updateTimer = null;
-        }
 
         getLog().info("Quartz Scheduler v." + getVersion() + " created.");
     }
@@ -258,15 +244,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
 
     public Logger getLog() {
         return log;
-    }
-
-    /**
-     * Update checker scheduler - fires every week
-     */
-    private Timer scheduleUpdateCheck() {
-        Timer rval = new Timer(true);
-        rval.scheduleAtFixedRate(new UpdateChecker(), 1000, 7 * 24 * 60 * 60 * 1000L);
-        return rval;
     }
 
     /**
@@ -622,10 +599,6 @@ public class QuartzScheduler implements RemotableQuartzScheduler {
         SchedulerRepository.getInstance().remove(resources.getName());
 
         holdToPreventGC.clear();
-
-        if (updateTimer != null) {
-            updateTimer.cancel();
-        }
 
         getLog().info("Scheduler " + resources.getUniqueIdentifier() + " shutdown complete.");
     }

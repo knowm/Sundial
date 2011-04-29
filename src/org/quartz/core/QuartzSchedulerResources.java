@@ -420,14 +420,6 @@ public class QuartzSchedulerResources {
         this.rmiBindName = rmiBindName;
     }
 
-    public boolean isRunUpdateCheck() {
-        return runUpdateCheck;
-    }
-
-    public void setRunUpdateCheck(boolean runUpdateCheck) {
-        this.runUpdateCheck = runUpdateCheck;
-    }
-
     public long getBatchTimeWindow() {
         return batchTimeWindow;
     }
