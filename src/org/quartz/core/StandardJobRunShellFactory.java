@@ -17,7 +17,6 @@
 
 package org.quartz.core;
 
-import org.quartz.ExecuteInJTATransaction;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerConfigException;
 import org.quartz.SchedulerException;
@@ -72,11 +71,7 @@ public class StandardJobRunShellFactory implements JobRunShellFactory {
      */
     @Override
     public JobRunShell createJobRunShell(TriggerFiredBundle bundle) throws SchedulerException {
-        // boolean needsJTA = ClassUtils.isAnnotationPresent(bundle.getJobDetail().getJobClass(), ExecuteInJTATransaction.class);
-        //
-        // if(needsJTA)
-        // return new JTAJobRunShell(scheduler, bundle);
-        // else
+
         return new JobRunShell(scheduler, bundle);
     }
 
