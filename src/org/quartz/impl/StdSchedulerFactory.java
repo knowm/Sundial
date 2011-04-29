@@ -1,5 +1,6 @@
 /*
  * Copyright 2001-2009 Terracotta, Inc.
+ * Copyright 2011 Xeiam, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -83,6 +84,7 @@ import org.slf4j.LoggerFactory;
  * @author James House
  * @author Anthony Eden
  * @author Mohammad Rezaei
+ * @author timmolter
  */
 public class StdSchedulerFactory implements SchedulerFactory {
 
@@ -107,20 +109,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
     public static final String PROP_SCHED_BATCH_TIME_WINDOW = "org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow";
 
     public static final String PROP_SCHED_MAX_BATCH_SIZE = "org.quartz.scheduler.batchTriggerAcquisitionMaxCount";
-
-    public static final String PROP_SCHED_RMI_EXPORT = "org.quartz.scheduler.rmi.export";
-
-    public static final String PROP_SCHED_RMI_PROXY = "org.quartz.scheduler.rmi.proxy";
-
-    public static final String PROP_SCHED_RMI_HOST = "org.quartz.scheduler.rmi.registryHost";
-
-    public static final String PROP_SCHED_RMI_PORT = "org.quartz.scheduler.rmi.registryPort";
-
-    public static final String PROP_SCHED_RMI_SERVER_PORT = "org.quartz.scheduler.rmi.serverPort";
-
-    public static final String PROP_SCHED_RMI_CREATE_REGISTRY = "org.quartz.scheduler.rmi.createRegistry";
-
-    public static final String PROP_SCHED_RMI_BIND_NAME = "org.quartz.scheduler.rmi.bindName";
 
     public static final String PROP_SCHED_WRAP_JOB_IN_USER_TX = "org.quartz.scheduler.wrapJobExecutionInUserTransaction";
 
@@ -215,7 +203,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     private String propSrc = null;
 
-    private PropertiesParser cfg;
+    private PropertiesParser mPropertiesParser;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -272,7 +260,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      */
     public void initialize() throws SchedulerException {
         // short-circuit if already initialized
-        if (cfg != null) {
+        if (mPropertiesParser != null) {
             return;
         }
         if (initException != null) {
@@ -391,7 +379,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      */
     public void initialize(String filename) throws SchedulerException {
         // short-circuit if already initialized
-        if (cfg != null) {
+        if (mPropertiesParser != null) {
             return;
         }
 
@@ -435,7 +423,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      */
     public void initialize(InputStream propertiesStream) throws SchedulerException {
         // short-circuit if already initialized
-        if (cfg != null) {
+        if (mPropertiesParser != null) {
             return;
         }
 
@@ -471,11 +459,11 @@ public class StdSchedulerFactory implements SchedulerFactory {
             propSrc = "an externally provided properties instance.";
         }
 
-        this.cfg = new PropertiesParser(props);
+        this.mPropertiesParser = new PropertiesParser(props);
     }
 
     private Scheduler instantiate() throws SchedulerException {
-        if (cfg == null) {
+        if (mPropertiesParser == null) {
             initialize();
         }
 
@@ -502,53 +490,45 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get Scheduler Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String schedName = cfg.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
+        String schedName = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
 
-        String threadName = cfg.getStringProperty(PROP_SCHED_THREAD_NAME, schedName + "_QuartzSchedulerThread");
+        String threadName = mPropertiesParser.getStringProperty(PROP_SCHED_THREAD_NAME, schedName + "_QuartzSchedulerThread");
 
-        String schedInstId = cfg.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
+        String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
 
         if (schedInstId.equals(AUTO_GENERATE_INSTANCE_ID)) {
             autoId = true;
-            instanceIdGeneratorClass = cfg.getStringProperty(PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS, "org.quartz.simpl.SimpleInstanceIdGenerator");
+            instanceIdGeneratorClass = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS, "org.quartz.simpl.SimpleInstanceIdGenerator");
         } else if (schedInstId.equals(SYSTEM_PROPERTY_AS_INSTANCE_ID)) {
             autoId = true;
             instanceIdGeneratorClass = "org.quartz.simpl.SystemPropertyInstanceIdGenerator";
         }
 
-        userTXLocation = cfg.getStringProperty(PROP_SCHED_USER_TX_URL, userTXLocation);
+        userTXLocation = mPropertiesParser.getStringProperty(PROP_SCHED_USER_TX_URL, userTXLocation);
         if (userTXLocation != null && userTXLocation.trim().length() == 0) {
             userTXLocation = null;
         }
 
-        classLoadHelperClass = cfg.getStringProperty(PROP_SCHED_CLASS_LOAD_HELPER_CLASS, "org.quartz.simpl.CascadingClassLoadHelper");
-        wrapJobInTx = cfg.getBooleanProperty(PROP_SCHED_WRAP_JOB_IN_USER_TX, wrapJobInTx);
+        classLoadHelperClass = mPropertiesParser.getStringProperty(PROP_SCHED_CLASS_LOAD_HELPER_CLASS, "org.quartz.simpl.CascadingClassLoadHelper");
+        wrapJobInTx = mPropertiesParser.getBooleanProperty(PROP_SCHED_WRAP_JOB_IN_USER_TX, wrapJobInTx);
 
-        jobFactoryClass = cfg.getStringProperty(PROP_SCHED_JOB_FACTORY_CLASS, null);
+        jobFactoryClass = mPropertiesParser.getStringProperty(PROP_SCHED_JOB_FACTORY_CLASS, null);
 
-        idleWaitTime = cfg.getLongProperty(PROP_SCHED_IDLE_WAIT_TIME, idleWaitTime);
-        dbFailureRetry = cfg.getLongProperty(PROP_SCHED_DB_FAILURE_RETRY_INTERVAL, dbFailureRetry);
+        idleWaitTime = mPropertiesParser.getLongProperty(PROP_SCHED_IDLE_WAIT_TIME, idleWaitTime);
+        dbFailureRetry = mPropertiesParser.getLongProperty(PROP_SCHED_DB_FAILURE_RETRY_INTERVAL, dbFailureRetry);
 
-        boolean makeSchedulerThreadDaemon = cfg.getBooleanProperty(PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON);
+        boolean makeSchedulerThreadDaemon = mPropertiesParser.getBooleanProperty(PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON);
 
-        boolean threadsInheritInitalizersClassLoader = cfg.getBooleanProperty(PROP_SCHED_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
+        boolean threadsInheritInitalizersClassLoader = mPropertiesParser.getBooleanProperty(PROP_SCHED_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
 
-        boolean skipUpdateCheck = cfg.getBooleanProperty(PROP_SCHED_SKIP_UPDATE_CHECK, false);
-        long batchTimeWindow = cfg.getLongProperty(PROP_SCHED_BATCH_TIME_WINDOW, 0L);
-        int maxBatchSize = cfg.getIntProperty(PROP_SCHED_MAX_BATCH_SIZE, 1);
+        boolean skipUpdateCheck = mPropertiesParser.getBooleanProperty(PROP_SCHED_SKIP_UPDATE_CHECK, false);
+        long batchTimeWindow = mPropertiesParser.getLongProperty(PROP_SCHED_BATCH_TIME_WINDOW, 0L);
+        int maxBatchSize = mPropertiesParser.getIntProperty(PROP_SCHED_MAX_BATCH_SIZE, 1);
 
-        boolean interruptJobsOnShutdown = cfg.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
-        boolean interruptJobsOnShutdownWithWait = cfg.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
+        boolean interruptJobsOnShutdown = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
+        boolean interruptJobsOnShutdownWithWait = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
 
-        boolean rmiExport = cfg.getBooleanProperty(PROP_SCHED_RMI_EXPORT, false);
-        boolean rmiProxy = cfg.getBooleanProperty(PROP_SCHED_RMI_PROXY, false);
-        String rmiHost = cfg.getStringProperty(PROP_SCHED_RMI_HOST, "localhost");
-        int rmiPort = cfg.getIntProperty(PROP_SCHED_RMI_PORT, 1099);
-        int rmiServerPort = cfg.getIntProperty(PROP_SCHED_RMI_SERVER_PORT, -1);
-        String rmiCreateRegistry = cfg.getStringProperty(PROP_SCHED_RMI_CREATE_REGISTRY, QuartzSchedulerResources.CREATE_REGISTRY_NEVER);
-        String rmiBindName = cfg.getStringProperty(PROP_SCHED_RMI_BIND_NAME);
-
-        Properties schedCtxtProps = cfg.getPropertyGroup(PROP_SCHED_CONTEXT_PREFIX, true);
+        Properties schedCtxtProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_CONTEXT_PREFIX, true);
 
         // Create class load helper
         ClassLoadHelper loadHelper = null;
@@ -567,7 +547,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 throw new SchedulerConfigException("Unable to instantiate JobFactory class: " + e.getMessage(), e);
             }
 
-            tProps = cfg.getPropertyGroup(PROP_SCHED_JOB_FACTORY_PREFIX, true);
+            tProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_JOB_FACTORY_PREFIX, true);
             try {
                 setBeanProps(jobFactory, tProps);
             } catch (Exception e) {
@@ -584,7 +564,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 throw new SchedulerConfigException("Unable to instantiate InstanceIdGenerator class: " + e.getMessage(), e);
             }
 
-            tProps = cfg.getPropertyGroup(PROP_SCHED_INSTANCE_ID_GENERATOR_PREFIX, true);
+            tProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_INSTANCE_ID_GENERATOR_PREFIX, true);
             try {
                 setBeanProps(instanceIdGenerator, tProps);
             } catch (Exception e) {
@@ -596,7 +576,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get ThreadPool Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String tpClass = cfg.getStringProperty(PROP_THREAD_POOL_CLASS, SimpleThreadPool.class.getName());
+        String tpClass = mPropertiesParser.getStringProperty(PROP_THREAD_POOL_CLASS, SimpleThreadPool.class.getName());
 
         if (tpClass == null) {
             initException = new SchedulerException("ThreadPool class not specified. ");
@@ -609,7 +589,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
             initException = new SchedulerException("ThreadPool class '" + tpClass + "' could not be instantiated.", e);
             throw initException;
         }
-        tProps = cfg.getPropertyGroup(PROP_THREAD_POOL_PREFIX, true);
+        tProps = mPropertiesParser.getPropertyGroup(PROP_THREAD_POOL_PREFIX, true);
         try {
             setBeanProps(threadpool, tProps);
         } catch (Exception e) {
@@ -620,7 +600,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get JobStore Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String jsClass = cfg.getStringProperty(PROP_JOB_STORE_CLASS, RAMJobStore.class.getName());
+        String jsClass = mPropertiesParser.getStringProperty(PROP_JOB_STORE_CLASS, RAMJobStore.class.getName());
 
         if (jsClass == null) {
             initException = new SchedulerException("JobStore class not specified. ");
@@ -636,7 +616,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         SchedulerDetailsSetter.setDetails(jobstore, schedName, schedInstId);
 
-        tProps = cfg.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
+        tProps = mPropertiesParser.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
         try {
             setBeanProps(jobstore, tProps);
         } catch (Exception e) {
@@ -790,10 +770,10 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Set up any SchedulerPlugins
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] pluginNames = cfg.getPropertyGroups(PROP_PLUGIN_PREFIX);
+        String[] pluginNames = mPropertiesParser.getPropertyGroups(PROP_PLUGIN_PREFIX);
         SchedulerPlugin[] plugins = new SchedulerPlugin[pluginNames.length];
         for (int i = 0; i < pluginNames.length; i++) {
-            Properties pp = cfg.getPropertyGroup(PROP_PLUGIN_PREFIX + "." + pluginNames[i], true);
+            Properties pp = mPropertiesParser.getPropertyGroup(PROP_PLUGIN_PREFIX + "." + pluginNames[i], true);
 
             String plugInClass = pp.getProperty(PROP_PLUGIN_CLASS, null);
 
@@ -822,10 +802,10 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         Class<?>[] strArg = new Class[] { String.class };
-        String[] jobListenerNames = cfg.getPropertyGroups(PROP_JOB_LISTENER_PREFIX);
+        String[] jobListenerNames = mPropertiesParser.getPropertyGroups(PROP_JOB_LISTENER_PREFIX);
         JobListener[] jobListeners = new JobListener[jobListenerNames.length];
         for (int i = 0; i < jobListenerNames.length; i++) {
-            Properties lp = cfg.getPropertyGroup(PROP_JOB_LISTENER_PREFIX + "." + jobListenerNames[i], true);
+            Properties lp = mPropertiesParser.getPropertyGroup(PROP_JOB_LISTENER_PREFIX + "." + jobListenerNames[i], true);
 
             String listenerClass = lp.getProperty(PROP_LISTENER_CLASS, null);
 
@@ -856,10 +836,10 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Set up any TriggerListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] triggerListenerNames = cfg.getPropertyGroups(PROP_TRIGGER_LISTENER_PREFIX);
+        String[] triggerListenerNames = mPropertiesParser.getPropertyGroups(PROP_TRIGGER_LISTENER_PREFIX);
         TriggerListener[] triggerListeners = new TriggerListener[triggerListenerNames.length];
         for (int i = 0; i < triggerListenerNames.length; i++) {
-            Properties lp = cfg.getPropertyGroup(PROP_TRIGGER_LISTENER_PREFIX + "." + triggerListenerNames[i], true);
+            Properties lp = mPropertiesParser.getPropertyGroup(PROP_TRIGGER_LISTENER_PREFIX + "." + triggerListenerNames[i], true);
 
             String listenerClass = lp.getProperty(PROP_LISTENER_CLASS, null);
 
@@ -930,14 +910,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             rsrcs.setMaxBatchSize(maxBatchSize);
             rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
             rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
-
-            if (rmiExport) {
-                rsrcs.setRMIRegistryHost(rmiHost);
-                rsrcs.setRMIRegistryPort(rmiPort);
-                rsrcs.setRMIServerPort(rmiServerPort);
-                rsrcs.setRMICreateRegistryStrategy(rmiCreateRegistry);
-                rsrcs.setRMIBindName(rmiBindName);
-            }
 
             SchedulerDetailsSetter.setDetails(threadpool, schedName, schedInstId);
 
@@ -1073,7 +1045,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 String refName = pp.getStringProperty(name);
                 if (refName != null && refName.startsWith("$@")) {
                     refName = refName.substring(2);
-                    refProps = cfg;
+                    refProps = mPropertiesParser;
                 } else {
                     refName = name;
                 }
@@ -1136,7 +1108,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
     }
 
     private String getSchedulerName() {
-        return cfg.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
+        return mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
     }
 
     /**
@@ -1149,7 +1121,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      */
     @Override
     public Scheduler getScheduler() throws SchedulerException {
-        if (cfg == null) {
+        if (mPropertiesParser == null) {
             initialize();
         }
 
