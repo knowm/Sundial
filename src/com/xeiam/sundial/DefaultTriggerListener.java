@@ -51,9 +51,12 @@ public class DefaultTriggerListener implements TriggerListener {
         try {
 
             List<JobExecutionContext> currentlyExecutingJobs = DefaultJobScheduler.getScheduler().getCurrentlyExecutingJobs();
+            logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
+
             for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
 
                 String alreadyRunningJobName = lJobExecutionContext.getJobDetail().getKey().getName();
+                logger.debug("alreadyRunningJobName: " + alreadyRunningJobName);
 
                 if (newJobName.equals(alreadyRunningJobName)) {
                     logger.debug("Already Running. Vetoing!");
