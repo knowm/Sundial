@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.security.AccessControlException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
@@ -90,8 +89,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    public static final String PROPERTIES_FILE = "org.quartz.properties";
 
     public static final String PROP_SCHED_INSTANCE_NAME = "org.quartz.scheduler.instanceName";
 
@@ -165,18 +162,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_DATASOURCE_VALIDATION_QUERY = "validationQuery";
 
-    public static final String PROP_DATASOURCE_JNDI_URL = "jndiURL";
-
-    public static final String PROP_DATASOURCE_JNDI_ALWAYS_LOOKUP = "jndiAlwaysLookup";
-
-    public static final String PROP_DATASOURCE_JNDI_INITIAL = "java.naming.factory.initial";
-
-    public static final String PROP_DATASOURCE_JNDI_PROVDER = "java.naming.provider.url";
-
-    public static final String PROP_DATASOURCE_JNDI_PRINCIPAL = "java.naming.security.principal";
-
-    public static final String PROP_DATASOURCE_JNDI_CREDENTIALS = "java.naming.security.credentials";
-
     public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
 
     public static final String PROP_PLUGIN_CLASS = "class";
@@ -190,6 +175,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
     public static final String DEFAULT_INSTANCE_ID = "NON_CLUSTERED";
 
     public static final String AUTO_GENERATE_INSTANCE_ID = "AUTO";
+
     public static final String SYSTEM_PROPERTY_AS_INSTANCE_ID = "SYS_PROP";
 
     /*
@@ -202,44 +188,52 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     private PropertiesParser mPropertiesParser;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
-    // private Scheduler scheduler;
-
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * Create an uninitialized StdSchedulerFactory.
-     */
-    public StdSchedulerFactory() {
-    }
-
-    /**
-     * Create a StdSchedulerFactory that has been initialized via <code>{@link #initialize(Properties)}</code>.
+     * <p>
+     * Returns a handle to the default Scheduler, creating it if it does not yet exist.
+     * </p>
      * 
-     * @see #initialize(Properties)
+     * @see #initialize()
      */
-    public StdSchedulerFactory(Properties props) throws SchedulerException {
-        initialize(props);
+    public static Scheduler getDefaultScheduler() throws SchedulerException {
+
+        StdSchedulerFactory fact = new StdSchedulerFactory();
+
+        return fact.getScheduler();
     }
 
     /**
-     * Create a StdSchedulerFactory that has been initialized via <code>{@link #initialize(String)}</code>.
-     * 
-     * @see #initialize(String)
+     * <p>
+     * Returns a handle to the Scheduler produced by this factory.
+     * </p>
+     * <p>
+     * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be called by this method.
+     * </p>
      */
-    public StdSchedulerFactory(String fileName) throws SchedulerException {
-        initialize(fileName);
-    }
+    @Override
+    public Scheduler getScheduler() throws SchedulerException {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+        if (mPropertiesParser == null) {
+            initialize();
+        }
 
-    public Logger getLog() {
-        return log;
+        SchedulerRepository schedRep = SchedulerRepository.getInstance();
+
+        Scheduler sched = schedRep.lookup(getSchedulerName());
+
+        if (sched != null) {
+            if (sched.isShutdown()) {
+                schedRep.remove(getSchedulerName());
+            } else {
+                return sched;
+            }
+        }
+
+        sched = instantiate();
+
+        return sched;
     }
 
     /**
@@ -256,6 +250,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      * </p>
      */
     public void initialize() throws SchedulerException {
+
         // short-circuit if already initialized
         if (mPropertiesParser != null) {
             return;
@@ -264,8 +259,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw initException;
         }
 
-        String requestedFile = System.getProperty(PROPERTIES_FILE);
-        String propFileName = requestedFile != null ? requestedFile : "quartz.properties";
+        String propFileName = "quartz.properties";
         File propFile = new File(propFileName);
 
         Properties props = new Properties();
@@ -275,11 +269,8 @@ public class StdSchedulerFactory implements SchedulerFactory {
         try {
             if (propFile.exists()) {
                 try {
-                    if (requestedFile != null) {
-                        propSrc = "specified file: '" + requestedFile + "'";
-                    } else {
-                        propSrc = "default file in current working dir: 'quartz.properties'";
-                    }
+
+                    propSrc = "default file in current working dir: 'quartz.properties'";
 
                     in = new BufferedInputStream(new FileInputStream(propFileName));
                     props.load(in);
@@ -288,24 +279,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
                     initException = new SchedulerException("Properties file: '" + propFileName + "' could not be read.", ioe);
                     throw initException;
                 }
-            } else if (requestedFile != null) {
-                in = Thread.currentThread().getContextClassLoader().getResourceAsStream(requestedFile);
-
-                if (in == null) {
-                    initException = new SchedulerException("Properties file: '" + requestedFile + "' could not be found.");
-                    throw initException;
-                }
-
-                propSrc = "specified file: '" + requestedFile + "' in the class resource path.";
-
-                in = new BufferedInputStream(in);
-                try {
-                    props.load(in);
-                } catch (IOException ioe) {
-                    initException = new SchedulerException("Properties file: '" + requestedFile + "' could not be read.", ioe);
-                    throw initException;
-                }
-
             } else {
                 propSrc = "default resource file in Quartz package: 'quartz.properties'";
 
@@ -345,104 +318,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             }
         }
 
-        initialize(overrideWithSysProps(props));
-    }
-
-    /**
-     * Add all System properties to the given <code>props</code>. Will override any properties that already exist in the given <code>props</code>.
-     */
-    private Properties overrideWithSysProps(Properties props) {
-        Properties sysProps = null;
-        try {
-            sysProps = System.getProperties();
-        } catch (AccessControlException e) {
-            getLog().warn(
-                    "Skipping overriding quartz properties with System properties " + "during initialization because of an AccessControlException.  " + "This is likely due to not having read/write access for "
-                            + "java.util.PropertyPermission as required by java.lang.System.getProperties().  " + "To resolve this warning, either add this permission to your policy file or "
-                            + "use a non-default version of initialize().", e);
-        }
-
-        if (sysProps != null) {
-            props.putAll(sysProps);
-        }
-
-        return props;
-    }
-
-    /**
-     * <p>
-     * Initialize the <code>{@link org.quartz.SchedulerFactory}</code> with the contents of the <code>Properties</code> file with the given name.
-     * </p>
-     */
-    public void initialize(String filename) throws SchedulerException {
-        // short-circuit if already initialized
-        if (mPropertiesParser != null) {
-            return;
-        }
-
-        if (initException != null) {
-            throw initException;
-        }
-
-        InputStream is = null;
-        Properties props = new Properties();
-
-        is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
-
-        try {
-            if (is != null) {
-                is = new BufferedInputStream(is);
-                propSrc = "the specified file : '" + filename + "' from the class resource path.";
-            } else {
-                is = new BufferedInputStream(new FileInputStream(filename));
-                propSrc = "the specified file : '" + filename + "'";
-            }
-            props.load(is);
-        } catch (IOException ioe) {
-            initException = new SchedulerException("Properties file: '" + filename + "' could not be read.", ioe);
-            throw initException;
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException ignore) {
-                }
-            }
-        }
-
-        initialize(props);
-    }
-
-    /**
-     * <p>
-     * Initialize the <code>{@link org.quartz.SchedulerFactory}</code> with the contents of the <code>Properties</code> file opened with the given <code>InputStream</code>.
-     * </p>
-     */
-    public void initialize(InputStream propertiesStream) throws SchedulerException {
-        // short-circuit if already initialized
-        if (mPropertiesParser != null) {
-            return;
-        }
-
-        if (initException != null) {
-            throw initException;
-        }
-
-        Properties props = new Properties();
-
-        if (propertiesStream != null) {
-            try {
-                props.load(propertiesStream);
-                propSrc = "an externally opened InputStream.";
-            } catch (IOException e) {
-                initException = new SchedulerException("Error loading property data from InputStream", e);
-                throw initException;
-            }
-        } else {
-            initException = new SchedulerException("Error loading property data from InputStream - InputStream is null.");
-            throw initException;
-        }
-
         initialize(props);
     }
 
@@ -456,10 +331,11 @@ public class StdSchedulerFactory implements SchedulerFactory {
             propSrc = "an externally provided properties instance.";
         }
 
-        this.mPropertiesParser = new PropertiesParser(props);
+        mPropertiesParser = new PropertiesParser(props);
     }
 
     private Scheduler instantiate() throws SchedulerException {
+
         if (mPropertiesParser == null) {
             initialize();
         }
@@ -619,149 +495,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw initException;
         }
 
-        // if (js instanceof JobStoreSupport) {
-        // // Install custom lock handler (Semaphore)
-        // String lockHandlerClass = cfg.getStringProperty(PROP_JOB_STORE_LOCK_HANDLER_CLASS);
-        // if (lockHandlerClass != null) {
-        // try {
-        // Semaphore lockHandler = (Semaphore) loadHelper.loadClass(lockHandlerClass).newInstance();
-        //
-        // tProps = cfg.getPropertyGroup(PROP_JOB_STORE_LOCK_HANDLER_PREFIX, true);
-        //
-        // // If this lock handler requires the table prefix, add it to its properties.
-        // if (lockHandler instanceof TablePrefixAware) {
-        // tProps.setProperty(PROP_TABLE_PREFIX, ((JobStoreSupport) js).getTablePrefix());
-        // tProps.setProperty(PROP_SCHED_NAME, schedName);
-        // }
-        //
-        // try {
-        // setBeanProps(lockHandler, tProps);
-        // } catch (Exception e) {
-        // initException = new SchedulerException("JobStore LockHandler class '" + lockHandlerClass + "' props could not be configured.", e);
-        // throw initException;
-        // }
-        //
-        // ((JobStoreSupport) js).setLockHandler(lockHandler);
-        // getLog().info("Using custom data access locking (synchronization): " + lockHandlerClass);
-        // } catch (Exception e) {
-        // initException = new SchedulerException("JobStore LockHandler class '" + lockHandlerClass + "' could not be instantiated.", e);
-        // throw initException;
-        // }
-        // }
-        // }
-
-        // Set up any DataSources
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        // String[] dsNames = cfg.getPropertyGroups(PROP_DATASOURCE_PREFIX);
-        // for (int i = 0; i < dsNames.length; i++) {
-        // PropertiesParser pp = new PropertiesParser(cfg.getPropertyGroup(
-        // PROP_DATASOURCE_PREFIX + "." + dsNames[i], true));
-        //
-        // String cpClass = pp.getStringProperty(PROP_CONNECTION_PROVIDER_CLASS, null);
-        //
-        // // custom connectionProvider...
-        // if(cpClass != null) {
-        // ConnectionProvider cp = null;
-        // try {
-        // cp = (ConnectionProvider) loadHelper.loadClass(cpClass).newInstance();
-        // } catch (Exception e) {
-        // initException = new SchedulerException("ConnectionProvider class '" + cpClass
-        // + "' could not be instantiated.", e);
-        // throw initException;
-        // }
-        //
-        // try {
-        // // remove the class name, so it isn't attempted to be set
-        // pp.getUnderlyingProperties().remove(
-        // PROP_CONNECTION_PROVIDER_CLASS);
-        //
-        // setBeanProps(cp, pp.getUnderlyingProperties());
-        // } catch (Exception e) {
-        // initException = new SchedulerException("ConnectionProvider class '" + cpClass
-        // + "' props could not be configured.", e);
-        // throw initException;
-        // }
-        //
-        // dbMgr = DBConnectionManager.getInstance();
-        // dbMgr.addConnectionProvider(dsNames[i], cp);
-        // } else {
-        // String dsJndi = pp.getStringProperty(PROP_DATASOURCE_JNDI_URL, null);
-        //
-        // if (dsJndi != null) {
-        // boolean dsAlwaysLookup = pp.getBooleanProperty(
-        // PROP_DATASOURCE_JNDI_ALWAYS_LOOKUP);
-        // String dsJndiInitial = pp.getStringProperty(
-        // PROP_DATASOURCE_JNDI_INITIAL);
-        // String dsJndiProvider = pp.getStringProperty(
-        // PROP_DATASOURCE_JNDI_PROVDER);
-        // String dsJndiPrincipal = pp.getStringProperty(
-        // PROP_DATASOURCE_JNDI_PRINCIPAL);
-        // String dsJndiCredentials = pp.getStringProperty(
-        // PROP_DATASOURCE_JNDI_CREDENTIALS);
-        // Properties props = null;
-        // if (null != dsJndiInitial || null != dsJndiProvider
-        // || null != dsJndiPrincipal || null != dsJndiCredentials) {
-        // props = new Properties();
-        // if (dsJndiInitial != null) {
-        // props.put(PROP_DATASOURCE_JNDI_INITIAL,
-        // dsJndiInitial);
-        // }
-        // if (dsJndiProvider != null) {
-        // props.put(PROP_DATASOURCE_JNDI_PROVDER,
-        // dsJndiProvider);
-        // }
-        // if (dsJndiPrincipal != null) {
-        // props.put(PROP_DATASOURCE_JNDI_PRINCIPAL,
-        // dsJndiPrincipal);
-        // }
-        // if (dsJndiCredentials != null) {
-        // props.put(PROP_DATASOURCE_JNDI_CREDENTIALS,
-        // dsJndiCredentials);
-        // }
-        // }
-        // JNDIConnectionProvider cp = new JNDIConnectionProvider(dsJndi,
-        // props, dsAlwaysLookup);
-        // dbMgr = DBConnectionManager.getInstance();
-        // dbMgr.addConnectionProvider(dsNames[i], cp);
-        // } else {
-        // String dsDriver = pp.getStringProperty(PROP_DATASOURCE_DRIVER);
-        // String dsURL = pp.getStringProperty(PROP_DATASOURCE_URL);
-        // String dsUser = pp.getStringProperty(PROP_DATASOURCE_USER, "");
-        // String dsPass = pp.getStringProperty(PROP_DATASOURCE_PASSWORD, "");
-        // int dsCnt = pp.getIntProperty(PROP_DATASOURCE_MAX_CONNECTIONS, 10);
-        // String dsValidation = pp.getStringProperty(PROP_DATASOURCE_VALIDATION_QUERY);
-        //
-        // if (dsDriver == null) {
-        // initException = new SchedulerException(
-        // "Driver not specified for DataSource: "
-        // + dsNames[i]);
-        // throw initException;
-        // }
-        // if (dsURL == null) {
-        // initException = new SchedulerException(
-        // "DB URL not specified for DataSource: "
-        // + dsNames[i]);
-        // throw initException;
-        // }
-        // try {
-        // PoolingConnectionProvider cp = new PoolingConnectionProvider(
-        // dsDriver, dsURL, dsUser, dsPass, dsCnt,
-        // dsValidation);
-        // dbMgr = DBConnectionManager.getInstance();
-        // dbMgr.addConnectionProvider(dsNames[i], cp);
-        // } catch (SQLException sqle) {
-        // initException = new SchedulerException(
-        // "Could not initialize DataSource: " + dsNames[i],
-        // sqle);
-        // throw initException;
-        // }
-        // }
-        //
-        // }
-        //
-        // }
-
         // Set up any SchedulerPlugins
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -871,15 +604,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             JobRunShellFactory jrsf = null; // Create correct run-shell factory...
 
-            // if (userTXLocation != null) {
-            // UserTransactionHelper.setUserTxLocation(userTXLocation);
-            // }
-            //
-            // if (wrapJobInTx) {
-            // jrsf = new JTAJobRunShellFactory();
-            // } else {
             jrsf = new StandardJobRunShellFactory();
-            // }
 
             if (autoId) {
                 try {
@@ -888,7 +613,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                         schedInstId = instanceIdGenerator.generateInstanceId();
                     }
                 } catch (Exception e) {
-                    getLog().error("Couldn't generate instance Id!", e);
+                    logger.error("Couldn't generate instance Id!", e);
                     throw new IllegalStateException("Cannot run without an instance id.");
                 }
             }
@@ -966,9 +691,9 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             qs.initialize();
 
-            getLog().info("Quartz scheduler '" + scheduler.getSchedulerName() + "' initialized from " + propSrc);
+            logger.info("Quartz scheduler '" + scheduler.getSchedulerName() + "' initialized from " + propSrc);
 
-            getLog().info("Quartz scheduler version: " + qs.getVersion());
+            logger.info("Quartz scheduler version: " + qs.getVersion());
 
             // prevents the repository from being garbage collected
             qs.addNoGCObject(schedRep);
@@ -1006,6 +731,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
     }
 
     private void setBeanProps(Object obj, Properties props) throws NoSuchMethodException, IllegalAccessException, java.lang.reflect.InvocationTargetException, IntrospectionException, SchedulerConfigException {
+
         props.remove("class");
 
         BeanInfo bi = Introspector.getBeanInfo(obj.getClass());
@@ -1099,50 +825,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     private String getSchedulerName() {
         return mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
-    }
-
-    /**
-     * <p>
-     * Returns a handle to the Scheduler produced by this factory.
-     * </p>
-     * <p>
-     * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be called by this method.
-     * </p>
-     */
-    @Override
-    public Scheduler getScheduler() throws SchedulerException {
-        if (mPropertiesParser == null) {
-            initialize();
-        }
-
-        SchedulerRepository schedRep = SchedulerRepository.getInstance();
-
-        Scheduler sched = schedRep.lookup(getSchedulerName());
-
-        if (sched != null) {
-            if (sched.isShutdown()) {
-                schedRep.remove(getSchedulerName());
-            } else {
-                return sched;
-            }
-        }
-
-        sched = instantiate();
-
-        return sched;
-    }
-
-    /**
-     * <p>
-     * Returns a handle to the default Scheduler, creating it if it does not yet exist.
-     * </p>
-     * 
-     * @see #initialize()
-     */
-    public static Scheduler getDefaultScheduler() throws SchedulerException {
-        StdSchedulerFactory fact = new StdSchedulerFactory();
-
-        return fact.getScheduler();
     }
 
     /**

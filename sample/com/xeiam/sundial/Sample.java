@@ -17,7 +17,7 @@ package com.xeiam.sundial;
 
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
+import org.quartz.impl.StdSchedulerFactory;
 
 /**
  * @author timmolter
@@ -33,10 +33,10 @@ public class Sample {
 
         System.out.println("Starting scheduler...");
         try {
-            SchedulerFactory lSchedulerFactory = new org.quartz.impl.StdSchedulerFactory("quartz.properties");
+            // SchedulerFactory lSchedulerFactory = new org.quartz.impl.StdSchedulerFactory("quartz.properties");
 
             System.out.println("Getting scheduler.");
-            Scheduler scheduler = lSchedulerFactory.getScheduler();
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             System.out.println("Starting scheduler.");
             scheduler.start();
             System.out.println("Scheduler started.");
