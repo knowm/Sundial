@@ -51,7 +51,7 @@ public class DefaultTriggerListener implements TriggerListener {
         try {
 
             List<JobExecutionContext> currentlyExecutingJobs = DefaultJobScheduler.getScheduler().getCurrentlyExecutingJobs();
-            logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
+            // logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
 
             for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
 

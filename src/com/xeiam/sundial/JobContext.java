@@ -54,8 +54,8 @@ public class JobContext {
     public void addQuartzContext(JobExecutionContext pJobExecutionContext) {
 
         for (Object lMapKey : pJobExecutionContext.getMergedJobDataMap().keySet()) {
-            logger.debug("added key: " + (String) lMapKey);
-            logger.debug("added value: " + (String) pJobExecutionContext.getMergedJobDataMap().get(lMapKey));
+            // logger.debug("added key: " + (String) lMapKey);
+            // logger.debug("added value: " + (String) pJobExecutionContext.getMergedJobDataMap().get(lMapKey));
             mMap.put((String) lMapKey, pJobExecutionContext.getMergedJobDataMap().get(lMapKey));
         }
         mMap.put(KEY_JOB_NAME, pJobExecutionContext.getJobDetail().getKey().getName());

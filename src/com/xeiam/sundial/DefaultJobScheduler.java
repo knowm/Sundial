@@ -108,8 +108,8 @@ public class DefaultJobScheduler {
 
             JobDataMap lJobDataMap = new JobDataMap();
             for (String key : pParams.keySet()) {
-                logger.debug("key= " + key);
-                logger.debug("value= " + pParams.get(key));
+                // logger.debug("key= " + key);
+                // logger.debug("value= " + pParams.get(key));
                 lJobDataMap.put(key, pParams.get(key));
             }
             JobKey jobKey = new JobKey(pJobName, KEY_DEFAULT_GROUP);
@@ -252,7 +252,7 @@ public class DefaultJobScheduler {
         try {
             getScheduler().shutdown(true);
         } catch (Exception e) {
-            logger.error("COULD NOT SHUTDOWN SCHEDULER!!!" + e);
+            logger.error("COULD NOT SHUTDOWN SCHEDULER!!!", e);
         }
     }
 }
