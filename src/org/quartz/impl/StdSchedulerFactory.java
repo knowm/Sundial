@@ -150,18 +150,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_CONNECTION_PROVIDER_CLASS = "connectionProvider.class";
 
-    public static final String PROP_DATASOURCE_DRIVER = "driver";
-
-    public static final String PROP_DATASOURCE_URL = "URL";
-
-    public static final String PROP_DATASOURCE_USER = "user";
-
-    public static final String PROP_DATASOURCE_PASSWORD = "password";
-
-    public static final String PROP_DATASOURCE_MAX_CONNECTIONS = "maxConnections";
-
-    public static final String PROP_DATASOURCE_VALIDATION_QUERY = "validationQuery";
-
     public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
 
     public static final String PROP_PLUGIN_CLASS = "class";
