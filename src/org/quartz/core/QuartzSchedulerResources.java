@@ -207,7 +207,7 @@ public class QuartzSchedulerResources {
      * @see Thread#setDaemon(boolean)
      */
     public void setMakeSchedulerThreadDaemon(boolean makeSchedulerThreadDaemon) {
-        this.makeSchedulerThreadDaemon = makeSchedulerThreadDaemon;
+        makeSchedulerThreadDaemon = makeSchedulerThreadDaemon;
     }
 
     /**
