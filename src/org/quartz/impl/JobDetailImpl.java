@@ -1,5 +1,6 @@
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
+ * Copyright 2011 Xeiam, LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
@@ -48,6 +49,7 @@ import org.quartz.utils.ClassUtils;
  * @see Trigger
  * @author James House
  * @author Sharada Jambula
+ * @author timmolter
  */
 public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail {
 
@@ -65,7 +67,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
 
     private JobDataMap jobDataMap;
 
-    private boolean durability = false;
+    private boolean durability = true;
 
     private boolean shouldRecover = false;
 
@@ -85,54 +87,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
      */
     public JobDetailImpl() {
         // do nothing...
-    }
-
-    /**
-     * <p>
-     * Create a <code>JobDetail</code> with the given name, given class, default group, and the default settings of all the other properties.
-     * </p>
-     * 
-     * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-     * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-     * @deprecated use {@link JobBuilder}
-     */
-    @Deprecated
-    public JobDetailImpl(String name, Class<? extends Job> jobClass) {
-        this(name, null, jobClass);
-    }
-
-    /**
-     * <p>
-     * Create a <code>JobDetail</code> with the given name, group and class, and the default settings of all the other properties.
-     * </p>
-     * 
-     * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-     * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-     * @deprecated use {@link JobBuilder}
-     */
-    @Deprecated
-    public JobDetailImpl(String name, String group, Class<? extends Job> jobClass) {
-        setName(name);
-        setGroup(group);
-        setJobClass(jobClass);
-    }
-
-    /**
-     * <p>
-     * Create a <code>JobDetail</code> with the given name, and group, and the given settings of all the other properties.
-     * </p>
-     * 
-     * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-     * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-     * @deprecated use {@link JobBuilder}
-     */
-    @Deprecated
-    public JobDetailImpl(String name, String group, Class<? extends Job> jobClass, boolean durability, boolean recover) {
-        setName(name);
-        setGroup(group);
-        setJobClass(jobClass);
-        setDurability(durability);
-        setRequestsRecovery(recover);
     }
 
     /*
@@ -203,10 +157,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         return group + "." + name;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#getKey()
-     */
     @Override
     public JobKey getKey() {
         if (key == null) {
@@ -229,10 +179,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         this.key = key;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#getDescription()
-     */
     @Override
     public String getDescription() {
         return description;
@@ -247,10 +193,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         this.description = description;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#getJobClass()
-     */
     @Override
     public Class<? extends Job> getJobClass() {
         return jobClass;
@@ -275,10 +217,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         this.jobClass = jobClass;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#getJobDataMap()
-     */
     @Override
     public JobDataMap getJobDataMap() {
         if (jobDataMap == null) {
@@ -322,10 +260,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         this.shouldRecover = shouldRecover;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#isDurable()
-     */
     @Override
     public boolean isDurable() {
         return durability;
@@ -340,10 +274,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         return ClassUtils.isAnnotationPresent(jobClass, DisallowConcurrentExecution.class);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.quartz.JobDetailI#requestsRecovery()
-     */
     @Override
     public boolean requestsRecovery() {
         return shouldRecover;

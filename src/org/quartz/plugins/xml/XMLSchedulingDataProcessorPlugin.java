@@ -37,14 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the file for changes.
  * <p>
- * The XML schema definition can be found here: http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd
- * </p>
- * <p>
- * The periodically scanning of files for changes is not currently supported in a clustered environment.
- * </p>
- * <p>
- * If using this plugin with JobStoreCMT, be sure to set the plugin property <em>wrapInUserTransaction</em> to true. Also, if you have a positive <em>scanInterval</em> be sure to set <em>org.quartz.scheduler.wrapJobExecutionInUserTransaction</em> to
- * true.
+ * The XML schema definition can be found here: http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd
  * </p>
  * 
  * @see org.quartz.xml.XMLSchedulingDataProcessor
@@ -63,7 +56,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-    private static final int MAX_JOB_TRIGGER_NAME_LEN = 80;
     private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
 
     private boolean failOnFileNotFound = true;

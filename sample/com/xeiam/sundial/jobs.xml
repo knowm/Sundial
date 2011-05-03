@@ -7,12 +7,7 @@
     <schedule>
         <job>
             <name>SampleJob</name>
-            <group>DEFAULT</group>
             <job-class>com.xeiam.sundial.SampleJob</job-class>
-<!--    add these if you remove the trigger        -->
-<!--            <durability>true</durability> -->
-<!--            <recover>false</recover> -->
-<!--             -->
             <job-data-map>
                 <entry>
                     <key>Concurrency</key>
@@ -20,15 +15,14 @@
                 </entry>
             </job-data-map>
         </job>
-        <trigger>
-            <cron>
-                <name>SampleJob-Trigger</name>
-                <group>CRON</group>
-                <job-name>SampleJob</job-name>
-                <job-group>DEFAULT</job-group>
-                <cron-expression>0/45 * * * * ?</cron-expression>
-            </cron>
-        </trigger>
+<!--         <trigger> -->
+<!--             <cron> -->
+<!--                 <name>SampleJob-Trigger</name> -->
+<!--                 <group>CRON</group> -->
+<!--                 <job-name>SampleJob</job-name> -->
+<!--                 <cron-expression>0/45 * * * * ?</cron-expression> -->
+<!--             </cron> -->
+<!--         </trigger> -->
 
     </schedule>
     

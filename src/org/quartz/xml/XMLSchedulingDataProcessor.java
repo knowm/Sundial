@@ -373,6 +373,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
      * @see #processFileAndScheduleJobs(String, Scheduler, boolean)
      */
     protected String getSystemIdForFileName(String fileName) {
+
         InputStream fileInputStream = null;
         try {
             String urlPath = null;
@@ -588,14 +589,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             String jobGroup = getTrimmedToNullString(xpath, "q:group", jobDetailNode);
             String jobDescription = getTrimmedToNullString(xpath, "q:description", jobDetailNode);
             String jobClassName = getTrimmedToNullString(xpath, "q:job-class", jobDetailNode);
-            t = getTrimmedToNullString(xpath, "q:durability", jobDetailNode);
-            boolean jobDurability = (t != null) && t.equals("true");
-            t = getTrimmedToNullString(xpath, "q:recover", jobDetailNode);
-            boolean jobRecoveryRequested = (t != null) && t.equals("true");
-
             Class jobClass = classLoadHelper.loadClass(jobClassName);
 
-            JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroup).withDescription(jobDescription).storeDurably(jobDurability).requestRecovery(jobRecoveryRequested).build();
+            JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroup).withDescription(jobDescription).build();
 
             NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", jobDetailNode, XPathConstants.NODESET);
 
