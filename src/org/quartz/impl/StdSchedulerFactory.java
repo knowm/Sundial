@@ -41,37 +41,18 @@ import org.quartz.core.QuartzScheduler;
 import org.quartz.core.QuartzSchedulerResources;
 import org.quartz.core.StandardJobRunShellFactory;
 import org.quartz.impl.matchers.EverythingMatcher;
+import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.simpl.SimpleThreadPool;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.JobStore;
-import org.quartz.spi.SchedulerPlugin;
 import org.quartz.utils.PropertiesParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * An implementation of <code>{@link org.quartz.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code> instance based on the contents of a <code>Properties</code> file.
- * </p>
- * <p>
- * By default a properties file named "quartz.properties" is loaded from the 'current working directory'. If that fails, then the "quartz.properties" file located (as a resource) in the org/quartz package is loaded. If you wish to use a file other
- * than these defaults, you must define the system property 'org.quartz.properties' to point to the file you want.
- * </p>
- * <p>
- * Alternatively, you can explicitly initialize the factory by calling one of the <code>initialize(xx)</code> methods before calling <code>getScheduler()</code>.
- * </p>
- * <p>
- * See the sample properties files that are distributed with Quartz for information about the various settings available within the file. Full configuration documentation can be found at http://www.quartz-scheduler.org/docs/configuration/index.html
- * </p>
- * <p>
- * Instances of the specified <code>{@link org.quartz.spi.JobStore}</code>, <code>{@link org.quartz.spi.ThreadPool}</code>, and other SPI classes will be created by name, and then any additional properties specified for them in the config file will
- * be set on the instance by calling an equivalent 'set' method. For example if the properties file contains the property 'org.quartz.jobStore.myProp = 10' then after the JobStore class has been instantiated, the method 'setMyProp()' will be called
- * on it. Type conversion to primitive Java types (int, long, float, double, boolean, and String) are performed before calling the property's setter method.
- * </p>
- * <p>
- * One property can reference another property's value by specifying a value following the convention of "$@other.property.name", for example, to reference the scheduler's instance name as the value for some other property, you would use
- * "$@org.quartz.scheduler.instanceName".
+ * An implementation of <code>{@link org.quartz.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code> instance.
  * </p>
  * 
  * @author James House
@@ -97,9 +78,9 @@ public class StdSchedulerFactory {
 
     public static final String PROP_SCHED_CONTEXT_PREFIX = "org.quartz.context.key";
 
-    public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
+    // public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
 
-    public static final String PROP_PLUGIN_CLASS = "class";
+    // public static final String PROP_PLUGIN_CLASS = "class";
 
     public static final String PROP_JOB_LISTENER_PREFIX = "org.quartz.jobListener";
 
@@ -319,33 +300,38 @@ public class StdSchedulerFactory {
         // Set up any SchedulerPlugins
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] pluginNames = mPropertiesParser.getPropertyGroups(PROP_PLUGIN_PREFIX);
-        SchedulerPlugin[] plugins = new SchedulerPlugin[pluginNames.length];
-        for (int i = 0; i < pluginNames.length; i++) {
-            Properties pp = mPropertiesParser.getPropertyGroup(PROP_PLUGIN_PREFIX + "." + pluginNames[i], true);
+        XMLSchedulingDataProcessorPlugin lXMLSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
+        lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(true);
+        lXMLSchedulingDataProcessorPlugin.setFileNames("jobs.xml");
+        lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
 
-            String plugInClass = pp.getProperty(PROP_PLUGIN_CLASS, null);
-
-            if (plugInClass == null) {
-                initException = new SchedulerException("SchedulerPlugin class not specified for plugin '" + pluginNames[i] + "'");
-                throw initException;
-            }
-            SchedulerPlugin plugin = null;
-            try {
-                plugin = (SchedulerPlugin) loadHelper.loadClass(plugInClass).newInstance();
-            } catch (Exception e) {
-                initException = new SchedulerException("SchedulerPlugin class '" + plugInClass + "' could not be instantiated.", e);
-                throw initException;
-            }
-            try {
-                setBeanProps(plugin, pp);
-            } catch (Exception e) {
-                initException = new SchedulerException("JobStore SchedulerPlugin '" + plugInClass + "' props could not be configured.", e);
-                throw initException;
-            }
-
-            plugins[i] = plugin;
-        }
+        // String[] pluginNames = mPropertiesParser.getPropertyGroups(PROP_PLUGIN_PREFIX);
+        // SchedulerPlugin[] plugins = new SchedulerPlugin[pluginNames.length];
+        // for (int i = 0; i < pluginNames.length; i++) {
+        // Properties pp = mPropertiesParser.getPropertyGroup(PROP_PLUGIN_PREFIX + "." + pluginNames[i], true);
+        //
+        // String plugInClass = pp.getProperty(PROP_PLUGIN_CLASS, null);
+        //
+        // if (plugInClass == null) {
+        // initException = new SchedulerException("SchedulerPlugin class not specified for plugin '" + pluginNames[i] + "'");
+        // throw initException;
+        // }
+        // SchedulerPlugin plugin = null;
+        // try {
+        // plugin = (SchedulerPlugin) loadHelper.loadClass(plugInClass).newInstance();
+        // } catch (Exception e) {
+        // initException = new SchedulerException("SchedulerPlugin class '" + plugInClass + "' could not be instantiated.", e);
+        // throw initException;
+        // }
+        // try {
+        // setBeanProps(plugin, pp);
+        // } catch (Exception e) {
+        // initException = new SchedulerException("JobStore SchedulerPlugin '" + plugInClass + "' props could not be configured.", e);
+        // throw initException;
+        // }
+        //
+        // plugins[i] = plugin;
+        // }
 
         // Set up any JobListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -450,9 +436,7 @@ public class StdSchedulerFactory {
             rsrcs.setJobStore(jobstore);
 
             // add plugins
-            for (int i = 0; i < plugins.length; i++) {
-                rsrcs.addSchedulerPlugin(plugins[i]);
-            }
+            rsrcs.addSchedulerPlugin(lXMLSchedulingDataProcessorPlugin);
 
             mQuartzScheduler = new QuartzScheduler(rsrcs);
             qsInited = true;
@@ -463,9 +447,7 @@ public class StdSchedulerFactory {
             // }
 
             // Initialize plugins now that we have a Scheduler instance.
-            for (int i = 0; i < plugins.length; i++) {
-                plugins[i].initialize(pluginNames[i], mQuartzScheduler);
-            }
+            lXMLSchedulingDataProcessorPlugin.initialize("lXMLSchedulingDataProcessorPlugin", mQuartzScheduler);
 
             // add listeners
             for (int i = 0; i < jobListeners.length; i++) {
