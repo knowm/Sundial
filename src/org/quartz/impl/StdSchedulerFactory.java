@@ -35,7 +35,6 @@ import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerConfigException;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.TriggerListener;
 import org.quartz.core.JobRunShellFactory;
 import org.quartz.core.QuartzScheduler;
@@ -80,17 +79,11 @@ import org.slf4j.LoggerFactory;
  * @author Mohammad Rezaei
  * @author timmolter
  */
-public class StdSchedulerFactory implements SchedulerFactory {
+public class StdSchedulerFactory {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    public static final String PROP_SCHED_THREAD_NAME = "org.quartz.scheduler.threadName";
-
-    public static final String PROP_SCHED_BATCH_TIME_WINDOW = "org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow";
-
-    public static final String PROP_SCHED_MAX_BATCH_SIZE = "org.quartz.scheduler.batchTriggerAcquisitionMaxCount";
 
     public static final String PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON = "org.quartz.scheduler.makeSchedulerThreadDaemon";
 
@@ -98,33 +91,11 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_SCHED_CLASS_LOAD_HELPER_CLASS = "org.quartz.scheduler.classLoadHelper.class";
 
-    // public static final String PROP_SCHED_JOB_FACTORY_CLASS = "org.quartz.scheduler.jobFactory.class";
-    //
-    // public static final String PROP_SCHED_JOB_FACTORY_PREFIX = "org.quartz.scheduler.jobFactory";
-
     public static final String PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN = "org.quartz.scheduler.interruptJobsOnShutdown";
 
     public static final String PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT = "org.quartz.scheduler.interruptJobsOnShutdownWithWait";
 
     public static final String PROP_SCHED_CONTEXT_PREFIX = "org.quartz.context.key";
-
-    public static final String PROP_JOB_STORE_PREFIX = "org.quartz.jobStore";
-
-    public static final String PROP_JOB_STORE_LOCK_HANDLER_PREFIX = PROP_JOB_STORE_PREFIX + ".lockHandler";
-
-    public static final String PROP_JOB_STORE_LOCK_HANDLER_CLASS = PROP_JOB_STORE_LOCK_HANDLER_PREFIX + ".class";
-
-    public static final String PROP_TABLE_PREFIX = "tablePrefix";
-
-    public static final String PROP_SCHED_NAME = "schedName";
-
-    public static final String PROP_JOB_STORE_CLASS = "org.quartz.jobStore.class";
-
-    public static final String PROP_JOB_STORE_USE_PROP = "org.quartz.jobStore.useProperties";
-
-    public static final String PROP_DATASOURCE_PREFIX = "org.quartz.dataSource";
-
-    public static final String PROP_CONNECTION_PROVIDER_CLASS = "connectionProvider.class";
 
     public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
 
@@ -135,8 +106,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
     public static final String PROP_TRIGGER_LISTENER_PREFIX = "org.quartz.triggerListener";
 
     public static final String PROP_LISTENER_CLASS = "class";
-
-    public static final String DEFAULT_INSTANCE_ID = "NON_CLUSTERED";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -152,6 +121,20 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     QuartzScheduler mQuartzScheduler = null;
 
+    private int mThreadPoolSize = 10; // default size is 10
+
+    /**
+     * @param pThreadPoolSize
+     * @return Returns a handle to the Scheduler produced by this factory. Initialized with given pThreadPoolSize
+     * @throws SchedulerException
+     */
+    public Scheduler getScheduler(int pThreadPoolSize) throws SchedulerException {
+
+        mThreadPoolSize = pThreadPoolSize;
+
+        return getScheduler();
+    }
+
     /**
      * <p>
      * Returns a handle to the Scheduler produced by this factory.
@@ -160,7 +143,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
      * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be called by this method.
      * </p>
      */
-    @Override
     public Scheduler getScheduler() throws SchedulerException {
 
         if (mQuartzScheduler != null) {
@@ -287,27 +269,15 @@ public class StdSchedulerFactory implements SchedulerFactory {
         SimpleThreadPool threadpool = null;
         Properties tProps = null;
         String classLoadHelperClass;
-        String jobFactoryClass;
 
         // Get Scheduler Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        // String schedName = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
-
-        String threadName = mPropertiesParser.getStringProperty(PROP_SCHED_THREAD_NAME, "QuartzSchedulerThread");
-
-        // String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
-
         classLoadHelperClass = mPropertiesParser.getStringProperty(PROP_SCHED_CLASS_LOAD_HELPER_CLASS, "org.quartz.simpl.CascadingClassLoadHelper");
-
-        // jobFactoryClass = mPropertiesParser.getStringProperty(PROP_SCHED_JOB_FACTORY_CLASS, null);
 
         boolean makeSchedulerThreadDaemon = mPropertiesParser.getBooleanProperty(PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON);
 
         boolean threadsInheritInitalizersClassLoader = mPropertiesParser.getBooleanProperty(PROP_SCHED_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
-
-        long batchTimeWindow = mPropertiesParser.getLongProperty(PROP_SCHED_BATCH_TIME_WINDOW, 0L);
-        int maxBatchSize = mPropertiesParser.getIntProperty(PROP_SCHED_MAX_BATCH_SIZE, 1);
 
         boolean interruptJobsOnShutdown = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
         boolean interruptJobsOnShutdownWithWait = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
@@ -323,23 +293,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
         }
         loadHelper.initialize();
 
-        // JobFactory jobFactory = null;
-        // if (jobFactoryClass != null) {
-        // try {
-        // jobFactory = (JobFactory) loadHelper.loadClass(jobFactoryClass).newInstance();
-        // } catch (Exception e) {
-        // throw new SchedulerConfigException("Unable to instantiate JobFactory class: " + e.getMessage(), e);
-        // }
-        //
-        // tProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_JOB_FACTORY_PREFIX, true);
-        // try {
-        // setBeanProps(jobFactory, tProps);
-        // } catch (Exception e) {
-        // initException = new SchedulerException("JobFactory class '" + jobFactoryClass + "' props could not be configured.", e);
-        // throw initException;
-        // }
-        // }
-
         // Setup SimpleThreadPool
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -349,30 +302,17 @@ public class StdSchedulerFactory implements SchedulerFactory {
             initException = new SchedulerException("SimpleThreadPool could not be instantiated.", e);
             throw initException;
         }
-        threadpool.setThreadCount(10);
+        threadpool.setThreadCount(mThreadPoolSize);
 
-        // Get JobStore Properties
+        // Setup RAMJobStore
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        String jsClass = mPropertiesParser.getStringProperty(PROP_JOB_STORE_CLASS, RAMJobStore.class.getName());
-
-        if (jsClass == null) {
-            initException = new SchedulerException("JobStore class not specified. ");
-            throw initException;
-        }
+        //
 
         try {
-            jobstore = (JobStore) loadHelper.loadClass(jsClass).newInstance();
+            // jobstore = (JobStore) loadHelper.loadClass(jsClass).newInstance();
+            jobstore = new RAMJobStore();
         } catch (Exception e) {
-            initException = new SchedulerException("JobStore class '" + jsClass + "' could not be instantiated.", e);
-            throw initException;
-        }
-
-        tProps = mPropertiesParser.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
-        try {
-            setBeanProps(jobstore, tProps);
-        } catch (Exception e) {
-            initException = new SchedulerException("JobStore class '" + jsClass + "' props could not be configured.", e);
+            initException = new SchedulerException("RAMJobStore could not be instantiated.", e);
             throw initException;
         }
 
@@ -488,12 +428,12 @@ public class StdSchedulerFactory implements SchedulerFactory {
             jrsf = new StandardJobRunShellFactory();
 
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
-            rsrcs.setThreadName(threadName);
+            rsrcs.setThreadName("Quartz Scheduler Thread");
             rsrcs.setJobRunShellFactory(jrsf);
             rsrcs.setMakeSchedulerThreadDaemon(makeSchedulerThreadDaemon);
             rsrcs.setThreadsInheritInitializersClassLoadContext(threadsInheritInitalizersClassLoader);
-            rsrcs.setBatchTimeWindow(batchTimeWindow);
-            rsrcs.setMaxBatchSize(maxBatchSize);
+            rsrcs.setBatchTimeWindow(0L);
+            rsrcs.setMaxBatchSize(1);
             rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
             rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
 

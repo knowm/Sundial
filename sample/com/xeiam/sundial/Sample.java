@@ -35,7 +35,7 @@ public class Sample {
         try {
 
             System.out.println("Getting scheduler.");
-            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler(5);
             System.out.println("Starting scheduler.");
             scheduler.start();
             System.out.println("Scheduler started.");
