@@ -54,7 +54,6 @@ import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.quartz.UnableToInterruptJobException;
-import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.simpl.SimpleJobFactory;
@@ -173,7 +172,7 @@ public class QuartzScheduler implements Scheduler {
      * 
      * @see QuartzSchedulerResources
      */
-    public QuartzScheduler(QuartzSchedulerResources pQuartzSchedulerResources, long idleWaitTime) throws SchedulerException {
+    public QuartzScheduler(QuartzSchedulerResources pQuartzSchedulerResources) throws SchedulerException {
 
         mQuartzSchedulerResources = pQuartzSchedulerResources;
         if (pQuartzSchedulerResources.getJobStore() instanceof JobListener) {
@@ -181,9 +180,6 @@ public class QuartzScheduler implements Scheduler {
         }
 
         mQuartzSchedulerThread = new QuartzSchedulerThread(this, pQuartzSchedulerResources);
-        if (idleWaitTime > 0) {
-            mQuartzSchedulerThread.setIdleWaitTime(idleWaitTime);
-        }
 
         jobMgr = new ExecutingJobsManager();
         addInternalJobListener(jobMgr);
@@ -201,7 +197,7 @@ public class QuartzScheduler implements Scheduler {
 
         getLog().info(
                 "Scheduler meta-data: "
-                        + (new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(),
+                        + (new SchedulerMetaData(getSchedulerInstanceId(), getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(),
                                 supportsPersistence(), isClustered(), getThreadPoolClass(), getThreadPoolSize(), getVersion())).toString());
     }
 
@@ -235,16 +231,6 @@ public class QuartzScheduler implements Scheduler {
 
     /**
      * <p>
-     * Returns the name of the <code>QuartzScheduler</code>.
-     * </p>
-     */
-    @Override
-    public String getSchedulerName() {
-        return mQuartzSchedulerResources.getName();
-    }
-
-    /**
-     * <p>
      * Returns the instance Id of the <code>QuartzScheduler</code>.
      * </p>
      */
@@ -260,7 +246,7 @@ public class QuartzScheduler implements Scheduler {
      */
     public ThreadGroup getSchedulerThreadGroup() {
         if (threadGroup == null) {
-            threadGroup = new ThreadGroup("QuartzScheduler:" + getSchedulerName());
+            threadGroup = new ThreadGroup("QuartzScheduler");
             if (mQuartzSchedulerResources.getMakeSchedulerThreadDaemon()) {
                 threadGroup.setDaemon(true);
             }
@@ -323,7 +309,7 @@ public class QuartzScheduler implements Scheduler {
 
         mQuartzSchedulerThread.togglePause(false);
 
-        getLog().info("Scheduler " + mQuartzSchedulerResources.getUniqueIdentifier() + " started.");
+        getLog().info("Scheduler started.");
 
         notifySchedulerListenersStarted();
     }
@@ -364,7 +350,7 @@ public class QuartzScheduler implements Scheduler {
     public void standby() {
 
         mQuartzSchedulerThread.togglePause(true);
-        getLog().info("Scheduler " + mQuartzSchedulerResources.getUniqueIdentifier() + " paused.");
+        getLog().info("Scheduler paused.");
         notifySchedulerListenersInStandbyMode();
     }
 
@@ -438,7 +424,7 @@ public class QuartzScheduler implements Scheduler {
 
         shuttingDown = true;
 
-        getLog().info("Scheduler " + mQuartzSchedulerResources.getUniqueIdentifier() + " shutting down.");
+        getLog().info("Scheduler  shutting down.");
 
         standby();
 
@@ -487,11 +473,9 @@ public class QuartzScheduler implements Scheduler {
 
         notifySchedulerListenersShutdown();
 
-        SchedulerRepository.getInstance().remove(mQuartzSchedulerResources.getName());
-
         holdToPreventGC.clear();
 
-        getLog().info("Scheduler " + mQuartzSchedulerResources.getUniqueIdentifier() + " shutdown complete.");
+        getLog().info("Scheduler shutdown complete.");
     }
 
     /**

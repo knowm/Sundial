@@ -30,8 +30,6 @@ public class SchedulerMetaData implements java.io.Serializable {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private String schedName;
-
     private String schedInst;
 
     private Class schedClass;
@@ -62,9 +60,8 @@ public class SchedulerMetaData implements java.io.Serializable {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public SchedulerMetaData(String schedName, String schedInst, Class schedClass, boolean started, boolean isInStandbyMode, boolean shutdown, Date startTime, int numJobsExec, Class jsClass, boolean jsPersistent,
-            boolean jsClustered, Class tpClass, int tpSize, String version) {
-        this.schedName = schedName;
+    public SchedulerMetaData(String schedInst, Class schedClass, boolean started, boolean isInStandbyMode, boolean shutdown, Date startTime, int numJobsExec, Class jsClass, boolean jsPersistent, boolean jsClustered,
+            Class tpClass, int tpSize, String version) {
         this.schedInst = schedInst;
         this.schedClass = schedClass;
         this.started = started;
@@ -83,15 +80,6 @@ public class SchedulerMetaData implements java.io.Serializable {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    /**
-     * <p>
-     * Returns the name of the <code>Scheduler</code>.
-     * </p>
-     */
-    public String getSchedulerName() {
-        return schedName;
-    }
 
     /**
      * <p>
@@ -260,7 +248,6 @@ public class SchedulerMetaData implements java.io.Serializable {
         str.append(getVersion());
         str.append(") '");
 
-        str.append(getSchedulerName());
         str.append("' with instanceId '");
         str.append(getSchedulerInstanceId());
         str.append("'\n");

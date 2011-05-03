@@ -57,7 +57,7 @@ public class DefaultJobScheduler {
 
         Scheduler scheduler = null;
         try {
-            scheduler = new StdSchedulerFactory().getScheduler("MyScheduler");
+            scheduler = new StdSchedulerFactory().getScheduler();
 
         } catch (SchedulerException e) {
             logger.error("COULD NOT OBTAIN REFERENCE TO QUARTZ SCHEDULER!!!" + e);

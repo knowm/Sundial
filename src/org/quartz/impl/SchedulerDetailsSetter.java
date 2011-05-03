@@ -4,17 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.quartz.SchedulerException;
 
 /**
- * This utility calls methods reflectively on the given objects even though the
- * methods are likely on a proper interface (ThreadPool, JobStore, etc). The
- * motivation is to be tolerant of older implementations that have not been
- * updated for the changes in the interfaces (eg. LocalTaskExecutorThreadPool in
- * spring quartz helpers)
- *
+ * This utility calls methods reflectively on the given objects even though the methods are likely on a proper interface (ThreadPool, JobStore, etc). The motivation is to be tolerant of older implementations that have not been updated for the changes
+ * in the interfaces (eg. LocalTaskExecutorThreadPool in spring quartz helpers)
+ * 
  * @author teck
  */
 class SchedulerDetailsSetter {
@@ -25,14 +22,11 @@ class SchedulerDetailsSetter {
         //
     }
 
-    static void setDetails(Object target, String schedulerName,
-            String schedulerId) throws SchedulerException {
-        set(target, "setInstanceName", schedulerName);
+    static void setDetails(Object target, String schedulerId) throws SchedulerException {
         set(target, "setInstanceId", schedulerId);
     }
 
-    private static void set(Object target, String method, String value)
-            throws SchedulerException {
+    private static void set(Object target, String method, String value) throws SchedulerException {
         final Method setter;
 
         try {
@@ -42,17 +36,14 @@ class SchedulerDetailsSetter {
             return;
         } catch (NoSuchMethodException e) {
             // This probably won't happen since the interface has the method
-            LOGGER.warn(target.getClass().getName()
-                    + " does not contain public method " + method + "(String)");
+            LOGGER.warn(target.getClass().getName() + " does not contain public method " + method + "(String)");
             return;
         }
 
         if (Modifier.isAbstract(setter.getModifiers())) {
             // expected if method not implemented (but is present on
             // interface)
-            LOGGER.warn(target.getClass().getName()
-                    + " does not implement " + method
-                    + "(String)");
+            LOGGER.warn(target.getClass().getName() + " does not implement " + method + "(String)");
             return;
         }
 

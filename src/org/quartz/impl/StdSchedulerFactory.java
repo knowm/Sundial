@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -89,8 +88,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static final String PROP_SCHED_INSTANCE_NAME = "org.quartz.scheduler.instanceName";
-
     public static final String PROP_SCHED_INSTANCE_ID = "org.quartz.scheduler.instanceId";
 
     public static final String PROP_SCHED_THREAD_NAME = "org.quartz.scheduler.threadName";
@@ -100,8 +97,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
     public static final String PROP_SCHED_MAX_BATCH_SIZE = "org.quartz.scheduler.batchTriggerAcquisitionMaxCount";
 
     public static final String PROP_SCHED_WRAP_JOB_IN_USER_TX = "org.quartz.scheduler.wrapJobExecutionInUserTransaction";
-
-    public static final String PROP_SCHED_IDLE_WAIT_TIME = "org.quartz.scheduler.idleWaitTime";
 
     public static final String PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON = "org.quartz.scheduler.makeSchedulerThreadDaemon";
 
@@ -165,6 +160,8 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    QuartzScheduler mQuartzScheduler = null;
+
     /**
      * <p>
      * Returns a handle to the Scheduler produced by this factory.
@@ -176,25 +173,15 @@ public class StdSchedulerFactory implements SchedulerFactory {
     @Override
     public Scheduler getScheduler() throws SchedulerException {
 
+        if (mQuartzScheduler != null) {
+            return mQuartzScheduler;
+        }
+
         if (mPropertiesParser == null) {
             initialize();
         }
 
-        SchedulerRepository schedRep = SchedulerRepository.getInstance();
-
-        Scheduler sched = schedRep.lookup(getSchedulerName());
-
-        if (sched != null) {
-            if (sched.isShutdown()) {
-                schedRep.remove(getSchedulerName());
-            } else {
-                return sched;
-            }
-        }
-
-        sched = instantiate();
-
-        return sched;
+        return instantiate();
     }
 
     /**
@@ -308,30 +295,22 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         JobStore jobstore = null;
         ThreadPool threadpool = null;
-        QuartzScheduler lQuartzScheduler = null;
         Properties tProps = null;
-        boolean wrapJobInTx = false;
-        long idleWaitTime = -1;
         String classLoadHelperClass;
         String jobFactoryClass;
-
-        SchedulerRepository schedRep = SchedulerRepository.getInstance();
 
         // Get Scheduler Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String schedName = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
+        // String schedName = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
 
-        String threadName = mPropertiesParser.getStringProperty(PROP_SCHED_THREAD_NAME, schedName + "_QuartzSchedulerThread");
+        String threadName = mPropertiesParser.getStringProperty(PROP_SCHED_THREAD_NAME, "QuartzSchedulerThread");
 
         String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
 
         classLoadHelperClass = mPropertiesParser.getStringProperty(PROP_SCHED_CLASS_LOAD_HELPER_CLASS, "org.quartz.simpl.CascadingClassLoadHelper");
-        wrapJobInTx = mPropertiesParser.getBooleanProperty(PROP_SCHED_WRAP_JOB_IN_USER_TX, wrapJobInTx);
 
         jobFactoryClass = mPropertiesParser.getStringProperty(PROP_SCHED_JOB_FACTORY_CLASS, null);
-
-        idleWaitTime = mPropertiesParser.getLongProperty(PROP_SCHED_IDLE_WAIT_TIME, idleWaitTime);
 
         boolean makeSchedulerThreadDaemon = mPropertiesParser.getBooleanProperty(PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON);
 
@@ -412,7 +391,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw initException;
         }
 
-        SchedulerDetailsSetter.setDetails(jobstore, schedName, schedInstId);
+        SchedulerDetailsSetter.setDetails(jobstore, schedInstId);
 
         tProps = mPropertiesParser.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
         try {
@@ -534,7 +513,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             jrsf = new StandardJobRunShellFactory();
 
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
-            rsrcs.setName(schedName);
             rsrcs.setThreadName(threadName);
             rsrcs.setInstanceId(schedInstId);
             rsrcs.setJobRunShellFactory(jrsf);
@@ -545,11 +523,11 @@ public class StdSchedulerFactory implements SchedulerFactory {
             rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
             rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
 
-            SchedulerDetailsSetter.setDetails(threadpool, schedName, schedInstId);
+            SchedulerDetailsSetter.setDetails(threadpool, schedInstId);
 
             rsrcs.setThreadPool(threadpool);
             if (threadpool instanceof SimpleThreadPool) {
-                ((SimpleThreadPool) threadpool).setThreadNamePrefix(schedName + "_Worker");
+                ((SimpleThreadPool) threadpool).setThreadNamePrefix("Quartz_Scheduler_Worker");
                 if (threadsInheritInitalizersClassLoader) {
                     ((SimpleThreadPool) threadpool).setThreadsInheritContextClassLoaderOfInitializingThread(threadsInheritInitalizersClassLoader);
                 }
@@ -564,73 +542,67 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 rsrcs.addSchedulerPlugin(plugins[i]);
             }
 
-            lQuartzScheduler = new QuartzScheduler(rsrcs, idleWaitTime);
+            mQuartzScheduler = new QuartzScheduler(rsrcs);
             qsInited = true;
 
             // set job factory if specified
             if (jobFactory != null) {
-                lQuartzScheduler.setJobFactory(jobFactory);
+                mQuartzScheduler.setJobFactory(jobFactory);
             }
 
             // Initialize plugins now that we have a Scheduler instance.
             for (int i = 0; i < plugins.length; i++) {
-                plugins[i].initialize(pluginNames[i], lQuartzScheduler);
+                plugins[i].initialize(pluginNames[i], mQuartzScheduler);
             }
 
             // add listeners
             for (int i = 0; i < jobListeners.length; i++) {
-                lQuartzScheduler.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
+                mQuartzScheduler.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
             }
             for (int i = 0; i < triggerListeners.length; i++) {
-                lQuartzScheduler.getListenerManager().addTriggerListener(triggerListeners[i], EverythingMatcher.allTriggers());
+                mQuartzScheduler.getListenerManager().addTriggerListener(triggerListeners[i], EverythingMatcher.allTriggers());
             }
 
             // set scheduler context data...
             for (Object key : schedCtxtProps.keySet()) {
                 String val = schedCtxtProps.getProperty((String) key);
 
-                lQuartzScheduler.getContext().put(key, val);
+                mQuartzScheduler.getContext().put(key, val);
             }
 
             // fire up job store, and runshell factory
 
             jobstore.setInstanceId(schedInstId);
-            jobstore.setInstanceName(schedName);
-            jobstore.initialize(loadHelper, lQuartzScheduler.getSchedulerSignaler());
+            jobstore.initialize(loadHelper, mQuartzScheduler.getSchedulerSignaler());
             jobstore.setThreadPoolSize(threadpool.getPoolSize());
 
-            jrsf.initialize(lQuartzScheduler);
+            jrsf.initialize(mQuartzScheduler);
 
-            lQuartzScheduler.initialize();
+            mQuartzScheduler.initialize();
 
-            logger.info("Quartz scheduler '" + lQuartzScheduler.getSchedulerName() + "' initialized from " + propSrc);
+            logger.info("Quartz scheduler initialized from " + propSrc);
 
-            logger.info("Quartz scheduler version: " + lQuartzScheduler.getVersion());
+            logger.info("Quartz scheduler version: " + mQuartzScheduler.getVersion());
 
-            // prevents the repository from being garbage collected
-            lQuartzScheduler.addNoGCObject(schedRep);
-
-            schedRep.bind(lQuartzScheduler);
-
-            return lQuartzScheduler;
+            return mQuartzScheduler;
 
         } catch (SchedulerException e) {
             if (qsInited) {
-                lQuartzScheduler.shutdown(false);
+                mQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
             throw e;
         } catch (RuntimeException re) {
             if (qsInited) {
-                lQuartzScheduler.shutdown(false);
+                mQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
             throw re;
         } catch (Error re) {
             if (qsInited) {
-                lQuartzScheduler.shutdown(false);
+                mQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
@@ -731,27 +703,4 @@ public class StdSchedulerFactory implements SchedulerFactory {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    private String getSchedulerName() {
-        return mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_NAME, "QuartzScheduler");
-    }
-
-    /**
-     * <p>
-     * Returns a handle to the Scheduler with the given name, if it exists (if it has already been instantiated).
-     * </p>
-     */
-    @Override
-    public Scheduler getScheduler(String schedName) throws SchedulerException {
-        return SchedulerRepository.getInstance().lookup(schedName);
-    }
-
-    /**
-     * <p>
-     * Returns a handle to all known Schedulers (made by any StdSchedulerFactory instance.).
-     * </p>
-     */
-    @Override
-    public Collection<Scheduler> getAllSchedulers() throws SchedulerException {
-        return SchedulerRepository.getInstance().lookupAll();
-    }
 }

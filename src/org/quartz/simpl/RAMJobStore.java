@@ -1553,11 +1553,6 @@ public class RAMJobStore implements JobStore {
     }
 
     @Override
-    public void setInstanceName(String schedName) {
-        //
-    }
-
-    @Override
     public void setThreadPoolSize(final int poolSize) {
         //
     }

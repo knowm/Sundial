@@ -125,11 +125,6 @@ public interface Scheduler {
      */
 
     /**
-     * Returns the name of the <code>Scheduler</code>.
-     */
-    String getSchedulerName() throws SchedulerException;
-
-    /**
      * Returns the instance Id of the <code>Scheduler</code>.
      */
     String getSchedulerInstanceId() throws SchedulerException;
