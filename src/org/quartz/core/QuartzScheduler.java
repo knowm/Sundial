@@ -172,7 +172,7 @@ public class QuartzScheduler {
      * 
      * @see QuartzSchedulerResources
      */
-    public QuartzScheduler(QuartzSchedulerResources resources, long idleWaitTime, long dbRetryInterval) throws SchedulerException {
+    public QuartzScheduler(QuartzSchedulerResources resources, long idleWaitTime) throws SchedulerException {
         this.resources = resources;
         if (resources.getJobStore() instanceof JobListener) {
             addInternalJobListener((JobListener) resources.getJobStore());
@@ -182,9 +182,9 @@ public class QuartzScheduler {
         if (idleWaitTime > 0) {
             this.schedThread.setIdleWaitTime(idleWaitTime);
         }
-        if (dbRetryInterval > 0) {
-            this.schedThread.setDbFailureRetryInterval(dbRetryInterval);
-        }
+        // if (dbRetryInterval > 0) {
+        // this.schedThread.setDbFailureRetryInterval(dbRetryInterval);
+        // }
 
         jobMgr = new ExecutingJobsManager();
         addInternalJobListener(jobMgr);

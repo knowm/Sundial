@@ -93,10 +93,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_SCHED_INSTANCE_ID = "org.quartz.scheduler.instanceId";
 
-    // public static final String PROP_SCHED_INSTANCE_ID_GENERATOR_PREFIX = "org.quartz.scheduler.instanceIdGenerator";
-    //
-    // public static final String PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS = PROP_SCHED_INSTANCE_ID_GENERATOR_PREFIX + ".class";
-
     public static final String PROP_SCHED_THREAD_NAME = "org.quartz.scheduler.threadName";
 
     public static final String PROP_SCHED_BATCH_TIME_WINDOW = "org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow";
@@ -109,7 +105,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_SCHED_IDLE_WAIT_TIME = "org.quartz.scheduler.idleWaitTime";
 
-    public static final String PROP_SCHED_DB_FAILURE_RETRY_INTERVAL = "org.quartz.scheduler.dbFailureRetryInterval";
+    // public static final String PROP_SCHED_DB_FAILURE_RETRY_INTERVAL = "org.quartz.scheduler.dbFailureRetryInterval";
 
     public static final String PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON = "org.quartz.scheduler.makeSchedulerThreadDaemon";
 
@@ -161,10 +157,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String DEFAULT_INSTANCE_ID = "NON_CLUSTERED";
 
-    // public static final String AUTO_GENERATE_INSTANCE_ID = "AUTO";
-    //
-    // public static final String SYSTEM_PROPERTY_AS_INSTANCE_ID = "SYS_PROP";
-
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
@@ -176,20 +168,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
     private PropertiesParser mPropertiesParser;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    // /**
-    // * <p>
-    // * Returns a handle to the default Scheduler, creating it if it does not yet exist.
-    // * </p>
-    // *
-    // * @see #initialize()
-    // */
-    // public static Scheduler getDefaultScheduler() throws SchedulerException {
-    //
-    // StdSchedulerFactory fact = new StdSchedulerFactory();
-    //
-    // return fact.getScheduler();
-    // }
 
     /**
      * <p>
@@ -334,14 +312,12 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         JobStore jobstore = null;
         ThreadPool threadpool = null;
-        QuartzScheduler qs = null;
-        // String instanceIdGeneratorClass = null;
+        QuartzScheduler lQuartzScheduler = null;
         Properties tProps = null;
         String userTXLocation = null;
         boolean wrapJobInTx = false;
-        // boolean autoId = false;
         long idleWaitTime = -1;
-        long dbFailureRetry = -1;
+        // long dbFailureRetry = -1;
         String classLoadHelperClass;
         String jobFactoryClass;
 
@@ -356,14 +332,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
 
-        // if (schedInstId.equals(AUTO_GENERATE_INSTANCE_ID)) {
-        // autoId = true;
-        // instanceIdGeneratorClass = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS, "org.quartz.simpl.SimpleInstanceIdGenerator");
-        // } else if (schedInstId.equals(SYSTEM_PROPERTY_AS_INSTANCE_ID)) {
-        // autoId = true;
-        // instanceIdGeneratorClass = "org.quartz.simpl.SystemPropertyInstanceIdGenerator";
-        // }
-
         userTXLocation = mPropertiesParser.getStringProperty(PROP_SCHED_USER_TX_URL, userTXLocation);
         if (userTXLocation != null && userTXLocation.trim().length() == 0) {
             userTXLocation = null;
@@ -375,7 +343,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         jobFactoryClass = mPropertiesParser.getStringProperty(PROP_SCHED_JOB_FACTORY_CLASS, null);
 
         idleWaitTime = mPropertiesParser.getLongProperty(PROP_SCHED_IDLE_WAIT_TIME, idleWaitTime);
-        dbFailureRetry = mPropertiesParser.getLongProperty(PROP_SCHED_DB_FAILURE_RETRY_INTERVAL, dbFailureRetry);
+        // dbFailureRetry = mPropertiesParser.getLongProperty(PROP_SCHED_DB_FAILURE_RETRY_INTERVAL, dbFailureRetry);
 
         boolean makeSchedulerThreadDaemon = mPropertiesParser.getBooleanProperty(PROP_SCHED_MAKE_SCHEDULER_THREAD_DAEMON);
 
@@ -414,23 +382,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 throw initException;
             }
         }
-
-        // InstanceIdGenerator instanceIdGenerator = null;
-        // if (instanceIdGeneratorClass != null) {
-        // try {
-        // instanceIdGenerator = (InstanceIdGenerator) loadHelper.loadClass(instanceIdGeneratorClass).newInstance();
-        // } catch (Exception e) {
-        // throw new SchedulerConfigException("Unable to instantiate InstanceIdGenerator class: " + e.getMessage(), e);
-        // }
-        //
-        // tProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_INSTANCE_ID_GENERATOR_PREFIX, true);
-        // try {
-        // setBeanProps(instanceIdGenerator, tProps);
-        // } catch (Exception e) {
-        // initException = new SchedulerException("InstanceIdGenerator class '" + instanceIdGeneratorClass + "' props could not be configured.", e);
-        // throw initException;
-        // }
-        // }
 
         // Get ThreadPool Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -594,18 +545,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             jrsf = new StandardJobRunShellFactory();
 
-            // if (autoId) {
-            // try {
-            // schedInstId = DEFAULT_INSTANCE_ID;
-            // if (jobstore.isClustered()) {
-            // schedInstId = instanceIdGenerator.generateInstanceId();
-            // }
-            // } catch (Exception e) {
-            // logger.error("Couldn't generate instance Id!", e);
-            // throw new IllegalStateException("Cannot run without an instance id.");
-            // }
-            // }
-
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
             rsrcs.setName(schedName);
             rsrcs.setThreadName(threadName);
@@ -637,15 +576,15 @@ public class StdSchedulerFactory implements SchedulerFactory {
                 rsrcs.addSchedulerPlugin(plugins[i]);
             }
 
-            qs = new QuartzScheduler(rsrcs, idleWaitTime, dbFailureRetry);
+            lQuartzScheduler = new QuartzScheduler(rsrcs, idleWaitTime);
             qsInited = true;
 
             // Create Scheduler ref...
-            Scheduler scheduler = instantiate(rsrcs, qs);
+            Scheduler scheduler = instantiate(rsrcs, lQuartzScheduler);
 
             // set job factory if specified
             if (jobFactory != null) {
-                qs.setJobFactory(jobFactory);
+                lQuartzScheduler.setJobFactory(jobFactory);
             }
 
             // Initialize plugins now that we have a Scheduler instance.
@@ -655,10 +594,10 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             // add listeners
             for (int i = 0; i < jobListeners.length; i++) {
-                qs.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
+                lQuartzScheduler.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
             }
             for (int i = 0; i < triggerListeners.length; i++) {
-                qs.getListenerManager().addTriggerListener(triggerListeners[i], EverythingMatcher.allTriggers());
+                lQuartzScheduler.getListenerManager().addTriggerListener(triggerListeners[i], EverythingMatcher.allTriggers());
             }
 
             // set scheduler context data...
@@ -672,19 +611,19 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             jobstore.setInstanceId(schedInstId);
             jobstore.setInstanceName(schedName);
-            jobstore.initialize(loadHelper, qs.getSchedulerSignaler());
+            jobstore.initialize(loadHelper, lQuartzScheduler.getSchedulerSignaler());
             jobstore.setThreadPoolSize(threadpool.getPoolSize());
 
             jrsf.initialize(scheduler);
 
-            qs.initialize();
+            lQuartzScheduler.initialize();
 
             logger.info("Quartz scheduler '" + scheduler.getSchedulerName() + "' initialized from " + propSrc);
 
-            logger.info("Quartz scheduler version: " + qs.getVersion());
+            logger.info("Quartz scheduler version: " + lQuartzScheduler.getVersion());
 
             // prevents the repository from being garbage collected
-            qs.addNoGCObject(schedRep);
+            lQuartzScheduler.addNoGCObject(schedRep);
 
             schedRep.bind(scheduler);
 
@@ -692,21 +631,21 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         } catch (SchedulerException e) {
             if (qsInited) {
-                qs.shutdown(false);
+                lQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
             throw e;
         } catch (RuntimeException re) {
             if (qsInited) {
-                qs.shutdown(false);
+                lQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
             throw re;
         } catch (Error re) {
             if (qsInited) {
-                qs.shutdown(false);
+                lQuartzScheduler.shutdown(false);
             } else if (tpInited) {
                 threadpool.shutdown(false);
             }
