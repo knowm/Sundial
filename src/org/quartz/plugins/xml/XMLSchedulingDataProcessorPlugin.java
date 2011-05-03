@@ -33,9 +33,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.TriggerKey;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
@@ -170,7 +170,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
      * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
      * </p>
      * 
-     * @throws org.quartz.SchedulerConfigException if there is an error initializing.
+     * @throws org.quartz.exceptions.SchedulerConfigException if there is an error initializing.
      */
     @Override
     public void initialize(String name, final Scheduler scheduler) throws SchedulerException {

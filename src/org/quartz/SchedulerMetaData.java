@@ -19,6 +19,8 @@ package org.quartz;
 
 import java.util.Date;
 
+import org.quartz.exceptions.SchedulerException;
+
 /**
  * Describes the settings and capabilities of a given <code>{@link Scheduler}</code> instance.
  * 

@@ -26,14 +26,14 @@ import org.quartz.Calendar;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.JobPersistenceException;
-import org.quartz.ObjectAlreadyExistsException;
-import org.quartz.SchedulerConfigException;
-import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerKey;
+import org.quartz.exceptions.JobPersistenceException;
+import org.quartz.exceptions.ObjectAlreadyExistsException;
+import org.quartz.exceptions.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.matchers.GroupMatcher;
 
 /**

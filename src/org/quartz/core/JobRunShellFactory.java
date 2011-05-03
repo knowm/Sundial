@@ -20,8 +20,8 @@ package org.quartz.core;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerConfigException;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**

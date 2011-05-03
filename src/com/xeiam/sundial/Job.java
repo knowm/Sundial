@@ -17,8 +17,8 @@ package com.xeiam.sundial;
 
 import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.UnableToInterruptJobException;
+import org.quartz.exceptions.JobExecutionException;
+import org.quartz.exceptions.UnableToInterruptJobException;
 
 import com.xeiam.sundial.exceptions.JobInterruptException;
 import com.xeiam.sundial.exceptions.RequiredParameterException;

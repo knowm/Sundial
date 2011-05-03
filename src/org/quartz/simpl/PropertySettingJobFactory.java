@@ -28,7 +28,7 @@ import java.util.Map;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.TriggerFiredBundle;
 
 

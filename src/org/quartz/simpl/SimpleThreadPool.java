@@ -19,7 +19,7 @@ package org.quartz.simpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.quartz.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.spi.ThreadPool;
 
 import java.util.Iterator;

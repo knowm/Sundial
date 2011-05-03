@@ -17,7 +17,6 @@
 
 package org.quartz.impl;
 
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -26,6 +25,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
+import org.quartz.exceptions.DisallowConcurrentExecution;
 import org.quartz.utils.ClassUtils;
 
 /**

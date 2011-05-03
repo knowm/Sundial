@@ -1,12 +1,12 @@
 package org.quartz.simpl;
 
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.InstanceIdGenerator;
 
 /**
  * InstanceIdGenerator that will use a {@link SystemPropertyInstanceIdGenerator#SYSTEM_PROPERTY system property}
  * to configure the scheduler.
- * If no value set for the property, a {@link org.quartz.SchedulerException} is thrown
+ * If no value set for the property, a {@link org.quartz.exceptions.SchedulerException} is thrown
  *
  * @author Alex Snaps
  */

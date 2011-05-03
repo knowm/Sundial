@@ -16,7 +16,7 @@
 package com.xeiam.sundial;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**

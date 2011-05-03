@@ -19,9 +19,9 @@ package org.quartz.impl;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.core.JobRunShell;
 import org.quartz.core.JobRunShellFactory;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.TriggerFiredBundle;
 
 /**

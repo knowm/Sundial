@@ -18,6 +18,8 @@
 
 package org.quartz;
 
+import org.quartz.exceptions.UnableToInterruptJobException;
+
 /**
  * The interface to be implemented by <code>{@link Job}s</code> that provide a 
  * mechanism for having their execution interrupted.  It is NOT a requirement

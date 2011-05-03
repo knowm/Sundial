@@ -16,15 +16,16 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
 
 /**
- * An exception that is thrown to indicate that there has been a failure in the
- * scheduler's underlying persistence mechanism.
+ * An exception that is thrown to indicate that there is a misconfiguration of
+ * the <code>SchedulerFactory</code>- or one of the components it
+ * configures.
  * 
  * @author James House
  */
-public class JobPersistenceException extends SchedulerException {
+public class SchedulerConfigException extends SchedulerException {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,10 +40,9 @@ public class JobPersistenceException extends SchedulerException {
      * Create a <code>JobPersistenceException</code> with the given message.
      * </p>
      */
-    public JobPersistenceException(String msg) {
+    public SchedulerConfigException(String msg) {
         super(msg);
     }
-
 
     /**
      * <p>
@@ -50,7 +50,7 @@ public class JobPersistenceException extends SchedulerException {
      * and cause.
      * </p>
      */
-    public JobPersistenceException(String msg, Throwable cause) {
+    public SchedulerConfigException(String msg, Throwable cause) {
         super(msg, cause);
     }
 

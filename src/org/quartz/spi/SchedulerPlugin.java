@@ -18,7 +18,7 @@
 package org.quartz.spi;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerException;
 
 /**
  * <p>
@@ -80,7 +80,7 @@ public interface SchedulerPlugin {
      * @param scheduler
      *          The scheduler to which the plugin is registered.
      * 
-     * @throws org.quartz.SchedulerConfigException
+     * @throws org.quartz.exceptions.SchedulerConfigException
      *           if there is an error initializing.
      */
     void initialize(String name, Scheduler scheduler)

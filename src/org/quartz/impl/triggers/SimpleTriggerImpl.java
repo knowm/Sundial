@@ -24,15 +24,15 @@ import org.quartz.Calendar;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerUtils;
+import org.quartz.exceptions.JobExecutionException;
+import org.quartz.exceptions.SchedulerException;
 
 
 /**

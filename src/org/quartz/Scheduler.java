@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.quartz.Trigger.TriggerState;
+import org.quartz.exceptions.ObjectAlreadyExistsException;
+import org.quartz.exceptions.SchedulerException;
+import org.quartz.exceptions.UnableToInterruptJobException;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.JobFactory;
 import org.quartz.utils.Key;

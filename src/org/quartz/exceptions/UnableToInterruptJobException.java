@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -16,42 +15,36 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
 
 /**
- * An exception that is thrown to indicate that there is a misconfiguration of
- * the <code>SchedulerFactory</code>- or one of the components it
- * configures.
+ * An exception that is thrown to indicate that a call to InterruptableJob.interrupt() failed without interrupting the Job.
  * 
+ * @see org.quartz.InterruptableJob#interrupt()
  * @author James House
  */
-public class SchedulerConfigException extends SchedulerException {
+public class UnableToInterruptJobException extends SchedulerException {
 
     /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
     /**
      * <p>
-     * Create a <code>JobPersistenceException</code> with the given message.
+     * Create a <code>UnableToInterruptJobException</code> with the given message.
      * </p>
      */
-    public SchedulerConfigException(String msg) {
+    public UnableToInterruptJobException(String msg) {
         super(msg);
     }
 
     /**
      * <p>
-     * Create a <code>JobPersistenceException</code> with the given message
-     * and cause.
+     * Create a <code>UnableToInterruptJobException</code> with the given cause.
      * </p>
      */
-    public SchedulerConfigException(String msg, Throwable cause) {
-        super(msg, cause);
+    public UnableToInterruptJobException(Throwable cause) {
+        super(cause);
     }
 
 }

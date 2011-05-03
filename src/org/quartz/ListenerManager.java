@@ -19,6 +19,8 @@ package org.quartz;
 
 import java.util.List;
 
+import org.quartz.exceptions.SchedulerException;
+
 /**
  * Client programs may be interested in the 'listener' interfaces that are
  * available from Quartz. The <code>{@link JobListener}</code> interface

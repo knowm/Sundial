@@ -17,7 +17,7 @@
 
 package org.quartz.spi;
 
-import org.quartz.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerConfigException;
 
 /**
  * <p>

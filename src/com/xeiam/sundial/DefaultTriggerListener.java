@@ -18,9 +18,9 @@ package com.xeiam.sundial;
 import java.util.List;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.TriggerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,7 +16,11 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.Scheduler;
 
 /**
  * An exception that can be thrown by a <code>{@link org.quartz.Job}</code>

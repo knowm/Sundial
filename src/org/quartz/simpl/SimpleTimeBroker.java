@@ -19,7 +19,7 @@ package org.quartz.simpl;
 
 import java.util.Date;
 
-import org.quartz.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.spi.TimeBroker;
 
 /**

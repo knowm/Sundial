@@ -18,6 +18,8 @@
 
 package org.quartz;
 
+import org.quartz.exceptions.SchedulerException;
+
 /**
  * The interface to be implemented by classes that want to be informed of major
  * <code>{@link Scheduler}</code> events.

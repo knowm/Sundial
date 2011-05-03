@@ -19,7 +19,7 @@ package org.quartz.jobs;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.exceptions.JobExecutionException;
 
 /**
  * <p>

@@ -19,11 +19,11 @@
 package org.quartz.impl;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.core.JobRunShellFactory;
 import org.quartz.core.QuartzScheduler;
 import org.quartz.core.QuartzSchedulerResources;
 import org.quartz.core.StandardJobRunShellFactory;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.matchers.EverythingMatcher;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.quartz.simpl.RAMJobStore;
@@ -108,7 +108,6 @@ public class StdSchedulerFactory {
         //
 
         try {
-            // jobstore = (JobStore) loadHelper.loadClass(jsClass).newInstance();
             jobstore = new RAMJobStore();
         } catch (Exception e) {
             initException = new SchedulerException("RAMJobStore could not be instantiated.", e);

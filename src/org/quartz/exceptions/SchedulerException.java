@@ -16,10 +16,12 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
+import org.quartz.Scheduler;
 
 
 /**

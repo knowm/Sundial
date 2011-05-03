@@ -23,10 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerListener;
 import org.quartz.Trigger.CompletedExecutionInstruction;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.matchers.EverythingMatcher;
 import org.quartz.spi.SchedulerPlugin;
 

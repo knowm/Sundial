@@ -15,13 +15,17 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.quartz.Job;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
 
 /**
  * An annotation that marks a {@link Job} class as one that must not have multiple

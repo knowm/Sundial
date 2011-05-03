@@ -21,8 +21,8 @@ import java.util.Iterator;
 
 import org.quartz.JobListener;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.JobDetail;
+import org.quartz.exceptions.JobExecutionException;
 
 /**
  * Holds a List of references to JobListener instances and broadcasts all

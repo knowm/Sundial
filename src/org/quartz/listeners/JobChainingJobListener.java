@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.JobExecutionException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.utils.Key;
 
 /**

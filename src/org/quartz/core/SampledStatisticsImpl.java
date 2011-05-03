@@ -4,10 +4,10 @@ import java.util.Timer;
 
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
 import org.quartz.SchedulerListener;
 import org.quartz.Trigger;
+import org.quartz.exceptions.JobExecutionException;
 import org.quartz.impl.matchers.EverythingMatcher;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.utils.counter.CounterConfig;

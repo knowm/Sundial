@@ -17,10 +17,10 @@ package org.quartz.listeners;
 
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.SchedulerException;
 import org.quartz.SchedulerListener;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
+import org.quartz.exceptions.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

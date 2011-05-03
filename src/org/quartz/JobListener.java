@@ -18,6 +18,8 @@
 
 package org.quartz;
 
+import org.quartz.exceptions.JobExecutionException;
+
 /**
  * The interface to be implemented by classes that want to be informed when a
  * <code>{@link org.quartz.JobDetail}</code> executes. In general,

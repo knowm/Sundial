@@ -18,6 +18,9 @@
 
 package org.quartz;
 
+import org.quartz.exceptions.DisallowConcurrentExecution;
+import org.quartz.exceptions.JobExecutionException;
+
 /**
  * <p>
  * The interface to be implemented by classes which represent a 'job' to be

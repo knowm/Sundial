@@ -19,6 +19,8 @@ package org.quartz;
 
 import java.io.Serializable;
 
+import org.quartz.exceptions.DisallowConcurrentExecution;
+
 /**
  * Conveys the detail properties of a given <code>Job</code> instance. JobDetails are to be created/defined with {@link JobBuilder}.
  * <p>

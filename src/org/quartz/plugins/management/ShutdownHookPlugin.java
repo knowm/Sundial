@@ -18,8 +18,8 @@
 package org.quartz.plugins.management;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerConfigException;
-import org.quartz.SchedulerException;
+import org.quartz.exceptions.SchedulerConfigException;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

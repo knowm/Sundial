@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.quartz.JobListener;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.exceptions.JobExecutionException;
 
 /**
  * A helpful abstract base class for implementors of 

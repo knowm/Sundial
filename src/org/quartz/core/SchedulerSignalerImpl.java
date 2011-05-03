@@ -21,8 +21,8 @@ package org.quartz.core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.quartz.JobKey;
-import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerSignaler;
 
 /**

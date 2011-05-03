@@ -16,17 +16,15 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
 
 /**
- * An exception that is thrown to indicate that a call to 
- * InterruptableJob.interrupt() failed without interrupting the Job.
- * 
- * @see org.quartz.InterruptableJob#interrupt()
+ * An exception that is thrown to indicate that there has been a failure in the
+ * scheduler's underlying persistence mechanism.
  * 
  * @author James House
  */
-public class UnableToInterruptJobException extends SchedulerException {
+public class JobPersistenceException extends SchedulerException {
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,20 +36,22 @@ public class UnableToInterruptJobException extends SchedulerException {
 
     /**
      * <p>
-     * Create a <code>UnableToInterruptJobException</code> with the given message.
+     * Create a <code>JobPersistenceException</code> with the given message.
      * </p>
      */
-    public UnableToInterruptJobException(String msg) {
+    public JobPersistenceException(String msg) {
         super(msg);
     }
-    
+
+
     /**
      * <p>
-     * Create a <code>UnableToInterruptJobException</code> with the given cause.
+     * Create a <code>JobPersistenceException</code> with the given message
+     * and cause.
      * </p>
      */
-    public UnableToInterruptJobException(Throwable cause) {
-        super(cause);
+    public JobPersistenceException(String msg, Throwable cause) {
+        super(msg, cause);
     }
-    
+
 }

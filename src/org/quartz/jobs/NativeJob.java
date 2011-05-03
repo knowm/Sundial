@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+import org.quartz.exceptions.JobExecutionException;
 
 /**
  * <p> Built in job for executing native executables in a separate process.</p> 

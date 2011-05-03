@@ -16,7 +16,12 @@
  * 
  */
 
-package org.quartz;
+package org.quartz.exceptions;
+
+import org.quartz.Calendar;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
 
 /**
  * An exception that is thrown to indicate that an attempt to store a new
