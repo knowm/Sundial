@@ -267,7 +267,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
                     if (isFailOnFileNotFound()) {
                         throw new SchedulerException("File named '" + getFileName() + "' does not exist.");
                     } else {
-                        log.warn("File named '" + getFileName() + "' does not exist.");
+                        log.warn("File named '" + getFileName() + "' does not exist. This is OK if you don't want to use an XML job config file.");
                     }
                 } else {
                     fileFound = true;
