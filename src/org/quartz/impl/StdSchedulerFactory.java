@@ -567,9 +567,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             lQuartzScheduler = new QuartzScheduler(rsrcs, idleWaitTime);
             qsInited = true;
 
-            // // Create Scheduler ref...
-            // Scheduler scheduler = instantiate(rsrcs, lQuartzScheduler);
-
             // set job factory if specified
             if (jobFactory != null) {
                 lQuartzScheduler.setJobFactory(jobFactory);
@@ -640,12 +637,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw re;
         }
     }
-
-    // protected Scheduler instantiate(QuartzSchedulerResources rsrcs, QuartzScheduler qs) {
-    //
-    // Scheduler scheduler = new StdScheduler(qs);
-    // return scheduler;
-    // }
 
     private void setBeanProps(Object obj, Properties props) throws NoSuchMethodException, IllegalAccessException, java.lang.reflect.InvocationTargetException, IntrospectionException, SchedulerConfigException {
 

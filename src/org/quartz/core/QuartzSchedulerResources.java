@@ -38,12 +38,6 @@ public class QuartzSchedulerResources {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static final String CREATE_REGISTRY_NEVER = "never";
-
-    public static final String CREATE_REGISTRY_ALWAYS = "always";
-
-    public static final String CREATE_REGISTRY_AS_NEEDED = "as_needed";
-
     private String name;
 
     private String instanceId;
