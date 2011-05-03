@@ -38,7 +38,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
 
     private boolean cleanShutdown = true;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -75,10 +75,6 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
         cleanShutdown = b;
     }
 
-    protected Logger getLog() {
-        return log;
-    }
-
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
@@ -93,16 +89,16 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
     @Override
     public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
 
-        getLog().info("Registering Quartz shutdown hook.");
+        logger.info("Registering Quartz shutdown hook.");
 
         Thread t = new Thread("Quartz Shutdown-Hook") {
             @Override
             public void run() {
-                getLog().info("Shutting down Quartz...");
+                logger.info("Shutting down Quartz...");
                 try {
                     scheduler.shutdown(isCleanShutdown());
                 } catch (SchedulerException e) {
-                    getLog().info("Error shutting down Quartz: " + e.getMessage(), e);
+                    logger.info("Error shutting down Quartz: " + e.getMessage(), e);
                 }
             }
         };

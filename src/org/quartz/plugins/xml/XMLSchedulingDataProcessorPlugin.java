@@ -24,19 +24,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.quartz.Scheduler;
-import org.quartz.SimpleTrigger;
-import org.quartz.TriggerKey;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.triggers.SimpleTriggerImpl;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.SchedulerPlugin;
@@ -64,31 +54,29 @@ import org.slf4j.LoggerFactory;
  */
 public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
-    private String name;
-    private Scheduler scheduler;
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private String name;
+
+    private Scheduler scheduler;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
     private static final int MAX_JOB_TRIGGER_NAME_LEN = 80;
     private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
-    private static final String FILE_NAME_DELIMITERS = ",";
 
     private boolean failOnFileNotFound = true;
 
-    private String fileNames = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
+    private String mFileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-    // Populated by initialization
-    private Map<String, JobFile> jobFiles = new LinkedHashMap<String, JobFile>();
+    private JobFile mJobFile;
 
     private long scanInterval = 0;
 
     boolean started = false;
 
     protected ClassLoadHelper classLoadHelper = null;
-
-    private Set<String> jobTriggerNameSet = new HashSet<String>();
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,14 +107,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
      * Comma separated list of file names (with paths) to the XML files that should be read.
      */
     public String getFileNames() {
-        return fileNames;
-    }
-
-    /**
-     * The file name (and path) to the XML file that should be read.
-     */
-    public void setFileNames(String fileNames) {
-        this.fileNames = fileNames;
+        return mFileName;
     }
 
     /**
@@ -143,8 +124,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
      * 
      * @param scanInterval The scanInterval to set.
      */
-    public void setScanInterval(long scanInterval) {
-        this.scanInterval = scanInterval * 1000;
+    public void setScanInterval(long pScanInterval) {
+        scanInterval = pScanInterval * 1000;
     }
 
     /**
@@ -174,113 +155,38 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
      */
     @Override
     public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
-        // super.initialize(name, scheduler);
+
         this.name = name;
         this.scheduler = scheduler;
 
         classLoadHelper = new CascadingClassLoadHelper();
         classLoadHelper.initialize();
 
-        log.info("Registering Quartz Job Initialization Plug-in.");
+        mJobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
 
-        // Create JobFile objects
-        StringTokenizer stok = new StringTokenizer(fileNames, FILE_NAME_DELIMITERS);
-        while (stok.hasMoreTokens()) {
-            final String fileName = stok.nextToken();
-            final JobFile jobFile = new JobFile(fileName);
-            jobFiles.put(fileName, jobFile);
-        }
+        log.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
+
     }
 
     @Override
     public void start() {
-        try {
-            if (jobFiles.isEmpty() == false) {
 
-                if (scanInterval > 0) {
-                    getScheduler().getContext().put(JOB_INITIALIZATION_PLUGIN_NAME + '_' + getName(), this);
-                }
+        processFile(mJobFile);
 
-                Iterator iterator = jobFiles.values().iterator();
-                while (iterator.hasNext()) {
-                    JobFile jobFile = (JobFile) iterator.next();
-
-                    if (scanInterval > 0) {
-                        String jobTriggerName = buildJobTriggerName(jobFile.getFileBasename());
-                        TriggerKey tKey = new TriggerKey(jobTriggerName, JOB_INITIALIZATION_PLUGIN_NAME);
-
-                        // remove pre-existing job/trigger, if any
-                        getScheduler().unscheduleJob(tKey);
-
-                        // TODO: convert to use builder
-                        SimpleTriggerImpl trig = (SimpleTriggerImpl) getScheduler().getTrigger(tKey);
-                        trig = new SimpleTriggerImpl();
-                        trig.setName(jobTriggerName);
-                        trig.setGroup(JOB_INITIALIZATION_PLUGIN_NAME);
-                        trig.setStartTime(new Date());
-                        trig.setEndTime(null);
-                        trig.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-                        trig.setRepeatInterval(scanInterval);
-
-                    }
-
-                    processFile(jobFile);
-                }
-            }
-        } catch (SchedulerException se) {
-            log.error("Error starting background-task for watching jobs file.", se);
-        } finally {
-            started = true;
-        }
+        started = true;
     }
 
     /**
-     * Helper method for generating unique job/trigger name for the file scanning jobs (one per FileJob). The unique names are saved in jobTriggerNameSet.
-     */
-    private String buildJobTriggerName(String fileBasename) {
-        // Name w/o collisions will be prefix + _ + filename (with '.' of filename replaced with '_')
-        // For example: JobInitializationPlugin_jobInitializer_myjobs_xml
-        String jobTriggerName = JOB_INITIALIZATION_PLUGIN_NAME + '_' + getName() + '_' + fileBasename.replace('.', '_');
-
-        // If name is too long (DB column is 80 chars), then truncate to max length
-        if (jobTriggerName.length() > MAX_JOB_TRIGGER_NAME_LEN) {
-            jobTriggerName = jobTriggerName.substring(0, MAX_JOB_TRIGGER_NAME_LEN);
-        }
-
-        // Make sure this name is unique in case the same file name under different
-        // directories is being checked, or had a naming collision due to length truncation.
-        // If there is a conflict, keep incrementing a _# suffix on the name (being sure
-        // not to get too long), until we find a unique name.
-        int currentIndex = 1;
-        while (jobTriggerNameSet.add(jobTriggerName) == false) {
-            // If not our first time through, then strip off old numeric suffix
-            if (currentIndex > 1) {
-                jobTriggerName = jobTriggerName.substring(0, jobTriggerName.lastIndexOf('_'));
-            }
-
-            String numericSuffix = "_" + currentIndex++;
-
-            // If the numeric suffix would make the name too long, then make room for it.
-            if (jobTriggerName.length() > (MAX_JOB_TRIGGER_NAME_LEN - numericSuffix.length())) {
-                jobTriggerName = jobTriggerName.substring(0, (MAX_JOB_TRIGGER_NAME_LEN - numericSuffix.length()));
-            }
-
-            jobTriggerName += numericSuffix;
-        }
-
-        return jobTriggerName;
-    }
-
-    /**
-     * Overriden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
+     * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
      */
     @Override
     public void shutdown() {
         // Since we have nothing to do, override base shutdown so don't
-        // get extranious UserTransactions.
+        // get extraneous UserTransactions.
     }
 
     private void processFile(JobFile jobFile) {
+
         if (jobFile == null || !jobFile.getFileFound()) {
             return;
         }
@@ -298,11 +204,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
         }
     }
 
-    public void processFile(String filePath) {
-        processFile(jobFiles.get(filePath));
-    }
-
     class JobFile {
+
         private String fileName;
 
         // These are set by initialize()

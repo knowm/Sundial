@@ -30,6 +30,7 @@ import org.quartz.Trigger;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +43,6 @@ public class DefaultJobScheduler {
 
     /** slf4J logger wrapper */
     static Logger logger = LoggerFactory.getLogger(DefaultJobScheduler.class);
-
-    private final static String KEY_DEFAULT_GROUP = "DEFAULT";
 
     /** global lock */
     private static boolean mGlobalLock = false;
@@ -89,7 +88,7 @@ public class DefaultJobScheduler {
     public static void startJob(String pJobName) {
 
         try {
-            JobKey jobKey = new JobKey(pJobName, KEY_DEFAULT_GROUP);
+            JobKey jobKey = new JobKey(pJobName);
             getScheduler().triggerJob(jobKey);
         } catch (SchedulerException e) {
             logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
@@ -112,7 +111,7 @@ public class DefaultJobScheduler {
                 // logger.debug("value= " + pParams.get(key));
                 lJobDataMap.put(key, pParams.get(key));
             }
-            JobKey jobKey = new JobKey(pJobName, KEY_DEFAULT_GROUP);
+            JobKey jobKey = new JobKey(pJobName);
             getScheduler().triggerJob(jobKey, lJobDataMap);
         } catch (SchedulerException e) {
             logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
@@ -188,7 +187,7 @@ public class DefaultJobScheduler {
 
         List<String> lAllJobNames = new ArrayList<String>();
         try {
-            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(KEY_DEFAULT_GROUP);
+            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
             Set<JobKey> allJobKeys = getScheduler().getJobKeys(groupMatcher);
             for (JobKey jobKey : allJobKeys) {
                 lAllJobNames.add(jobKey.getName());
@@ -210,7 +209,7 @@ public class DefaultJobScheduler {
 
         Map<String, List<Trigger>> lAllJobsMap = new TreeMap<String, List<Trigger>>();
         try {
-            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(KEY_DEFAULT_GROUP);
+            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
             Set<JobKey> allJobKeys = getScheduler().getJobKeys(groupMatcher);
             for (JobKey lJobKey : allJobKeys) {
                 List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(lJobKey);

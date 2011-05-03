@@ -118,8 +118,7 @@ public class StdSchedulerFactory {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         XMLSchedulingDataProcessorPlugin lXMLSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
-        lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(true);
-        lXMLSchedulingDataProcessorPlugin.setFileNames("jobs.xml");
+        lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
         lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
 
         // Set up any JobListeners
@@ -167,7 +166,7 @@ public class StdSchedulerFactory {
             qsInited = true;
 
             // Initialize plugins now that we have a Scheduler instance.
-            lXMLSchedulingDataProcessorPlugin.initialize("lXMLSchedulingDataProcessorPlugin", mQuartzScheduler);
+            lXMLSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", mQuartzScheduler);
 
             // add listeners
             mQuartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
