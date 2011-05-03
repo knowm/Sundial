@@ -225,14 +225,6 @@ public interface Scheduler {
     boolean isShutdown() throws SchedulerException;
 
     /**
-     * Get a <code>SchedulerMetaData</code> object describing the settings and capabilities of the scheduler instance.
-     * <p>
-     * Note that the data returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the meta data values may be different.
-     * </p>
-     */
-    SchedulerMetaData getMetaData() throws SchedulerException;
-
-    /**
      * Return a list of <code>JobExecutionContext</code> objects that represent all currently executing Jobs in this Scheduler instance.
      * <p>
      * This method is not cluster aware. That is, it will only return Jobs currently executing in this Scheduler instance, not across the entire cluster.

@@ -43,7 +43,6 @@ import org.quartz.Matcher;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerContext;
 import org.quartz.SchedulerListener;
-import org.quartz.SchedulerMetaData;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.Trigger.TriggerState;
@@ -194,11 +193,6 @@ public class QuartzScheduler implements Scheduler {
     public void initialize() throws SchedulerException {
 
         this.mQuartzSchedulerThread.start();
-
-        getLog().info(
-                "Scheduler meta-data: "
-                        + (new SchedulerMetaData(getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(), getThreadPoolClass(), getThreadPoolSize(),
-                                getVersion())).toString());
     }
 
     /*
@@ -1946,12 +1940,6 @@ public class QuartzScheduler implements Scheduler {
 
     @Override
     public SchedulerContext getContext() throws SchedulerException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public SchedulerMetaData getMetaData() throws SchedulerException {
         // TODO Auto-generated method stub
         return null;
     }
