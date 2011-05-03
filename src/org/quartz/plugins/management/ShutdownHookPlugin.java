@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This plugin catches the event of the JVM terminating (such as upon a CRTL-C) and tells the scheuler to shutdown.
+ * This plugin catches the event of the JVM terminating (such as upon a CRTL-C) and tells the scheduler to shutdown.
  * 
  * @see org.quartz.Scheduler#shutdown(boolean)
  * @author James House
