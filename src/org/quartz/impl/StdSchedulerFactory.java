@@ -27,11 +27,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerConfigException;
 import org.quartz.SchedulerException;
@@ -73,15 +71,7 @@ public class StdSchedulerFactory {
 
     public static final String PROP_SCHED_CLASS_LOAD_HELPER_CLASS = "org.quartz.scheduler.classLoadHelper.class";
 
-    public static final String PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN = "org.quartz.scheduler.interruptJobsOnShutdown";
-
-    public static final String PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT = "org.quartz.scheduler.interruptJobsOnShutdownWithWait";
-
     public static final String PROP_SCHED_CONTEXT_PREFIX = "org.quartz.context.key";
-
-    public static final String PROP_JOB_LISTENER_PREFIX = "org.quartz.jobListener";
-
-    public static final String PROP_LISTENER_CLASS = "class";
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -255,8 +245,8 @@ public class StdSchedulerFactory {
 
         boolean threadsInheritInitalizersClassLoader = mPropertiesParser.getBooleanProperty(PROP_SCHED_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
 
-        boolean interruptJobsOnShutdown = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
-        boolean interruptJobsOnShutdownWithWait = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
+        // boolean interruptJobsOnShutdown = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN, false);
+        // boolean interruptJobsOnShutdownWithWait = mPropertiesParser.getBooleanProperty(PROP_SCHED_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
 
         Properties schedCtxtProps = mPropertiesParser.getPropertyGroup(PROP_SCHED_CONTEXT_PREFIX, true);
 
@@ -303,38 +293,6 @@ public class StdSchedulerFactory {
         // Set up any JobListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        Class<?>[] strArg = new Class[] { String.class };
-        String[] jobListenerNames = mPropertiesParser.getPropertyGroups(PROP_JOB_LISTENER_PREFIX);
-        JobListener[] jobListeners = new JobListener[jobListenerNames.length];
-        for (int i = 0; i < jobListenerNames.length; i++) {
-            Properties lp = mPropertiesParser.getPropertyGroup(PROP_JOB_LISTENER_PREFIX + "." + jobListenerNames[i], true);
-
-            String listenerClass = lp.getProperty(PROP_LISTENER_CLASS, null);
-
-            if (listenerClass == null) {
-                initException = new SchedulerException("JobListener class not specified for listener '" + jobListenerNames[i] + "'");
-                throw initException;
-            }
-            JobListener listener = null;
-            try {
-                listener = (JobListener) loadHelper.loadClass(listenerClass).newInstance();
-            } catch (Exception e) {
-                initException = new SchedulerException("JobListener class '" + listenerClass + "' could not be instantiated.", e);
-                throw initException;
-            }
-            try {
-                Method nameSetter = listener.getClass().getMethod("setName", strArg);
-                if (nameSetter != null) {
-                    nameSetter.invoke(listener, new Object[] { jobListenerNames[i] });
-                }
-                setBeanProps(listener, lp);
-            } catch (Exception e) {
-                initException = new SchedulerException("JobListener '" + listenerClass + "' props could not be configured.", e);
-                throw initException;
-            }
-            jobListeners[i] = listener;
-        }
-
         // Set up any TriggerListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -358,8 +316,8 @@ public class StdSchedulerFactory {
             rsrcs.setThreadsInheritInitializersClassLoadContext(threadsInheritInitalizersClassLoader);
             rsrcs.setBatchTimeWindow(0L);
             rsrcs.setMaxBatchSize(1);
-            rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
-            rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
+            rsrcs.setInterruptJobsOnShutdown(true);
+            rsrcs.setInterruptJobsOnShutdownWithWait(true);
 
             rsrcs.setThreadPool(threadpool);
             if (threadpool instanceof SimpleThreadPool) {
@@ -383,9 +341,6 @@ public class StdSchedulerFactory {
             lXMLSchedulingDataProcessorPlugin.initialize("lXMLSchedulingDataProcessorPlugin", mQuartzScheduler);
 
             // add listeners
-            for (int i = 0; i < jobListeners.length; i++) {
-                mQuartzScheduler.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
-            }
             mQuartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
 
             // set scheduler context data...
