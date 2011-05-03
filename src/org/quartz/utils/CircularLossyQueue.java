@@ -20,17 +20,14 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * An implementation of a CircularQueue data-structure.
- * When the number of items added exceeds the maximum capacity, items that were
- * added first are lost.
+ * An implementation of a CircularQueue data-structure. When the number of items added exceeds the maximum capacity, items that were added first are lost.
  * 
- * @param <T>
- *            Type of the item's to add in this queue
- * 
+ * @param <T> Type of the item's to add in this queue
  * @author <a href="mailto:asanoujam@terracottatech.com">Abhishek Sanoujam</a>
  * @since 1.7
  */
 public class CircularLossyQueue<T> {
+
     private final AtomicReference<T>[] circularArray;
     private final int maxSize;
 
@@ -60,13 +57,10 @@ public class CircularLossyQueue<T> {
     }
 
     /**
-     * Returns an array of the current elements in the queue. The order of
-     * elements is in reverse order of the order items were added.
+     * Returns an array of the current elements in the queue. The order of elements is in reverse order of the order items were added.
      * 
      * @param type
-     * @return An array containing the current elements in the queue. The first
-     *         element of the array is the tail of the queue and the last
-     *         element is the head of the queue
+     * @return An array containing the current elements in the queue. The first element of the array is the tail of the queue and the last element is the head of the queue
      */
     public T[] toArray(T[] type) {
         System.getProperties();
