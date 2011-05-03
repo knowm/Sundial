@@ -48,7 +48,6 @@ import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.JobFactory;
 import org.quartz.spi.JobStore;
 import org.quartz.spi.SchedulerPlugin;
-import org.quartz.spi.ThreadPool;
 import org.quartz.utils.PropertiesParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,9 +113,9 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
     public static final String PROP_SCHED_CONTEXT_PREFIX = "org.quartz.context.key";
 
-    public static final String PROP_THREAD_POOL_PREFIX = "org.quartz.threadPool";
+    // public static final String PROP_THREAD_POOL_PREFIX = "org.quartz.threadPool";
 
-    public static final String PROP_THREAD_POOL_CLASS = "org.quartz.threadPool.class";
+    // public static final String PROP_THREAD_POOL_CLASS = "org.quartz.threadPool.class";
 
     public static final String PROP_JOB_STORE_PREFIX = "org.quartz.jobStore";
 
@@ -294,7 +293,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         }
 
         JobStore jobstore = null;
-        ThreadPool threadpool = null;
+        SimpleThreadPool threadpool = null;
         Properties tProps = null;
         String classLoadHelperClass;
         String jobFactoryClass;
@@ -350,29 +349,24 @@ public class StdSchedulerFactory implements SchedulerFactory {
             }
         }
 
-        // Get ThreadPool Properties
+        // Setup SimpleThreadPool
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String tpClass = mPropertiesParser.getStringProperty(PROP_THREAD_POOL_CLASS, SimpleThreadPool.class.getName());
-
-        if (tpClass == null) {
-            initException = new SchedulerException("ThreadPool class not specified. ");
-            throw initException;
-        }
-
         try {
-            threadpool = (ThreadPool) loadHelper.loadClass(tpClass).newInstance();
+            threadpool = new SimpleThreadPool();
+            // (ThreadPool) loadHelper.loadClass(tpClass).newInstance();
         } catch (Exception e) {
-            initException = new SchedulerException("ThreadPool class '" + tpClass + "' could not be instantiated.", e);
+            initException = new SchedulerException("SimpleThreadPool could not be instantiated.", e);
             throw initException;
         }
-        tProps = mPropertiesParser.getPropertyGroup(PROP_THREAD_POOL_PREFIX, true);
-        try {
-            setBeanProps(threadpool, tProps);
-        } catch (Exception e) {
-            initException = new SchedulerException("ThreadPool class '" + tpClass + "' props could not be configured.", e);
-            throw initException;
-        }
+        threadpool.setThreadCount(10);
+        // tProps = mPropertiesParser.getPropertyGroup("org.quartz.threadPool", true);
+        // try {
+        // setBeanProps(threadpool, tProps);
+        // } catch (Exception e) {
+        // initException = new SchedulerException("SimpleThreadPool props could not be configured.", e);
+        // throw initException;
+        // }
 
         // Get JobStore Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -522,9 +516,9 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             rsrcs.setThreadPool(threadpool);
             if (threadpool instanceof SimpleThreadPool) {
-                ((SimpleThreadPool) threadpool).setThreadNamePrefix("Quartz_Scheduler_Worker");
+                (threadpool).setThreadNamePrefix("Quartz_Scheduler_Worker");
                 if (threadsInheritInitalizersClassLoader) {
-                    ((SimpleThreadPool) threadpool).setThreadsInheritContextClassLoaderOfInitializingThread(threadsInheritInitalizersClassLoader);
+                    (threadpool).setThreadsInheritContextClassLoaderOfInitializingThread(threadsInheritInitalizersClassLoader);
                 }
             }
             threadpool.initialize();
