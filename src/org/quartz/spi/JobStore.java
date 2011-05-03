@@ -81,11 +81,6 @@ public interface JobStore {
      */
     long getEstimatedTimeToReleaseAndAcquireTrigger();
 
-    /**
-     * Whether or not the <code>JobStore</code> implementation is clustered.
-     */
-    boolean isClustered();
-
     // ///////////////////////////////////////////////////////////////////////////
     //
     // Job & Trigger Storage methods
@@ -436,13 +431,6 @@ public interface JobStore {
      * <code>{@link org.quartz.JobDataMap}</code> in the given <code>JobDetail</code> should be updated if the <code>Job</code> is stateful.
      */
     void triggeredJobComplete(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode) throws JobPersistenceException;
-
-    /**
-     * Inform the <code>JobStore</code> of the Scheduler instance's Id, prior to initialize being invoked.
-     * 
-     * @since 1.7
-     */
-    void setInstanceId(String schedInstId);
 
     /**
      * Tells the JobStore the pool size used to execute jobs

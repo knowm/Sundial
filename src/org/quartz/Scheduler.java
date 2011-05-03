@@ -125,11 +125,6 @@ public interface Scheduler {
      */
 
     /**
-     * Returns the instance Id of the <code>Scheduler</code>.
-     */
-    String getSchedulerInstanceId() throws SchedulerException;
-
-    /**
      * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
      */
     SchedulerContext getContext() throws SchedulerException;

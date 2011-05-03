@@ -38,8 +38,6 @@ public class QuartzSchedulerResources {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private String instanceId;
-
     private String threadName;
 
     private ThreadPool threadPool;
@@ -78,30 +76,6 @@ public class QuartzSchedulerResources {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    /**
-     * <p>
-     * Get the instance Id for the <code>{@link QuartzScheduler}</code>.
-     * </p>
-     */
-    public String getInstanceId() {
-        return instanceId;
-    }
-
-    /**
-     * <p>
-     * Set the name for the <code>{@link QuartzScheduler}</code>.
-     * </p>
-     * 
-     * @exception IllegalArgumentException if name is null or empty.
-     */
-    public void setInstanceId(String instanceId) {
-        if (instanceId == null || instanceId.trim().length() == 0) {
-            throw new IllegalArgumentException("Scheduler instanceId cannot be empty.");
-        }
-
-        this.instanceId = instanceId;
-    }
 
     /**
      * <p>

@@ -33,7 +33,6 @@ public class Sample {
 
         System.out.println("Starting scheduler...");
         try {
-            // SchedulerFactory lSchedulerFactory = new org.quartz.impl.StdSchedulerFactory("quartz.properties");
 
             System.out.println("Getting scheduler.");
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();

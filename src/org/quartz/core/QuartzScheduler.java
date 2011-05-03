@@ -197,8 +197,8 @@ public class QuartzScheduler implements Scheduler {
 
         getLog().info(
                 "Scheduler meta-data: "
-                        + (new SchedulerMetaData(getSchedulerInstanceId(), getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(),
-                                supportsPersistence(), isClustered(), getThreadPoolClass(), getThreadPoolSize(), getVersion())).toString());
+                        + (new SchedulerMetaData(getClass(), runningSince() != null, isInStandbyMode(), isShutdown(), runningSince(), numJobsExecuted(), getJobStoreClass(), getThreadPoolClass(), getThreadPoolSize(),
+                                getVersion())).toString());
     }
 
     /*
@@ -227,16 +227,6 @@ public class QuartzScheduler implements Scheduler {
 
     public Logger getLog() {
         return log;
-    }
-
-    /**
-     * <p>
-     * Returns the instance Id of the <code>QuartzScheduler</code>.
-     * </p>
-     */
-    @Override
-    public String getSchedulerInstanceId() {
-        return mQuartzSchedulerResources.getInstanceId();
     }
 
     /**
@@ -378,10 +368,6 @@ public class QuartzScheduler implements Scheduler {
 
     public boolean supportsPersistence() {
         return mQuartzSchedulerResources.getJobStore().supportsPersistence();
-    }
-
-    public boolean isClustered() {
-        return mQuartzSchedulerResources.getJobStore().isClustered();
     }
 
     public Class getThreadPoolClass() {

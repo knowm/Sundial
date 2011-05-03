@@ -88,7 +88,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static final String PROP_SCHED_INSTANCE_ID = "org.quartz.scheduler.instanceId";
+    // public static final String PROP_SCHED_INSTANCE_ID = "org.quartz.scheduler.instanceId";
 
     public static final String PROP_SCHED_THREAD_NAME = "org.quartz.scheduler.threadName";
 
@@ -306,7 +306,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         String threadName = mPropertiesParser.getStringProperty(PROP_SCHED_THREAD_NAME, "QuartzSchedulerThread");
 
-        String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
+        // String schedInstId = mPropertiesParser.getStringProperty(PROP_SCHED_INSTANCE_ID, DEFAULT_INSTANCE_ID);
 
         classLoadHelperClass = mPropertiesParser.getStringProperty(PROP_SCHED_CLASS_LOAD_HELPER_CLASS, "org.quartz.simpl.CascadingClassLoadHelper");
 
@@ -390,8 +390,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             initException = new SchedulerException("JobStore class '" + jsClass + "' could not be instantiated.", e);
             throw initException;
         }
-
-        SchedulerDetailsSetter.setDetails(jobstore, schedInstId);
 
         tProps = mPropertiesParser.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] { PROP_JOB_STORE_LOCK_HANDLER_PREFIX });
         try {
@@ -514,7 +512,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
             rsrcs.setThreadName(threadName);
-            rsrcs.setInstanceId(schedInstId);
             rsrcs.setJobRunShellFactory(jrsf);
             rsrcs.setMakeSchedulerThreadDaemon(makeSchedulerThreadDaemon);
             rsrcs.setThreadsInheritInitializersClassLoadContext(threadsInheritInitalizersClassLoader);
@@ -522,8 +519,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             rsrcs.setMaxBatchSize(maxBatchSize);
             rsrcs.setInterruptJobsOnShutdown(interruptJobsOnShutdown);
             rsrcs.setInterruptJobsOnShutdownWithWait(interruptJobsOnShutdownWithWait);
-
-            SchedulerDetailsSetter.setDetails(threadpool, schedInstId);
 
             rsrcs.setThreadPool(threadpool);
             if (threadpool instanceof SimpleThreadPool) {
@@ -571,8 +566,6 @@ public class StdSchedulerFactory implements SchedulerFactory {
             }
 
             // fire up job store, and runshell factory
-
-            jobstore.setInstanceId(schedInstId);
             jobstore.initialize(loadHelper, mQuartzScheduler.getSchedulerSignaler());
             jobstore.setThreadPoolSize(threadpool.getPoolSize());
 

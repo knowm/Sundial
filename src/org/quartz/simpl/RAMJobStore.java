@@ -1548,11 +1548,6 @@ public class RAMJobStore implements JobStore {
     }
 
     @Override
-    public void setInstanceId(String schedInstId) {
-        //
-    }
-
-    @Override
     public void setThreadPoolSize(final int poolSize) {
         //
     }
@@ -1560,11 +1555,6 @@ public class RAMJobStore implements JobStore {
     @Override
     public long getEstimatedTimeToReleaseAndAcquireTrigger() {
         return 5;
-    }
-
-    @Override
-    public boolean isClustered() {
-        return false;
     }
 
 }

@@ -30,8 +30,6 @@ public class SchedulerMetaData implements java.io.Serializable {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private String schedInst;
-
     private Class schedClass;
 
     private boolean started;
@@ -46,10 +44,6 @@ public class SchedulerMetaData implements java.io.Serializable {
 
     private Class jsClass;
 
-    private boolean jsPersistent;
-
-    private boolean jsClustered;
-
     private Class tpClass;
 
     private int tpSize;
@@ -60,9 +54,7 @@ public class SchedulerMetaData implements java.io.Serializable {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public SchedulerMetaData(String schedInst, Class schedClass, boolean started, boolean isInStandbyMode, boolean shutdown, Date startTime, int numJobsExec, Class jsClass, boolean jsPersistent, boolean jsClustered,
-            Class tpClass, int tpSize, String version) {
-        this.schedInst = schedInst;
+    public SchedulerMetaData(Class schedClass, boolean started, boolean isInStandbyMode, boolean shutdown, Date startTime, int numJobsExec, Class jsClass, Class tpClass, int tpSize, String version) {
         this.schedClass = schedClass;
         this.started = started;
         this.isInStandbyMode = isInStandbyMode;
@@ -70,8 +62,7 @@ public class SchedulerMetaData implements java.io.Serializable {
         this.startTime = startTime;
         this.numJobsExec = numJobsExec;
         this.jsClass = jsClass;
-        this.jsPersistent = jsPersistent;
-        this.jsClustered = jsClustered;
+
         this.tpClass = tpClass;
         this.tpSize = tpSize;
         this.version = version;
@@ -80,15 +71,6 @@ public class SchedulerMetaData implements java.io.Serializable {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    /**
-     * <p>
-     * Returns the instance Id of the <code>Scheduler</code>.
-     * </p>
-     */
-    public String getSchedulerInstanceId() {
-        return schedInst;
-    }
 
     /**
      * <p>
@@ -158,37 +140,6 @@ public class SchedulerMetaData implements java.io.Serializable {
 
     /**
      * <p>
-     * Returns whether or not the <code>Scheduler</code>'s<code>JobStore</code> instance supports persistence.
-     * </p>
-     * 
-     * @deprecated s
-     * @see #isJobStoreSupportsPersistence()
-     */
-    @Deprecated
-    public boolean jobStoreSupportsPersistence() {
-        return isJobStoreSupportsPersistence();
-    }
-
-    /**
-     * <p>
-     * Returns whether or not the <code>Scheduler</code>'s<code>JobStore</code> instance supports persistence.
-     * </p>
-     */
-    public boolean isJobStoreSupportsPersistence() {
-        return jsPersistent;
-    }
-
-    /**
-     * <p>
-     * Returns whether or not the <code>Scheduler</code>'s<code>JobStore</code> is clustered.
-     * </p>
-     */
-    public boolean isJobStoreClustered() {
-        return jsClustered;
-    }
-
-    /**
-     * <p>
      * Returns the class-name of the <code>ThreadPool</code> instance that is being used by the <code>Scheduler</code>.
      * </p>
      */
@@ -248,8 +199,6 @@ public class SchedulerMetaData implements java.io.Serializable {
         str.append(getVersion());
         str.append(") '");
 
-        str.append("' with instanceId '");
-        str.append(getSchedulerInstanceId());
         str.append("'\n");
 
         str.append("  Scheduler class: '");
@@ -292,17 +241,7 @@ public class SchedulerMetaData implements java.io.Serializable {
 
         str.append("  Using job-store '");
         str.append(getJobStoreClass().getName());
-        str.append("' - which ");
-        if (isJobStoreSupportsPersistence()) {
-            str.append("supports persistence.");
-        } else {
-            str.append("does not support persistence.");
-        }
-        if (isJobStoreClustered()) {
-            str.append(" and is clustered.");
-        } else {
-            str.append(" and is not clustered.");
-        }
+
         str.append("\n");
 
         return str.toString();
