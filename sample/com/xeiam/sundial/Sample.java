@@ -25,7 +25,7 @@ import org.quartz.impl.StdSchedulerFactory;
 public class Sample {
 
     /**
-     * Make sure jobs.xml, log4j.xml nad quartz.properties are on the classpath!
+     * Make sure jobs.xml, log4j.xml and quartz.properties are on the classpath!
      * 
      * @param args
      */
