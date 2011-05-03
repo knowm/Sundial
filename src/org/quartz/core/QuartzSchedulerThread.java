@@ -90,13 +90,13 @@ public class QuartzSchedulerThread extends Thread {
      * Construct a new <code>QuartzSchedulerThread</code> for the given <code>QuartzScheduler</code> as a <code>Thread</code> with the given attributes.
      * </p>
      */
-    QuartzSchedulerThread(QuartzScheduler qs, QuartzSchedulerResources qsRsrcs, boolean setDaemon, int threadPrio) {
+    QuartzSchedulerThread(QuartzScheduler pQuartzScheduler, QuartzSchedulerResources pQuartzSchedulerResources, boolean setDaemon, int threadPrio) {
 
-        super(qs.getSchedulerThreadGroup(), qsRsrcs.getThreadName());
-        this.mQuartzScheduler = qs;
-        this.mQuartzSchedulerResources = qsRsrcs;
+        super(pQuartzScheduler.getSchedulerThreadGroup(), pQuartzSchedulerResources.getThreadName());
+        mQuartzScheduler = pQuartzScheduler;
+        mQuartzSchedulerResources = pQuartzSchedulerResources;
         this.setDaemon(setDaemon);
-        if (qsRsrcs.isThreadsInheritInitializersClassLoadContext()) {
+        if (pQuartzSchedulerResources.isThreadsInheritInitializersClassLoadContext()) {
             logger.info("QuartzSchedulerThread Inheriting ContextClassLoader of thread: " + Thread.currentThread().getName());
             this.setContextClassLoader(Thread.currentThread().getContextClassLoader());
         }

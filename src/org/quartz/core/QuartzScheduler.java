@@ -182,9 +182,6 @@ public class QuartzScheduler {
         if (idleWaitTime > 0) {
             this.schedThread.setIdleWaitTime(idleWaitTime);
         }
-        // if (dbRetryInterval > 0) {
-        // this.schedThread.setDbFailureRetryInterval(dbRetryInterval);
-        // }
 
         jobMgr = new ExecutingJobsManager();
         addInternalJobListener(jobMgr);

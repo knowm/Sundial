@@ -56,7 +56,7 @@ public class StdScheduler implements Scheduler {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    private QuartzScheduler sched;
+    private QuartzScheduler mQuartzScheduler;
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,7 +68,7 @@ public class StdScheduler implements Scheduler {
      * </p>
      */
     public StdScheduler(QuartzScheduler sched) {
-        this.sched = sched;
+        this.mQuartzScheduler = sched;
     }
 
     /*
@@ -82,7 +82,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public String getSchedulerName() {
-        return sched.getSchedulerName();
+        return mQuartzScheduler.getSchedulerName();
     }
 
     /**
@@ -92,13 +92,13 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public String getSchedulerInstanceId() {
-        return sched.getSchedulerInstanceId();
+        return mQuartzScheduler.getSchedulerInstanceId();
     }
 
     @Override
     public SchedulerMetaData getMetaData() {
-        return new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), isStarted(), isInStandbyMode(), isShutdown(), sched.runningSince(), sched.numJobsExecuted(), sched.getJobStoreClass(),
-                sched.supportsPersistence(), sched.isClustered(), sched.getThreadPoolClass(), sched.getThreadPoolSize(), sched.getVersion());
+        return new SchedulerMetaData(getSchedulerName(), getSchedulerInstanceId(), getClass(), isStarted(), isInStandbyMode(), isShutdown(), mQuartzScheduler.runningSince(), mQuartzScheduler.numJobsExecuted(), mQuartzScheduler.getJobStoreClass(),
+                mQuartzScheduler.supportsPersistence(), mQuartzScheduler.isClustered(), mQuartzScheduler.getThreadPoolClass(), mQuartzScheduler.getThreadPoolSize(), mQuartzScheduler.getVersion());
 
     }
 
@@ -109,7 +109,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public SchedulerContext getContext() throws SchedulerException {
-        return sched.getSchedulerContext();
+        return mQuartzScheduler.getSchedulerContext();
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void start() throws SchedulerException {
-        sched.start();
+        mQuartzScheduler.start();
     }
 
     /**
@@ -135,7 +135,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void startDelayed(int seconds) throws SchedulerException {
-        sched.startDelayed(seconds);
+        mQuartzScheduler.startDelayed(seconds);
     }
 
     /**
@@ -145,7 +145,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void standby() {
-        sched.standby();
+        mQuartzScheduler.standby();
     }
 
     /**
@@ -160,7 +160,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean isStarted() {
-        return (sched.runningSince() != null);
+        return (mQuartzScheduler.runningSince() != null);
     }
 
     /**
@@ -170,7 +170,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean isInStandbyMode() {
-        return sched.isInStandbyMode();
+        return mQuartzScheduler.isInStandbyMode();
     }
 
     /**
@@ -180,7 +180,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void shutdown() {
-        sched.shutdown();
+        mQuartzScheduler.shutdown();
     }
 
     /**
@@ -190,7 +190,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void shutdown(boolean waitForJobsToComplete) {
-        sched.shutdown(waitForJobsToComplete);
+        mQuartzScheduler.shutdown(waitForJobsToComplete);
     }
 
     /**
@@ -200,7 +200,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean isShutdown() {
-        return sched.isShutdown();
+        return mQuartzScheduler.isShutdown();
     }
 
     /**
@@ -210,7 +210,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public List<JobExecutionContext> getCurrentlyExecutingJobs() {
-        return sched.getCurrentlyExecutingJobs();
+        return mQuartzScheduler.getCurrentlyExecutingJobs();
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void clear() throws SchedulerException {
-        sched.clear();
+        mQuartzScheduler.clear();
     }
 
     /**
@@ -236,7 +236,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException {
-        return sched.scheduleJob(jobDetail, trigger);
+        return mQuartzScheduler.scheduleJob(jobDetail, trigger);
     }
 
     /**
@@ -246,7 +246,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Date scheduleJob(Trigger trigger) throws SchedulerException {
-        return sched.scheduleJob(trigger);
+        return mQuartzScheduler.scheduleJob(trigger);
     }
 
     /**
@@ -256,22 +256,22 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException {
-        sched.addJob(jobDetail, replace);
+        mQuartzScheduler.addJob(jobDetail, replace);
     }
 
     @Override
     public boolean deleteJobs(List<JobKey> jobKeys) throws SchedulerException {
-        return sched.deleteJobs(jobKeys);
+        return mQuartzScheduler.deleteJobs(jobKeys);
     }
 
     @Override
     public void scheduleJobs(Map<JobDetail, List<Trigger>> triggersAndJobs, boolean replace) throws SchedulerException {
-        sched.scheduleJobs(triggersAndJobs, replace);
+        mQuartzScheduler.scheduleJobs(triggersAndJobs, replace);
     }
 
     @Override
     public boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException {
-        return sched.unscheduleJobs(triggerKeys);
+        return mQuartzScheduler.unscheduleJobs(triggerKeys);
     }
 
     /**
@@ -281,7 +281,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean deleteJob(JobKey jobKey) throws SchedulerException {
-        return sched.deleteJob(jobKey);
+        return mQuartzScheduler.deleteJob(jobKey);
     }
 
     /**
@@ -291,7 +291,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean unscheduleJob(TriggerKey triggerKey) throws SchedulerException {
-        return sched.unscheduleJob(triggerKey);
+        return mQuartzScheduler.unscheduleJob(triggerKey);
     }
 
     /**
@@ -301,7 +301,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException {
-        return sched.rescheduleJob(triggerKey, newTrigger);
+        return mQuartzScheduler.rescheduleJob(triggerKey, newTrigger);
     }
 
     /**
@@ -321,7 +321,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException {
-        sched.triggerJob(jobKey, data);
+        mQuartzScheduler.triggerJob(jobKey, data);
     }
 
     /**
@@ -331,7 +331,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void pauseTrigger(TriggerKey triggerKey) throws SchedulerException {
-        sched.pauseTrigger(triggerKey);
+        mQuartzScheduler.pauseTrigger(triggerKey);
     }
 
     /**
@@ -341,7 +341,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void pauseTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
-        sched.pauseTriggers(matcher);
+        mQuartzScheduler.pauseTriggers(matcher);
     }
 
     /**
@@ -351,7 +351,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void pauseJob(JobKey jobKey) throws SchedulerException {
-        sched.pauseJob(jobKey);
+        mQuartzScheduler.pauseJob(jobKey);
     }
 
     /**
@@ -359,7 +359,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Set getPausedTriggerGroups() throws SchedulerException {
-        return sched.getPausedTriggerGroups();
+        return mQuartzScheduler.getPausedTriggerGroups();
     }
 
     /**
@@ -369,7 +369,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void pauseJobs(GroupMatcher<JobKey> matcher) throws SchedulerException {
-        sched.pauseJobs(matcher);
+        mQuartzScheduler.pauseJobs(matcher);
     }
 
     /**
@@ -379,7 +379,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void resumeTrigger(TriggerKey triggerKey) throws SchedulerException {
-        sched.resumeTrigger(triggerKey);
+        mQuartzScheduler.resumeTrigger(triggerKey);
     }
 
     /**
@@ -389,7 +389,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
-        sched.resumeTriggers(matcher);
+        mQuartzScheduler.resumeTriggers(matcher);
     }
 
     /**
@@ -399,7 +399,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void resumeJob(JobKey jobKey) throws SchedulerException {
-        sched.resumeJob(jobKey);
+        mQuartzScheduler.resumeJob(jobKey);
     }
 
     /**
@@ -409,7 +409,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void resumeJobs(GroupMatcher<JobKey> matcher) throws SchedulerException {
-        sched.resumeJobs(matcher);
+        mQuartzScheduler.resumeJobs(matcher);
     }
 
     /**
@@ -419,7 +419,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void pauseAll() throws SchedulerException {
-        sched.pauseAll();
+        mQuartzScheduler.pauseAll();
     }
 
     /**
@@ -429,7 +429,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void resumeAll() throws SchedulerException {
-        sched.resumeAll();
+        mQuartzScheduler.resumeAll();
     }
 
     /**
@@ -439,7 +439,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public List<String> getJobGroupNames() throws SchedulerException {
-        return sched.getJobGroupNames();
+        return mQuartzScheduler.getJobGroupNames();
     }
 
     /**
@@ -449,7 +449,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException {
-        return sched.getTriggersOfJob(jobKey);
+        return mQuartzScheduler.getTriggersOfJob(jobKey);
     }
 
     /**
@@ -459,7 +459,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException {
-        return sched.getJobKeys(matcher);
+        return mQuartzScheduler.getJobKeys(matcher);
     }
 
     /**
@@ -469,7 +469,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public List<String> getTriggerGroupNames() throws SchedulerException {
-        return sched.getTriggerGroupNames();
+        return mQuartzScheduler.getTriggerGroupNames();
     }
 
     /**
@@ -479,7 +479,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws SchedulerException {
-        return sched.getTriggerKeys(matcher);
+        return mQuartzScheduler.getTriggerKeys(matcher);
     }
 
     /**
@@ -489,7 +489,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public JobDetail getJobDetail(JobKey jobKey) throws SchedulerException {
-        return sched.getJobDetail(jobKey);
+        return mQuartzScheduler.getJobDetail(jobKey);
     }
 
     /**
@@ -499,7 +499,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException {
-        return sched.getTrigger(triggerKey);
+        return mQuartzScheduler.getTrigger(triggerKey);
     }
 
     /**
@@ -509,7 +509,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public TriggerState getTriggerState(TriggerKey triggerKey) throws SchedulerException {
-        return sched.getTriggerState(triggerKey);
+        return mQuartzScheduler.getTriggerState(triggerKey);
     }
 
     /**
@@ -519,7 +519,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers) throws SchedulerException {
-        sched.addCalendar(calName, calendar, replace, updateTriggers);
+        mQuartzScheduler.addCalendar(calName, calendar, replace, updateTriggers);
     }
 
     /**
@@ -529,7 +529,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean deleteCalendar(String calName) throws SchedulerException {
-        return sched.deleteCalendar(calName);
+        return mQuartzScheduler.deleteCalendar(calName);
     }
 
     /**
@@ -539,7 +539,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public Calendar getCalendar(String calName) throws SchedulerException {
-        return sched.getCalendar(calName);
+        return mQuartzScheduler.getCalendar(calName);
     }
 
     /**
@@ -549,7 +549,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public List<String> getCalendarNames() throws SchedulerException {
-        return sched.getCalendarNames();
+        return mQuartzScheduler.getCalendarNames();
     }
 
     /**
@@ -559,7 +559,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean checkExists(JobKey jobKey) throws SchedulerException {
-        return sched.checkExists(jobKey);
+        return mQuartzScheduler.checkExists(jobKey);
     }
 
     /**
@@ -569,7 +569,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public boolean checkExists(TriggerKey triggerKey) throws SchedulerException {
-        return sched.checkExists(triggerKey);
+        return mQuartzScheduler.checkExists(triggerKey);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -583,7 +583,7 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public void setJobFactory(JobFactory factory) throws SchedulerException {
-        sched.setJobFactory(factory);
+        mQuartzScheduler.setJobFactory(factory);
     }
 
     /**
@@ -591,12 +591,12 @@ public class StdScheduler implements Scheduler {
      */
     @Override
     public ListenerManager getListenerManager() throws SchedulerException {
-        return sched.getListenerManager();
+        return mQuartzScheduler.getListenerManager();
     }
 
     @Override
     public boolean interrupt(JobKey jobKey) throws UnableToInterruptJobException {
-        return sched.interrupt(jobKey);
+        return mQuartzScheduler.interrupt(jobKey);
     }
 
 }
