@@ -179,8 +179,6 @@ public class StdSchedulerFactory {
 
             mQuartzScheduler.initialize();
 
-            logger.info("Quartz scheduler version: " + mQuartzScheduler.getVersion());
-
             return mQuartzScheduler;
 
         } catch (SchedulerException e) {

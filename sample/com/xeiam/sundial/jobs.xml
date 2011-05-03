@@ -15,14 +15,14 @@
                 </entry>
             </job-data-map>
         </job>
-<!--         <trigger> -->
-<!--             <cron> -->
-<!--                 <name>SampleJob-Trigger</name> -->
-<!--                 <group>CRON</group> -->
-<!--                 <job-name>SampleJob</job-name> -->
-<!--                 <cron-expression>0/45 * * * * ?</cron-expression> -->
-<!--             </cron> -->
-<!--         </trigger> -->
+        <trigger>
+            <cron>
+                <name>SampleJob-Trigger</name>
+                <group>CRON</group>
+                <job-name>SampleJob</job-name>
+                <cron-expression>0/45 * * * * ?</cron-expression>
+            </cron>
+        </trigger>
 
     </schedule>
     

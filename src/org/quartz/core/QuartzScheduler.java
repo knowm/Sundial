@@ -17,7 +17,6 @@
 
 package org.quartz.core;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,47 +74,6 @@ import org.slf4j.LoggerFactory;
  * @author James House
  */
 public class QuartzScheduler implements Scheduler {
-
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-
-    private static String VERSION_MAJOR = "UNKNOWN";
-    private static String VERSION_MINOR = "UNKNOWN";
-    private static String VERSION_ITERATION = "UNKNOWN";
-
-    static {
-        Properties props = new Properties();
-        InputStream is = null;
-        try {
-            is = QuartzScheduler.class.getResourceAsStream("quartz-build.properties");
-            if (is != null) {
-                props.load(is);
-                String version = props.getProperty("version");
-                if (version != null) {
-                    String[] versionComponents = version.split("\\.");
-                    VERSION_MAJOR = versionComponents[0];
-                    VERSION_MINOR = versionComponents[1];
-                    if (versionComponents.length > 2) {
-                        VERSION_ITERATION = versionComponents[2];
-                    } else {
-                        VERSION_ITERATION = "0";
-                    }
-                } else {
-                    (LoggerFactory.getLogger(QuartzScheduler.class)).error("Can't parse Quartz version from quartz-build.properties");
-                }
-            }
-        } catch (Exception e) {
-            (LoggerFactory.getLogger(QuartzScheduler.class)).error("Error loading version info from quartz-build.properties.", e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ignore) {
-                }
-            }
-        }
-    }
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,7 +144,6 @@ public class QuartzScheduler implements Scheduler {
 
         signaler = new SchedulerSignalerImpl(this, this.mQuartzSchedulerThread);
 
-        getLog().info("Quartz Scheduler v." + getVersion() + " created.");
     }
 
     public void initialize() throws SchedulerException {
@@ -198,22 +154,6 @@ public class QuartzScheduler implements Scheduler {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    public String getVersion() {
-        return getVersionMajor() + "." + getVersionMinor() + "." + getVersionIteration();
-    }
-
-    public static String getVersionMajor() {
-        return VERSION_MAJOR;
-    }
-
-    public static String getVersionMinor() {
-        return VERSION_MINOR;
-    }
-
-    public static String getVersionIteration() {
-        return VERSION_ITERATION;
-    }
 
     public SchedulerSignaler getSchedulerSignaler() {
         return signaler;
