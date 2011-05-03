@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -19,19 +18,14 @@
 package org.quartz.exceptions;
 
 /**
- * An exception that is thrown to indicate that there has been a failure in the
- * scheduler's underlying persistence mechanism.
+ * An exception that is thrown to indicate that there has been a failure in the scheduler's underlying persistence mechanism.
  * 
  * @author James House
  */
 public class JobPersistenceException extends SchedulerException {
 
     /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
     /**
@@ -43,11 +37,9 @@ public class JobPersistenceException extends SchedulerException {
         super(msg);
     }
 
-
     /**
      * <p>
-     * Create a <code>JobPersistenceException</code> with the given message
-     * and cause.
+     * Create a <code>JobPersistenceException</code> with the given message and cause.
      * </p>
      */
     public JobPersistenceException(String msg, Throwable cause) {

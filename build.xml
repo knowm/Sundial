@@ -40,11 +40,7 @@
        </manifest>
     </target>
 	
-    <target name="copy" depends="compile">
-        <copy file="${src.dir}/quartz.properties" tofile="${build.dir}/quartz.properties" overwrite="true" />
-    </target>
-	
-	<target name="jar" depends="compile, manifest, copy">
+	<target name="jar" depends="compile, manifest">
 	      <jar jarfile="${dist.dir}/${project.name}-${build.version}.jar">
 	         <fileset dir="${build.dir}">
 	         	<include name="**/*.class"/>
