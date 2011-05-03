@@ -35,7 +35,6 @@ import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerConfigException;
 import org.quartz.SchedulerException;
-import org.quartz.TriggerListener;
 import org.quartz.core.JobRunShellFactory;
 import org.quartz.core.QuartzScheduler;
 import org.quartz.core.QuartzSchedulerResources;
@@ -49,6 +48,8 @@ import org.quartz.spi.JobStore;
 import org.quartz.utils.PropertiesParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xeiam.sundial.DefaultTriggerListener;
 
 /**
  * <p>
@@ -78,13 +79,7 @@ public class StdSchedulerFactory {
 
     public static final String PROP_SCHED_CONTEXT_PREFIX = "org.quartz.context.key";
 
-    // public static final String PROP_PLUGIN_PREFIX = "org.quartz.plugin";
-
-    // public static final String PROP_PLUGIN_CLASS = "class";
-
     public static final String PROP_JOB_LISTENER_PREFIX = "org.quartz.jobListener";
-
-    public static final String PROP_TRIGGER_LISTENER_PREFIX = "org.quartz.triggerListener";
 
     public static final String PROP_LISTENER_CLASS = "class";
 
@@ -305,34 +300,6 @@ public class StdSchedulerFactory {
         lXMLSchedulingDataProcessorPlugin.setFileNames("jobs.xml");
         lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
 
-        // String[] pluginNames = mPropertiesParser.getPropertyGroups(PROP_PLUGIN_PREFIX);
-        // SchedulerPlugin[] plugins = new SchedulerPlugin[pluginNames.length];
-        // for (int i = 0; i < pluginNames.length; i++) {
-        // Properties pp = mPropertiesParser.getPropertyGroup(PROP_PLUGIN_PREFIX + "." + pluginNames[i], true);
-        //
-        // String plugInClass = pp.getProperty(PROP_PLUGIN_CLASS, null);
-        //
-        // if (plugInClass == null) {
-        // initException = new SchedulerException("SchedulerPlugin class not specified for plugin '" + pluginNames[i] + "'");
-        // throw initException;
-        // }
-        // SchedulerPlugin plugin = null;
-        // try {
-        // plugin = (SchedulerPlugin) loadHelper.loadClass(plugInClass).newInstance();
-        // } catch (Exception e) {
-        // initException = new SchedulerException("SchedulerPlugin class '" + plugInClass + "' could not be instantiated.", e);
-        // throw initException;
-        // }
-        // try {
-        // setBeanProps(plugin, pp);
-        // } catch (Exception e) {
-        // initException = new SchedulerException("JobStore SchedulerPlugin '" + plugInClass + "' props could not be configured.", e);
-        // throw initException;
-        // }
-        //
-        // plugins[i] = plugin;
-        // }
-
         // Set up any JobListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -371,36 +338,7 @@ public class StdSchedulerFactory {
         // Set up any TriggerListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] triggerListenerNames = mPropertiesParser.getPropertyGroups(PROP_TRIGGER_LISTENER_PREFIX);
-        TriggerListener[] triggerListeners = new TriggerListener[triggerListenerNames.length];
-        for (int i = 0; i < triggerListenerNames.length; i++) {
-            Properties lp = mPropertiesParser.getPropertyGroup(PROP_TRIGGER_LISTENER_PREFIX + "." + triggerListenerNames[i], true);
-
-            String listenerClass = lp.getProperty(PROP_LISTENER_CLASS, null);
-
-            if (listenerClass == null) {
-                initException = new SchedulerException("TriggerListener class not specified for listener '" + triggerListenerNames[i] + "'");
-                throw initException;
-            }
-            TriggerListener listener = null;
-            try {
-                listener = (TriggerListener) loadHelper.loadClass(listenerClass).newInstance();
-            } catch (Exception e) {
-                initException = new SchedulerException("TriggerListener class '" + listenerClass + "' could not be instantiated.", e);
-                throw initException;
-            }
-            try {
-                Method nameSetter = listener.getClass().getMethod("setName", strArg);
-                if (nameSetter != null) {
-                    nameSetter.invoke(listener, new Object[] { triggerListenerNames[i] });
-                }
-                setBeanProps(listener, lp);
-            } catch (Exception e) {
-                initException = new SchedulerException("TriggerListener '" + listenerClass + "' props could not be configured.", e);
-                throw initException;
-            }
-            triggerListeners[i] = listener;
-        }
+        DefaultTriggerListener lDefaultTriggerListener = new DefaultTriggerListener();
 
         boolean tpInited = false;
         boolean qsInited = false;
@@ -441,11 +379,6 @@ public class StdSchedulerFactory {
             mQuartzScheduler = new QuartzScheduler(rsrcs);
             qsInited = true;
 
-            // // set job factory if specified
-            // if (jobFactory != null) {
-            // mQuartzScheduler.setJobFactory(jobFactory);
-            // }
-
             // Initialize plugins now that we have a Scheduler instance.
             lXMLSchedulingDataProcessorPlugin.initialize("lXMLSchedulingDataProcessorPlugin", mQuartzScheduler);
 
@@ -453,9 +386,7 @@ public class StdSchedulerFactory {
             for (int i = 0; i < jobListeners.length; i++) {
                 mQuartzScheduler.getListenerManager().addJobListener(jobListeners[i], EverythingMatcher.allJobs());
             }
-            for (int i = 0; i < triggerListeners.length; i++) {
-                mQuartzScheduler.getListenerManager().addTriggerListener(triggerListeners[i], EverythingMatcher.allTriggers());
-            }
+            mQuartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
 
             // set scheduler context data...
             for (Object key : schedCtxtProps.keySet()) {
