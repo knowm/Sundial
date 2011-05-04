@@ -228,7 +228,7 @@ public class QuartzScheduler implements Scheduler {
 
         if (initialStart == null) {
             initialStart = new Date();
-            this.mQuartzSchedulerResources.getJobStore().schedulerStarted();
+            mQuartzSchedulerResources.getJobStore().schedulerStarted();
             startPlugins();
         }
 

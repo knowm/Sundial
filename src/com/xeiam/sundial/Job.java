@@ -39,7 +39,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
     public final void execute(JobExecutionContext pJobExecutionContext) throws JobExecutionException {
 
         // check for global lock
-        if (DefaultJobScheduler.getGlobalLock()) {
+        if (SundialJobScheduler.getGlobalLock()) {
             logInfo("Global Lock in place! Job aborted.");
             return;
         }

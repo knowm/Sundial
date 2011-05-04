@@ -15,10 +15,6 @@
  */
 package com.xeiam.sundial;
 
-import org.quartz.Scheduler;
-import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
-
 /**
  * @author timmolter
  */
@@ -32,17 +28,17 @@ public class Sample {
     public static void main(String[] args) {
 
         System.out.println("Starting scheduler...");
-        try {
+        // try {
+        SundialJobScheduler.startScheduler();
+        // System.out.println("Getting scheduler.");
+        // Scheduler scheduler = new StdSchedulerFactory().getScheduler(5);
+        // System.out.println("Starting scheduler.");
+        // scheduler.start();
+        // System.out.println("Scheduler started.");
 
-            System.out.println("Getting scheduler.");
-            Scheduler scheduler = new StdSchedulerFactory().getScheduler(5);
-            System.out.println("Starting scheduler.");
-            scheduler.start();
-            System.out.println("Scheduler started.");
-
-        } catch (SchedulerException exc) {
-            System.out.println("Failed to initialize scheduler/jobs! " + exc.getMessage());
-        }
+        // } catch (SchedulerException exc) {
+        // System.out.println("Failed to initialize scheduler/jobs! " + exc.getMessage());
+        // }
 
     }
 

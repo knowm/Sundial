@@ -238,9 +238,7 @@ public class QuartzSchedulerThread extends Thread {
                             logger.debug("batch acquisition of " + (triggers == null ? 0 : triggers.size()) + " triggers");
                         }
                     } catch (JobPersistenceException jpe) {
-                        if (!lastAcquireFailed) {
-                            mQuartzScheduler.notifySchedulerListenersError("An error occurred while scanning for the next triggers to fire.", jpe);
-                        }
+
                         lastAcquireFailed = true;
                     } catch (RuntimeException e) {
                         if (!lastAcquireFailed) {

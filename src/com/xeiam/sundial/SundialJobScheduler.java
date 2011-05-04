@@ -33,33 +33,66 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main entry-point to the default Quartz scheduler
+ * Main entry-point to the Sundial scheduler
  * 
  * @author timmolter
  */
-public class DefaultJobScheduler {
+public class SundialJobScheduler {
 
     /** slf4J logger wrapper */
-    static Logger logger = LoggerFactory.getLogger(DefaultJobScheduler.class);
+    static Logger logger = LoggerFactory.getLogger(SundialJobScheduler.class);
+
+    /** Quartz scheduler */
+    private static Scheduler mScheduler = null;
+
+    // /** ThreadPool Size */
+    // private static int mThreadPoolSize = 10;
 
     /** global lock */
     private static boolean mGlobalLock = false;
 
     /**
-     * Gets the underlying Quartz scheduler
+     * Gets the underlying Sundial scheduler
      * 
      * @return
      */
     public static Scheduler getScheduler() {
 
-        Scheduler scheduler = null;
-        try {
-            scheduler = new StdSchedulerFactory().getScheduler();
-
-        } catch (SchedulerException e) {
-            logger.error("COULD NOT OBTAIN REFERENCE TO QUARTZ SCHEDULER!!!" + e);
+        if (mScheduler == null) {
+            mScheduler = createScheduler(10);
         }
-        return scheduler;
+        return mScheduler;
+    }
+
+    /**
+     * Creates the Sundial Scheduler
+     * 
+     * @param pThreadPoolSize
+     * @return
+     */
+    public static Scheduler createScheduler(int pThreadPoolSize) {
+
+        if (mScheduler == null) {
+            try {
+                mScheduler = new StdSchedulerFactory().getScheduler(pThreadPoolSize);
+
+            } catch (SchedulerException e) {
+                logger.error("COULD NOT CREATE QUARTZ SCHEDULER!!!" + e);
+            }
+        }
+        return mScheduler;
+    }
+
+    /**
+     * Starts the Sundial Scheduler
+     */
+    public static void startScheduler() {
+        try {
+            getScheduler().start();
+        } catch (SchedulerException e) {
+            logger.error("COULD NOT START QUARTZ SCHEDULER!!!" + e);
+
+        }
     }
 
     public static void toggleGlobalLock() {

@@ -50,7 +50,7 @@ public class DefaultTriggerListener implements TriggerListener {
 
         try {
 
-            List<JobExecutionContext> currentlyExecutingJobs = DefaultJobScheduler.getScheduler().getCurrentlyExecutingJobs();
+            List<JobExecutionContext> currentlyExecutingJobs = SundialJobScheduler.getScheduler().getCurrentlyExecutingJobs();
             // logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
 
             for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {

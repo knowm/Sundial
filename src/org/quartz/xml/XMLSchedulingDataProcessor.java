@@ -679,7 +679,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         Iterator<JobDetail> itr = jobs.iterator();
         while (itr.hasNext()) {
             JobDetail detail = itr.next();
-            loggger.debug("***detail" + detail.getKey().getName());
+            loggger.debug("***detail: " + detail.getKey().getName());
             itr.remove(); // remove jobs as we handle them...
 
             JobDetail dupeJ = sched.getJobDetail(detail.getKey());

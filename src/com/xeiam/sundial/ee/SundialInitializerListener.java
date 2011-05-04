@@ -22,13 +22,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.quartz.Scheduler;
-import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xeiam.sundial.DefaultJobScheduler;
+import com.xeiam.sundial.SundialJobScheduler;
 
 /**
  * <p>
@@ -61,7 +58,7 @@ public class SundialInitializerListener implements ServletContextListener {
 
     private boolean waitOnShutdown = false;
 
-    private Scheduler scheduler = null;
+    // private Scheduler scheduler = null;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -98,7 +95,7 @@ public class SundialInitializerListener implements ServletContextListener {
 
             // Always want to get the scheduler, even if it isn't starting,
             // to make sure it is both initialized and registered.
-            scheduler = new StdSchedulerFactory().getScheduler(threadPoolSize);
+            SundialJobScheduler.createScheduler(10);
 
             // Should the Scheduler being started now or later
             String startOnLoad = servletContext.getInitParameter("start-scheduler-on-load");
@@ -118,11 +115,11 @@ public class SundialInitializerListener implements ServletContextListener {
             if (startOnLoad == null || (Boolean.valueOf(startOnLoad).booleanValue())) {
                 if (startDelay <= 0) {
                     // Start now
-                    scheduler.start();
+                    SundialJobScheduler.getScheduler().start();
                     logger.info("Scheduler has been started...");
                 } else {
                     // Start delayed
-                    scheduler.startDelayed(startDelay);
+                    SundialJobScheduler.getScheduler().startDelayed(startDelay);
                     logger.info("Scheduler will start in " + startDelay + " seconds.");
                 }
             } else {
@@ -131,20 +128,6 @@ public class SundialInitializerListener implements ServletContextListener {
 
         } catch (Exception e) {
             logger.error("Quartz Scheduler failed to initialize: " + e.toString());
-            e.printStackTrace();
-        }
-        logger.debug("Scheduled Jobs:");
-        for (String name : DefaultJobScheduler.getAllJobNames()) {
-            logger.debug("   " + name);
-        }
-        logger.debug("Group Names:");
-
-        try {
-            for (String name : DefaultJobScheduler.getScheduler().getJobGroupNames()) {
-                logger.debug("   " + name);
-            }
-        } catch (SchedulerException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -158,8 +141,8 @@ public class SundialInitializerListener implements ServletContextListener {
         }
 
         try {
-            if (scheduler != null) {
-                scheduler.shutdown(waitOnShutdown);
+            if (SundialJobScheduler.getScheduler() != null) {
+                SundialJobScheduler.getScheduler().shutdown(waitOnShutdown);
             }
         } catch (Exception e) {
             logger.error("Quartz Scheduler failed to shutdown cleanly: " + e.toString());
