@@ -70,7 +70,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.MutableTrigger;
 import org.slf4j.Logger;
@@ -100,13 +99,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     public static final String QUARTZ_NS = "http://www.quartz-scheduler.org/xml/JobSchedulingData";
 
-    // public static final String QUARTZ_SCHEMA_WEB_URL = "http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd";
-
     public static final String QUARTZ_XSD_PATH_IN_JAR = "org/quartz/xml/job_scheduling_data_2_0.xsd";
 
     public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
-
-    public static final String QUARTZ_SYSTEM_ID_JAR_PREFIX = "jar:";
 
     /**
      * XML Schema dateTime datatype format.
@@ -120,12 +115,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
-
-    // pre-processing commands
-    protected List<String> jobGroupsToDelete = new LinkedList<String>();
-    protected List<String> triggerGroupsToDelete = new LinkedList<String>();
-    protected List<JobKey> jobsToDelete = new LinkedList<JobKey>();
-    protected List<TriggerKey> triggersToDelete = new LinkedList<TriggerKey>();
 
     // scheduling commands
     protected List<JobDetail> loadedJobs = new LinkedList<JobDetail>();
@@ -225,21 +214,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         InputStream is = null;
 
-        // URL url = null;
-
         // try {
         is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
-        // } finally {
-        // if (is != null) {
-        // inputSource = new InputSource(is);
-        // inputSource.setSystemId(QUARTZ_SCHEMA_WEB_URL);
-        // log.debug("Utilizing schema packaged in local quartz distribution jar.");
-        // } else {
-        // log.info("Unable to load local schema packaged in quartz distribution jar. Utilizing schema online at " + QUARTZ_SCHEMA_WEB_URL);
-        // return QUARTZ_SCHEMA_WEB_URL;
-        // }
-        //
-        // }
 
         if (is == null) {
             log.warn("Could not load xml scheme from classpath");
@@ -298,27 +274,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     /**
-     * Remove the given group to the list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-     * 
-     * @param group
-     */
-    public boolean removeJobGroupToNeverDelete(String group) {
-        if (group != null) {
-            return jobGroupsToNeverDelete.remove(group);
-        }
-        return false;
-    }
-
-    /**
-     * Get the (unmodifiable) list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-     * 
-     * @param group
-     */
-    public List<String> getJobGroupsToNeverDelete() {
-        return Collections.unmodifiableList(jobGroupsToDelete);
-    }
-
-    /**
      * Add the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
      * 
      * @param group
@@ -327,27 +282,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         if (group != null) {
             triggerGroupsToNeverDelete.add(group);
         }
-    }
-
-    /**
-     * Remove the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-     * 
-     * @param group
-     */
-    public boolean removeTriggerGroupToNeverDelete(String group) {
-        if (group != null) {
-            return triggerGroupsToNeverDelete.remove(group);
-        }
-        return false;
-    }
-
-    /**
-     * Get the (unmodifiable) list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-     * 
-     * @param group
-     */
-    public List<String> getTriggerGroupsToNeverDelete() {
-        return Collections.unmodifiableList(triggerGroupsToDelete);
     }
 
     /*
@@ -441,11 +375,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         setOverWriteExistingData(true);
         setIgnoreDuplicates(false);
 
-        jobGroupsToDelete.clear();
-        jobsToDelete.clear();
-        triggerGroupsToDelete.clear();
-        triggersToDelete.clear();
-
         loadedJobs.clear();
         loadedTriggers.clear();
     }
@@ -487,7 +416,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         is.setSystemId(systemId);
 
         process(is);
-        executePreProcessCommands(sched);
         scheduleJobs(sched);
 
         maybeThrowValidationException();
@@ -497,68 +425,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         // load the document
         Document document = docBuilder.parse(is);
-
-        //
-        // Extract pre-processing commands
-        //
-
-        NodeList deleteJobGroupNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:pre-processing-commands/q:delete-jobs-in-group", document, XPathConstants.NODESET);
-
-        log.debug("Found " + deleteJobGroupNodes.getLength() + " delete job group commands.");
-
-        for (int i = 0; i < deleteJobGroupNodes.getLength(); i++) {
-            Node node = deleteJobGroupNodes.item(i);
-            String t = node.getTextContent();
-            if (t == null || (t = t.trim()).length() == 0) {
-                continue;
-            }
-            jobGroupsToDelete.add(t);
-        }
-
-        NodeList deleteTriggerGroupNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:pre-processing-commands/q:delete-triggers-in-group", document, XPathConstants.NODESET);
-
-        log.debug("Found " + deleteTriggerGroupNodes.getLength() + " delete trigger group commands.");
-
-        for (int i = 0; i < deleteTriggerGroupNodes.getLength(); i++) {
-            Node node = deleteTriggerGroupNodes.item(i);
-            String t = node.getTextContent();
-            if (t == null || (t = t.trim()).length() == 0) {
-                continue;
-            }
-            triggerGroupsToDelete.add(t);
-        }
-
-        NodeList deleteJobNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:pre-processing-commands/q:delete-job", document, XPathConstants.NODESET);
-
-        log.debug("Found " + deleteJobNodes.getLength() + " delete job commands.");
-
-        for (int i = 0; i < deleteJobNodes.getLength(); i++) {
-            Node node = deleteJobNodes.item(i);
-
-            String name = getTrimmedToNullString(xpath, "q:name", node);
-            String group = getTrimmedToNullString(xpath, "q:group", node);
-
-            if (name == null) {
-                throw new ParseException("Encountered a 'delete-job' command without a name specified.", -1);
-            }
-            jobsToDelete.add(new JobKey(name, group));
-        }
-
-        NodeList deleteTriggerNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:pre-processing-commands/q:delete-trigger", document, XPathConstants.NODESET);
-
-        log.debug("Found " + deleteTriggerNodes.getLength() + " delete trigger commands.");
-
-        for (int i = 0; i < deleteTriggerNodes.getLength(); i++) {
-            Node node = deleteTriggerNodes.item(i);
-
-            String name = getTrimmedToNullString(xpath, "q:name", node);
-            String group = getTrimmedToNullString(xpath, "q:group", node);
-
-            if (name == null) {
-                throw new ParseException("Encountered a 'delete-trigger' command without a name specified.", -1);
-            }
-            triggersToDelete.add(new TriggerKey(name, group));
-        }
 
         //
         // Extract directives
@@ -799,7 +665,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
      */
     public void processFileAndScheduleJobs(String fileName, String systemId, Scheduler sched) throws Exception {
         processFile(fileName, systemId);
-        executePreProcessCommands(sched);
+        // executePreProcessCommands(sched);
         scheduleJobs(sched);
     }
 
@@ -857,62 +723,62 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         return triggersByFQJobName;
     }
 
-    protected void executePreProcessCommands(Scheduler scheduler) throws SchedulerException {
-
-        for (String group : jobGroupsToDelete) {
-            if (group.equals("*")) {
-                log.info("Deleting all jobs in ALL groups.");
-                for (String groupName : scheduler.getJobGroupNames()) {
-                    if (!jobGroupsToNeverDelete.contains(groupName)) {
-                        for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(groupName))) {
-                            scheduler.deleteJob(key);
-                        }
-                    }
-                }
-            } else {
-                if (!jobGroupsToNeverDelete.contains(group)) {
-                    log.info("Deleting all jobs in group: {}", group);
-                    for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(group))) {
-                        scheduler.deleteJob(key);
-                    }
-                }
-            }
-        }
-
-        for (String group : triggerGroupsToDelete) {
-            if (group.equals("*")) {
-                log.info("Deleting all triggers in ALL groups.");
-                for (String groupName : scheduler.getTriggerGroupNames()) {
-                    if (!triggerGroupsToNeverDelete.contains(groupName)) {
-                        for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(groupName))) {
-                            scheduler.unscheduleJob(key);
-                        }
-                    }
-                }
-            } else {
-                if (!triggerGroupsToNeverDelete.contains(group)) {
-                    log.info("Deleting all triggers in group: {}", group);
-                    for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(group))) {
-                        scheduler.unscheduleJob(key);
-                    }
-                }
-            }
-        }
-
-        for (JobKey key : jobsToDelete) {
-            if (!jobGroupsToNeverDelete.contains(key.getGroup())) {
-                log.info("Deleting job: {}", key);
-                scheduler.deleteJob(key);
-            }
-        }
-
-        for (TriggerKey key : triggersToDelete) {
-            if (!triggerGroupsToNeverDelete.contains(key.getGroup())) {
-                log.info("Deleting trigger: {}", key);
-                scheduler.unscheduleJob(key);
-            }
-        }
-    }
+    // protected void executePreProcessCommands(Scheduler scheduler) throws SchedulerException {
+    //
+    // for (String group : jobGroupsToDelete) {
+    // if (group.equals("*")) {
+    // log.info("Deleting all jobs in ALL groups.");
+    // for (String groupName : scheduler.getJobGroupNames()) {
+    // if (!jobGroupsToNeverDelete.contains(groupName)) {
+    // for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(groupName))) {
+    // scheduler.deleteJob(key);
+    // }
+    // }
+    // }
+    // } else {
+    // if (!jobGroupsToNeverDelete.contains(group)) {
+    // log.info("Deleting all jobs in group: {}", group);
+    // for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(group))) {
+    // scheduler.deleteJob(key);
+    // }
+    // }
+    // }
+    // }
+    //
+    // for (String group : triggerGroupsToDelete) {
+    // if (group.equals("*")) {
+    // log.info("Deleting all triggers in ALL groups.");
+    // for (String groupName : scheduler.getTriggerGroupNames()) {
+    // if (!triggerGroupsToNeverDelete.contains(groupName)) {
+    // for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(groupName))) {
+    // scheduler.unscheduleJob(key);
+    // }
+    // }
+    // }
+    // } else {
+    // if (!triggerGroupsToNeverDelete.contains(group)) {
+    // log.info("Deleting all triggers in group: {}", group);
+    // for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(group))) {
+    // scheduler.unscheduleJob(key);
+    // }
+    // }
+    // }
+    // }
+    //
+    // for (JobKey key : jobsToDelete) {
+    // if (!jobGroupsToNeverDelete.contains(key.getGroup())) {
+    // log.info("Deleting job: {}", key);
+    // scheduler.deleteJob(key);
+    // }
+    // }
+    //
+    // for (TriggerKey key : triggersToDelete) {
+    // if (!triggerGroupsToNeverDelete.contains(key.getGroup())) {
+    // log.info("Deleting trigger: {}", key);
+    // scheduler.unscheduleJob(key);
+    // }
+    // }
+    // }
 
     /**
      * Schedules the given sets of jobs and triggers.
