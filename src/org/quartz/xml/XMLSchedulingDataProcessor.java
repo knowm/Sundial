@@ -120,10 +120,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     protected List<JobDetail> loadedJobs = new LinkedList<JobDetail>();
     protected List<Trigger> loadedTriggers = new LinkedList<Trigger>();
 
-    // directives
-    private boolean overWriteExistingData = true;
-    private boolean ignoreDuplicates = false;
-
     protected Collection validationExceptions = new ArrayList();
 
     protected ClassLoadHelper classLoadHelper;
@@ -224,42 +220,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         }
 
         return inputSource;
-    }
-
-    /**
-     * Whether the existing scheduling data (with same identifiers) will be overwritten. If false, and <code>IgnoreDuplicates</code> is not false, and jobs or triggers with the same names already exist as those in the file, an error will occur.
-     * 
-     * @see #isIgnoreDuplicates()
-     */
-    public boolean isOverWriteExistingData() {
-        return overWriteExistingData;
-    }
-
-    /**
-     * Whether the existing scheduling data (with same identifiers) will be overwritten. If false, and <code>IgnoreDuplicates</code> is not false, and jobs or triggers with the same names already exist as those in the file, an error will occur.
-     * 
-     * @see #setIgnoreDuplicates(boolean)
-     */
-    protected void setOverWriteExistingData(boolean overWriteExistingData) {
-        this.overWriteExistingData = overWriteExistingData;
-    }
-
-    /**
-     * If true (and <code>OverWriteExistingData</code> is false) then any job/triggers encountered in this file that have names that already exist in the scheduler will be ignored, and no error will be produced.
-     * 
-     * @see #isOverWriteExistingData()
-     */
-    public boolean isIgnoreDuplicates() {
-        return ignoreDuplicates;
-    }
-
-    /**
-     * If true (and <code>OverWriteExistingData</code> is false) then any job/triggers encountered in this file that have names that already exist in the scheduler will be ignored, and no error will be produced.
-     * 
-     * @see #setOverWriteExistingData(boolean)
-     */
-    public void setIgnoreDuplicates(boolean ignoreDuplicates) {
-        this.ignoreDuplicates = ignoreDuplicates;
     }
 
     /**
@@ -372,9 +332,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     protected void prepForProcessing() {
         clearValidationExceptions();
 
-        setOverWriteExistingData(true);
-        setIgnoreDuplicates(false);
-
         loadedJobs.clear();
         loadedTriggers.clear();
     }
@@ -425,26 +382,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         // load the document
         Document document = docBuilder.parse(is);
-
-        //
-        // Extract directives
-        //
-
-        // Boolean overWrite = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:overwrite-existing-data", document);
-        // if (overWrite == null) {
-        // log.debug("Directive 'overwrite-existing-data' not specified, defaulting to " + isOverWriteExistingData());
-        // } else {
-        // log.debug("Directive 'overwrite-existing-data' specified as: " + overWrite);
-        // setOverWriteExistingData(overWrite);
-        // }
-        //
-        // Boolean ignoreDupes = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:ignore-duplicates", document);
-        // if (ignoreDupes == null) {
-        // log.debug("Directive 'ignore-duplicates' not specified, defaulting to " + isIgnoreDuplicates());
-        // } else {
-        // log.debug("Directive 'ignore-duplicates' specified as: " + ignoreDupes);
-        // setIgnoreDuplicates(ignoreDupes);
-        // }
 
         //
         // Extract Job definitions...
@@ -723,63 +660,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         return triggersByFQJobName;
     }
 
-    // protected void executePreProcessCommands(Scheduler scheduler) throws SchedulerException {
-    //
-    // for (String group : jobGroupsToDelete) {
-    // if (group.equals("*")) {
-    // log.info("Deleting all jobs in ALL groups.");
-    // for (String groupName : scheduler.getJobGroupNames()) {
-    // if (!jobGroupsToNeverDelete.contains(groupName)) {
-    // for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(groupName))) {
-    // scheduler.deleteJob(key);
-    // }
-    // }
-    // }
-    // } else {
-    // if (!jobGroupsToNeverDelete.contains(group)) {
-    // log.info("Deleting all jobs in group: {}", group);
-    // for (JobKey key : scheduler.getJobKeys(GroupMatcher.groupEquals(group))) {
-    // scheduler.deleteJob(key);
-    // }
-    // }
-    // }
-    // }
-    //
-    // for (String group : triggerGroupsToDelete) {
-    // if (group.equals("*")) {
-    // log.info("Deleting all triggers in ALL groups.");
-    // for (String groupName : scheduler.getTriggerGroupNames()) {
-    // if (!triggerGroupsToNeverDelete.contains(groupName)) {
-    // for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(groupName))) {
-    // scheduler.unscheduleJob(key);
-    // }
-    // }
-    // }
-    // } else {
-    // if (!triggerGroupsToNeverDelete.contains(group)) {
-    // log.info("Deleting all triggers in group: {}", group);
-    // for (TriggerKey key : scheduler.getTriggerKeys(GroupMatcher.groupEquals(group))) {
-    // scheduler.unscheduleJob(key);
-    // }
-    // }
-    // }
-    // }
-    //
-    // for (JobKey key : jobsToDelete) {
-    // if (!jobGroupsToNeverDelete.contains(key.getGroup())) {
-    // log.info("Deleting job: {}", key);
-    // scheduler.deleteJob(key);
-    // }
-    // }
-    //
-    // for (TriggerKey key : triggersToDelete) {
-    // if (!triggerGroupsToNeverDelete.contains(key.getGroup())) {
-    // log.info("Deleting trigger: {}", key);
-    // scheduler.unscheduleJob(key);
-    // }
-    // }
-    // }
-
     /**
      * Schedules the given sets of jobs and triggers.
      * 
@@ -802,16 +682,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             itr.remove(); // remove jobs as we handle them...
 
             JobDetail dupeJ = sched.getJobDetail(detail.getKey());
-
-            if ((dupeJ != null)) {
-                if (!isOverWriteExistingData() && isIgnoreDuplicates()) {
-                    log.info("Not overwriting existing job: " + dupeJ.getKey());
-                    continue; // just ignore the entry
-                }
-                if (!isOverWriteExistingData() && !isIgnoreDuplicates()) {
-                    throw new ObjectAlreadyExistsException(detail);
-                }
-            }
 
             if (dupeJ != null) {
                 log.info("Replacing job: " + detail.getKey());
@@ -850,16 +720,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                     while (addedTrigger == false) {
                         Trigger dupeT = sched.getTrigger(trigger.getKey());
                         if (dupeT != null) {
-                            if (isOverWriteExistingData()) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Rescheduling job: " + trigger.getJobKey() + " with updated trigger: " + trigger.getKey());
-                                }
-                            } else if (isIgnoreDuplicates()) {
-                                log.info("Not overwriting existing trigger: " + dupeT.getKey());
-                                continue; // just ignore the trigger (and possibly job)
-                            } else {
-                                throw new ObjectAlreadyExistsException(trigger);
-                            }
 
                             if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
                                 log.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
@@ -903,16 +763,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             while (addedTrigger == false) {
                 Trigger dupeT = sched.getTrigger(trigger.getKey());
                 if (dupeT != null) {
-                    if (isOverWriteExistingData()) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Rescheduling job: " + trigger.getJobKey() + " with updated trigger: " + trigger.getKey());
-                        }
-                    } else if (isIgnoreDuplicates()) {
-                        log.info("Not overwriting existing trigger: " + dupeT.getKey());
-                        continue; // just ignore the trigger
-                    } else {
-                        throw new ObjectAlreadyExistsException(trigger);
-                    }
 
                     if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
                         log.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
