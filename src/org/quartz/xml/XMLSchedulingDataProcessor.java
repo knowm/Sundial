@@ -99,7 +99,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     public static final String QUARTZ_NS = "http://www.sundial-scheduler.org/xml/JobSchedulingData";
 
-    public static final String QUARTZ_XSD_PATH_IN_JAR = "org/quartz/xml/job_scheduling_data.xsd";
+    public static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
 
     public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
 
