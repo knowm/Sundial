@@ -97,9 +97,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    public static final String QUARTZ_NS = "http://www.quartz-scheduler.org/xml/JobSchedulingData";
+    public static final String QUARTZ_NS = "http://www.sundial-scheduler.org/xml/JobSchedulingData";
 
-    public static final String QUARTZ_XSD_PATH_IN_JAR = "org/quartz/xml/job_scheduling_data_2_0.xsd";
+    public static final String QUARTZ_XSD_PATH_IN_JAR = "org/quartz/xml/job_scheduling_data.xsd";
 
     public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
 
