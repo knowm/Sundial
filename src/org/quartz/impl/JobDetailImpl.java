@@ -28,6 +28,7 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.exceptions.DisallowConcurrentExecution;
 import org.quartz.utils.ClassUtils;
+import org.quartz.utils.Key;
 
 /**
  * <p>
@@ -58,8 +59,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
      */
 
     private String name;
-
-    private String group = Scheduler.DEFAULT_GROUP;
 
     private String description;
 
@@ -118,21 +117,21 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         this.key = null;
     }
 
-    /**
-     * <p>
-     * Get the group of this <code>Job</code>.
-     * </p>
-     */
-    public String getGroup() {
-        return group;
-    }
+    // /**
+    // * <p>
+    // * Get the group of this <code>Job</code>.
+    // * </p>
+    // */
+    // public String getGroup() {
+    // return group;
+    // }
 
     /**
      * <p>
      * Set the group of this <code>Job</code>.
      * </p>
      * 
-     * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
+     * @param group if <code>null</code>, Key.DEFAULT_GROUP will be used.
      * @exception IllegalArgumentException if the group is an empty string.
      */
     public void setGroup(String group) {
@@ -141,10 +140,9 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
         }
 
         if (group == null) {
-            group = Scheduler.DEFAULT_GROUP;
+            group = Key.DEFAULT_GROUP;
         }
 
-        this.group = group;
         this.key = null;
     }
 
@@ -154,7 +152,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
      * </p>
      */
     public String getFullName() {
-        return group + "." + name;
+        return Key.DEFAULT_GROUP + "." + name;
     }
 
     @Override
@@ -163,7 +161,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
             if (getName() == null) {
                 return null;
             }
-            key = new JobKey(getName(), getGroup());
+            key = new JobKey(getName(), Key.DEFAULT_GROUP);
         }
 
         return key;

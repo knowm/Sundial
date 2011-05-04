@@ -49,8 +49,6 @@ public class StdSchedulerFactory {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private SchedulerException initException = null;
-
     QuartzScheduler mQuartzScheduler = null;
 
     private int mThreadPoolSize = 10; // default size is 10
@@ -86,46 +84,24 @@ public class StdSchedulerFactory {
 
     private Scheduler instantiate() throws SchedulerException {
 
-        if (initException != null) {
-            throw initException;
-        }
-
-        JobStore jobstore = null;
-        SimpleThreadPool threadpool = null;
-
         // Setup SimpleThreadPool
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        try {
-            threadpool = new SimpleThreadPool();
-        } catch (Exception e) {
-            initException = new SchedulerException("SimpleThreadPool could not be instantiated.", e);
-            throw initException;
-        }
+        //
+        SimpleThreadPool threadpool = new SimpleThreadPool();
         threadpool.setThreadCount(mThreadPoolSize);
 
         // Setup RAMJobStore
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //
-
-        try {
-            jobstore = new RAMJobStore();
-        } catch (Exception e) {
-            initException = new SchedulerException("RAMJobStore could not be instantiated.", e);
-            throw initException;
-        }
+        JobStore jobstore = new RAMJobStore();
 
         // Set up any SchedulerPlugins
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         XMLSchedulingDataProcessorPlugin lXMLSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
         lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
         lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
 
         ShutdownHookPlugin lShutdownHookPlugin = new ShutdownHookPlugin();
-
-        // Set up any JobListeners
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Set up any TriggerListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,9 +115,7 @@ public class StdSchedulerFactory {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         try {
 
-            JobRunShellFactory jrsf = null; // Create correct run-shell factory...
-
-            jrsf = new StandardJobRunShellFactory();
+            JobRunShellFactory jrsf = new StandardJobRunShellFactory(); // Create correct run-shell factory...
 
             QuartzSchedulerResources rsrcs = new QuartzSchedulerResources();
             rsrcs.setThreadName("Quartz Scheduler Thread");
@@ -152,11 +126,8 @@ public class StdSchedulerFactory {
             rsrcs.setMaxBatchSize(1);
             rsrcs.setInterruptJobsOnShutdown(true);
             rsrcs.setInterruptJobsOnShutdownWithWait(true);
-
             rsrcs.setThreadPool(threadpool);
-            if (threadpool instanceof SimpleThreadPool) {
-                (threadpool).setThreadNamePrefix("Quartz_Scheduler_Worker");
-            }
+            threadpool.setThreadNamePrefix("Quartz_Scheduler_Worker");
             threadpool.initialize();
             tpInited = true;
 
@@ -169,10 +140,6 @@ public class StdSchedulerFactory {
             mQuartzScheduler = new QuartzScheduler(rsrcs);
             qsInited = true;
 
-            // Initialize plugins now that we have a Scheduler instance.
-            lXMLSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", mQuartzScheduler);
-            lShutdownHookPlugin.initialize("ShutdownHookPlugin", mQuartzScheduler);
-
             // add listeners
             mQuartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
 
@@ -180,9 +147,13 @@ public class StdSchedulerFactory {
             jobstore.initialize(mQuartzScheduler.getSchedulerSignaler());
             jobstore.setThreadPoolSize(threadpool.getPoolSize());
 
+            // Initialize plugins now that we have a Scheduler instance.
+            lXMLSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", mQuartzScheduler);
+            lShutdownHookPlugin.initialize("ShutdownHookPlugin", mQuartzScheduler);
+
             jrsf.initialize(mQuartzScheduler);
 
-            mQuartzScheduler.initialize();
+            mQuartzScheduler.initialize(); // starts the thread
 
             return mQuartzScheduler;
 
@@ -209,5 +180,4 @@ public class StdSchedulerFactory {
             throw re;
         }
     }
-
 }

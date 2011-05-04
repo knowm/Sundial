@@ -129,7 +129,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     private DocumentBuilder docBuilder = null;
     private XPath xpath = null;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger loggger = LoggerFactory.getLogger(getClass());
 
     /*
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,7 +214,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
 
         if (is == null) {
-            log.warn("Could not load xml scheme from classpath");
+            loggger.warn("Could not load xml scheme from classpath");
         } else {
             inputSource = new InputSource(is);
         }
@@ -286,7 +286,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                     try {
                         urlPath = URLDecoder.decode(url.getPath(), "UTF-8");
                     } catch (UnsupportedEncodingException e) {
-                        log.warn("Unable to decode file path URL", e);
+                        loggger.warn("Unable to decode file path URL", e);
                     }
                     try {
                         if (url != null) {
@@ -303,7 +303,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             }
 
             if (fileInputStream == null) {
-                log.debug("Unable to resolve '" + fileName + "' to full path, so using it as is for system id.");
+                loggger.debug("Unable to resolve '" + fileName + "' to full path, so using it as is for system id.");
                 return fileName;
             } else {
                 return (urlPath != null) ? urlPath : file.getAbsolutePath();
@@ -314,7 +314,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                     fileInputStream.close();
                 }
             } catch (IOException ioe) {
-                log.warn("Error closing jobs file: " + fileName, ioe);
+                loggger.warn("Error closing jobs file: " + fileName, ioe);
             }
         }
     }
@@ -347,7 +347,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         prepForProcessing();
 
-        log.info("Parsing XML file: " + fileName + " with systemId: " + systemId);
+        loggger.info("Parsing XML file: " + fileName + " with systemId: " + systemId);
         InputSource is = new InputSource(getInputStream(fileName));
         is.setSystemId(systemId);
 
@@ -367,7 +367,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         prepForProcessing();
 
-        log.info("Parsing XML from stream with systemId: " + systemId);
+        loggger.info("Parsing XML from stream with systemId: " + systemId);
 
         InputSource is = new InputSource(stream);
         is.setSystemId(systemId);
@@ -389,7 +389,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         NodeList jobNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:schedule/q:job", document, XPathConstants.NODESET);
 
-        log.debug("Found " + jobNodes.getLength() + " job definitions.");
+        loggger.debug("Found " + jobNodes.getLength() + " job definitions.");
 
         for (int i = 0; i < jobNodes.getLength(); i++) {
             Node jobDetailNode = jobNodes.item(i);
@@ -412,8 +412,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                 jobDetail.getJobDataMap().put(key, value);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Parsed job definition: " + jobDetail);
+            if (loggger.isDebugEnabled()) {
+                loggger.debug("Parsed job definition: " + jobDetail);
             }
 
             addJobToSchedule(jobDetail);
@@ -425,7 +425,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         NodeList triggerEntries = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:schedule/q:trigger/*", document, XPathConstants.NODESET);
 
-        log.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
+        loggger.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
 
         for (int j = 0; j < triggerEntries.getLength(); j++) {
             Node triggerNode = triggerEntries.item(j);
@@ -541,8 +541,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                 trigger.getJobDataMap().put(key, value);
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Parsed trigger definition: " + trigger);
+            if (loggger.isDebugEnabled()) {
+                loggger.debug("Parsed trigger definition: " + trigger);
             }
 
             addTriggerToSchedule(trigger);
@@ -671,7 +671,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         List<JobDetail> jobs = new LinkedList(getLoadedJobs());
         List<MutableTrigger> triggers = new LinkedList(getLoadedTriggers());
 
-        log.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
+        loggger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
         Map<JobKey, List<MutableTrigger>> triggersByFQJobName = buildTriggersByFQJobNameMap(triggers);
 
@@ -679,18 +679,20 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         Iterator<JobDetail> itr = jobs.iterator();
         while (itr.hasNext()) {
             JobDetail detail = itr.next();
+            loggger.debug("***detail" + detail.getKey().getName());
             itr.remove(); // remove jobs as we handle them...
 
             JobDetail dupeJ = sched.getJobDetail(detail.getKey());
 
             if (dupeJ != null) {
-                log.info("Replacing job: " + detail.getKey());
+                loggger.info("Replacing job: " + detail.getKey());
             } else {
-                log.info("Adding job: " + detail.getKey());
+                loggger.info("Adding job: " + detail.getKey());
             }
 
             List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(detail.getKey());
 
+            // log.debug("detail.isDurable()" + detail.isDurable());
             if (!detail.isDurable() && (triggersOfJob == null || triggersOfJob.size() == 0)) {
                 if (dupeJ == null) {
                     throw new SchedulerException("A new job defined without any triggers must be durable: " + detail.getKey());
@@ -722,25 +724,29 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                         if (dupeT != null) {
 
                             if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-                                log.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+                                loggger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
                             }
 
                             sched.rescheduleJob(trigger.getKey(), trigger);
                         } else {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
+                            if (loggger.isDebugEnabled()) {
+                                loggger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
                             }
 
                             try {
                                 if (addJobWithFirstSchedule) {
+                                    loggger.debug("here1");
+
                                     sched.scheduleJob(detail, trigger); // add the job if it's not in yet...
                                     addJobWithFirstSchedule = false;
                                 } else {
+                                    loggger.debug("here2");
+
                                     sched.scheduleJob(trigger);
                                 }
                             } catch (ObjectAlreadyExistsException e) {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getKey() + " failed because the trigger already existed.  "
+                                if (loggger.isDebugEnabled()) {
+                                    loggger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getKey() + " failed because the trigger already existed.  "
                                             + "This is likely due to a race condition between multiple instances " + "in the cluster.  Will try to reschedule instead.");
                                 }
                                 continue;
@@ -765,20 +771,20 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                 if (dupeT != null) {
 
                     if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-                        log.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+                        loggger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
                     }
 
                     sched.rescheduleJob(trigger.getKey(), trigger);
                 } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
+                    if (loggger.isDebugEnabled()) {
+                        loggger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
                     }
 
                     try {
                         sched.scheduleJob(trigger);
                     } catch (ObjectAlreadyExistsException e) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Adding trigger: " + trigger.getKey() + " for job: " + trigger.getJobKey() + " failed because the trigger already existed.  "
+                        if (loggger.isDebugEnabled()) {
+                            loggger.debug("Adding trigger: " + trigger.getKey() + " for job: " + trigger.getJobKey() + " failed because the trigger already existed.  "
                                     + "This is likely due to a race condition between multiple instances " + "in the cluster.  Will try to reschedule instead.");
                         }
                         continue;

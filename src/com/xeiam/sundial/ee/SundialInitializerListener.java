@@ -23,9 +23,12 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.quartz.Scheduler;
+import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xeiam.sundial.DefaultJobScheduler;
 
 /**
  * <p>
@@ -65,7 +68,7 @@ public class SundialInitializerListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        logger.info("Quartz Initializer Servlet loaded, initializing Scheduler...");
+        logger.info("Sundial Initializer Servlet loaded, initializing Scheduler...");
 
         ServletContext servletContext = sce.getServletContext();
         try {
@@ -112,9 +115,6 @@ public class SundialInitializerListener implements ServletContextListener {
                 startDelay = 5;
             }
 
-            /*
-             * If the "quartz:start-on-load" init-parameter is not specified, the scheduler will be started. This is to maintain backwards compatability.
-             */
             if (startOnLoad == null || (Boolean.valueOf(startOnLoad).booleanValue())) {
                 if (startDelay <= 0) {
                     // Start now
@@ -133,6 +133,21 @@ public class SundialInitializerListener implements ServletContextListener {
             logger.error("Quartz Scheduler failed to initialize: " + e.toString());
             e.printStackTrace();
         }
+        logger.debug("Scheduled Jobs:");
+        for (String name : DefaultJobScheduler.getAllJobNames()) {
+            logger.debug("   " + name);
+        }
+        logger.debug("Group Names:");
+
+        try {
+            for (String name : DefaultJobScheduler.getScheduler().getJobGroupNames()) {
+                logger.debug("   " + name);
+            }
+        } catch (SchedulerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     @Override

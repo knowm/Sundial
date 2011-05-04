@@ -24,6 +24,7 @@ public class SampleJobAction extends JobAction {
         // String xyz = (String) lContext.getRequiredValue("xyz");
         // System.out.println(xyz);
         logDebug("Test Action Log!");
+
     }
 
 }

@@ -29,8 +29,6 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,8 +185,7 @@ public class DefaultJobScheduler {
 
         List<String> lAllJobNames = new ArrayList<String>();
         try {
-            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
-            Set<JobKey> allJobKeys = getScheduler().getJobKeys(groupMatcher);
+            Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
             for (JobKey jobKey : allJobKeys) {
                 lAllJobNames.add(jobKey.getName());
             }
@@ -209,8 +206,7 @@ public class DefaultJobScheduler {
 
         Map<String, List<Trigger>> lAllJobsMap = new TreeMap<String, List<Trigger>>();
         try {
-            GroupMatcher<JobKey> groupMatcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
-            Set<JobKey> allJobKeys = getScheduler().getJobKeys(groupMatcher);
+            Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
             for (JobKey lJobKey : allJobKeys) {
                 List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(lJobKey);
                 lAllJobsMap.put(lJobKey.getName(), lTriggers);

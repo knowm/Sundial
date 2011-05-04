@@ -58,6 +58,7 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.SchedulerPlugin;
 import org.quartz.spi.SchedulerSignaler;
+import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,7 +149,7 @@ public class QuartzScheduler implements Scheduler {
 
     public void initialize() throws SchedulerException {
 
-        this.mQuartzSchedulerThread.start();
+        mQuartzSchedulerThread.start();
     }
 
     /*
@@ -762,7 +763,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         // TODO: use builder
-        OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Scheduler.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
+        OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
         trig.computeFirstFireTime(null);
         if (data != null) {
             trig.setJobDataMap(data);
@@ -774,7 +775,7 @@ public class QuartzScheduler implements Scheduler {
                 mQuartzSchedulerResources.getJobStore().storeTrigger(trig, false);
                 collision = false;
             } catch (ObjectAlreadyExistsException oaee) {
-                trig.setKey(new TriggerKey(newTriggerId(), Scheduler.DEFAULT_GROUP));
+                trig.setKey(new TriggerKey(newTriggerId(), Key.DEFAULT_GROUP));
             }
         }
 
@@ -799,7 +800,7 @@ public class QuartzScheduler implements Scheduler {
                 mQuartzSchedulerResources.getJobStore().storeTrigger(trig, false);
                 collision = false;
             } catch (ObjectAlreadyExistsException oaee) {
-                trig.setKey(new TriggerKey(newTriggerId(), Scheduler.DEFAULT_GROUP));
+                trig.setKey(new TriggerKey(newTriggerId(), Key.DEFAULT_GROUP));
             }
         }
 
@@ -833,7 +834,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (matcher == null) {
-            matcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         Collection<String> pausedGroups = mQuartzSchedulerResources.getJobStore().pauseTriggers(matcher);
@@ -869,7 +870,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (groupMatcher == null) {
-            groupMatcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            groupMatcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         Collection<String> pausedGroups = mQuartzSchedulerResources.getJobStore().pauseJobs(groupMatcher);
@@ -911,7 +912,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (matcher == null) {
-            matcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         Collection<String> pausedGroups = mQuartzSchedulerResources.getJobStore().resumeTriggers(matcher);
@@ -958,7 +959,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (matcher == null) {
-            matcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         Collection<String> resumedGroups = mQuartzSchedulerResources.getJobStore().resumeJobs(matcher);
@@ -1034,7 +1035,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (matcher == null) {
-            matcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         return mQuartzSchedulerResources.getJobStore().getJobKeys(matcher);
@@ -1077,7 +1078,7 @@ public class QuartzScheduler implements Scheduler {
         validateState();
 
         if (matcher == null) {
-            matcher = GroupMatcher.groupEquals(Scheduler.DEFAULT_GROUP);
+            matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
         }
 
         return mQuartzSchedulerResources.getJobStore().getTriggerKeys(matcher);
@@ -1408,6 +1409,7 @@ public class QuartzScheduler implements Scheduler {
     }
 
     private boolean matchJobListener(JobListener listener, JobKey key) {
+
         List<Matcher<JobKey>> matchers = getListenerManager().getJobListenerMatchers(listener.getName());
         if (matchers == null) {
             return true;
@@ -1421,6 +1423,7 @@ public class QuartzScheduler implements Scheduler {
     }
 
     private boolean matchTriggerListener(TriggerListener listener, TriggerKey key) {
+
         List<Matcher<TriggerKey>> matchers = getListenerManager().getTriggerListenerMatchers(listener.getName());
         if (matchers == null) {
             return true;

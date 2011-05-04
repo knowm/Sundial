@@ -28,7 +28,6 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.exceptions.UnableToInterruptJobException;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.JobFactory;
-import org.quartz.utils.Key;
 
 /**
  * This is the main interface of a Quartz Scheduler.
@@ -83,10 +82,10 @@ public interface Scheduler {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-    /**
-     * A (possibly) useful constant that can be used for specifying the group that <code>Job</code> and <code>Trigger</code> instances belong to.
-     */
-    String DEFAULT_GROUP = Key.DEFAULT_GROUP;
+    // /**
+    // * A (possibly) useful constant that can be used for specifying the group that <code>Job</code> and <code>Trigger</code> instances belong to.
+    // */
+    // String DEFAULT_GROUP = Key.DEFAULT_GROUP;
 
     /**
      * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("RECOVERING_JOBS") for the name of a <code>Trigger</code>'s group.
