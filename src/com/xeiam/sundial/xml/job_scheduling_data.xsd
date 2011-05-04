@@ -11,16 +11,6 @@
         </xs:annotation>
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
-                <xs:element name="pre-processing-commands" type="pre-processing-commandsType" minOccurs="0" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>Commands to be executed before scheduling the jobs and triggers in this file.</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="processing-directives" type="processing-directivesType" minOccurs="0" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>Directives to be followed while scheduling the jobs and triggers in this file.</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
                 <xs:element name="schedule" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence maxOccurs="unbounded">
@@ -37,46 +27,6 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
-    
-    <xs:complexType name="pre-processing-commandsType">
-        <xs:sequence maxOccurs="unbounded">
-            <xs:element name="delete-jobs-in-group" type="xs:string" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation><xs:documentation>Delete all jobs, if any, in the identified group. "*" can be used to identify all groups. Will also result in deleting all triggers related to the jobs.</xs:documentation></xs:annotation>
-            </xs:element>
-            <xs:element name="delete-triggers-in-group" type="xs:string" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation><xs:documentation>Delete all triggers, if any, in the identified group. "*" can be used to identify all groups. Will also result in deletion of related jobs that are non-durable.</xs:documentation></xs:annotation>
-            </xs:element>
-            <xs:element name="delete-job" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation><xs:documentation>Delete the identified job if it exists (will also result in deleting all triggers related to it).</xs:documentation></xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="name" type="xs:string"/>
-                        <xs:element name="group" type="xs:string" minOccurs="0"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="delete-trigger" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation><xs:documentation>Delete the identified trigger if it exists (will also result in deletion of related jobs that are non-durable).</xs:documentation></xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="name" type="xs:string"/>
-                        <xs:element name="group" type="xs:string" minOccurs="0"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="processing-directivesType">
-        <xs:sequence>
-            <xs:element name="overwrite-existing-data" type="xs:boolean" minOccurs="0" default="true">
-                <xs:annotation><xs:documentation>Whether the existing scheduling data (with same identifiers) will be overwritten. If false, and ignore-duplicates is not false, and jobs or triggers with the same names already exist as those in the file, an error will occur.</xs:documentation></xs:annotation>
-            </xs:element>
-            <xs:element name="ignore-duplicates" type="xs:boolean" minOccurs="0" default="false">
-                <xs:annotation><xs:documentation>If true (and overwrite-existing-data is false) then any job/triggers encountered in this file that have names that already exist in the scheduler will be ignored, and no error will be produced.</xs:documentation></xs:annotation>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
     
     <xs:complexType name="job-detailType">
         <xs:annotation>

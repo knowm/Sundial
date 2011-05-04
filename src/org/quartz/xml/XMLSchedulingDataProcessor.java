@@ -430,21 +430,21 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         // Extract directives
         //
 
-        Boolean overWrite = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:overwrite-existing-data", document);
-        if (overWrite == null) {
-            log.debug("Directive 'overwrite-existing-data' not specified, defaulting to " + isOverWriteExistingData());
-        } else {
-            log.debug("Directive 'overwrite-existing-data' specified as: " + overWrite);
-            setOverWriteExistingData(overWrite);
-        }
-
-        Boolean ignoreDupes = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:ignore-duplicates", document);
-        if (ignoreDupes == null) {
-            log.debug("Directive 'ignore-duplicates' not specified, defaulting to " + isIgnoreDuplicates());
-        } else {
-            log.debug("Directive 'ignore-duplicates' specified as: " + ignoreDupes);
-            setIgnoreDuplicates(ignoreDupes);
-        }
+        // Boolean overWrite = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:overwrite-existing-data", document);
+        // if (overWrite == null) {
+        // log.debug("Directive 'overwrite-existing-data' not specified, defaulting to " + isOverWriteExistingData());
+        // } else {
+        // log.debug("Directive 'overwrite-existing-data' specified as: " + overWrite);
+        // setOverWriteExistingData(overWrite);
+        // }
+        //
+        // Boolean ignoreDupes = getBoolean(xpath, "/q:job-scheduling-data/q:processing-directives/q:ignore-duplicates", document);
+        // if (ignoreDupes == null) {
+        // log.debug("Directive 'ignore-duplicates' not specified, defaulting to " + isIgnoreDuplicates());
+        // } else {
+        // log.debug("Directive 'ignore-duplicates' specified as: " + ignoreDupes);
+        // setIgnoreDuplicates(ignoreDupes);
+        // }
 
         //
         // Extract Job definitions...
