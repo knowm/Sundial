@@ -25,6 +25,7 @@ import org.quartz.core.QuartzSchedulerResources;
 import org.quartz.core.StandardJobRunShellFactory;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.matchers.EverythingMatcher;
+import org.quartz.plugins.management.ShutdownHookPlugin;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.simpl.SimpleThreadPool;
@@ -121,6 +122,8 @@ public class StdSchedulerFactory {
         lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
         lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
 
+        ShutdownHookPlugin lShutdownHookPlugin = new ShutdownHookPlugin();
+
         // Set up any JobListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -161,12 +164,14 @@ public class StdSchedulerFactory {
 
             // add plugins
             rsrcs.addSchedulerPlugin(lXMLSchedulingDataProcessorPlugin);
+            rsrcs.addSchedulerPlugin(lShutdownHookPlugin);
 
             mQuartzScheduler = new QuartzScheduler(rsrcs);
             qsInited = true;
 
             // Initialize plugins now that we have a Scheduler instance.
             lXMLSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", mQuartzScheduler);
+            lShutdownHookPlugin.initialize("ShutdownHookPlugin", mQuartzScheduler);
 
             // add listeners
             mQuartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
