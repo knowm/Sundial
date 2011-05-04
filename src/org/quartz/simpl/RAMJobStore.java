@@ -226,9 +226,6 @@ public class RAMJobStore implements JobStore {
     @Override
     public void storeJob(JobDetail newJob, boolean replaceExisting) throws ObjectAlreadyExistsException {
 
-        logger.debug("***newJob.getKey().getGroup(): " + newJob.getKey().getGroup());
-        logger.debug("***newJob.getKey().getName(): " + newJob.getKey().getName());
-
         JobWrapper jw = new JobWrapper((JobDetail) newJob.clone());
 
         boolean repl = false;
@@ -248,14 +245,11 @@ public class RAMJobStore implements JobStore {
                 HashMap<JobKey, JobWrapper> grpMap = jobsByGroup.get(newJob.getKey().getGroup());
                 if (grpMap == null) {
                     grpMap = new HashMap<JobKey, JobWrapper>(100);
-                    logger.debug("***newJob.getKey().getGroup(): " + newJob.getKey().getGroup());
 
                     jobsByGroup.put(newJob.getKey().getGroup(), grpMap);
                 }
                 // add to jobs by group
                 grpMap.put(newJob.getKey(), jw);
-                logger.debug("*** grpMap: " + grpMap.size());
-                logger.debug("*** jobsByGroup: " + jobsByGroup.size());
 
                 // add to jobs by FQN map
                 jobsByKey.put(jw.key, jw);
@@ -770,20 +764,15 @@ public class RAMJobStore implements JobStore {
 
             switch (operator) {
             case EQUALS:
-                logger.debug("***compareToValue: " + compareToValue);
-                logger.debug("***jobsByGroup.size(): " + jobsByGroup.size());
 
                 HashMap<JobKey, JobWrapper> grpMap = jobsByGroup.get(compareToValue);
                 if (grpMap != null) {
-                    logger.debug("***HEREEEE6");
 
                     outList = new HashSet<JobKey>();
 
                     for (JobWrapper jw : grpMap.values()) {
-                        logger.debug("***HEREEEE7");
 
                         if (jw != null) {
-                            logger.debug("***jw.jobDetail.getKey()" + jw.jobDetail.getKey().getName());
 
                             outList.add(jw.jobDetail.getKey());
                         }

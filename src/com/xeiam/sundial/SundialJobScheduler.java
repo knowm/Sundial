@@ -45,9 +45,6 @@ public class SundialJobScheduler {
     /** Quartz scheduler */
     private static Scheduler mScheduler = null;
 
-    // /** ThreadPool Size */
-    // private static int mThreadPoolSize = 10;
-
     /** global lock */
     private static boolean mGlobalLock = false;
 
