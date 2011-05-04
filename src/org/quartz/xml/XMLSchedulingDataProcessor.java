@@ -100,7 +100,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     public static final String QUARTZ_NS = "http://www.quartz-scheduler.org/xml/JobSchedulingData";
 
-    public static final String QUARTZ_SCHEMA_WEB_URL = "http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd";
+    // public static final String QUARTZ_SCHEMA_WEB_URL = "http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd";
 
     public static final String QUARTZ_XSD_PATH_IN_JAR = "org/quartz/xml/job_scheduling_data_2_0.xsd";
 
@@ -220,24 +220,31 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     protected Object resolveSchemaSource() {
+
         InputSource inputSource = null;
 
         InputStream is = null;
 
-        URL url = null;
+        // URL url = null;
 
-        try {
-            is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
-        } finally {
-            if (is != null) {
-                inputSource = new InputSource(is);
-                inputSource.setSystemId(QUARTZ_SCHEMA_WEB_URL);
-                log.debug("Utilizing schema packaged in local quartz distribution jar.");
-            } else {
-                log.info("Unable to load local schema packaged in quartz distribution jar. Utilizing schema online at " + QUARTZ_SCHEMA_WEB_URL);
-                return QUARTZ_SCHEMA_WEB_URL;
-            }
+        // try {
+        is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
+        // } finally {
+        // if (is != null) {
+        // inputSource = new InputSource(is);
+        // inputSource.setSystemId(QUARTZ_SCHEMA_WEB_URL);
+        // log.debug("Utilizing schema packaged in local quartz distribution jar.");
+        // } else {
+        // log.info("Unable to load local schema packaged in quartz distribution jar. Utilizing schema online at " + QUARTZ_SCHEMA_WEB_URL);
+        // return QUARTZ_SCHEMA_WEB_URL;
+        // }
+        //
+        // }
 
+        if (is == null) {
+            log.warn("Could not load xml scheme from classpath");
+        } else {
+            inputSource = new InputSource(is);
         }
 
         return inputSource;
