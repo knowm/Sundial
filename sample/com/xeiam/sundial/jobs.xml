@@ -23,7 +23,6 @@
                 <cron-expression>0/45 * * * * ?</cron-expression>
             </cron>
         </trigger>
-
     </schedule>
     
 </job-scheduling-data>

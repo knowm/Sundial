@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="sundial" default="build" basedir=".">
+<project name="sundial" default="jar" basedir=".">
 
     <property file="build.properties"/>
 	
@@ -28,6 +28,15 @@
         </javac>
     </target>
 	
+    <target name="copy">
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}">
+	         	<include name="**/*.xsd"/>
+	        </fileset>
+        </copy>
+        
+    </target>
+	
     <target name="manifest">
         <echo>Creating manifest</echo>
         <tstamp>
@@ -40,11 +49,11 @@
        </manifest>
     </target>
 	
-	<target name="jar" depends="compile, manifest">
+	<target name="build" depends="compile, copy, manifest">
 	      <jar jarfile="${dist.dir}/${project.name}-${build.version}.jar">
 	         <fileset dir="${build.dir}">
 	         	<include name="**/*.class"/>
-	         	<include name="**/*.properties"/>
+	         	<include name="**/*.xsd"/>
 	         </fileset>
 	       </jar>
 	</target>	
@@ -53,7 +62,7 @@
         <delete dir="${build.dir}"/>
     </target>
 	
-   <target name="build" depends="jar, delete">
+   <target name="jar" depends="build, delete">
     </target>
 	
 </project>

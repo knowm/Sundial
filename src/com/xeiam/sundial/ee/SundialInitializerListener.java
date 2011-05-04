@@ -68,7 +68,6 @@ public class SundialInitializerListener implements ServletContextListener {
         logger.info("Quartz Initializer Servlet loaded, initializing Scheduler...");
 
         ServletContext servletContext = sce.getServletContext();
-        StdSchedulerFactory factory;
         try {
 
             String shutdownPref = servletContext.getInitParameter("shutdown-on-unload");
@@ -81,11 +80,22 @@ public class SundialInitializerListener implements ServletContextListener {
                 waitOnShutdown = Boolean.valueOf(shutdownWaitPref).booleanValue();
             }
 
-            factory = new StdSchedulerFactory();
+            // THREAD POOL SIZE
+            int threadPoolSize = 0;
+            String ThreadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
+
+            try {
+                if (ThreadPoolSizeString != null && ThreadPoolSizeString.trim().length() > 0) {
+                    threadPoolSize = Integer.parseInt(ThreadPoolSizeString);
+                }
+            } catch (Exception e) {
+                logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
+                threadPoolSize = 10;
+            }
 
             // Always want to get the scheduler, even if it isn't starting,
             // to make sure it is both initialized and registered.
-            scheduler = factory.getScheduler();
+            scheduler = new StdSchedulerFactory().getScheduler(threadPoolSize);
 
             // Should the Scheduler being started now or later
             String startOnLoad = servletContext.getInitParameter("start-scheduler-on-load");
