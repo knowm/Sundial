@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTriggerListener implements TriggerListener {
 
-    /** slf4J logger wrapper */
+    /** slf4J loggger wrapper */
     Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
 
     /**
