@@ -20,8 +20,8 @@ import java.util.List;
 import org.quartz.JobExecutionContext;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
-import org.quartz.exceptions.SchedulerException;
 import org.quartz.TriggerListener;
+import org.quartz.exceptions.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTriggerListener implements TriggerListener {
 
-    /** slf4J loggger wrapper */
+    /** slf4J logger wrapper */
     Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
 
     /**
