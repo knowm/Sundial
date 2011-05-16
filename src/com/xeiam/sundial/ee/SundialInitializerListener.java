@@ -58,16 +58,14 @@ public class SundialInitializerListener implements ServletContextListener {
 
     private boolean waitOnShutdown = false;
 
-    // private Scheduler scheduler = null;
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void contextInitialized(ServletContextEvent pServletContextEvent) {
 
         logger.info("Sundial Initializer Servlet loaded, initializing Scheduler...");
 
-        ServletContext servletContext = sce.getServletContext();
+        ServletContext servletContext = pServletContextEvent.getServletContext();
         try {
 
             String shutdownPref = servletContext.getInitParameter("shutdown-on-unload");
@@ -96,6 +94,9 @@ public class SundialInitializerListener implements ServletContextListener {
             // Always want to get the scheduler, even if it isn't starting,
             // to make sure it is both initialized and registered.
             SundialJobScheduler.createScheduler(10);
+
+            // Give a reference to the servletContext so jobs can access "global" webapp objects
+            SundialJobScheduler.setServletContext(servletContext);
 
             // Should the Scheduler being started now or later
             String startOnLoad = servletContext.getInitParameter("start-scheduler-on-load");
@@ -127,8 +128,7 @@ public class SundialInitializerListener implements ServletContextListener {
             }
 
         } catch (Exception e) {
-            logger.error("Quartz Scheduler failed to initialize: " + e.toString());
-            e.printStackTrace();
+            logger.error("Quartz Scheduler failed to initialize: ", e);
         }
 
     }
@@ -145,8 +145,7 @@ public class SundialInitializerListener implements ServletContextListener {
                 SundialJobScheduler.getScheduler().shutdown(waitOnShutdown);
             }
         } catch (Exception e) {
-            logger.error("Quartz Scheduler failed to shutdown cleanly: " + e.toString());
-            e.printStackTrace();
+            logger.error("Quartz Scheduler failed to shutdown cleanly: ", e);
         }
 
         logger.info("Quartz Scheduler successful shutdown.");

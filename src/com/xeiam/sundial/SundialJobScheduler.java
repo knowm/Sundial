@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.servlet.ServletContext;
+
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
@@ -47,6 +49,8 @@ public class SundialJobScheduler {
 
     /** global lock */
     private static boolean mGlobalLock = false;
+
+    private static ServletContext mServletContext = null;
 
     /**
      * Gets the underlying Sundial scheduler
@@ -106,6 +110,20 @@ public class SundialJobScheduler {
 
     public static boolean getGlobalLock() {
         return mGlobalLock;
+    }
+
+    /**
+     * @return the mServletContext
+     */
+    public static ServletContext getServletContext() {
+        return mServletContext;
+    }
+
+    /**
+     * @param mServletContext the mServletContext to set
+     */
+    public static void setServletContext(ServletContext mServletContext) {
+        SundialJobScheduler.mServletContext = mServletContext;
     }
 
     /**
