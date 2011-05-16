@@ -41,9 +41,11 @@ import org.quartz.Matcher;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerContext;
 import org.quartz.SchedulerListener;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.Trigger.TriggerState;
+import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.quartz.exceptions.JobExecutionException;
@@ -757,13 +759,13 @@ public class QuartzScheduler implements Scheduler {
      * Trigger the identified <code>{@link org.quartz.Job}</code> (execute it now) - with a non-volatile trigger.
      * </p>
      */
-
     @Override
     public void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException {
         validateState();
 
-        // TODO: use builder
-        OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
+        OperableTrigger trig = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey.getName() + "-trigger", Key.DEFAULT_GROUP).forJob(jobKey).withSchedule(SimpleScheduleBuilder.simpleSchedule())
+                .startAt(new Date()).build();
+        // OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
         trig.computeFirstFireTime(null);
         if (data != null) {
             trig.setJobDataMap(data);

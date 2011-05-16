@@ -135,7 +135,7 @@ public class SundialJobScheduler {
 
         try {
             JobKey jobKey = new JobKey(pJobName);
-            getScheduler().triggerJob(jobKey);
+            getScheduler().triggerJob(jobKey, null);
         } catch (SchedulerException e) {
             logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
         }
