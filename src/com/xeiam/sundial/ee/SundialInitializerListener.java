@@ -127,6 +127,15 @@ public class SundialInitializerListener implements ServletContextListener {
                 logger.info("Scheduler has not been started. Use scheduler.start()");
             }
 
+            String globalLockOnLoadString = servletContext.getInitParameter("global-lock-on-load");
+            boolean globalLockOnLoad = false;
+            if (globalLockOnLoadString != null) {
+                globalLockOnLoad = Boolean.valueOf(globalLockOnLoadString).booleanValue();
+                if (globalLockOnLoad) {
+                    SundialJobScheduler.lockScheduler();
+                }
+            }
+
         } catch (Exception e) {
             logger.error("Quartz Scheduler failed to initialize: ", e);
         }
