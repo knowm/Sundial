@@ -147,7 +147,7 @@ public class SundialJobScheduler {
      * 
      * @param pJobName
      */
-    public static void startJob(String pJobName, Map<String, String> pParams) {
+    public static void startJob(String pJobName, Map<String, Object> pParams) {
 
         try {
 
