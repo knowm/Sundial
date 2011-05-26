@@ -15,9 +15,6 @@
  */
 package com.xeiam.sundial;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,99 +101,12 @@ public class JobContext {
     }
 
     /**
-     * Get a String value out of the JobContext
-     * 
-     * @param pKey
-     * @return
-     */
-    public String getStringValue(String pKey) {
-        try {
-            return (String) get(pKey);
-        } catch (Exception e) {
-            logger.error("COULD NOT CAST CONTEXT VALUE INTO A STRING FOR KEY: " + pKey);
-            return null;
-        }
-    }
-
-    /**
-     * Get a Date value out of the JobContext matching the given Date pattern String
-     * 
-     * @param pKey
-     * @param pDatePattern
-     * @return
-     */
-    public Date getDateValue(String pKey, String pDatePattern) {
-        DateFormat lDateFormat = new SimpleDateFormat(pDatePattern);
-        try {
-            return lDateFormat.parse((String) get(pKey));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get a Boolean value out of the JobContext
-     * 
-     * @param pKey
-     * @return
-     */
-    public Boolean getBooleanValue(String pKey) {
-        try {
-            return Boolean.parseBoolean((String) get(pKey));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get a Long value out of the JobContext
-     * 
-     * @param pKey
-     * @return
-     */
-    public Long getLongValue(String pKey) {
-        try {
-            return new Long((String) get(pKey));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get a Double value out of the JobContext
-     * 
-     * @param pKey
-     * @return
-     */
-    public Double getDoubleValue(String pKey) {
-        try {
-            return new Double((String) get(pKey));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * Get a Integer value out of the JobContext
-     * 
-     * @param pKey
-     * @return
-     */
-    public Integer getIntegerValue(String pKey) {
-        try {
-            return new Integer((String) get(pKey));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
      * Convenience method to get the Job Name
      * 
      * @return
      */
     public String getJobName() {
-        return getStringValue(KEY_JOB_NAME);
+        return get(KEY_JOB_NAME);
     }
 
     /**
@@ -205,7 +115,7 @@ public class JobContext {
      * @return
      */
     public String getTriggerName() {
-        return getStringValue(KEY_TRIGGER_NAME);
+        return get(KEY_TRIGGER_NAME);
     }
 
     /**
@@ -214,7 +124,7 @@ public class JobContext {
      * @return
      */
     public String getCronExpressionName() {
-        return getStringValue(KEY_TRIGGER_CRON_EXPRESSION);
+        return get(KEY_TRIGGER_CRON_EXPRESSION);
     }
 
 }
