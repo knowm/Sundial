@@ -31,7 +31,5 @@ public class SampleJob2 extends Job {
 
         logInfo("value=" + value);
 
-        new SampleJobAction().run();
-
     }
 }
