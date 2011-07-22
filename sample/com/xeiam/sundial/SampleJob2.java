@@ -19,38 +19,19 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
 
 /**
  * @author timmolter
- * @version $Revision: $ $Date: $ $Author: $
  */
-public class SampleJob extends Job {
+public class SampleJob2 extends Job {
 
     @Override
     public void doRun() throws JobInterruptException {
 
-        JobContext lContext = getJobContext();
+        JobContext context = getJobContext();
 
-        System.out.println("RUNNING!");
+        String value = (String) context.get("MyParam");
 
-        int counter = 0;
-        while (counter < 3) {
+        logInfo("value=" + value);
 
-            checkTerminated();
+        new SampleJobAction().run();
 
-            new SampleJobAction().run();
-
-            Thread t = Thread.currentThread();
-            String name = t.getName();
-
-            // System.out.println(lContext.getValue("timestamp") + " TName: " + name);
-            counter++;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // e.printStackTrace();
-            }
-        }
-        // setTerminate();
-        // checkTerminated();
-
-        System.out.println("DONE!");
     }
 }

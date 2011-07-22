@@ -11,7 +11,7 @@
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="DEBUG"/>
-            <param name="LevelMax" value="INFO"/>
+            <param name="LevelMax" value="WARN"/>
         </filter>
   </appender>
 
@@ -22,10 +22,10 @@
               value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5p %c %m %n" />
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
-            <param name="LevelMin" value="WARN"/>
+            <param name="LevelMin" value="ERROR"/>
             <param name="LevelMax" value="FATAL"/>
         </filter>
-  </appender>
+  </appender>  
 
     <!--                           -->
     <!-- setup log4j's root logger -->
@@ -35,6 +35,5 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="STDERR"/>
     </root>
-
 
 </log4j:configuration>

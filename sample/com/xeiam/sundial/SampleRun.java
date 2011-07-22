@@ -18,17 +18,14 @@ package com.xeiam.sundial;
 /**
  * @author timmolter
  */
-public class Sample {
+public class SampleRun {
 
     /**
-     * Make sure jobs.xml, log4j.xml and quartz.properties are on the classpath!
-     * 
-     * @param args
+     * Make sure jobs.xml and log4j.xml are on the classpath!
      */
     public static void main(String[] args) {
 
         SundialJobScheduler.startScheduler();
 
     }
-
 }

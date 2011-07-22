@@ -15,19 +15,21 @@
  */
 package com.xeiam.sundial;
 
+import com.xeiam.sundial.exceptions.JobInterruptException;
+
 /**
- * A sample Job Action that simply logs a message every time it's called.
- * 
  * @author timmolter
  */
-public class SampleJobAction extends JobAction {
+public class SampleJob3 extends Job {
 
     @Override
-    public void doRun() {
+    public void doRun() throws JobInterruptException {
 
-        Integer myValue = getJobContext().get("MyValue");
-        logInfo("myValue: " + myValue);
+        JobContext context = getJobContext();
+
+        context.put("MyValue", new Integer(123));
+
+        new SampleJobAction().run();
 
     }
-
 }
