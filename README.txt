@@ -21,7 +21,7 @@ into your applications, Sundial is for you.
     ********************************************************
     
 Dependencies: 
-	slf4j-log4j12-1.6.1.jar (required)
 	slf4j-api-1.6.1.jar (required)
+	slf4j-log4j12-1.6.1.jar (not required)
 	servlet-api.jar (not required)
 	log4j-1.2.16.jar (not required)
