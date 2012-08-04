@@ -20,74 +20,78 @@ import org.quartz.Matcher;
 import org.quartz.utils.Key;
 
 /**
- * Matches using an AND operator on two Matcher operands. 
- *  
+ * Matches using an AND operator on two Matcher operands.
+ * 
  * @author jhouse
  */
 public class AndMatcher<T extends Key> implements Matcher<T> {
 
-    protected Matcher<T> leftOperand;
-    protected Matcher<T> rightOperand;
-    
-    protected AndMatcher(Matcher<T> leftOperand, Matcher<T> rightOperand) {
-        if(leftOperand == null || rightOperand == null)
-            throw new IllegalArgumentException("Two non-null operands required!");
-        
-        this.leftOperand = leftOperand;
-        this.rightOperand = rightOperand;
-    }
-    
-    /**
-     * Create an AndMatcher that depends upon the result of both of the given matchers.
-     */
-    public static <U extends Key> AndMatcher<U> and(Matcher<U> leftOperand, Matcher<U> rightOperand) {
-        return new AndMatcher<U>(leftOperand, rightOperand);
-    }
+  protected Matcher<T> leftOperand;
+  protected Matcher<T> rightOperand;
 
-    public boolean isMatch(T key) {
+  protected AndMatcher(Matcher<T> leftOperand, Matcher<T> rightOperand) {
 
-        return leftOperand.isMatch(key) && rightOperand.isMatch(key);
-    }
+    if (leftOperand == null || rightOperand == null)
+      throw new IllegalArgumentException("Two non-null operands required!");
 
-    public Matcher<T> getLeftOperand() {
-        return leftOperand;
-    }
+    this.leftOperand = leftOperand;
+    this.rightOperand = rightOperand;
+  }
 
-    public Matcher<T> getRightOperand() {
-        return rightOperand;
-    }
+  /**
+   * Create an AndMatcher that depends upon the result of both of the given matchers.
+   */
+  public static <U extends Key> AndMatcher<U> and(Matcher<U> leftOperand, Matcher<U> rightOperand) {
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((leftOperand == null) ? 0 : leftOperand.hashCode());
-        result = prime * result
-                + ((rightOperand == null) ? 0 : rightOperand.hashCode());
-        return result;
-    }
+    return new AndMatcher<U>(leftOperand, rightOperand);
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AndMatcher other = (AndMatcher) obj;
-        if (leftOperand == null) {
-            if (other.leftOperand != null)
-                return false;
-        } else if (!leftOperand.equals(other.leftOperand))
-            return false;
-        if (rightOperand == null) {
-            if (other.rightOperand != null)
-                return false;
-        } else if (!rightOperand.equals(other.rightOperand))
-            return false;
-        return true;
-    }
+  public boolean isMatch(T key) {
+
+    return leftOperand.isMatch(key) && rightOperand.isMatch(key);
+  }
+
+  public Matcher<T> getLeftOperand() {
+
+    return leftOperand;
+  }
+
+  public Matcher<T> getRightOperand() {
+
+    return rightOperand;
+  }
+
+  @Override
+  public int hashCode() {
+
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((leftOperand == null) ? 0 : leftOperand.hashCode());
+    result = prime * result + ((rightOperand == null) ? 0 : rightOperand.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    AndMatcher other = (AndMatcher) obj;
+    if (leftOperand == null) {
+      if (other.leftOperand != null)
+        return false;
+    } else if (!leftOperand.equals(other.leftOperand))
+      return false;
+    if (rightOperand == null) {
+      if (other.rightOperand != null)
+        return false;
+    } else if (!rightOperand.equals(other.rightOperand))
+      return false;
+    return true;
+  }
 
 }

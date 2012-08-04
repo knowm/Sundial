@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -30,223 +29,242 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.spi.TriggerFiredBundle;
 
-
 public class JobExecutionContextImpl implements java.io.Serializable, JobExecutionContext {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private transient Scheduler scheduler;
+  private transient Scheduler scheduler;
 
-    private Trigger trigger;
+  private Trigger trigger;
 
-    private JobDetail jobDetail;
-    
-    private JobDataMap jobDataMap;
+  private JobDetail jobDetail;
 
-    private transient Job job;
-    
-    private Calendar calendar;
+  private JobDataMap jobDataMap;
 
-    private boolean recovering = false;
+  private transient Job job;
 
-    private int numRefires = 0;
+  private Calendar calendar;
 
-    private Date fireTime;
+  private boolean recovering = false;
 
-    private Date scheduledFireTime;
+  private int numRefires = 0;
 
-    private Date prevFireTime;
+  private Date fireTime;
 
-    private Date nextFireTime;
-    
-    private long jobRunTime = -1;
-    
-    private Object result;
-    
-    private HashMap data = new HashMap();
+  private Date scheduledFireTime;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  private Date prevFireTime;
 
-    /**
-     * <p>
-     * Create a JobExcecutionContext with the given context data.
-     * </p>
-     */
-    public JobExecutionContextImpl(Scheduler scheduler,
-            TriggerFiredBundle firedBundle, Job job) {
-        this.scheduler = scheduler;
-        this.trigger = firedBundle.getTrigger();
-        this.calendar = firedBundle.getCalendar();
-        this.jobDetail = firedBundle.getJobDetail();
-        this.job = job;
-        this.recovering = firedBundle.isRecovering();
-        this.fireTime = firedBundle.getFireTime();
-        this.scheduledFireTime = firedBundle.getScheduledFireTime();
-        this.prevFireTime = firedBundle.getPrevFireTime();
-        this.nextFireTime = firedBundle.getNextFireTime();
-        
-        this.jobDataMap = new JobDataMap();
-        this.jobDataMap.putAll(jobDetail.getJobDataMap());
-        this.jobDataMap.putAll(trigger.getJobDataMap());
-    }
+  private Date nextFireTime;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  private long jobRunTime = -1;
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getScheduler()
-     */
-    public Scheduler getScheduler() {
-        return scheduler;
-    }
+  private Object result;
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getTrigger()
-     */
-    public Trigger getTrigger() {
-        return trigger;
-    }
+  private HashMap data = new HashMap();
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getCalendar()
-     */
-    public Calendar getCalendar() {
-        return calendar;
-    }
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#isRecovering()
-     */
-    public boolean isRecovering() {
-        return recovering;
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionContext with the given context data.
+   * </p>
+   */
+  public JobExecutionContextImpl(Scheduler scheduler, TriggerFiredBundle firedBundle, Job job) {
 
-    public void incrementRefireCount() {
-        numRefires++;
-    }
+    this.scheduler = scheduler;
+    this.trigger = firedBundle.getTrigger();
+    this.calendar = firedBundle.getCalendar();
+    this.jobDetail = firedBundle.getJobDetail();
+    this.job = job;
+    this.recovering = firedBundle.isRecovering();
+    this.fireTime = firedBundle.getFireTime();
+    this.scheduledFireTime = firedBundle.getScheduledFireTime();
+    this.prevFireTime = firedBundle.getPrevFireTime();
+    this.nextFireTime = firedBundle.getNextFireTime();
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getRefireCount()
-     */
-    public int getRefireCount() {
-        return numRefires;
-    }
+    this.jobDataMap = new JobDataMap();
+    this.jobDataMap.putAll(jobDetail.getJobDataMap());
+    this.jobDataMap.putAll(trigger.getJobDataMap());
+  }
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getMergedJobDataMap()
-     */
-    public JobDataMap getMergedJobDataMap() {
-        return jobDataMap;
-    }
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getJobDetail()
-     */
-    public JobDetail getJobDetail() {
-        return jobDetail;
-    }
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getScheduler()
+   */
+  public Scheduler getScheduler() {
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getJobInstance()
-     */
-    public Job getJobInstance() {
-        return job;
-    }
+    return scheduler;
+  }
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getFireTime()
-     */
-    public Date getFireTime() {
-        return fireTime;
-    }
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getTrigger()
+   */
+  public Trigger getTrigger() {
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getScheduledFireTime()
-     */
-    public Date getScheduledFireTime() {
-        return scheduledFireTime;
-    }
+    return trigger;
+  }
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getPreviousFireTime()
-     */
-    public Date getPreviousFireTime() {
-        return prevFireTime;
-    }
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getCalendar()
+   */
+  public Calendar getCalendar() {
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getNextFireTime()
-     */
-    public Date getNextFireTime() {
-        return nextFireTime;
-    }
+    return calendar;
+  }
 
-    public String toString() {
-        return "JobExecutionContext:" + " trigger: '"
-                + getTrigger().getKey() + " job: "
-                + getJobDetail().getKey() + " fireTime: '" + getFireTime()
-                + " scheduledFireTime: " + getScheduledFireTime()
-                + " previousFireTime: '" + getPreviousFireTime()
-                + " nextFireTime: " + getNextFireTime() + " isRecovering: "
-                + isRecovering() + " refireCount: " + getRefireCount();
-    }
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#isRecovering()
+   */
+  public boolean isRecovering() {
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getResult()
-     */
-    public Object getResult() {
-        return result;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#setResult(java.lang.Object)
-     */
-    public void setResult(Object result) {
-        this.result = result;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#getJobRunTime()
-     */
-    public long getJobRunTime() {
-        return jobRunTime;
-    }
-    
-    /**
-     * @param jobRunTime The jobRunTime to set.
-     */
-    public void setJobRunTime(long jobRunTime) {
-        this.jobRunTime = jobRunTime;
-    }
+    return recovering;
+  }
 
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#put(java.lang.Object, java.lang.Object)
-     */
-    public void put(Object key, Object value) {
-        data.put(key, value);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.quartz.JobExecutionContext#get(java.lang.Object)
-     */
-    public Object get(Object key) {
-        return data.get(key);
-    }
+  public void incrementRefireCount() {
+
+    numRefires++;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getRefireCount()
+   */
+  public int getRefireCount() {
+
+    return numRefires;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getMergedJobDataMap()
+   */
+  public JobDataMap getMergedJobDataMap() {
+
+    return jobDataMap;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getJobDetail()
+   */
+  public JobDetail getJobDetail() {
+
+    return jobDetail;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getJobInstance()
+   */
+  public Job getJobInstance() {
+
+    return job;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getFireTime()
+   */
+  public Date getFireTime() {
+
+    return fireTime;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getScheduledFireTime()
+   */
+  public Date getScheduledFireTime() {
+
+    return scheduledFireTime;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getPreviousFireTime()
+   */
+  public Date getPreviousFireTime() {
+
+    return prevFireTime;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getNextFireTime()
+   */
+  public Date getNextFireTime() {
+
+    return nextFireTime;
+  }
+
+  public String toString() {
+
+    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getKey() + " fireTime: '" + getFireTime() + " scheduledFireTime: " + getScheduledFireTime() + " previousFireTime: '"
+        + getPreviousFireTime() + " nextFireTime: " + getNextFireTime() + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getResult()
+   */
+  public Object getResult() {
+
+    return result;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#setResult(java.lang.Object)
+   */
+  public void setResult(Object result) {
+
+    this.result = result;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#getJobRunTime()
+   */
+  public long getJobRunTime() {
+
+    return jobRunTime;
+  }
+
+  /**
+   * @param jobRunTime The jobRunTime to set.
+   */
+  public void setJobRunTime(long jobRunTime) {
+
+    this.jobRunTime = jobRunTime;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#put(java.lang.Object, java.lang.Object)
+   */
+  public void put(Object key, Object value) {
+
+    data.put(key, value);
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.quartz.JobExecutionContext#get(java.lang.Object)
+   */
+  public Object get(Object key) {
+
+    return data.get(key);
+  }
 }

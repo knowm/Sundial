@@ -22,14 +22,14 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  */
 public class SampleJob2 extends Job {
 
-    @Override
-    public void doRun() throws JobInterruptException {
+  @Override
+  public void doRun() throws JobInterruptException {
 
-        JobContext context = getJobContext();
+    JobContext context = getJobContext();
 
-        String value = (String) context.get("MyParam");
+    String value = (String) context.get("MyParam");
 
-        logInfo("value=" + value);
+    logInfo("value=" + value);
 
-    }
+  }
 }

@@ -23,81 +23,73 @@ import java.net.URL;
 import java.io.InputStream;
 
 /**
- * A <code>ClassLoadHelper</code> that uses either the context class loader
- * of the thread that initialized Quartz.
+ * A <code>ClassLoadHelper</code> that uses either the context class loader of the thread that initialized Quartz.
  * 
  * @see org.quartz.spi.ClassLoadHelper
  * @see org.quartz.simpl.ThreadContextClassLoadHelper
  * @see org.quartz.simpl.SimpleClassLoadHelper
  * @see org.quartz.simpl.CascadingClassLoadHelper
  * @see org.quartz.simpl.LoadingLoaderClassLoadHelper
- * 
  * @author jhouse
  * @author pl47ypus
  */
 public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
 
-    
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private ClassLoader initClassLoader;
+  private ClassLoader initClassLoader;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * Called to give the ClassLoadHelper a chance to initialize itself,
-     * including the opportunity to "steal" the class loader off of the calling
-     * thread, which is the thread that is initializing Quartz.
-     */
-    public void initialize() {
-        initClassLoader = Thread.currentThread().getContextClassLoader();
-    }
+  /**
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling thread, which is the thread that is initializing Quartz.
+   */
+  public void initialize() {
 
-    /**
-     * Return the class with the given name.
-     */
-    public Class loadClass(String name) throws ClassNotFoundException {
-        return initClassLoader.loadClass(name);
-    }
+    initClassLoader = Thread.currentThread().getContextClassLoader();
+  }
 
-    /**
-     * Finds a resource with a given name. This method returns null if no
-     * resource with this name is found.
-     * @param name name of the desired resource
-     * @return a java.net.URL object
-     */
-    public URL getResource(String name) {
-        return initClassLoader.getResource(name);
-    }
+  /**
+   * Return the class with the given name.
+   */
+  public Class loadClass(String name) throws ClassNotFoundException {
 
-    /**
-     * Finds a resource with a given name. This method returns null if no
-     * resource with this name is found.
-     * @param name name of the desired resource
-     * @return a java.io.InputStream object
-     */
-    public InputStream getResourceAsStream(String name) {
-        return initClassLoader.getResourceAsStream(name);
-    }
+    return initClassLoader.loadClass(name);
+  }
 
-    /**
-     * Enable sharing of the class-loader with 3rd party.
-     *
-     * @return the class-loader user be the helper.
-     */
-    public ClassLoader getClassLoader() {
-        return this.initClassLoader;
-    }
+  /**
+   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * 
+   * @param name name of the desired resource
+   * @return a java.net.URL object
+   */
+  public URL getResource(String name) {
+
+    return initClassLoader.getResource(name);
+  }
+
+  /**
+   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * 
+   * @param name name of the desired resource
+   * @return a java.io.InputStream object
+   */
+  public InputStream getResourceAsStream(String name) {
+
+    return initClassLoader.getResourceAsStream(name);
+  }
+
+  /**
+   * Enable sharing of the class-loader with 3rd party.
+   * 
+   * @return the class-loader user be the helper.
+   */
+  public ClassLoader getClassLoader() {
+
+    return this.initClassLoader;
+  }
 }

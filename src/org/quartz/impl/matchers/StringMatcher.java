@@ -21,103 +21,114 @@ import org.quartz.utils.Key;
 
 /**
  * An abstract base class for some types of matchers.
- *  
+ * 
  * @author jhouse
  */
 public abstract class StringMatcher<T extends Key> implements Matcher<T> {
 
-    public enum StringOperatorName {
+  public enum StringOperatorName {
 
-        EQUALS {
-            @Override
-            public boolean evaluate(final String value, final String compareTo) {
-                return value.equals(compareTo);
-            }
-        },
+    EQUALS {
 
-        STARTS_WITH {
-            @Override
-            public boolean evaluate(final String value, final String compareTo) {
-                return value.startsWith(compareTo);
-            }
-        },
+      @Override
+      public boolean evaluate(final String value, final String compareTo) {
 
-        ENDS_WITH {
-            @Override
-            public boolean evaluate(final String value, final String compareTo) {
-                return value.endsWith(compareTo);
-            }
-        },
+        return value.equals(compareTo);
+      }
+    },
 
-        CONTAINS {
-            @Override
-            public boolean evaluate(final String value, final String compareTo) {
-                return value.contains(compareTo);
-            }
-        };
+    STARTS_WITH {
 
-        public abstract boolean evaluate(String value, String compareTo);
-    }
+      @Override
+      public boolean evaluate(final String value, final String compareTo) {
 
-    protected String compareTo;
-    protected StringOperatorName compareWith;
-    
-    protected StringMatcher(String compareTo, StringOperatorName compareWith) {
-        if(compareTo == null)
-            throw new IllegalArgumentException("CompareTo value cannot be null!");
-        if(compareWith == null)
-            throw new IllegalArgumentException("CompareWith operator cannot be null!");
-        
-        this.compareTo = compareTo;
-        this.compareWith = compareWith;
-    }
+        return value.startsWith(compareTo);
+      }
+    },
 
-    protected abstract String getValue(T key);
-    
-    public boolean isMatch(T key) {
+    ENDS_WITH {
 
-        return compareWith.evaluate(getValue(key), compareTo);
-    }
+      @Override
+      public boolean evaluate(final String value, final String compareTo) {
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((compareTo == null) ? 0 : compareTo.hashCode());
-        result = prime * result
-                + ((compareWith == null) ? 0 : compareWith.hashCode());
-        return result;
-    }
+        return value.endsWith(compareTo);
+      }
+    },
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        StringMatcher other = (StringMatcher) obj;
-        if (compareTo == null) {
-            if (other.compareTo != null)
-                return false;
-        } else if (!compareTo.equals(other.compareTo))
-            return false;
-        if (compareWith == null) {
-            if (other.compareWith != null)
-                return false;
-        } else if (!compareWith.equals(other.compareWith))
-            return false;
-        return true;
-    }
+    CONTAINS {
 
-    public String getCompareToValue() {
-        return compareTo;
-    }
+      @Override
+      public boolean evaluate(final String value, final String compareTo) {
 
-    public StringOperatorName getCompareWithOperator() {
-        return compareWith;
-    }
+        return value.contains(compareTo);
+      }
+    };
+
+    public abstract boolean evaluate(String value, String compareTo);
+  }
+
+  protected String compareTo;
+  protected StringOperatorName compareWith;
+
+  protected StringMatcher(String compareTo, StringOperatorName compareWith) {
+
+    if (compareTo == null)
+      throw new IllegalArgumentException("CompareTo value cannot be null!");
+    if (compareWith == null)
+      throw new IllegalArgumentException("CompareWith operator cannot be null!");
+
+    this.compareTo = compareTo;
+    this.compareWith = compareWith;
+  }
+
+  protected abstract String getValue(T key);
+
+  public boolean isMatch(T key) {
+
+    return compareWith.evaluate(getValue(key), compareTo);
+  }
+
+  @Override
+  public int hashCode() {
+
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((compareTo == null) ? 0 : compareTo.hashCode());
+    result = prime * result + ((compareWith == null) ? 0 : compareWith.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    StringMatcher other = (StringMatcher) obj;
+    if (compareTo == null) {
+      if (other.compareTo != null)
+        return false;
+    } else if (!compareTo.equals(other.compareTo))
+      return false;
+    if (compareWith == null) {
+      if (other.compareWith != null)
+        return false;
+    } else if (!compareWith.equals(other.compareWith))
+      return false;
+    return true;
+  }
+
+  public String getCompareToValue() {
+
+    return compareTo;
+  }
+
+  public StringOperatorName getCompareWithOperator() {
+
+    return compareWith;
+  }
 
 }

@@ -28,73 +28,75 @@ import org.quartz.utils.counter.sampled.SampledCounterImpl;
  * 
  * @author <a href="mailto:asanoujam@terracottatech.com">Abhishek Sanoujam</a>
  * @since 1.8
- * 
  */
 public class CounterManagerImpl implements CounterManager {
 
-    private Timer timer;
-    private boolean shutdown;
-    private List<Counter> counters = new ArrayList<Counter>();
+  private Timer timer;
+  private boolean shutdown;
+  private List<Counter> counters = new ArrayList<Counter>();
 
-    /**
-     * Constructor that accepts a timer that will be used for scheduling sampled
-     * counter if any is created
-     */
-    public CounterManagerImpl(Timer timer) {
-        if (timer == null) {
-            throw new IllegalArgumentException("Timer cannot be null");
-        }
-        this.timer = timer;
+  /**
+   * Constructor that accepts a timer that will be used for scheduling sampled counter if any is created
+   */
+  public CounterManagerImpl(Timer timer) {
+
+    if (timer == null) {
+      throw new IllegalArgumentException("Timer cannot be null");
     }
+    this.timer = timer;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized void shutdown(boolean killTimer) {
-        if (shutdown) {
-            return;
-        }
-        try {
-            // shutdown the counters of this counterManager
-            for (Counter counter : counters) {
-                if (counter instanceof SampledCounter) {
-                    ((SampledCounter) counter).shutdown();
-                }
-            }
-            if(killTimer)
-                timer.cancel();
-        } finally {
-            shutdown = true;
-        }
+  /**
+   * {@inheritDoc}
+   */
+  public synchronized void shutdown(boolean killTimer) {
+
+    if (shutdown) {
+      return;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized Counter createCounter(CounterConfig config) {
-        if (shutdown) {
-            throw new IllegalStateException("counter manager is shutdown");
-        }
-        if (config == null) {
-            throw new NullPointerException("config cannot be null");
-        }
-        Counter counter = config.createCounter();
-        if (counter instanceof SampledCounterImpl) {
-            SampledCounterImpl sampledCounter = (SampledCounterImpl) counter;
-            timer.schedule(sampledCounter.getTimerTask(), sampledCounter.getIntervalMillis(), sampledCounter.getIntervalMillis());
-        }
-        counters.add(counter);
-        return counter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void shutdownCounter(Counter counter) {
+    try {
+      // shutdown the counters of this counterManager
+      for (Counter counter : counters) {
         if (counter instanceof SampledCounter) {
-            SampledCounter sc = (SampledCounter) counter;
-            sc.shutdown();
+          ((SampledCounter) counter).shutdown();
         }
+      }
+      if (killTimer)
+        timer.cancel();
+    } finally {
+      shutdown = true;
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public synchronized Counter createCounter(CounterConfig config) {
+
+    if (shutdown) {
+      throw new IllegalStateException("counter manager is shutdown");
+    }
+    if (config == null) {
+      throw new NullPointerException("config cannot be null");
+    }
+    Counter counter = config.createCounter();
+    if (counter instanceof SampledCounterImpl) {
+      SampledCounterImpl sampledCounter = (SampledCounterImpl) counter;
+      timer.schedule(sampledCounter.getTimerTask(), sampledCounter.getIntervalMillis(), sampledCounter.getIntervalMillis());
+    }
+    counters.add(counter);
+    return counter;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void shutdownCounter(Counter counter) {
+
+    if (counter instanceof SampledCounter) {
+      SampledCounter sc = (SampledCounter) counter;
+      sc.shutdown();
+    }
+  }
 
 }

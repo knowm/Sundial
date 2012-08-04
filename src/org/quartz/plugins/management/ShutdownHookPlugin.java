@@ -32,95 +32,102 @@ import org.slf4j.LoggerFactory;
  */
 public class ShutdownHookPlugin implements SchedulerPlugin {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private boolean cleanShutdown = true;
+  private boolean cleanShutdown = true;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    public ShutdownHookPlugin() {
-    }
+  public ShutdownHookPlugin() {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  }
 
-    /**
-     * Determine whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
-     * <p>
-     * The default value is <code>true</code>.
-     * </p>
-     * 
-     * @see org.quartz.Scheduler#shutdown(boolean)
-     */
-    public boolean isCleanShutdown() {
-        return cleanShutdown;
-    }
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * Set whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
-     * <p>
-     * The default value is <code>true</code>.
-     * </p>
-     * 
-     * @see org.quartz.Scheduler#shutdown(boolean)
-     */
-    public void setCleanShutdown(boolean b) {
-        cleanShutdown = b;
-    }
+  /**
+   * Determine whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
+   * <p>
+   * The default value is <code>true</code>.
+   * </p>
+   * 
+   * @see org.quartz.Scheduler#shutdown(boolean)
+   */
+  public boolean isCleanShutdown() {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    return cleanShutdown;
+  }
 
-    /**
-     * <p>
-     * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
-     * </p>
-     * 
-     * @throws SchedulerConfigException if there is an error initializing.
-     */
-    @Override
-    public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
+  /**
+   * Set whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
+   * <p>
+   * The default value is <code>true</code>.
+   * </p>
+   * 
+   * @see org.quartz.Scheduler#shutdown(boolean)
+   */
+  public void setCleanShutdown(boolean b) {
 
-        logger.info("Registering Quartz shutdown hook.");
+    cleanShutdown = b;
+  }
 
-        Thread t = new Thread("Quartz Shutdown-Hook") {
-            @Override
-            public void run() {
-                logger.info("Shutting down Quartz...");
-                try {
-                    scheduler.shutdown(isCleanShutdown());
-                } catch (SchedulerException e) {
-                    logger.info("Error shutting down Quartz: " + e.getMessage(), e);
-                }
-            }
-        };
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-        Runtime.getRuntime().addShutdownHook(t);
-    }
+  /**
+   * <p>
+   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
+   * </p>
+   * 
+   * @throws SchedulerConfigException if there is an error initializing.
+   */
+  @Override
+  public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
 
-    @Override
-    public void start() {
-        // do nothing.
-    }
+    logger.info("Registering Quartz shutdown hook.");
 
-    /**
-     * <p>
-     * Called in order to inform the <code>SchedulerPlugin</code> that it should free up all of it's resources because the scheduler is shutting down.
-     * </p>
-     */
-    @Override
-    public void shutdown() {
-        // nothing to do in this case (since the scheduler is already shutting
-        // down)
-    }
+    Thread t = new Thread("Quartz Shutdown-Hook") {
+
+      @Override
+      public void run() {
+
+        logger.info("Shutting down Quartz...");
+        try {
+          scheduler.shutdown(isCleanShutdown());
+        } catch (SchedulerException e) {
+          logger.info("Error shutting down Quartz: " + e.getMessage(), e);
+        }
+      }
+    };
+
+    Runtime.getRuntime().addShutdownHook(t);
+  }
+
+  @Override
+  public void start() {
+
+    // do nothing.
+  }
+
+  /**
+   * <p>
+   * Called in order to inform the <code>SchedulerPlugin</code> that it should free up all of it's resources because the scheduler is shutting down.
+   * </p>
+   */
+  @Override
+  public void shutdown() {
+
+    // nothing to do in this case (since the scheduler is already shutting
+    // down)
+  }
 
 }
 

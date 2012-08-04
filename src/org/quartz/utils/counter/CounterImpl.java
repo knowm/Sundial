@@ -24,74 +24,83 @@ import java.util.concurrent.atomic.AtomicLong;
  * 
  * @author <a href="mailto:asanoujam@terracottatech.com">Abhishek Sanoujam</a>
  * @since 1.8
- * 
  */
 public class CounterImpl implements Counter, Serializable {
-    private AtomicLong value;
 
-    /**
-     * Default Constructor
-     */
-    public CounterImpl() {
-        this(0L);
-    }
+  private AtomicLong value;
 
-    /**
-     * Constructor with initial value
-     * 
-     * @param initialValue
-     */
-    public CounterImpl(long initialValue) {
-        this.value = new AtomicLong(initialValue);
-    }
+  /**
+   * Default Constructor
+   */
+  public CounterImpl() {
 
-    /**
-     * {@inheritDoc}
-     */
-    public long increment() {
-        return value.incrementAndGet();
-    }
+    this(0L);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public long decrement() {
-        return value.decrementAndGet();
-    }
+  /**
+   * Constructor with initial value
+   * 
+   * @param initialValue
+   */
+  public CounterImpl(long initialValue) {
 
-    /**
-     * {@inheritDoc}
-     */
-    public long getAndSet(long newValue) {
-        return value.getAndSet(newValue);
-    }
+    this.value = new AtomicLong(initialValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public long getValue() {
-        return value.get();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public long increment() {
 
-    /**
-     * {@inheritDoc}
-     */
-    public long increment(long amount) {
-        return value.addAndGet(amount);
-    }
+    return value.incrementAndGet();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public long decrement(long amount) {
-        return value.addAndGet(amount * -1);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public long decrement() {
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setValue(long newValue) {
-        value.set(newValue);
-    }
+    return value.decrementAndGet();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public long getAndSet(long newValue) {
+
+    return value.getAndSet(newValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public long getValue() {
+
+    return value.get();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public long increment(long amount) {
+
+    return value.addAndGet(amount);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public long decrement(long amount) {
+
+    return value.addAndGet(amount * -1);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(long newValue) {
+
+    value.set(newValue);
+  }
 
 }

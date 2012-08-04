@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -26,69 +25,59 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerSignaler;
 
 /**
- * An interface to be used by <code>JobStore</code> instances in order to
- * communicate signals back to the <code>QuartzScheduler</code>.
+ * An interface to be used by <code>JobStore</code> instances in order to communicate signals back to the <code>QuartzScheduler</code>.
  * 
  * @author jhouse
  */
 public class SchedulerSignalerImpl implements SchedulerSignaler {
 
-    Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
-	
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
-	protected QuartzScheduler sched;
-    protected QuartzSchedulerThread schedThread;
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  protected QuartzScheduler sched;
+  protected QuartzSchedulerThread schedThread;
 
-    public SchedulerSignalerImpl(QuartzScheduler sched, QuartzSchedulerThread schedThread) {
-        this.sched = sched;
-        this.schedThread = schedThread;
-        
-		log.info("Initialized Scheduler Signaller of type: " + getClass());
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  public SchedulerSignalerImpl(QuartzScheduler sched, QuartzSchedulerThread schedThread) {
+
+    this.sched = sched;
+    this.schedThread = schedThread;
+
+    log.info("Initialized Scheduler Signaller of type: " + getClass());
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  public void notifyTriggerListenersMisfired(Trigger trigger) {
+
+    try {
+      sched.notifyTriggerListenersMisfired(trigger);
+    } catch (SchedulerException se) {
+      sched.getLog().error("Error notifying listeners of trigger misfire.", se);
+      sched.notifySchedulerListenersError("Error notifying listeners of trigger misfire.", se);
     }
+  }
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  public void notifySchedulerListenersFinalized(Trigger trigger) {
 
-    public void notifyTriggerListenersMisfired(Trigger trigger) {
-        try {
-            sched.notifyTriggerListenersMisfired(trigger);
-        } catch (SchedulerException se) {
-            sched.getLog().error(
-                    "Error notifying listeners of trigger misfire.", se);
-            sched.notifySchedulerListenersError(
-                    "Error notifying listeners of trigger misfire.", se);
-        }
-    }
+    sched.notifySchedulerListenersFinalized(trigger);
+  }
 
-    public void notifySchedulerListenersFinalized(Trigger trigger) {
-        sched.notifySchedulerListenersFinalized(trigger);
-    }
+  public void signalSchedulingChange(long candidateNewNextFireTime) {
 
-    public void signalSchedulingChange(long candidateNewNextFireTime) {
-        schedThread.signalSchedulingChange(candidateNewNextFireTime);
-    }
+    schedThread.signalSchedulingChange(candidateNewNextFireTime);
+  }
 
-    public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
-        sched.notifySchedulerListenersJobDeleted(jobKey);
-    }
+  public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
+
+    sched.notifySchedulerListenersJobDeleted(jobKey);
+  }
 }

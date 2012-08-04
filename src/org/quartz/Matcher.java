@@ -22,17 +22,16 @@ import java.io.Serializable;
 import org.quartz.utils.Key;
 
 /**
- * Matchers can be used in various {@link Scheduler} API methods to 
- * select the entities that should be operated upon.
- *  
+ * Matchers can be used in various {@link Scheduler} API methods to select the entities that should be operated upon.
+ * 
  * @author jhouse
  * @since 2.0
  */
 public interface Matcher<T extends Key> extends Serializable {
 
-    boolean isMatch(T key);
- 
-    public int hashCode();
+  boolean isMatch(T key);
 
-    public boolean equals(Object obj);
+  public int hashCode();
+
+  public boolean equals(Object obj);
 }

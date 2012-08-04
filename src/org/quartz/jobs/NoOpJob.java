@@ -23,43 +23,32 @@ import org.quartz.exceptions.JobExecutionException;
 
 /**
  * <p>
- * An implementation of Job, that does absolutely nothing - useful for system
- * which only wish to use <code>{@link org.quartz.TriggerListener}s</code>
- * and <code>{@link org.quartz.JobListener}s</code>, rather than writing
- * Jobs that perform work.
+ * An implementation of Job, that does absolutely nothing - useful for system which only wish to use <code>{@link org.quartz.TriggerListener}s</code> and <code>{@link org.quartz.JobListener}s</code>, rather than writing Jobs that perform work.
  * </p>
  * 
  * @author James House
  */
 public class NoOpJob implements Job {
 
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /*
-     *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     *
-     * Constructors.
-     *  
-     *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-    
-    public NoOpJob() {
-    }
+  public NoOpJob() {
 
-    /*
-     *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     *
-     * Interface.
-     *  
-     *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  }
 
-    /**
-     * <p>
-     * Do nothing.
-     * </p>
-     */
-    public void execute(JobExecutionContext context)
-        throws JobExecutionException {
-    }
-    
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * <p>
+   * Do nothing.
+   * </p>
+   */
+  public void execute(JobExecutionContext context) throws JobExecutionException {
+
+  }
+
 }

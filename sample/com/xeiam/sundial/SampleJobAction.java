@@ -22,12 +22,12 @@ package com.xeiam.sundial;
  */
 public class SampleJobAction extends JobAction {
 
-    @Override
-    public void doRun() {
+  @Override
+  public void doRun() {
 
-        Integer myValue = getJobContext().get("MyValue");
-        logInfo("myValue: " + myValue);
+    Integer myValue = getJobContext().get("MyValue");
+    logInfo("myValue: " + myValue);
 
-    }
+  }
 
 }

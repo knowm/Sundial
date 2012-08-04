@@ -47,236 +47,251 @@ import org.slf4j.LoggerFactory;
  */
 public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String name;
+  private String name;
 
-    private Scheduler scheduler;
+  private Scheduler scheduler;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-    private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+  private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
 
-    private boolean failOnFileNotFound = true;
+  private boolean failOnFileNotFound = true;
 
-    private String mFileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
+  private String mFileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-    private JobFile mJobFile;
+  private JobFile mJobFile;
 
-    private long scanInterval = 0;
+  private long scanInterval = 0;
 
-    boolean started = false;
+  boolean started = false;
 
-    protected ClassLoadHelper classLoadHelper = null;
+  protected ClassLoadHelper classLoadHelper = null;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    public XMLSchedulingDataProcessorPlugin() {
+  public XMLSchedulingDataProcessorPlugin() {
+
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
+   */
+  protected Scheduler getScheduler() {
+
+    return scheduler;
+  }
+
+  /**
+   * Get the name of this plugin. Set as part of initialize().
+   */
+  protected String getName() {
+
+    return name;
+  }
+
+  /**
+   * Comma separated list of file names (with paths) to the XML files that should be read.
+   */
+  public String getFileNames() {
+
+    return mFileName;
+  }
+
+  /**
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
+   * 
+   * @return Returns the scanInterval.
+   */
+  public long getScanInterval() {
+
+    return scanInterval / 1000;
+  }
+
+  /**
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
+   * 
+   * @param scanInterval The scanInterval to set.
+   */
+  public void setScanInterval(long pScanInterval) {
+
+    scanInterval = pScanInterval * 1000;
+  }
+
+  /**
+   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
+   */
+  public boolean isFailOnFileNotFound() {
+
+    return failOnFileNotFound;
+  }
+
+  /**
+   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
+   */
+  public void setFailOnFileNotFound(boolean failOnFileNotFound) {
+
+    this.failOnFileNotFound = failOnFileNotFound;
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * <p>
+   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
+   * </p>
+   * 
+   * @throws org.quartz.exceptions.SchedulerConfigException if there is an error initializing.
+   */
+  @Override
+  public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
+
+    this.name = name;
+    this.scheduler = scheduler;
+
+    classLoadHelper = new CascadingClassLoadHelper();
+    classLoadHelper.initialize();
+
+    mJobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
+
+    log.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
+
+  }
+
+  @Override
+  public void start() {
+
+    processFile(mJobFile);
+
+    started = true;
+  }
+
+  /**
+   * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
+   */
+  @Override
+  public void shutdown() {
+
+    // Since we have nothing to do, override base shutdown so don't
+    // get extraneous UserTransactions.
+  }
+
+  private void processFile(JobFile jobFile) {
+
+    if (jobFile == null || !jobFile.getFileFound()) {
+      return;
     }
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    try {
+      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(this.classLoadHelper);
 
-    /**
-     * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
-     */
-    protected Scheduler getScheduler() {
-        return scheduler;
+      processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
+      processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
+
+      processor.processFileAndScheduleJobs(jobFile.getFileName(), jobFile.getFileName(), // systemId
+          getScheduler());
+    } catch (Exception e) {
+      log.error("Error scheduling jobs: " + e.getMessage(), e);
+    }
+  }
+
+  class JobFile {
+
+    private String fileName;
+
+    // These are set by initialize()
+    private String filePath;
+    private String fileBasename;
+    private boolean fileFound;
+
+    protected JobFile(String fileName) throws SchedulerException {
+
+      this.fileName = fileName;
+      initialize();
     }
 
-    /**
-     * Get the name of this plugin. Set as part of initialize().
-     */
-    protected String getName() {
-        return name;
+    protected String getFileName() {
+
+      return fileName;
     }
 
-    /**
-     * Comma separated list of file names (with paths) to the XML files that should be read.
-     */
-    public String getFileNames() {
-        return mFileName;
+    protected boolean getFileFound() {
+
+      return fileFound;
     }
 
-    /**
-     * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
-     * 
-     * @return Returns the scanInterval.
-     */
-    public long getScanInterval() {
-        return scanInterval / 1000;
+    protected String getFilePath() {
+
+      return filePath;
     }
 
-    /**
-     * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
-     * 
-     * @param scanInterval The scanInterval to set.
-     */
-    public void setScanInterval(long pScanInterval) {
-        scanInterval = pScanInterval * 1000;
+    protected String getFileBasename() {
+
+      return fileBasename;
     }
 
-    /**
-     * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
-     */
-    public boolean isFailOnFileNotFound() {
-        return failOnFileNotFound;
-    }
+    private void initialize() throws SchedulerException {
 
-    /**
-     * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
-     */
-    public void setFailOnFileNotFound(boolean failOnFileNotFound) {
-        this.failOnFileNotFound = failOnFileNotFound;
-    }
+      InputStream f = null;
+      try {
+        String furl = null;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-
-    /**
-     * <p>
-     * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
-     * </p>
-     * 
-     * @throws org.quartz.exceptions.SchedulerConfigException if there is an error initializing.
-     */
-    @Override
-    public void initialize(String name, final Scheduler scheduler) throws SchedulerException {
-
-        this.name = name;
-        this.scheduler = scheduler;
-
-        classLoadHelper = new CascadingClassLoadHelper();
-        classLoadHelper.initialize();
-
-        mJobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
-
-        log.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
-
-    }
-
-    @Override
-    public void start() {
-
-        processFile(mJobFile);
-
-        started = true;
-    }
-
-    /**
-     * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
-     */
-    @Override
-    public void shutdown() {
-        // Since we have nothing to do, override base shutdown so don't
-        // get extraneous UserTransactions.
-    }
-
-    private void processFile(JobFile jobFile) {
-
-        if (jobFile == null || !jobFile.getFileFound()) {
-            return;
-        }
-
-        try {
-            XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(this.classLoadHelper);
-
-            processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
-            processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
-
-            processor.processFileAndScheduleJobs(jobFile.getFileName(), jobFile.getFileName(), // systemId
-                    getScheduler());
-        } catch (Exception e) {
-            log.error("Error scheduling jobs: " + e.getMessage(), e);
-        }
-    }
-
-    class JobFile {
-
-        private String fileName;
-
-        // These are set by initialize()
-        private String filePath;
-        private String fileBasename;
-        private boolean fileFound;
-
-        protected JobFile(String fileName) throws SchedulerException {
-            this.fileName = fileName;
-            initialize();
-        }
-
-        protected String getFileName() {
-            return fileName;
-        }
-
-        protected boolean getFileFound() {
-            return fileFound;
-        }
-
-        protected String getFilePath() {
-            return filePath;
-        }
-
-        protected String getFileBasename() {
-            return fileBasename;
-        }
-
-        private void initialize() throws SchedulerException {
-            InputStream f = null;
+        File file = new File(getFileName()); // files in filesystem
+        if (!file.exists()) {
+          URL url = classLoadHelper.getResource(getFileName());
+          if (url != null) {
             try {
-                String furl = null;
-
-                File file = new File(getFileName()); // files in filesystem
-                if (!file.exists()) {
-                    URL url = classLoadHelper.getResource(getFileName());
-                    if (url != null) {
-                        try {
-                            furl = URLDecoder.decode(url.getPath(), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            furl = url.getPath();
-                        }
-                        file = new File(furl);
-                        try {
-                            f = url.openStream();
-                        } catch (IOException ignor) {
-                            // Swallow the exception
-                        }
-                    }
-                } else {
-                    try {
-                        f = new java.io.FileInputStream(file);
-                    } catch (FileNotFoundException e) {
-                        // ignore
-                    }
-                }
-
-                if (f == null) {
-                    if (isFailOnFileNotFound()) {
-                        throw new SchedulerException("File named '" + getFileName() + "' does not exist.");
-                    } else {
-                        log.warn("File named '" + getFileName() + "' does not exist. This is OK if you don't want to use an XML job config file.");
-                    }
-                } else {
-                    fileFound = true;
-                    filePath = (furl != null) ? furl : file.getAbsolutePath();
-                    fileBasename = file.getName();
-                }
-            } finally {
-                try {
-                    if (f != null) {
-                        f.close();
-                    }
-                } catch (IOException ioe) {
-                    log.warn("Error closing jobs file " + getFileName(), ioe);
-                }
+              furl = URLDecoder.decode(url.getPath(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+              furl = url.getPath();
             }
+            file = new File(furl);
+            try {
+              f = url.openStream();
+            } catch (IOException ignor) {
+              // Swallow the exception
+            }
+          }
+        } else {
+          try {
+            f = new java.io.FileInputStream(file);
+          } catch (FileNotFoundException e) {
+            // ignore
+          }
         }
+
+        if (f == null) {
+          if (isFailOnFileNotFound()) {
+            throw new SchedulerException("File named '" + getFileName() + "' does not exist.");
+          } else {
+            log.warn("File named '" + getFileName() + "' does not exist. This is OK if you don't want to use an XML job config file.");
+          }
+        } else {
+          fileFound = true;
+          filePath = (furl != null) ? furl : file.getAbsolutePath();
+          fileBasename = file.getName();
+        }
+      } finally {
+        try {
+          if (f != null) {
+            f.close();
+          }
+        } catch (IOException ioe) {
+          log.warn("Error closing jobs file " + getFileName(), ioe);
+        }
+      }
     }
+  }
 
 }
 

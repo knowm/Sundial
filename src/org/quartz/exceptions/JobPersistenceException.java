@@ -24,26 +24,28 @@ package org.quartz.exceptions;
  */
 public class JobPersistenceException extends SchedulerException {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * <p>
-     * Create a <code>JobPersistenceException</code> with the given message.
-     * </p>
-     */
-    public JobPersistenceException(String msg) {
-        super(msg);
-    }
+  /**
+   * <p>
+   * Create a <code>JobPersistenceException</code> with the given message.
+   * </p>
+   */
+  public JobPersistenceException(String msg) {
 
-    /**
-     * <p>
-     * Create a <code>JobPersistenceException</code> with the given message and cause.
-     * </p>
-     */
-    public JobPersistenceException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+    super(msg);
+  }
+
+  /**
+   * <p>
+   * Create a <code>JobPersistenceException</code> with the given message and cause.
+   * </p>
+   */
+  public JobPersistenceException(String msg, Throwable cause) {
+
+    super(msg, cause);
+  }
 
 }

@@ -23,52 +23,49 @@ import org.quartz.utils.counter.Counter;
  * 
  * @author <a href="mailto:asanoujam@terracottatech.com">Abhishek Sanoujam</a>
  * @since 1.8
- * 
  */
 public class SampledRateCounterConfig extends SampledCounterConfig {
 
-    private final long initialNumeratorValue;
-    private final long initialDenominatorValue;
+  private final long initialNumeratorValue;
+  private final long initialDenominatorValue;
 
-    /**
-     * Constructor accepting the interval time in seconds, history-size and
-     * whether counters should reset on each sample or not.
-     * Initial values of both numerator and denominator are zeroes
-     * 
-     * @param intervalSecs
-     * @param historySize
-     * @param isResetOnSample
-     */
-    public SampledRateCounterConfig(int intervalSecs, int historySize, boolean isResetOnSample) {
-        this(intervalSecs, historySize, isResetOnSample, 0, 0);
-    }
+  /**
+   * Constructor accepting the interval time in seconds, history-size and whether counters should reset on each sample or not. Initial values of both numerator and denominator are zeroes
+   * 
+   * @param intervalSecs
+   * @param historySize
+   * @param isResetOnSample
+   */
+  public SampledRateCounterConfig(int intervalSecs, int historySize, boolean isResetOnSample) {
 
-    /**
-     * Constructor accepting the interval time in seconds, history-size and
-     * whether counters should reset on each sample or not. Also the initial
-     * values for the numerator and the denominator
-     * 
-     * @param intervalSecs
-     * @param historySize
-     * @param isResetOnSample
-     * @param initialNumeratorValue
-     * @param initialDenominatorValue
-     */
-    public SampledRateCounterConfig(int intervalSecs, int historySize, boolean isResetOnSample, long initialNumeratorValue,
-            long initialDenominatorValue) {
-        super(intervalSecs, historySize, isResetOnSample, 0);
-        this.initialNumeratorValue = initialNumeratorValue;
-        this.initialDenominatorValue = initialDenominatorValue;
-    }
+    this(intervalSecs, historySize, isResetOnSample, 0, 0);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Counter createCounter() {
-        SampledRateCounterImpl sampledRateCounter = new SampledRateCounterImpl(this);
-        sampledRateCounter.setValue(initialNumeratorValue, initialDenominatorValue);
-        return sampledRateCounter;
-    }
+  /**
+   * Constructor accepting the interval time in seconds, history-size and whether counters should reset on each sample or not. Also the initial values for the numerator and the denominator
+   * 
+   * @param intervalSecs
+   * @param historySize
+   * @param isResetOnSample
+   * @param initialNumeratorValue
+   * @param initialDenominatorValue
+   */
+  public SampledRateCounterConfig(int intervalSecs, int historySize, boolean isResetOnSample, long initialNumeratorValue, long initialDenominatorValue) {
+
+    super(intervalSecs, historySize, isResetOnSample, 0);
+    this.initialNumeratorValue = initialNumeratorValue;
+    this.initialDenominatorValue = initialDenominatorValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Counter createCounter() {
+
+    SampledRateCounterImpl sampledRateCounter = new SampledRateCounterImpl(this);
+    sampledRateCounter.setValue(initialNumeratorValue, initialDenominatorValue);
+    return sampledRateCounter;
+  }
 
 }

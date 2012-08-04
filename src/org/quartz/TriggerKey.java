@@ -21,56 +21,51 @@ import org.quartz.utils.Key;
 
 /**
  * Uniquely identifies a {@link Trigger}.
+ * <p>
+ * Keys are composed of both a name and group, and the name must be unique within the group. If only a group is specified then the default group name will be used.
+ * </p>
+ * <p>
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>,
+ * <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * </p>
+ * <p>
+ * Client code can then use the DSL to write code such as this:
+ * </p>
  * 
- * <p>Keys are composed of both a name and group, and the name must be unique
- * within the group.  If only a group is specified then the default group
- * name will be used.</p> 
- *
- *
- * <p>Quartz provides a builder-style API for constructing scheduling-related
- * entities via a Domain-Specific Language (DSL).  The DSL can best be
- * utilized through the usage of static imports of the methods on the classes
- * <code>TriggerBuilder</code>, <code>JobBuilder</code>, 
- * <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> 
- * and the various <code>ScheduleBuilder</code> implementations.</p>
+ * <pre>
  * 
- * <p>Client code can then use the DSL to write code such as this:</p>
+ * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
+ * 
+ * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;)).withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
+ * 
+ * scheduler.scheduleJob(job, trigger);
+ * 
  * <pre>
- *         JobDetail job = newJob(MyJob.class)
- *             .withIdentity("myJob")
- *             .build();
- *             
- *         Trigger trigger = newTrigger() 
- *             .withIdentity(triggerKey("myTrigger", "myTriggerGroup"))
- *             .withSchedule(simpleSchedule()
- *                 .withIntervalInHours(1)
- *                 .repeatForever())
- *             .startAt(futureDate(10, MINUTES))
- *             .build();
- *         
- *         scheduler.scheduleJob(job, trigger);
- * <pre>
- *  
+ * 
  * 
  * @see Trigger
  * @see Key#DEFAULT_GROUP
  */
 public final class TriggerKey extends Key<TriggerKey> {
 
-    public TriggerKey(String name) {
-        super(name, null);
-    }
+  public TriggerKey(String name) {
 
-    public TriggerKey(String name, String group) {
-        super(name, group);
-    }
+    super(name, null);
+  }
 
-    public static TriggerKey triggerKey(String name) {
-        return new TriggerKey(name, null);
-    }
-    
-    public static TriggerKey triggerKey(String name, String group) {
-        return new TriggerKey(name, group);
-    }
-    
+  public TriggerKey(String name, String group) {
+
+    super(name, group);
+  }
+
+  public static TriggerKey triggerKey(String name) {
+
+    return new TriggerKey(name, null);
+  }
+
+  public static TriggerKey triggerKey(String name, String group) {
+
+    return new TriggerKey(name, group);
+  }
+
 }

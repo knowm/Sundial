@@ -25,44 +25,49 @@ import java.io.Serializable;
  * @since 1.8
  */
 public class TimeStampedCounterValue implements Serializable {
-    private final long counterValue;
-    private final long timestamp;
 
-    /**
-     * Constructor accepting the value of both timestamp and the counter value.
-     * 
-     * @param timestamp
-     * @param value
-     */
-    public TimeStampedCounterValue(long timestamp, long value) {
-        this.timestamp = timestamp;
-        this.counterValue = value;
-    }
+  private final long counterValue;
+  private final long timestamp;
 
-    /**
-     * Get the counter value
-     * 
-     * @return The counter value
-     */
-    public long getCounterValue() {
-        return this.counterValue;
-    }
+  /**
+   * Constructor accepting the value of both timestamp and the counter value.
+   * 
+   * @param timestamp
+   * @param value
+   */
+  public TimeStampedCounterValue(long timestamp, long value) {
 
-    /**
-     * Get value of the timestamp
-     * 
-     * @return the timestamp associated with the current value
-     */
-    public long getTimestamp() {
-        return this.timestamp;
-    }
+    this.timestamp = timestamp;
+    this.counterValue = value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return "value: " + this.counterValue + ", timestamp: " + this.timestamp;
-    }
+  /**
+   * Get the counter value
+   * 
+   * @return The counter value
+   */
+  public long getCounterValue() {
+
+    return this.counterValue;
+  }
+
+  /**
+   * Get value of the timestamp
+   * 
+   * @return the timestamp associated with the current value
+   */
+  public long getTimestamp() {
+
+    return this.timestamp;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+
+    return "value: " + this.counterValue + ", timestamp: " + this.timestamp;
+  }
 
 }

@@ -22,13 +22,13 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  */
 public class SampleJob1 extends Job {
 
-    @Override
-    public void doRun() throws JobInterruptException {
+  @Override
+  public void doRun() throws JobInterruptException {
 
-        logInfo("RUNNING!");
+    logInfo("RUNNING!");
 
-        // Do something interesting...
+    // Do something interesting...
 
-        logInfo("DONE!");
-    }
+    logInfo("DONE!");
+  }
 }

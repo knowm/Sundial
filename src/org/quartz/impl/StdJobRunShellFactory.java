@@ -26,51 +26,41 @@ import org.quartz.spi.TriggerFiredBundle;
 
 /**
  * <p>
- * Responsible for creating the instances of <code>{@link org.quartz.core.JobRunShell}</code>
- * to be used within the <class>{@link org.quartz.core.QuartzScheduler}
- * </code> instance.
+ * Responsible for creating the instances of <code>{@link org.quartz.core.JobRunShell}</code> to be used within the <class>{@link org.quartz.core.QuartzScheduler} </code> instance.
  * </p>
  * 
  * @author James House
  */
 public class StdJobRunShellFactory implements JobRunShellFactory {
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
 
-    private Scheduler scheduler;
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  private Scheduler scheduler;
 
-    /**
-     * <p>
-     * Initialize the factory, providing a handle to the <code>Scheduler</code>
-     * that should be made available within the <code>JobRunShell</code> and
-     * the <code>JobExecutionContext</code> s within it.
-     * </p>
-     */
-    public void initialize(Scheduler scheduler) {
-        this.scheduler = scheduler;
-    }
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * <p>
-     * Called by the <class>{@link org.quartz.core.QuartzSchedulerThread}
-     * </code> to obtain instances of <code>
-     * {@link org.quartz.core.JobRunShell}</code>.
-     * </p>
-     */
-    public JobRunShell createJobRunShell(TriggerFiredBundle bndle) throws SchedulerException {
-        return new JobRunShell(scheduler, bndle);
-    }
+  /**
+   * <p>
+   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and the <code>JobExecutionContext</code> s within it.
+   * </p>
+   */
+  public void initialize(Scheduler scheduler) {
+
+    this.scheduler = scheduler;
+  }
+
+  /**
+   * <p>
+   * Called by the <class>{@link org.quartz.core.QuartzSchedulerThread} </code> to obtain instances of <code>
+   * {@link org.quartz.core.JobRunShell}</code>.
+   * </p>
+   */
+  public JobRunShell createJobRunShell(TriggerFiredBundle bndle) throws SchedulerException {
+
+    return new JobRunShell(scheduler, bndle);
+  }
 }

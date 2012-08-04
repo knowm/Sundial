@@ -25,18 +25,11 @@ import java.io.InputStream;
 import org.quartz.spi.ClassLoadHelper;
 
 /**
- * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code>
- * types that are found in this package in its attempts to load a class, when
- * one scheme is found to work, it is promoted to the scheme that will be used
- * first the next time a class is loaded (in order to improve performance).
- * 
+ * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code> types that are found in this package in its attempts to load a class, when one scheme is found to work, it is promoted to the scheme that will be used first the next time
+ * a class is loaded (in order to improve performance).
  * <p>
- * This approach is used because of the wide variance in class loader behavior
- * between the various environments in which Quartz runs (e.g. disparate 
- * application servers, stand-alone, mobile devices, etc.).  Because of this
- * disparity, Quartz ran into difficulty with a one class-load style fits-all 
- * design.  Thus, this class loader finds the approach that works, then 
- * 'remembers' it.  
+ * This approach is used because of the wide variance in class loader behavior between the various environments in which Quartz runs (e.g. disparate application servers, stand-alone, mobile devices, etc.). Because of this disparity, Quartz ran into
+ * difficulty with a one class-load style fits-all design. Thus, this class loader finds the approach that works, then 'remembers' it.
  * </p>
  * 
  * @see org.quartz.spi.ClassLoadHelper
@@ -44,167 +37,154 @@ import org.quartz.spi.ClassLoadHelper;
  * @see org.quartz.simpl.SimpleClassLoadHelper
  * @see org.quartz.simpl.ThreadContextClassLoadHelper
  * @see org.quartz.simpl.InitThreadContextClassLoadHelper
- * 
  * @author jhouse
  * @author pl47ypus
  */
 public class CascadingClassLoadHelper implements ClassLoadHelper {
 
-    
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private LinkedList<ClassLoadHelper> loadHelpers;
+  private LinkedList<ClassLoadHelper> loadHelpers;
 
-    private ClassLoadHelper bestCandidate;
+  private ClassLoadHelper bestCandidate;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * Called to give the ClassLoadHelper a chance to initialize itself,
-     * including the opportunity to "steal" the class loader off of the calling
-     * thread, which is the thread that is initializing Quartz.
-     */
-    public void initialize() {
-        loadHelpers = new LinkedList<ClassLoadHelper>();
+  /**
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling thread, which is the thread that is initializing Quartz.
+   */
+  public void initialize() {
 
-        loadHelpers.add(new LoadingLoaderClassLoadHelper());
-        loadHelpers.add(new SimpleClassLoadHelper());
-        loadHelpers.add(new ThreadContextClassLoadHelper());
-        loadHelpers.add(new InitThreadContextClassLoadHelper());
-        
-        for(ClassLoadHelper loadHelper: loadHelpers) {
-            loadHelper.initialize();
-        }
+    loadHelpers = new LinkedList<ClassLoadHelper>();
+
+    loadHelpers.add(new LoadingLoaderClassLoadHelper());
+    loadHelpers.add(new SimpleClassLoadHelper());
+    loadHelpers.add(new ThreadContextClassLoadHelper());
+    loadHelpers.add(new InitThreadContextClassLoadHelper());
+
+    for (ClassLoadHelper loadHelper : loadHelpers) {
+      loadHelper.initialize();
+    }
+  }
+
+  /**
+   * Return the class with the given name.
+   */
+  public Class loadClass(String name) throws ClassNotFoundException {
+
+    if (bestCandidate != null) {
+      try {
+        return bestCandidate.loadClass(name);
+      } catch (Throwable t) {
+        bestCandidate = null;
+      }
     }
 
-    /**
-     * Return the class with the given name.
-     */
-    public Class loadClass(String name) throws ClassNotFoundException {
+    Throwable throwable = null;
+    Class clazz = null;
+    ClassLoadHelper loadHelper = null;
 
-        if (bestCandidate != null) {
-            try {
-                return bestCandidate.loadClass(name);
-            } catch (Throwable t) {
-                bestCandidate = null;
-            }
-        }
+    Iterator iter = loadHelpers.iterator();
+    while (iter.hasNext()) {
+      loadHelper = (ClassLoadHelper) iter.next();
 
-        Throwable throwable = null;
-        Class clazz = null;
-        ClassLoadHelper loadHelper = null;
-
-        Iterator iter = loadHelpers.iterator();
-        while (iter.hasNext()) {
-            loadHelper = (ClassLoadHelper) iter.next();
-
-            try {
-                clazz = loadHelper.loadClass(name);
-                break;
-            } catch (Throwable t) {
-                throwable = t;
-            }
-        }
-
-        if (clazz == null) {
-            if (throwable instanceof ClassNotFoundException) {
-                throw (ClassNotFoundException)throwable;
-            } 
-            else {
-                throw new ClassNotFoundException( String.format( "Unable to load class %s by any known loaders.", name), throwable);
-            } 
-        }
-
-        bestCandidate = loadHelper;
-
-        return clazz;
+      try {
+        clazz = loadHelper.loadClass(name);
+        break;
+      } catch (Throwable t) {
+        throwable = t;
+      }
     }
 
-    /**
-     * Finds a resource with a given name. This method returns null if no
-     * resource with this name is found.
-     * @param name name of the desired resource
-     * @return a java.net.URL object
-     */
-    public URL getResource(String name) {
-
-        URL result = null;
-
-        if (bestCandidate != null) {
-            result = bestCandidate.getResource(name);
-            if(result == null)
-                bestCandidate = null;
-        }
-
-        ClassLoadHelper loadHelper = null;
-
-        Iterator iter = loadHelpers.iterator();
-        while (iter.hasNext()) {
-            loadHelper = (ClassLoadHelper) iter.next();
-
-            result = loadHelper.getResource(name);
-            if (result != null) {
-                break;
-            }
-        }
-
-        bestCandidate = loadHelper;
-        return result;
+    if (clazz == null) {
+      if (throwable instanceof ClassNotFoundException) {
+        throw (ClassNotFoundException) throwable;
+      } else {
+        throw new ClassNotFoundException(String.format("Unable to load class %s by any known loaders.", name), throwable);
+      }
     }
 
-    /**
-     * Finds a resource with a given name. This method returns null if no
-     * resource with this name is found.
-     * @param name name of the desired resource
-     * @return a java.io.InputStream object
-     */
-    public InputStream getResourceAsStream(String name) {
+    bestCandidate = loadHelper;
 
-        InputStream result = null;
+    return clazz;
+  }
 
-        if (bestCandidate != null) {
-            result = bestCandidate.getResourceAsStream(name);
-            if(result == null)
-                bestCandidate = null;
-        }
+  /**
+   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * 
+   * @param name name of the desired resource
+   * @return a java.net.URL object
+   */
+  public URL getResource(String name) {
 
-        ClassLoadHelper loadHelper = null;
+    URL result = null;
 
-        Iterator iter = loadHelpers.iterator();
-        while (iter.hasNext()) {
-            loadHelper = (ClassLoadHelper) iter.next();
-
-            result = loadHelper.getResourceAsStream(name);
-            if (result != null) {
-                break;
-            }
-        }
-
-        bestCandidate = loadHelper;
-        return result;
+    if (bestCandidate != null) {
+      result = bestCandidate.getResource(name);
+      if (result == null)
+        bestCandidate = null;
     }
 
-    /**
-     * Enable sharing of the "best" class-loader with 3rd party.
-     *
-     * @return the class-loader user be the helper.
-     */
-    public ClassLoader getClassLoader() {
-        return (this.bestCandidate == null) ?
-                Thread.currentThread().getContextClassLoader() :
-                this.bestCandidate.getClassLoader();
+    ClassLoadHelper loadHelper = null;
+
+    Iterator iter = loadHelpers.iterator();
+    while (iter.hasNext()) {
+      loadHelper = (ClassLoadHelper) iter.next();
+
+      result = loadHelper.getResource(name);
+      if (result != null) {
+        break;
+      }
     }
+
+    bestCandidate = loadHelper;
+    return result;
+  }
+
+  /**
+   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * 
+   * @param name name of the desired resource
+   * @return a java.io.InputStream object
+   */
+  public InputStream getResourceAsStream(String name) {
+
+    InputStream result = null;
+
+    if (bestCandidate != null) {
+      result = bestCandidate.getResourceAsStream(name);
+      if (result == null)
+        bestCandidate = null;
+    }
+
+    ClassLoadHelper loadHelper = null;
+
+    Iterator iter = loadHelpers.iterator();
+    while (iter.hasNext()) {
+      loadHelper = (ClassLoadHelper) iter.next();
+
+      result = loadHelper.getResourceAsStream(name);
+      if (result != null) {
+        break;
+      }
+    }
+
+    bestCandidate = loadHelper;
+    return result;
+  }
+
+  /**
+   * Enable sharing of the "best" class-loader with 3rd party.
+   * 
+   * @return the class-loader user be the helper.
+   */
+  public ClassLoader getClassLoader() {
+
+    return (this.bestCandidate == null) ? Thread.currentThread().getContextClassLoader() : this.bestCandidate.getClassLoader();
+  }
 
 }

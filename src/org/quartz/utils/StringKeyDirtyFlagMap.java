@@ -21,363 +21,357 @@ import java.util.Map;
 
 /**
  * <p>
- * An implementation of <code>Map</code> that wraps another <code>Map</code>
- * and flags itself 'dirty' when it is modified, enforces that all keys are
- * Strings. 
+ * An implementation of <code>Map</code> that wraps another <code>Map</code> and flags itself 'dirty' when it is modified, enforces that all keys are Strings.
  * </p>
- * 
  * <p>
  * All allowsTransientData flag related methods are deprecated as of version 1.6.
  * </p>
  */
 public class StringKeyDirtyFlagMap extends DirtyFlagMap {
-    static final long serialVersionUID = -9076749120524952280L;
-    
-    /**
-     * @deprecated JDBCJobStores no longer prune out transient data.  If you
-     * include non-Serializable values in the Map, you will now get an 
-     * exception when attempting to store it in a database.
-     */
-    private boolean allowsTransientData = false;
 
-    public StringKeyDirtyFlagMap() {
-        super();
-    }
+  static final long serialVersionUID = -9076749120524952280L;
 
-    public StringKeyDirtyFlagMap(int initialCapacity) {
-        super(initialCapacity);
-    }
+  /**
+   * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
+   */
+  private boolean allowsTransientData = false;
 
-    public StringKeyDirtyFlagMap(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-    }
+  public StringKeyDirtyFlagMap() {
 
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
+    super();
+  }
 
-    public int hashCode()
-    {
-        return getWrappedMap().hashCode();
-    }
-    
-    /**
-     * Get a copy of the Map's String keys in an array of Strings.
-     */
-    public String[] getKeys() {
-        return (String[]) keySet().toArray(new String[size()]);
-    }
+  public StringKeyDirtyFlagMap(int initialCapacity) {
 
-    /**
-     * Tell the <code>StringKeyDirtyFlagMap</code> that it should
-     * allow non-<code>Serializable</code> values.  Enforces that the Map 
-     * doesn't already include transient data.
-     * 
-     * @deprecated JDBCJobStores no longer prune out transient data.  If you
-     * include non-Serializable values in the Map, you will now get an 
-     * exception when attempting to store it in a database.
-     */
-    public void setAllowsTransientData(boolean allowsTransientData) {
-    
-        if (containsTransientData() && !allowsTransientData) {
-            throw new IllegalStateException(
-                "Cannot set property 'allowsTransientData' to 'false' "
-                    + "when data map contains non-serializable objects.");
-        }
-    
-        this.allowsTransientData = allowsTransientData;
+    super(initialCapacity);
+  }
+
+  public StringKeyDirtyFlagMap(int initialCapacity, float loadFactor) {
+
+    super(initialCapacity, loadFactor);
+  }
+
+  public boolean equals(Object obj) {
+
+    return super.equals(obj);
+  }
+
+  public int hashCode() {
+
+    return getWrappedMap().hashCode();
+  }
+
+  /**
+   * Get a copy of the Map's String keys in an array of Strings.
+   */
+  public String[] getKeys() {
+
+    return (String[]) keySet().toArray(new String[size()]);
+  }
+
+  /**
+   * Tell the <code>StringKeyDirtyFlagMap</code> that it should allow non-<code>Serializable</code> values. Enforces that the Map doesn't already include transient data.
+   * 
+   * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
+   */
+  public void setAllowsTransientData(boolean allowsTransientData) {
+
+    if (containsTransientData() && !allowsTransientData) {
+      throw new IllegalStateException("Cannot set property 'allowsTransientData' to 'false' " + "when data map contains non-serializable objects.");
     }
 
-    /**
-     * Whether the <code>StringKeyDirtyFlagMap</code> allows 
-     * non-<code>Serializable</code> values.
-     * 
-     * @deprecated JDBCJobStores no longer prune out transient data.  If you
-     * include non-Serializable values in the Map, you will now get an 
-     * exception when attempting to store it in a database.
-     */
-    public boolean getAllowsTransientData() {
-        return allowsTransientData;
+    this.allowsTransientData = allowsTransientData;
+  }
+
+  /**
+   * Whether the <code>StringKeyDirtyFlagMap</code> allows non-<code>Serializable</code> values.
+   * 
+   * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
+   */
+  public boolean getAllowsTransientData() {
+
+    return allowsTransientData;
+  }
+
+  /**
+   * Determine whether any values in this Map do not implement <code>Serializable</code>. Always returns false if this Map is flagged to not allow transient data.
+   * 
+   * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
+   */
+  public boolean containsTransientData() {
+
+    if (!getAllowsTransientData()) { // short circuit...
+      return false;
     }
 
-    /**
-     * Determine whether any values in this Map do not implement 
-     * <code>Serializable</code>.  Always returns false if this Map
-     * is flagged to not allow transient data.
-     * 
-     * @deprecated JDBCJobStores no longer prune out transient data.  If you
-     * include non-Serializable values in the Map, you will now get an 
-     * exception when attempting to store it in a database.
-     */
-    public boolean containsTransientData() {
-        if (!getAllowsTransientData()) { // short circuit...
-            return false;
-        }
-    
-        String[] keys = getKeys();
-        for (int i = 0; i < keys.length; i++) {
-            Object o = super.get(keys[i]);
-            if (!(o instanceof Serializable)) {
-                return true;
-            }
-        }
-    
-        return false;
+    String[] keys = getKeys();
+    for (int i = 0; i < keys.length; i++) {
+      Object o = super.get(keys[i]);
+      if (!(o instanceof Serializable)) {
+        return true;
+      }
     }
 
-    /**
-     * Removes any data values in the map that are non-Serializable.  Does 
-     * nothing if this Map does not allow transient data.
-     * 
-     * @deprecated JDBCJobStores no longer prune out transient data.  If you
-     * include non-Serializable values in the Map, you will now get an 
-     * exception when attempting to store it in a database.
-     */
-    public void removeTransientData() {
-        if (!getAllowsTransientData()) { // short circuit...
-            return;
-        }
-    
-        String[] keys = getKeys();
-        for (int i = 0; i < keys.length; i++) {
-            Object o = super.get(keys[i]);
-            if (!(o instanceof Serializable)) {
-                remove(keys[i]);
-            }
-        }
-    }
-    
-    /**
-     * <p>
-     * Adds the name-value pairs in the given <code>Map</code> to the 
-     * <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * <p>
-     * All keys must be <code>String</code>s.
-     * </p>
-     */
-    public void putAll(Map map) {
-        for (Iterator entryIter = map.entrySet().iterator(); entryIter.hasNext();) {
-            Map.Entry entry = (Map.Entry) entryIter.next();
-            
-            // will throw IllegalArgumentException if key is not a String
-            put(entry.getKey(), entry.getValue());
-        }
+    return false;
+  }
+
+  /**
+   * Removes any data values in the map that are non-Serializable. Does nothing if this Map does not allow transient data.
+   * 
+   * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
+   */
+  public void removeTransientData() {
+
+    if (!getAllowsTransientData()) { // short circuit...
+      return;
     }
 
-    /**
-     * <p>
-     * Adds the given <code>int</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, int value) {
-        super.put(key, Integer.valueOf(value));
+    String[] keys = getKeys();
+    for (int i = 0; i < keys.length; i++) {
+      Object o = super.get(keys[i]);
+      if (!(o instanceof Serializable)) {
+        remove(keys[i]);
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * Adds the name-value pairs in the given <code>Map</code> to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * <p>
+   * All keys must be <code>String</code>s.
+   * </p>
+   */
+  public void putAll(Map map) {
+
+    for (Iterator entryIter = map.entrySet().iterator(); entryIter.hasNext();) {
+      Map.Entry entry = (Map.Entry) entryIter.next();
+
+      // will throw IllegalArgumentException if key is not a String
+      put(entry.getKey(), entry.getValue());
+    }
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>int</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, int value) {
+
+    super.put(key, Integer.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>long</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, long value) {
+
+    super.put(key, Long.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>float</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, float value) {
+
+    super.put(key, Float.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>double</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, double value) {
+
+    super.put(key, Double.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>boolean</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, boolean value) {
+
+    super.put(key, Boolean.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>char</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, char value) {
+
+    super.put(key, Character.valueOf(value));
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>String</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public void put(String key, String value) {
+
+    super.put(key, value);
+  }
+
+  /**
+   * <p>
+   * Adds the given <code>Object</code> value to the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   */
+  public Object put(Object key, Object value) {
+
+    if (!(key instanceof String)) {
+      throw new IllegalArgumentException("Keys in map must be Strings.");
     }
 
-    /**
-     * <p>
-     * Adds the given <code>long</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, long value) {
-        super.put(key, Long.valueOf(value));
-    }
+    return super.put(key, value);
+  }
 
-    /**
-     * <p>
-     * Adds the given <code>float</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, float value) {
-        super.put(key, Float.valueOf(value));
-    }
+  /**
+   * <p>
+   * Retrieve the identified <code>int</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not an Integer.
+   */
+  public int getInt(String key) {
 
-    /**
-     * <p>
-     * Adds the given <code>double</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, double value) {
-        super.put(key, Double.valueOf(value));
-    }
+    Object obj = get(key);
 
-    /**
-     * <p>
-     * Adds the given <code>boolean</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, boolean value) {
-        super.put(key, Boolean.valueOf(value));
+    try {
+      if (obj instanceof Integer)
+        return ((Integer) obj).intValue();
+      return Integer.parseInt((String) obj);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not an Integer.");
     }
+  }
 
-    /**
-     * <p>
-     * Adds the given <code>char</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, char value) {
-        super.put(key, Character.valueOf(value));
-    }
+  /**
+   * <p>
+   * Retrieve the identified <code>long</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a Long.
+   */
+  public long getLong(String key) {
 
-    /**
-     * <p>
-     * Adds the given <code>String</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public void put(String key, String value) {
-        super.put(key, value);
-    }
+    Object obj = get(key);
 
-    /**
-     * <p>
-     * Adds the given <code>Object</code> value to the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     */
-    public Object put(Object key, Object value) {
-        if (!(key instanceof String)) {
-            throw new IllegalArgumentException(
-                    "Keys in map must be Strings.");
-        }
-    
-        return super.put(key, value);
+    try {
+      if (obj instanceof Long)
+        return ((Long) obj).longValue();
+      return Long.parseLong((String) obj);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a Long.");
     }
+  }
 
-    /**
-     * <p>
-     * Retrieve the identified <code>int</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not an Integer.
-     */
-    public int getInt(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Integer)
-        		return ((Integer) obj).intValue();
-        	return Integer.parseInt((String)obj);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not an Integer.");
-        }
-    }
+  /**
+   * <p>
+   * Retrieve the identified <code>float</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a Float.
+   */
+  public float getFloat(String key) {
 
-    /**
-     * <p>
-     * Retrieve the identified <code>long</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a Long.
-     */
-    public long getLong(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Long)
-        		return ((Long) obj).longValue();
-        	return Long.parseLong((String)obj);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a Long.");
-        }
-    }
+    Object obj = get(key);
 
-    /**
-     * <p>
-     * Retrieve the identified <code>float</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a Float.
-     */
-    public float getFloat(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Float)
-        		return ((Float) obj).floatValue();
-        	return Float.parseFloat((String)obj);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a Float.");
-        }
+    try {
+      if (obj instanceof Float)
+        return ((Float) obj).floatValue();
+      return Float.parseFloat((String) obj);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a Float.");
     }
+  }
 
-    /**
-     * <p>
-     * Retrieve the identified <code>double</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a Double.
-     */
-    public double getDouble(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Double)
-        		return ((Double) obj).doubleValue();
-        	return Double.parseDouble((String)obj);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a Double.");
-        }
-    }
+  /**
+   * <p>
+   * Retrieve the identified <code>double</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a Double.
+   */
+  public double getDouble(String key) {
 
-    /**
-     * <p>
-     * Retrieve the identified <code>boolean</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a Boolean.
-     */
-    public boolean getBoolean(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Boolean)
-        		return ((Boolean) obj).booleanValue();
-        	return Boolean.parseBoolean((String)obj);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a Boolean.");
-        }
-    }
+    Object obj = get(key);
 
-    /**
-     * <p>
-     * Retrieve the identified <code>char</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a Character.
-     */
-    public char getChar(String key) {
-        Object obj = get(key);
-    
-        try {
-        	if(obj instanceof Character)
-        		return ((Character) obj).charValue();
-        	return ((String)obj).charAt(0);
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a Character.");
-        }
+    try {
+      if (obj instanceof Double)
+        return ((Double) obj).doubleValue();
+      return Double.parseDouble((String) obj);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a Double.");
     }
+  }
 
-    /**
-     * <p>
-     * Retrieve the identified <code>String</code> value from the <code>StringKeyDirtyFlagMap</code>.
-     * </p>
-     * 
-     * @throws ClassCastException
-     *           if the identified object is not a String.
-     */
-    public String getString(String key) {
-        Object obj = get(key);
-    
-        try {
-            return (String) obj;
-        } catch (Exception e) {
-            throw new ClassCastException("Identified object is not a String.");
-        }
+  /**
+   * <p>
+   * Retrieve the identified <code>boolean</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a Boolean.
+   */
+  public boolean getBoolean(String key) {
+
+    Object obj = get(key);
+
+    try {
+      if (obj instanceof Boolean)
+        return ((Boolean) obj).booleanValue();
+      return Boolean.parseBoolean((String) obj);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a Boolean.");
     }
+  }
+
+  /**
+   * <p>
+   * Retrieve the identified <code>char</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a Character.
+   */
+  public char getChar(String key) {
+
+    Object obj = get(key);
+
+    try {
+      if (obj instanceof Character)
+        return ((Character) obj).charValue();
+      return ((String) obj).charAt(0);
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a Character.");
+    }
+  }
+
+  /**
+   * <p>
+   * Retrieve the identified <code>String</code> value from the <code>StringKeyDirtyFlagMap</code>.
+   * </p>
+   * 
+   * @throws ClassCastException if the identified object is not a String.
+   */
+  public String getString(String key) {
+
+    Object obj = get(key);
+
+    try {
+      return (String) obj;
+    } catch (Exception e) {
+      throw new ClassCastException("Identified object is not a String.");
+    }
+  }
 }

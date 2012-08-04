@@ -23,28 +23,30 @@ import org.slf4j.LoggerFactory;
  */
 public class GenericJobException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /** slf4J logger wrapper */
-    Logger logger = LoggerFactory.getLogger(GenericJobException.class);
+  /** slf4J logger wrapper */
+  Logger logger = LoggerFactory.getLogger(GenericJobException.class);
 
-    /**
-     * Constructor to use when a business error occurs and the Job needs to stop, no real runtime exception
-     * 
-     * @param pMessage
-     */
-    public GenericJobException(String pMessage) {
-        logger.error(pMessage);
-    }
+  /**
+   * Constructor to use when a business error occurs and the Job needs to stop, no real runtime exception
+   * 
+   * @param pMessage
+   */
+  public GenericJobException(String pMessage) {
 
-    /**
-     * Constructor to use when a real runtime exception occurs
-     * 
-     * @param pMessage
-     * @param e
-     */
-    public GenericJobException(String pMessage, Throwable e) {
-        logger.error(pMessage, e);
-    }
+    logger.error(pMessage);
+  }
+
+  /**
+   * Constructor to use when a real runtime exception occurs
+   * 
+   * @param pMessage
+   * @param e
+   */
+  public GenericJobException(String pMessage, Throwable e) {
+
+    logger.error(pMessage, e);
+  }
 
 }

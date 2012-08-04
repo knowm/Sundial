@@ -54,282 +54,304 @@ import org.quartz.utils.Key;
  */
 public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private Class<? extends Job> jobClass;
+  private Class<? extends Job> jobClass;
 
-    private JobDataMap jobDataMap;
+  private JobDataMap jobDataMap;
 
-    private boolean durability = true;
+  private boolean durability = true;
 
-    private boolean shouldRecover = false;
+  private boolean shouldRecover = false;
 
-    private transient JobKey key = null;
+  private transient JobKey key = null;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * <p>
-     * Create a <code>JobDetail</code> with no specified name or group, and the default settings of all the other properties.
-     * </p>
-     * <p>
-     * Note that the {@link #setName(String)},{@link #setGroup(String)}and {@link #setJobClass(Class)}methods must be called before the job can be placed into a {@link Scheduler}
-     * </p>
-     */
-    public JobDetailImpl() {
-        // do nothing...
+  /**
+   * <p>
+   * Create a <code>JobDetail</code> with no specified name or group, and the default settings of all the other properties.
+   * </p>
+   * <p>
+   * Note that the {@link #setName(String)},{@link #setGroup(String)}and {@link #setJobClass(Class)}methods must be called before the job can be placed into a {@link Scheduler}
+   * </p>
+   */
+  public JobDetailImpl() {
+
+    // do nothing...
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * <p>
+   * Get the name of this <code>Job</code>.
+   * </p>
+   */
+  public String getName() {
+
+    return name;
+  }
+
+  /**
+   * <p>
+   * Set the name of this <code>Job</code>.
+   * </p>
+   * 
+   * @exception IllegalArgumentException if name is null or empty.
+   */
+  public void setName(String name) {
+
+    if (name == null || name.trim().length() == 0) {
+      throw new IllegalArgumentException("Job name cannot be empty.");
     }
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    this.name = name;
+    this.key = null;
+  }
 
-    /**
-     * <p>
-     * Get the name of this <code>Job</code>.
-     * </p>
-     */
-    public String getName() {
-        return name;
+  // /**
+  // * <p>
+  // * Get the group of this <code>Job</code>.
+  // * </p>
+  // */
+  // public String getGroup() {
+  // return group;
+  // }
+
+  /**
+   * <p>
+   * Set the group of this <code>Job</code>.
+   * </p>
+   * 
+   * @param group if <code>null</code>, Key.DEFAULT_GROUP will be used.
+   * @exception IllegalArgumentException if the group is an empty string.
+   */
+  public void setGroup(String group) {
+
+    if (group != null && group.trim().length() == 0) {
+      throw new IllegalArgumentException("Group name cannot be empty.");
     }
 
-    /**
-     * <p>
-     * Set the name of this <code>Job</code>.
-     * </p>
-     * 
-     * @exception IllegalArgumentException if name is null or empty.
-     */
-    public void setName(String name) {
-        if (name == null || name.trim().length() == 0) {
-            throw new IllegalArgumentException("Job name cannot be empty.");
-        }
-
-        this.name = name;
-        this.key = null;
+    if (group == null) {
+      group = Key.DEFAULT_GROUP;
     }
 
-    // /**
-    // * <p>
-    // * Get the group of this <code>Job</code>.
-    // * </p>
-    // */
-    // public String getGroup() {
-    // return group;
-    // }
+    this.key = null;
+  }
 
-    /**
-     * <p>
-     * Set the group of this <code>Job</code>.
-     * </p>
-     * 
-     * @param group if <code>null</code>, Key.DEFAULT_GROUP will be used.
-     * @exception IllegalArgumentException if the group is an empty string.
-     */
-    public void setGroup(String group) {
-        if (group != null && group.trim().length() == 0) {
-            throw new IllegalArgumentException("Group name cannot be empty.");
-        }
+  /**
+   * <p>
+   * Returns the 'full name' of the <code>JobDetail</code> in the format "group.name".
+   * </p>
+   */
+  public String getFullName() {
 
-        if (group == null) {
-            group = Key.DEFAULT_GROUP;
-        }
+    return Key.DEFAULT_GROUP + "." + name;
+  }
 
-        this.key = null;
+  @Override
+  public JobKey getKey() {
+
+    if (key == null) {
+      if (getName() == null) {
+        return null;
+      }
+      key = new JobKey(getName(), Key.DEFAULT_GROUP);
     }
 
-    /**
-     * <p>
-     * Returns the 'full name' of the <code>JobDetail</code> in the format "group.name".
-     * </p>
-     */
-    public String getFullName() {
-        return Key.DEFAULT_GROUP + "." + name;
+    return key;
+  }
+
+  public void setKey(JobKey key) {
+
+    if (key == null) {
+      throw new IllegalArgumentException("Key cannot be null!");
     }
 
-    @Override
-    public JobKey getKey() {
-        if (key == null) {
-            if (getName() == null) {
-                return null;
-            }
-            key = new JobKey(getName(), Key.DEFAULT_GROUP);
-        }
+    setName(key.getName());
+    setGroup(key.getGroup());
+    this.key = key;
+  }
 
-        return key;
+  @Override
+  public String getDescription() {
+
+    return description;
+  }
+
+  /**
+   * <p>
+   * Set a description for the <code>Job</code> instance - may be useful for remembering/displaying the purpose of the job, though the description has no meaning to Quartz.
+   * </p>
+   */
+  public void setDescription(String description) {
+
+    this.description = description;
+  }
+
+  @Override
+  public Class<? extends Job> getJobClass() {
+
+    return jobClass;
+  }
+
+  /**
+   * <p>
+   * Set the instance of <code>Job</code> that will be executed.
+   * </p>
+   * 
+   * @exception IllegalArgumentException if jobClass is null or the class is not a <code>Job</code>.
+   */
+  public void setJobClass(Class<? extends Job> jobClass) {
+
+    if (jobClass == null) {
+      throw new IllegalArgumentException("Job class cannot be null.");
     }
 
-    public void setKey(JobKey key) {
-        if (key == null) {
-            throw new IllegalArgumentException("Key cannot be null!");
-        }
-
-        setName(key.getName());
-        setGroup(key.getGroup());
-        this.key = key;
+    if (!Job.class.isAssignableFrom(jobClass)) {
+      throw new IllegalArgumentException("Job class must implement the Job interface.");
     }
 
-    @Override
-    public String getDescription() {
-        return description;
+    this.jobClass = jobClass;
+  }
+
+  @Override
+  public JobDataMap getJobDataMap() {
+
+    if (jobDataMap == null) {
+      jobDataMap = new JobDataMap();
+    }
+    return jobDataMap;
+  }
+
+  /**
+   * <p>
+   * Set the <code>JobDataMap</code> to be associated with the <code>Job</code>.
+   * </p>
+   */
+  public void setJobDataMap(JobDataMap jobDataMap) {
+
+    this.jobDataMap = jobDataMap;
+  }
+
+  /**
+   * <p>
+   * Set whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
+   * </p>
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   */
+  public void setDurability(boolean durability) {
+
+    this.durability = durability;
+  }
+
+  /**
+   * <p>
+   * Set whether or not the the <code>Scheduler</code> should re-execute the <code>Job</code> if a 'recovery' or 'fail-over' situation is encountered.
+   * </p>
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   * 
+   * @see JobExecutionContext#isRecovering()
+   */
+  public void setRequestsRecovery(boolean shouldRecover) {
+
+    this.shouldRecover = shouldRecover;
+  }
+
+  @Override
+  public boolean isDurable() {
+
+    return durability;
+  }
+
+  /**
+   * @return whether the associated Job class carries the {@link DisallowConcurrentExecution} annotation.
+   */
+  @Override
+  public boolean isConcurrentExectionDisallowed() {
+
+    return ClassUtils.isAnnotationPresent(jobClass, DisallowConcurrentExecution.class);
+  }
+
+  @Override
+  public boolean requestsRecovery() {
+
+    return shouldRecover;
+  }
+
+  /**
+   * <p>
+   * Return a simple string representation of this object.
+   * </p>
+   */
+  @Override
+  public String toString() {
+
+    return "JobDetail '" + getFullName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName()) + " concurrentExectionDisallowed: " + isConcurrentExectionDisallowed() + " isDurable: "
+        + isDurable() + " requestsRecovers: " + requestsRecovery();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    if (!(obj instanceof JobDetail)) {
+      return false;
     }
 
-    /**
-     * <p>
-     * Set a description for the <code>Job</code> instance - may be useful for remembering/displaying the purpose of the job, though the description has no meaning to Quartz.
-     * </p>
-     */
-    public void setDescription(String description) {
-        this.description = description;
+    JobDetail other = (JobDetail) obj;
+
+    if (other.getKey() == null || getKey() == null) {
+      return false;
     }
 
-    @Override
-    public Class<? extends Job> getJobClass() {
-        return jobClass;
+    if (!other.getKey().equals(getKey())) {
+      return false;
     }
 
-    /**
-     * <p>
-     * Set the instance of <code>Job</code> that will be executed.
-     * </p>
-     * 
-     * @exception IllegalArgumentException if jobClass is null or the class is not a <code>Job</code>.
-     */
-    public void setJobClass(Class<? extends Job> jobClass) {
-        if (jobClass == null) {
-            throw new IllegalArgumentException("Job class cannot be null.");
-        }
+    return true;
+  }
 
-        if (!Job.class.isAssignableFrom(jobClass)) {
-            throw new IllegalArgumentException("Job class must implement the Job interface.");
-        }
+  @Override
+  public int hashCode() {
 
-        this.jobClass = jobClass;
+    return getKey().hashCode();
+  }
+
+  @Override
+  public Object clone() {
+
+    JobDetailImpl copy;
+    try {
+      copy = (JobDetailImpl) super.clone();
+      if (jobDataMap != null) {
+        copy.jobDataMap = (JobDataMap) jobDataMap.clone();
+      }
+    } catch (CloneNotSupportedException ex) {
+      throw new IncompatibleClassChangeError("Not Cloneable.");
     }
 
-    @Override
-    public JobDataMap getJobDataMap() {
-        if (jobDataMap == null) {
-            jobDataMap = new JobDataMap();
-        }
-        return jobDataMap;
-    }
+    return copy;
+  }
 
-    /**
-     * <p>
-     * Set the <code>JobDataMap</code> to be associated with the <code>Job</code>.
-     * </p>
-     */
-    public void setJobDataMap(JobDataMap jobDataMap) {
-        this.jobDataMap = jobDataMap;
-    }
+  @Override
+  public JobBuilder getJobBuilder() {
 
-    /**
-     * <p>
-     * Set whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-     * </p>
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     */
-    public void setDurability(boolean durability) {
-        this.durability = durability;
-    }
-
-    /**
-     * <p>
-     * Set whether or not the the <code>Scheduler</code> should re-execute the <code>Job</code> if a 'recovery' or 'fail-over' situation is encountered.
-     * </p>
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     * 
-     * @see JobExecutionContext#isRecovering()
-     */
-    public void setRequestsRecovery(boolean shouldRecover) {
-        this.shouldRecover = shouldRecover;
-    }
-
-    @Override
-    public boolean isDurable() {
-        return durability;
-    }
-
-    /**
-     * @return whether the associated Job class carries the {@link DisallowConcurrentExecution} annotation.
-     */
-    @Override
-    public boolean isConcurrentExectionDisallowed() {
-
-        return ClassUtils.isAnnotationPresent(jobClass, DisallowConcurrentExecution.class);
-    }
-
-    @Override
-    public boolean requestsRecovery() {
-        return shouldRecover;
-    }
-
-    /**
-     * <p>
-     * Return a simple string representation of this object.
-     * </p>
-     */
-    @Override
-    public String toString() {
-        return "JobDetail '" + getFullName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName()) + " concurrentExectionDisallowed: " + isConcurrentExectionDisallowed() + " isDurable: "
-                + isDurable() + " requestsRecovers: " + requestsRecovery();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof JobDetail)) {
-            return false;
-        }
-
-        JobDetail other = (JobDetail) obj;
-
-        if (other.getKey() == null || getKey() == null) {
-            return false;
-        }
-
-        if (!other.getKey().equals(getKey())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return getKey().hashCode();
-    }
-
-    @Override
-    public Object clone() {
-        JobDetailImpl copy;
-        try {
-            copy = (JobDetailImpl) super.clone();
-            if (jobDataMap != null) {
-                copy.jobDataMap = (JobDataMap) jobDataMap.clone();
-            }
-        } catch (CloneNotSupportedException ex) {
-            throw new IncompatibleClassChangeError("Not Cloneable.");
-        }
-
-        return copy;
-    }
-
-    @Override
-    public JobBuilder getJobBuilder() {
-        JobBuilder b = JobBuilder.newJob().ofType(getJobClass()).requestRecovery(requestsRecovery()).storeDurably(isDurable()).usingJobData(getJobDataMap()).withDescription(getDescription()).withIdentity(getKey());
-        return b;
-    }
+    JobBuilder b = JobBuilder.newJob().ofType(getJobClass()).requestRecovery(requestsRecovery()).storeDurably(isDurable()).usingJobData(getJobDataMap()).withDescription(getDescription()).withIdentity(getKey());
+    return b;
+  }
 }

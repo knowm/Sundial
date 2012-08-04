@@ -28,90 +28,101 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  */
 public abstract class JobContainer {
 
-    /** ThreadLocal container */
-    private static ThreadLocal<JobContext> sContextContainer = new ThreadLocal<JobContext>();
+  /** ThreadLocal container */
+  private static ThreadLocal<JobContext> sContextContainer = new ThreadLocal<JobContext>();
 
-    /** slf4J logger wrapper */
-    Logger logger = LoggerFactory.getLogger(JobContainer.class);
+  /** slf4J logger wrapper */
+  Logger logger = LoggerFactory.getLogger(JobContainer.class);
 
-    /** terminate flag */
-    private boolean mTerminate = false;
+  /** terminate flag */
+  private boolean mTerminate = false;
 
-    /**
-     * Initialize the ThreadLocal with a JobExecutionContext object
-     * 
-     * @param pJobContext
-     */
-    protected void initContextContainer(JobExecutionContext pJobExecutionContext) {
-        JobContext lJobContext = new JobContext();
-        lJobContext.addQuartzContext(pJobExecutionContext);
-        sContextContainer.set(lJobContext);
+  /**
+   * Initialize the ThreadLocal with a JobExecutionContext object
+   * 
+   * @param pJobContext
+   */
+  protected void initContextContainer(JobExecutionContext pJobExecutionContext) {
+
+    JobContext lJobContext = new JobContext();
+    lJobContext.addQuartzContext(pJobExecutionContext);
+    sContextContainer.set(lJobContext);
+  }
+
+  /**
+   * Empty the ThreadLocal container
+   */
+  protected void destroyContext() {
+
+    sContextContainer.remove();
+  }
+
+  /**
+   * Get the JobContext object
+   * 
+   * @return
+   */
+  protected JobContext getJobContext() {
+
+    return JobContainer.getContext();
+  }
+
+  /**
+   * Get the JobContext object
+   * 
+   * @return
+   */
+  private static JobContext getContext() {
+
+    return sContextContainer.get();
+  }
+
+  /**
+   * Check if the terminate flag is true, and throw a JobInterruptException if it is.
+   */
+  public void checkTerminated() {
+
+    if (mTerminate) {
+      throw new JobInterruptException();
     }
+  }
 
-    /**
-     * Empty the ThreadLocal container
-     */
-    protected void destroyContext() {
-        sContextContainer.remove();
-    }
+  /**
+   * Set the terminate flag to true
+   */
+  public void setTerminate() {
 
-    /**
-     * Get the JobContext object
-     * 
-     * @return
-     */
-    protected JobContext getJobContext() {
-        return JobContainer.getContext();
-    }
+    mTerminate = true;
+  }
 
-    /**
-     * Get the JobContext object
-     * 
-     * @return
-     */
-    private static JobContext getContext() {
-        return sContextContainer.get();
-    }
+  protected void logTrace(String pMessage) {
 
-    /**
-     * Check if the terminate flag is true, and throw a JobInterruptException if it is.
-     */
-    public void checkTerminated() {
+    logger.trace(" [" + this.getClass().getName() + "] " + pMessage);
+  }
 
-        if (mTerminate) {
-            throw new JobInterruptException();
-        }
-    }
+  protected void logDebug(String pMessage) {
 
-    /**
-     * Set the terminate flag to true
-     */
-    public void setTerminate() {
-        mTerminate = true;
-    }
+    logger.debug(" [" + this.getClass().getName() + "] " + pMessage);
+  }
 
-    protected void logTrace(String pMessage) {
-        logger.trace(" [" + this.getClass().getName() + "] " + pMessage);
-    }
+  protected void logInfo(String pMessage) {
 
-    protected void logDebug(String pMessage) {
-        logger.debug(" [" + this.getClass().getName() + "] " + pMessage);
-    }
+    logger.info(" [" + this.getClass().getName() + "] " + pMessage);
+  }
 
-    protected void logInfo(String pMessage) {
-        logger.info(" [" + this.getClass().getName() + "] " + pMessage);
-    }
+  protected void logWarning(String pMessage) {
 
-    protected void logWarning(String pMessage) {
-        logger.warn(" [" + this.getClass().getName() + "] " + pMessage);
-    }
+    logger.warn(" [" + this.getClass().getName() + "] " + pMessage);
+  }
 
-    protected void logError(String pMessage) {
-        logger.error(" [" + this.getClass().getName() + "] " + pMessage);
-    }
+  protected void logError(String pMessage) {
 
-    protected void logError(String pMessage, Throwable e) {
-        logger.error(" [" + this.getClass().getName() + "] " + pMessage, e);
-    }
+    logger.error(" [" + this.getClass().getName() + "] " + pMessage);
+  }
+
+  protected void logError(String pMessage, Throwable e) {
+
+    logger.error(" [" + this.getClass().getName() + "] " + pMessage, e);
+  }
 
 }

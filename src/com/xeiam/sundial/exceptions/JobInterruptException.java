@@ -25,13 +25,14 @@ import org.slf4j.LoggerFactory;
  */
 public class JobInterruptException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /** slf4J logger wrapper */
-    Logger logger = LoggerFactory.getLogger(JobInterruptException.class);
+  /** slf4J logger wrapper */
+  Logger logger = LoggerFactory.getLogger(JobInterruptException.class);
 
-    public JobInterruptException() {
-        logger.info("Job Interrupted!!!");
-    }
+  public JobInterruptException() {
+
+    logger.info("Job Interrupted!!!");
+  }
 
 }

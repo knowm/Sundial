@@ -17,32 +17,31 @@
 package org.quartz.utils.counter;
 
 /**
- * A Counter Manager that accepts a config to create counters. Creates counter's
- * based on {@link CounterConfig}. This manages the lifycycle of a counter
+ * A Counter Manager that accepts a config to create counters. Creates counter's based on {@link CounterConfig}. This manages the lifycycle of a counter
  * 
  * @author <a href="mailto:asanoujam@terracottatech.com">Abhishek Sanoujam</a>
  * @since 1.8
- * 
  */
 public interface CounterManager {
-    /**
-     * Creates a Counter based on tha passed config
-     * 
-     * @param config
-     * @return The counter created and managed by this CounterManager
-     */
-    Counter createCounter(CounterConfig config);
 
-    /**
-     * Shuts down this counter manager
-     */
-    void shutdown(boolean killTimer);
+  /**
+   * Creates a Counter based on tha passed config
+   * 
+   * @param config
+   * @return The counter created and managed by this CounterManager
+   */
+  Counter createCounter(CounterConfig config);
 
-    /**
-     * Shuts down the counter
-     * 
-     * @param counter
-     */
-    void shutdownCounter(Counter counter);
+  /**
+   * Shuts down this counter manager
+   */
+  void shutdown(boolean killTimer);
+
+  /**
+   * Shuts down the counter
+   * 
+   * @param counter
+   */
+  void shutdownCounter(Counter counter);
 
 }

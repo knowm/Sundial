@@ -18,89 +18,101 @@ import org.quartz.utils.counter.sampled.SampledCounterConfig;
 import org.quartz.utils.counter.sampled.SampledRateCounterConfig;
 
 public class SampledStatisticsImpl extends SchedulerListenerSupport implements SampledStatistics, JobListener, SchedulerListener {
-	private final QuartzScheduler scheduler;
-	
-	private static final String NAME = "QuartzSampledStatistics";
-	
-    private static final int DEFAULT_HISTORY_SIZE = 30;
-    private static final int DEFAULT_INTERVAL_SECS = 1;
-    private final static SampledCounterConfig DEFAULT_SAMPLED_COUNTER_CONFIG = new SampledCounterConfig(DEFAULT_INTERVAL_SECS,
-            DEFAULT_HISTORY_SIZE, true, 0L);
-    private final static SampledRateCounterConfig DEFAULT_SAMPLED_RATE_COUNTER_CONFIG = new SampledRateCounterConfig(DEFAULT_INTERVAL_SECS,
-            DEFAULT_HISTORY_SIZE, true);
 
-    private volatile CounterManager counterManager;
-    private final SampledCounter jobsScheduledCount;
-    private final SampledCounter jobsExecutingCount;
-    private final SampledCounter jobsCompletedCount;
-	
-	SampledStatisticsImpl(QuartzScheduler scheduler) {
-		this.scheduler = scheduler;
-		
-        counterManager = new CounterManagerImpl(new Timer(NAME+"Timer"));
-        jobsScheduledCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
-        jobsExecutingCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
-        jobsCompletedCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
-        
-        scheduler.addInternalSchedulerListener(this);
-        scheduler.addInternalJobListener(this);
-	}
-	
-	public void shutdown() {
-	    counterManager.shutdown(true);
-	}
-	
-    private SampledCounter createSampledCounter(CounterConfig defaultCounterConfig) {
-        return (SampledCounter) counterManager.createCounter(defaultCounterConfig);
-    }
-	
-    /**
-     * Clears the collected statistics. Resets all counters to zero
-     */
-    public void clearStatistics() {
-    	jobsScheduledCount.getAndReset();
-    	jobsExecutingCount.getAndReset();
-    	jobsCompletedCount.getAndReset();
-    }
-    
-	public long getJobsCompletedMostRecentSample() {
-        return jobsCompletedCount.getMostRecentSample().getCounterValue();
-	}
+  private final QuartzScheduler scheduler;
 
-	public long getJobsExecutingMostRecentSample() {
-        return jobsExecutingCount.getMostRecentSample().getCounterValue();
-	}
+  private static final String NAME = "QuartzSampledStatistics";
 
-	public long getJobsScheduledMostRecentSample() {
-        return jobsScheduledCount.getMostRecentSample().getCounterValue();
-	}
+  private static final int DEFAULT_HISTORY_SIZE = 30;
+  private static final int DEFAULT_INTERVAL_SECS = 1;
+  private final static SampledCounterConfig DEFAULT_SAMPLED_COUNTER_CONFIG = new SampledCounterConfig(DEFAULT_INTERVAL_SECS, DEFAULT_HISTORY_SIZE, true, 0L);
+  private final static SampledRateCounterConfig DEFAULT_SAMPLED_RATE_COUNTER_CONFIG = new SampledRateCounterConfig(DEFAULT_INTERVAL_SECS, DEFAULT_HISTORY_SIZE, true);
 
-	public String getName() {
-		return NAME;
-	}
+  private volatile CounterManager counterManager;
+  private final SampledCounter jobsScheduledCount;
+  private final SampledCounter jobsExecutingCount;
+  private final SampledCounter jobsCompletedCount;
 
-    public void jobScheduled(Trigger trigger) {
-    	jobsScheduledCount.increment();
-    }
-	
-	public void jobExecutionVetoed(JobExecutionContext context) {
-		/**/
-	}
+  SampledStatisticsImpl(QuartzScheduler scheduler) {
 
-	public void jobToBeExecuted(JobExecutionContext context) {
-		jobsExecutingCount.increment();
-	}
+    this.scheduler = scheduler;
 
-	public void jobWasExecuted(JobExecutionContext context,
-			JobExecutionException jobException) {
-		jobsCompletedCount.increment();
-	}
+    counterManager = new CounterManagerImpl(new Timer(NAME + "Timer"));
+    jobsScheduledCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
+    jobsExecutingCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
+    jobsCompletedCount = createSampledCounter(DEFAULT_SAMPLED_COUNTER_CONFIG);
 
-	public void jobAdded(JobDetail jobDetail) {
-		/**/
-	}
+    scheduler.addInternalSchedulerListener(this);
+    scheduler.addInternalJobListener(this);
+  }
 
-	public void jobDeleted(String jobName, String groupName) {
-		/**/
-	}
+  public void shutdown() {
+
+    counterManager.shutdown(true);
+  }
+
+  private SampledCounter createSampledCounter(CounterConfig defaultCounterConfig) {
+
+    return (SampledCounter) counterManager.createCounter(defaultCounterConfig);
+  }
+
+  /**
+   * Clears the collected statistics. Resets all counters to zero
+   */
+  public void clearStatistics() {
+
+    jobsScheduledCount.getAndReset();
+    jobsExecutingCount.getAndReset();
+    jobsCompletedCount.getAndReset();
+  }
+
+  public long getJobsCompletedMostRecentSample() {
+
+    return jobsCompletedCount.getMostRecentSample().getCounterValue();
+  }
+
+  public long getJobsExecutingMostRecentSample() {
+
+    return jobsExecutingCount.getMostRecentSample().getCounterValue();
+  }
+
+  public long getJobsScheduledMostRecentSample() {
+
+    return jobsScheduledCount.getMostRecentSample().getCounterValue();
+  }
+
+  public String getName() {
+
+    return NAME;
+  }
+
+  public void jobScheduled(Trigger trigger) {
+
+    jobsScheduledCount.increment();
+  }
+
+  public void jobExecutionVetoed(JobExecutionContext context) {
+
+    /**/
+  }
+
+  public void jobToBeExecuted(JobExecutionContext context) {
+
+    jobsExecutingCount.increment();
+  }
+
+  public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
+
+    jobsCompletedCount.increment();
+  }
+
+  public void jobAdded(JobDetail jobDetail) {
+
+    /**/
+  }
+
+  public void jobDeleted(String jobName, String groupName) {
+
+    /**/
+  }
 }

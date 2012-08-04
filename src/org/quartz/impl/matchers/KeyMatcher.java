@@ -20,58 +20,62 @@ import org.quartz.Matcher;
 import org.quartz.utils.Key;
 
 /**
- * Matches on the complete key being equal (both name and group). 
- *  
+ * Matches on the complete key being equal (both name and group).
+ * 
  * @author jhouse
  */
 public class KeyMatcher<T extends Key> implements Matcher<T> {
 
-    protected T compareTo;
-    
-    protected KeyMatcher(T compareTo) {
-        this.compareTo = compareTo;
-    }
-    
-    /**
-     * Create a KeyMatcher that matches Keys that equal the given key. 
-     */
-    public static <U extends Key> KeyMatcher<U> keyEquals(U compareTo) {
-        return new KeyMatcher<U>(compareTo);
-    }
+  protected T compareTo;
 
-    public boolean isMatch(T key) {
+  protected KeyMatcher(T compareTo) {
 
-        return compareTo.equals(key);
-    }
+    this.compareTo = compareTo;
+  }
 
-    public T getCompareToValue() {
-        return compareTo;
-    }
+  /**
+   * Create a KeyMatcher that matches Keys that equal the given key.
+   */
+  public static <U extends Key> KeyMatcher<U> keyEquals(U compareTo) {
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((compareTo == null) ? 0 : compareTo.hashCode());
-        return result;
-    }
+    return new KeyMatcher<U>(compareTo);
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        KeyMatcher other = (KeyMatcher) obj;
-        if (compareTo == null) {
-            if (other.compareTo != null)
-                return false;
-        } else if (!compareTo.equals(other.compareTo))
-            return false;
-        return true;
-    }
-    
+  public boolean isMatch(T key) {
+
+    return compareTo.equals(key);
+  }
+
+  public T getCompareToValue() {
+
+    return compareTo;
+  }
+
+  @Override
+  public int hashCode() {
+
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((compareTo == null) ? 0 : compareTo.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    KeyMatcher other = (KeyMatcher) obj;
+    if (compareTo == null) {
+      if (other.compareTo != null)
+        return false;
+    } else if (!compareTo.equals(other.compareTo))
+      return false;
+    return true;
+  }
+
 }

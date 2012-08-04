@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -23,78 +22,67 @@ import java.io.PrintWriter;
 
 import org.quartz.Scheduler;
 
-
 /**
  * Base class for exceptions thrown by the Quartz <code>{@link Scheduler}</code>.
- * 
  * <p>
- * <code>SchedulerException</code>s may contain a reference to another
- * <code>Exception</code>, which was the underlying cause of the <code>SchedulerException</code>.
+ * <code>SchedulerException</code>s may contain a reference to another <code>Exception</code>, which was the underlying cause of the <code>SchedulerException</code>.
  * </p>
  * 
  * @author James House
  */
 public class SchedulerException extends Exception {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    public SchedulerException() {
-        super();
+  public SchedulerException() {
+
+    super();
+  }
+
+  public SchedulerException(String msg) {
+
+    super(msg);
+  }
+
+  public SchedulerException(Throwable cause) {
+
+    super(cause);
+  }
+
+  public SchedulerException(String msg, Throwable cause) {
+
+    super(msg, cause);
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * <p>
+   * Return the exception that is the underlying cause of this exception.
+   * </p>
+   * <p>
+   * This may be used to find more detail about the cause of the error.
+   * </p>
+   * 
+   * @return the underlying exception, or <code>null</code> if there is not one.
+   */
+  public Throwable getUnderlyingException() {
+
+    return super.getCause();
+  }
+
+  public String toString() {
+
+    Throwable cause = getUnderlyingException();
+    if (cause == null || cause == this) {
+      return super.toString();
+    } else {
+      return super.toString() + " [See nested exception: " + cause + "]";
     }
-
-    public SchedulerException(String msg) {
-        super(msg);
-    }
-
-    public SchedulerException(Throwable cause) {
-        super(cause);
-    }
-
-    public SchedulerException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-
-
-    
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-
-    /**
-     * <p>
-     * Return the exception that is the underlying cause of this exception.
-     * </p>
-     * 
-     * <p>
-     * This may be used to find more detail about the cause of the error.
-     * </p>
-     * 
-     * @return the underlying exception, or <code>null</code> if there is not
-     *         one.
-     */
-    public Throwable getUnderlyingException() {
-        return super.getCause();
-    }
-
-
-    public String toString() {
-        Throwable cause = getUnderlyingException(); 
-        if (cause == null || cause == this) {
-            return super.toString();
-        } else {
-            return super.toString() + " [See nested exception: " + cause + "]";
-        }
-    }
-
+  }
 
 }

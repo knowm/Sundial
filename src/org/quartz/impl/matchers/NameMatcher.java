@@ -21,46 +21,52 @@ import org.quartz.utils.Key;
 
 /**
  * Matches on name (ignores group) property of Keys.
- *  
+ * 
  * @author jhouse
  */
 public class NameMatcher<T extends Key> extends StringMatcher<T> {
 
-    protected NameMatcher(String compareTo, StringOperatorName compareWith) {
-        super(compareTo, compareWith);
-    }
-    
-    /**
-     * Create a NameMatcher that matches names equaling the given string.
-     */
-    public static NameMatcher nameEquals(String compareTo) {
-        return new NameMatcher(compareTo, StringOperatorName.EQUALS);
-    }
+  protected NameMatcher(String compareTo, StringOperatorName compareWith) {
 
-    /**
-     * Create a NameMatcher that matches names starting with the given string.
-     */
-    public static NameMatcher nameStartsWith(String compareTo) {
-        return new NameMatcher(compareTo, StringOperatorName.STARTS_WITH);
-    }
+    super(compareTo, compareWith);
+  }
 
-    /**
-     * Create a NameMatcher that matches names ending with the given string.
-     */
-    public static NameMatcher nameEndsWith(String compareTo) {
-        return new NameMatcher(compareTo, StringOperatorName.ENDS_WITH);
-    }
+  /**
+   * Create a NameMatcher that matches names equaling the given string.
+   */
+  public static NameMatcher nameEquals(String compareTo) {
 
-    /**
-     * Create a NameMatcher that matches names containing the given string.
-     */
-    public static NameMatcher nameContains(String compareTo) {
-        return new NameMatcher(compareTo, StringOperatorName.CONTAINS);
-    }
+    return new NameMatcher(compareTo, StringOperatorName.EQUALS);
+  }
 
-    @Override
-    protected String getValue(T key) {
-        return key.getName();
-    }
+  /**
+   * Create a NameMatcher that matches names starting with the given string.
+   */
+  public static NameMatcher nameStartsWith(String compareTo) {
+
+    return new NameMatcher(compareTo, StringOperatorName.STARTS_WITH);
+  }
+
+  /**
+   * Create a NameMatcher that matches names ending with the given string.
+   */
+  public static NameMatcher nameEndsWith(String compareTo) {
+
+    return new NameMatcher(compareTo, StringOperatorName.ENDS_WITH);
+  }
+
+  /**
+   * Create a NameMatcher that matches names containing the given string.
+   */
+  public static NameMatcher nameContains(String compareTo) {
+
+    return new NameMatcher(compareTo, StringOperatorName.CONTAINS);
+  }
+
+  @Override
+  protected String getValue(T key) {
+
+    return key.getName();
+  }
 
 }

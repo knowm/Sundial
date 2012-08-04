@@ -28,54 +28,55 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
  */
 public abstract class Job extends JobContainer implements InterruptableJob {
 
-    /**
-     * Required no-arg constructor
-     */
-    public Job() {
-        // this is a comment.
+  /**
+   * Required no-arg constructor
+   */
+  public Job() {
+
+    // this is a comment.
+  }
+
+  @Override
+  public final void execute(JobExecutionContext pJobExecutionContext) throws JobExecutionException {
+
+    // check for global lock
+    if (SundialJobScheduler.getGlobalLock()) {
+      logInfo("Global Lock in place! Job aborted.");
+      return;
     }
 
-    @Override
-    public final void execute(JobExecutionContext pJobExecutionContext) throws JobExecutionException {
+    try {
 
-        // check for global lock
-        if (SundialJobScheduler.getGlobalLock()) {
-            logInfo("Global Lock in place! Job aborted.");
-            return;
-        }
+      initContextContainer(pJobExecutionContext);
 
-        try {
+      doRun();
 
-            initContextContainer(pJobExecutionContext);
-
-            doRun();
-
-        } catch (RequiredParameterException e) {
-        } catch (JobInterruptException e) {
-        } catch (Exception e) {
-            logError("Error executing Job! Job aborted!!!", e);
-        } finally {
-            cleanup();
-            destroyContext(); // remove the JobContext from the ThreadLocal
-        }
-
+    } catch (RequiredParameterException e) {
+    } catch (JobInterruptException e) {
+    } catch (Exception e) {
+      logError("Error executing Job! Job aborted!!!", e);
+    } finally {
+      cleanup();
+      destroyContext(); // remove the JobContext from the ThreadLocal
     }
 
-    @Override
-    public void interrupt() throws UnableToInterruptJobException {
+  }
 
-        setTerminate();
-        logInfo("Interrupt called!");
+  @Override
+  public void interrupt() throws UnableToInterruptJobException {
 
-    }
+    setTerminate();
+    logInfo("Interrupt called!");
 
-    /**
-     * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
-     */
-    public void cleanup() {
+  }
 
-    }
+  /**
+   * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
+   */
+  public void cleanup() {
 
-    public abstract void doRun() throws JobInterruptException;
+  }
+
+  public abstract void doRun() throws JobInterruptException;
 
 }

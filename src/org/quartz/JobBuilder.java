@@ -33,6 +33,7 @@ import org.quartz.utils.Key;
  * </p>
  * 
  * <pre>
+ * 
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;)).withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
@@ -48,271 +49,290 @@ import org.quartz.utils.Key;
  */
 public class JobBuilder {
 
-    private JobKey key;
-    private String description;
-    private Class<? extends Job> jobClass = NoOpJob.class;
-    private boolean durability = true;
-    private boolean shouldRecover = false;
+  private JobKey key;
+  private String description;
+  private Class<? extends Job> jobClass = NoOpJob.class;
+  private boolean durability = true;
+  private boolean shouldRecover = false;
 
-    private JobDataMap jobDataMap = new JobDataMap();
+  private JobDataMap jobDataMap = new JobDataMap();
 
-    private JobBuilder() {
+  private JobBuilder() {
+
+  }
+
+  /**
+   * Create a JobBuilder with which to define a <code>JobDetail</code>.
+   * 
+   * @return a new JobBuilder
+   */
+  public static JobBuilder newJob() {
+
+    return new JobBuilder();
+  }
+
+  /**
+   * Create a JobBuilder with which to define a <code>JobDetail</code>, and set the class name of the <code>Job</code> to be executed.
+   * 
+   * @return a new JobBuilder
+   */
+  public static JobBuilder newJob(Class<? extends Job> jobClass) {
+
+    JobBuilder b = new JobBuilder();
+    b.ofType(jobClass);
+    return b;
+  }
+
+  /**
+   * Produce the <code>JobDetail</code> instance defined by this <code>JobBuilder</code>.
+   * 
+   * @return the defined JobDetail.
+   */
+  public JobDetail build() {
+
+    JobDetailImpl job = new JobDetailImpl();
+
+    job.setJobClass(jobClass);
+    job.setDescription(description);
+    if (key == null) {
+      key = new JobKey(Key.createUniqueName(null), null);
+    }
+    job.setKey(key);
+    job.setDurability(durability);
+    job.setRequestsRecovery(shouldRecover);
+
+    if (!jobDataMap.isEmpty()) {
+      job.setJobDataMap(jobDataMap);
     }
 
-    /**
-     * Create a JobBuilder with which to define a <code>JobDetail</code>.
-     * 
-     * @return a new JobBuilder
-     */
-    public static JobBuilder newJob() {
-        return new JobBuilder();
+    return job;
+  }
+
+  /**
+   * Use a <code>JobKey</code> with the given name and default group to identify the JobDetail.
+   * <p>
+   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
+   * </p>
+   * 
+   * @param name the name element for the Job's JobKey
+   * @return the updated JobBuilder
+   * @see JobKey
+   * @see JobDetail#getKey()
+   */
+  public JobBuilder withIdentity(String name) {
+
+    key = new JobKey(name, null);
+    return this;
+  }
+
+  /**
+   * Use a <code>JobKey</code> with the given name and group to identify the JobDetail.
+   * <p>
+   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
+   * </p>
+   * 
+   * @param name the name element for the Job's JobKey
+   * @param group the group element for the Job's JobKey
+   * @return the updated JobBuilder
+   * @see JobKey
+   * @see JobDetail#getKey()
+   */
+  public JobBuilder withIdentity(String name, String group) {
+
+    key = new JobKey(name, group);
+    return this;
+  }
+
+  /**
+   * Use a <code>JobKey</code> to identify the JobDetail.
+   * <p>
+   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
+   * </p>
+   * 
+   * @param key the Job's JobKey
+   * @return the updated JobBuilder
+   * @see JobKey
+   * @see JobDetail#getKey()
+   */
+  public JobBuilder withIdentity(JobKey key) {
+
+    this.key = key;
+    return this;
+  }
+
+  /**
+   * Set the given (human-meaningful) description of the Job.
+   * 
+   * @param description the description for the Job
+   * @return the updated JobBuilder
+   * @see JobDetail#getDescription()
+   */
+  public JobBuilder withDescription(String description) {
+
+    this.description = description;
+    return this;
+  }
+
+  /**
+   * Set the class which will be instantiated and executed when a Trigger fires that is associated with this JobDetail.
+   * 
+   * @param jobClass a class implementing the Job interface.
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobClass()
+   */
+  public JobBuilder ofType(Class<? extends Job> jobClass) {
+
+    this.jobClass = jobClass;
+    return this;
+  }
+
+  /**
+   * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is encountered.
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#requestsRecovery()
+   */
+  public JobBuilder requestRecovery() {
+
+    this.shouldRecover = true;
+    return this;
+  }
+
+  /**
+   * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is encountered.
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   * 
+   * @param shouldRecover
+   * @return the updated JobBuilder
+   */
+  public JobBuilder requestRecovery(boolean shouldRecover) {
+
+    this.shouldRecover = shouldRecover;
+    return this;
+  }
+
+  /**
+   * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#isDurable()
+   */
+  public JobBuilder storeDurably() {
+
+    this.durability = true;
+    return this;
+  }
+
+  /**
+   * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
+   * <p>
+   * If not explicitly set, the default value is <code>false</code>.
+   * </p>
+   * 
+   * @param durability the value to set for the durability property.
+   * @return the updated JobBuilder
+   * @see JobDetail#isDurable()
+   */
+  public JobBuilder storeDurably(boolean durability) {
+
+    this.durability = durability;
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, String value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, Integer value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, Long value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, Float value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, Double value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(String key, Boolean value) {
+
+    jobDataMap.put(key, value);
+    return this;
+  }
+
+  /**
+   * Set the JobDetail's {@link JobDataMap}, adding any values to it that were already set on this JobBuilder using any of the other 'usingJobData' methods.
+   * 
+   * @return the updated JobBuilder
+   * @see JobDetail#getJobDataMap()
+   */
+  public JobBuilder usingJobData(JobDataMap newJobDataMap) {
+
+    // add any existing data to this new map
+    for (Object key : jobDataMap.keySet()) {
+      newJobDataMap.put(key, jobDataMap.get(key));
     }
-
-    /**
-     * Create a JobBuilder with which to define a <code>JobDetail</code>, and set the class name of the <code>Job</code> to be executed.
-     * 
-     * @return a new JobBuilder
-     */
-    public static JobBuilder newJob(Class<? extends Job> jobClass) {
-        JobBuilder b = new JobBuilder();
-        b.ofType(jobClass);
-        return b;
-    }
-
-    /**
-     * Produce the <code>JobDetail</code> instance defined by this <code>JobBuilder</code>.
-     * 
-     * @return the defined JobDetail.
-     */
-    public JobDetail build() {
-
-        JobDetailImpl job = new JobDetailImpl();
-
-        job.setJobClass(jobClass);
-        job.setDescription(description);
-        if (key == null) {
-            key = new JobKey(Key.createUniqueName(null), null);
-        }
-        job.setKey(key);
-        job.setDurability(durability);
-        job.setRequestsRecovery(shouldRecover);
-
-        if (!jobDataMap.isEmpty()) {
-            job.setJobDataMap(jobDataMap);
-        }
-
-        return job;
-    }
-
-    /**
-     * Use a <code>JobKey</code> with the given name and default group to identify the JobDetail.
-     * <p>
-     * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-     * </p>
-     * 
-     * @param name the name element for the Job's JobKey
-     * @return the updated JobBuilder
-     * @see JobKey
-     * @see JobDetail#getKey()
-     */
-    public JobBuilder withIdentity(String name) {
-        key = new JobKey(name, null);
-        return this;
-    }
-
-    /**
-     * Use a <code>JobKey</code> with the given name and group to identify the JobDetail.
-     * <p>
-     * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-     * </p>
-     * 
-     * @param name the name element for the Job's JobKey
-     * @param group the group element for the Job's JobKey
-     * @return the updated JobBuilder
-     * @see JobKey
-     * @see JobDetail#getKey()
-     */
-    public JobBuilder withIdentity(String name, String group) {
-        key = new JobKey(name, group);
-        return this;
-    }
-
-    /**
-     * Use a <code>JobKey</code> to identify the JobDetail.
-     * <p>
-     * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-     * </p>
-     * 
-     * @param key the Job's JobKey
-     * @return the updated JobBuilder
-     * @see JobKey
-     * @see JobDetail#getKey()
-     */
-    public JobBuilder withIdentity(JobKey key) {
-        this.key = key;
-        return this;
-    }
-
-    /**
-     * Set the given (human-meaningful) description of the Job.
-     * 
-     * @param description the description for the Job
-     * @return the updated JobBuilder
-     * @see JobDetail#getDescription()
-     */
-    public JobBuilder withDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    /**
-     * Set the class which will be instantiated and executed when a Trigger fires that is associated with this JobDetail.
-     * 
-     * @param jobClass a class implementing the Job interface.
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobClass()
-     */
-    public JobBuilder ofType(Class<? extends Job> jobClass) {
-        this.jobClass = jobClass;
-        return this;
-    }
-
-    /**
-     * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is encountered.
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#requestsRecovery()
-     */
-    public JobBuilder requestRecovery() {
-        this.shouldRecover = true;
-        return this;
-    }
-
-    /**
-     * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is encountered.
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     * 
-     * @param shouldRecover
-     * @return the updated JobBuilder
-     */
-    public JobBuilder requestRecovery(boolean shouldRecover) {
-        this.shouldRecover = shouldRecover;
-        return this;
-    }
-
-    /**
-     * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#isDurable()
-     */
-    public JobBuilder storeDurably() {
-        this.durability = true;
-        return this;
-    }
-
-    /**
-     * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-     * <p>
-     * If not explicitly set, the default value is <code>false</code>.
-     * </p>
-     * 
-     * @param durability the value to set for the durability property.
-     * @return the updated JobBuilder
-     * @see JobDetail#isDurable()
-     */
-    public JobBuilder storeDurably(boolean durability) {
-        this.durability = durability;
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, String value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, Integer value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, Long value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, Float value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, Double value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(String key, Boolean value) {
-        jobDataMap.put(key, value);
-        return this;
-    }
-
-    /**
-     * Set the JobDetail's {@link JobDataMap}, adding any values to it that were already set on this JobBuilder using any of the other 'usingJobData' methods.
-     * 
-     * @return the updated JobBuilder
-     * @see JobDetail#getJobDataMap()
-     */
-    public JobBuilder usingJobData(JobDataMap newJobDataMap) {
-        // add any existing data to this new map
-        for (Object key : jobDataMap.keySet()) {
-            newJobDataMap.put(key, jobDataMap.get(key));
-        }
-        jobDataMap = newJobDataMap; // set new map as the map to use
-        return this;
-    }
+    jobDataMap = newJobDataMap; // set new map as the map to use
+    return this;
+  }
 
 }

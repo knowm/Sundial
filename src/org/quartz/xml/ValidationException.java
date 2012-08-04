@@ -28,113 +28,101 @@ import java.util.Iterator;
  * @author <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
  */
 public class ValidationException extends Exception {
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
 
-    private Collection validationExceptions = new ArrayList();
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  private Collection validationExceptions = new ArrayList();
 
-    /**
-     * Constructor for ValidationException.
-     */
-    public ValidationException() {
-        super();
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * Constructor for ValidationException.
+   */
+  public ValidationException() {
+
+    super();
+  }
+
+  /**
+   * Constructor for ValidationException.
+   * 
+   * @param message exception message.
+   */
+  public ValidationException(String message) {
+
+    super(message);
+  }
+
+  /**
+   * Constructor for ValidationException.
+   * 
+   * @param errors collection of validation exceptions.
+   */
+  public ValidationException(Collection<Exception> errors) {
+
+    this();
+    this.validationExceptions = Collections.unmodifiableCollection(validationExceptions);
+    initCause(errors.iterator().next());
+  }
+
+  /**
+   * Constructor for ValidationException.
+   * 
+   * @param message exception message.
+   * @param errors collection of validation exceptions.
+   */
+  public ValidationException(String message, Collection<Exception> errors) {
+
+    this(message);
+    this.validationExceptions = Collections.unmodifiableCollection(validationExceptions);
+    initCause(errors.iterator().next());
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  /**
+   * Returns collection of errors.
+   * 
+   * @return collection of errors.
+   */
+  public Collection getValidationExceptions() {
+
+    return validationExceptions;
+  }
+
+  /**
+   * Returns the detail message string.
+   * 
+   * @return the detail message string.
+   */
+  public String getMessage() {
+
+    if (getValidationExceptions().size() == 0) {
+      return super.getMessage();
     }
 
-    /**
-     * Constructor for ValidationException.
-     * 
-     * @param message
-     *          exception message.
-     */
-    public ValidationException(String message) {
-        super(message);
+    StringBuffer sb = new StringBuffer();
+
+    boolean first = true;
+
+    for (Iterator iter = getValidationExceptions().iterator(); iter.hasNext();) {
+      Exception e = (Exception) iter.next();
+
+      if (!first) {
+        sb.append('\n');
+        first = false;
+      }
+
+      sb.append(e.getMessage());
     }
 
-    /**
-     * Constructor for ValidationException.
-     * 
-     * @param errors
-     *          collection of validation exceptions.
-     */
-    public ValidationException(Collection<Exception> errors) {
-        this();
-        this.validationExceptions = Collections
-                .unmodifiableCollection(validationExceptions);
-        initCause(errors.iterator().next());
-    }
-    
+    return sb.toString();
+  }
 
-    /**
-     * Constructor for ValidationException.
-     * 
-     * @param message
-     *          exception message.
-     * @param errors
-     *          collection of validation exceptions.
-     */
-    public ValidationException(String message, Collection<Exception> errors) {
-        this(message);
-        this.validationExceptions = Collections
-                .unmodifiableCollection(validationExceptions);
-        initCause(errors.iterator().next());
-    }
-
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
-
-    /**
-     * Returns collection of errors.
-     * 
-     * @return collection of errors.
-     */
-    public Collection getValidationExceptions() {
-        return validationExceptions;
-    }
-
-    /**
-     * Returns the detail message string.
-     * 
-     * @return the detail message string.
-     */
-    public String getMessage() {
-        if (getValidationExceptions().size() == 0) { return super.getMessage(); }
-
-        StringBuffer sb = new StringBuffer();
-
-        boolean first = true;
-
-        for (Iterator iter = getValidationExceptions().iterator(); iter
-                .hasNext(); ) {
-            Exception e = (Exception) iter.next();
-
-            if (!first) {
-                sb.append('\n');
-                first = false;
-            }
-
-            sb.append(e.getMessage());
-        }
-
-        return sb.toString();
-    }
-    
-    
 }

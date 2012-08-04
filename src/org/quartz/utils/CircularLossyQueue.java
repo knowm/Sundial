@@ -28,91 +28,99 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class CircularLossyQueue<T> {
 
-    private final AtomicReference<T>[] circularArray;
-    private final int maxSize;
+  private final AtomicReference<T>[] circularArray;
+  private final int maxSize;
 
-    private final AtomicLong currentIndex = new AtomicLong(-1);
+  private final AtomicLong currentIndex = new AtomicLong(-1);
 
-    /**
-     * Constructs the circular queue with the specified capacity
-     * 
-     * @param size
-     */
-    public CircularLossyQueue(int size) {
-        this.circularArray = new AtomicReference[size];
-        for (int i = 0; i < size; i++) {
-            this.circularArray[i] = new AtomicReference<T>();
-        }
-        this.maxSize = size;
+  /**
+   * Constructs the circular queue with the specified capacity
+   * 
+   * @param size
+   */
+  public CircularLossyQueue(int size) {
+
+    this.circularArray = new AtomicReference[size];
+    for (int i = 0; i < size; i++) {
+      this.circularArray[i] = new AtomicReference<T>();
+    }
+    this.maxSize = size;
+  }
+
+  /**
+   * Adds a new item
+   * 
+   * @param newVal
+   */
+  public void push(T newVal) {
+
+    int index = (int) (currentIndex.incrementAndGet() % maxSize);
+    circularArray[index].set(newVal);
+  }
+
+  /**
+   * Returns an array of the current elements in the queue. The order of elements is in reverse order of the order items were added.
+   * 
+   * @param type
+   * @return An array containing the current elements in the queue. The first element of the array is the tail of the queue and the last element is the head of the queue
+   */
+  public T[] toArray(T[] type) {
+
+    System.getProperties();
+
+    if (type.length > maxSize) {
+      throw new IllegalArgumentException("Size of array passed in cannot be greater than " + maxSize);
     }
 
-    /**
-     * Adds a new item
-     * 
-     * @param newVal
-     */
-    public void push(T newVal) {
-        int index = (int) (currentIndex.incrementAndGet() % maxSize);
-        circularArray[index].set(newVal);
+    int curIndex = getCurrentIndex();
+    for (int k = 0; k < type.length; k++) {
+      int index = getIndex(curIndex - k);
+      type[k] = circularArray[index].get();
     }
+    return type;
+  }
 
-    /**
-     * Returns an array of the current elements in the queue. The order of elements is in reverse order of the order items were added.
-     * 
-     * @param type
-     * @return An array containing the current elements in the queue. The first element of the array is the tail of the queue and the last element is the head of the queue
-     */
-    public T[] toArray(T[] type) {
-        System.getProperties();
+  private int getIndex(int index) {
 
-        if (type.length > maxSize) {
-            throw new IllegalArgumentException("Size of array passed in cannot be greater than " + maxSize);
-        }
+    return (index < 0 ? index + maxSize : index);
+  }
 
-        int curIndex = getCurrentIndex();
-        for (int k = 0; k < type.length; k++) {
-            int index = getIndex(curIndex - k);
-            type[k] = circularArray[index].get();
-        }
-        return type;
+  /**
+   * Returns value at the tail of the queue
+   * 
+   * @return Value at the tail of the queue
+   */
+  public T peek() {
+
+    if (depth() == 0) {
+      return null;
     }
+    return circularArray[getIndex(getCurrentIndex())].get();
+  }
 
-    private int getIndex(int index) {
-        return (index < 0 ? index + maxSize : index);
-    }
+  /**
+   * Returns true if the queue is empty, otherwise false
+   * 
+   * @return true if the queue is empty, false otherwise
+   */
+  public boolean isEmtpy() {
 
-    /**
-     * Returns value at the tail of the queue
-     * 
-     * @return Value at the tail of the queue
-     */
-    public T peek() {
-        if (depth() == 0) {
-            return null;
-        }
-        return circularArray[getIndex(getCurrentIndex())].get();
-    }
+    return depth() == 0;
+  }
 
-    /**
-     * Returns true if the queue is empty, otherwise false
-     * 
-     * @return true if the queue is empty, false otherwise
-     */
-    public boolean isEmtpy() {
-        return depth() == 0;
-    }
+  private int getCurrentIndex() {
 
-    private int getCurrentIndex() {
-        return (int) (currentIndex.get() % maxSize);
-    }
+    return (int) (currentIndex.get() % maxSize);
+  }
 
-    /**
-     * Returns the number of items currently in the queue
-     * 
-     * @return the number of items in the queue
-     */
-    public int depth() {
-        long currInd = currentIndex.get() + 1;
-        return currInd >= maxSize ? maxSize : (int) currInd;
-    }
+  /**
+   * Returns the number of items currently in the queue
+   * 
+   * @return the number of items in the queue
+   */
+  public int depth() {
+
+    long currInd = currentIndex.get() + 1;
+    return currInd >= maxSize ? maxSize : (int) currInd;
+  }
 }

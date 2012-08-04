@@ -23,13 +23,14 @@ import org.slf4j.LoggerFactory;
  */
 public class RequiredParameterException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /** slf4J logger wrapper */
-    Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
+  /** slf4J logger wrapper */
+  Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
 
-    public RequiredParameterException() {
-        logger.error("Required Value not found in Context! Job aborted!!!");
-    }
+  public RequiredParameterException() {
+
+    logger.error("Required Value not found in Context! Job aborted!!!");
+  }
 
 }

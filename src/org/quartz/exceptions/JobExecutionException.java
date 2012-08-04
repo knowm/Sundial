@@ -1,4 +1,3 @@
-
 /* 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
@@ -23,159 +22,148 @@ import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 
 /**
- * An exception that can be thrown by a <code>{@link org.quartz.Job}</code>
- * to indicate to the Quartz <code>{@link Scheduler}</code> that an error
- * occurred while executing, and whether or not the <code>Job</code> requests
- * to be re-fired immediately (using the same <code>{@link JobExecutionContext}</code>,
- * or whether it wants to be unscheduled.
- * 
+ * An exception that can be thrown by a <code>{@link org.quartz.Job}</code> to indicate to the Quartz <code>{@link Scheduler}</code> that an error occurred while executing, and whether or not the <code>Job</code> requests to be re-fired immediately
+ * (using the same <code>{@link JobExecutionContext}</code>, or whether it wants to be unscheduled.
  * <p>
- * Note that if the flag for 'refire immediately' is set, the flags for
- * unscheduling the Job are ignored.
+ * Note that if the flag for 'refire immediately' is set, the flags for unscheduling the Job are ignored.
  * </p>
  * 
  * @see Job
  * @see JobExecutionContext
  * @see SchedulerException
- * 
  * @author James House
  */
 public class JobExecutionException extends SchedulerException {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Data members.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    private boolean refire = false;
+  private boolean refire = false;
 
-    private boolean unscheduleTrigg = false;
+  private boolean unscheduleTrigg = false;
 
-    private boolean unscheduleAllTriggs = false;
+  private boolean unscheduleAllTriggs = false;
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Constructors.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * <p>
-     * Create a JobExcecutionException, with the 're-fire immediately' flag set
-     * to <code>false</code>.
-     * </p>
-     */
-    public JobExecutionException() {
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionException, with the 're-fire immediately' flag set to <code>false</code>.
+   * </p>
+   */
+  public JobExecutionException() {
 
-    /**
-     * <p>
-     * Create a JobExcecutionException, with the given cause.
-     * </p>
-     */
-    public JobExecutionException(Throwable cause) {
-        super(cause);
-    }
+  }
 
-    /**
-     * <p>
-     * Create a JobExcecutionException, with the given message.
-     * </p>
-     */
-    public JobExecutionException(String msg) {
-        super(msg);
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionException, with the given cause.
+   * </p>
+   */
+  public JobExecutionException(Throwable cause) {
 
-    /**
-     * <p>
-     * Create a JobExcecutionException with the 're-fire immediately' flag set
-     * to the given value.
-     * </p>
-     */
-    public JobExecutionException(boolean refireImmediately) {
-        refire = refireImmediately;
-    }
+    super(cause);
+  }
 
-    /**
-     * <p>
-     * Create a JobExcecutionException with the given underlying exception, and
-     * the 're-fire immediately' flag set to the given value.
-     * </p>
-     */
-    public JobExecutionException(Throwable cause, boolean refireImmediately) {
-        super(cause);
+  /**
+   * <p>
+   * Create a JobExcecutionException, with the given message.
+   * </p>
+   */
+  public JobExecutionException(String msg) {
 
-        refire = refireImmediately;
-    }
+    super(msg);
+  }
 
-    /**
-     * <p>
-     * Create a JobExcecutionException with the given message, and underlying
-     * exception.
-     * </p>
-     */
-    public JobExecutionException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
-    
-    /**
-     * <p>
-     * Create a JobExcecutionException with the given message, and underlying
-     * exception, and the 're-fire immediately' flag set to the given value.
-     * </p>
-     */
-    public JobExecutionException(String msg, Throwable cause,
-            boolean refireImmediately) {
-        super(msg, cause);
+  /**
+   * <p>
+   * Create a JobExcecutionException with the 're-fire immediately' flag set to the given value.
+   * </p>
+   */
+  public JobExecutionException(boolean refireImmediately) {
 
-        refire = refireImmediately;
-    }
-    
-    /**
-     * Create a JobExcecutionException with the given message and the 're-fire 
-     * immediately' flag set to the given value.
-     */
-    public JobExecutionException(String msg, boolean refireImmediately) {
-        super(msg);
+    refire = refireImmediately;
+  }
 
-        refire = refireImmediately;
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionException with the given underlying exception, and the 're-fire immediately' flag set to the given value.
+   * </p>
+   */
+  public JobExecutionException(Throwable cause, boolean refireImmediately) {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    super(cause);
 
-    public void setRefireImmediately(boolean refire) {
-        this.refire = refire;
-    }
+    refire = refireImmediately;
+  }
 
-    public boolean refireImmediately() {
-        return refire;
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionException with the given message, and underlying exception.
+   * </p>
+   */
+  public JobExecutionException(String msg, Throwable cause) {
 
-    public void setUnscheduleFiringTrigger(boolean unscheduleTrigg) {
-        this.unscheduleTrigg = unscheduleTrigg;
-    }
+    super(msg, cause);
+  }
 
-    public boolean unscheduleFiringTrigger() {
-        return unscheduleTrigg;
-    }
+  /**
+   * <p>
+   * Create a JobExcecutionException with the given message, and underlying exception, and the 're-fire immediately' flag set to the given value.
+   * </p>
+   */
+  public JobExecutionException(String msg, Throwable cause, boolean refireImmediately) {
 
-    public void setUnscheduleAllTriggers(boolean unscheduleAllTriggs) {
-        this.unscheduleAllTriggs = unscheduleAllTriggs;
-    }
+    super(msg, cause);
 
-    public boolean unscheduleAllTriggers() {
-        return unscheduleAllTriggs;
-    }
+    refire = refireImmediately;
+  }
+
+  /**
+   * Create a JobExcecutionException with the given message and the 're-fire immediately' flag set to the given value.
+   */
+  public JobExecutionException(String msg, boolean refireImmediately) {
+
+    super(msg);
+
+    refire = refireImmediately;
+  }
+
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
+
+  public void setRefireImmediately(boolean refire) {
+
+    this.refire = refire;
+  }
+
+  public boolean refireImmediately() {
+
+    return refire;
+  }
+
+  public void setUnscheduleFiringTrigger(boolean unscheduleTrigg) {
+
+    this.unscheduleTrigg = unscheduleTrigg;
+  }
+
+  public boolean unscheduleFiringTrigger() {
+
+    return unscheduleTrigg;
+  }
+
+  public void setUnscheduleAllTriggers(boolean unscheduleAllTriggs) {
+
+    this.unscheduleAllTriggs = unscheduleAllTriggs;
+  }
+
+  public boolean unscheduleAllTriggers() {
+
+    return unscheduleAllTriggs;
+  }
 
 }

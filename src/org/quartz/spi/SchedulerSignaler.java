@@ -21,26 +21,21 @@ import org.quartz.JobKey;
 import org.quartz.Trigger;
 
 /**
- * An interface to be used by <code>JobStore</code> instances in order to
- * communicate signals back to the <code>QuartzScheduler</code>.
+ * An interface to be used by <code>JobStore</code> instances in order to communicate signals back to the <code>QuartzScheduler</code>.
  * 
  * @author jhouse
  */
 public interface SchedulerSignaler {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * 
-     * Interface.
-     * 
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    void notifyTriggerListenersMisfired(Trigger trigger);
+  void notifyTriggerListenersMisfired(Trigger trigger);
 
-    void notifySchedulerListenersFinalized(Trigger trigger);
+  void notifySchedulerListenersFinalized(Trigger trigger);
 
-    void notifySchedulerListenersJobDeleted(JobKey jobKey);
+  void notifySchedulerListenersJobDeleted(JobKey jobKey);
 
-    void signalSchedulingChange(long candidateNewNextFireTime);
+  void signalSchedulingChange(long candidateNewNextFireTime);
 }

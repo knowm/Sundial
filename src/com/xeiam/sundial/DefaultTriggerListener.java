@@ -30,74 +30,79 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTriggerListener implements TriggerListener {
 
-    /** slf4J logger wrapper */
-    Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
+  /** slf4J logger wrapper */
+  Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
 
-    /**
-     * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
-     */
-    @Override
-    public boolean vetoJobExecution(Trigger pTrigger, JobExecutionContext pJobExecutionContext) {
+  /**
+   * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
+   */
+  @Override
+  public boolean vetoJobExecution(Trigger pTrigger, JobExecutionContext pJobExecutionContext) {
 
-        String lConcurrency = (String) pJobExecutionContext.getJobDetail().getJobDataMap().get("Concurrency");
-        if (lConcurrency != null && lConcurrency.equals("Y")) {
-            logger.debug("Concurrency allowed. Not Vetoing!");
-            return false;
+    String lConcurrency = (String) pJobExecutionContext.getJobDetail().getJobDataMap().get("Concurrency");
+    if (lConcurrency != null && lConcurrency.equals("Y")) {
+      logger.debug("Concurrency allowed. Not Vetoing!");
+      return false;
+    }
+
+    String newJobName = pJobExecutionContext.getJobDetail().getKey().getName();
+    // logger.debug(JobClass);
+
+    try {
+
+      List<JobExecutionContext> currentlyExecutingJobs = SundialJobScheduler.getScheduler().getCurrentlyExecutingJobs();
+      // logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
+
+      for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
+
+        String alreadyRunningJobName = lJobExecutionContext.getJobDetail().getKey().getName();
+        logger.debug("alreadyRunningJobName: " + alreadyRunningJobName);
+
+        if (newJobName.equals(alreadyRunningJobName)) {
+          logger.debug("Already Running. Vetoing!");
+          return true;
+        } else {
+          logger.debug("Non-matching Job found. Not Vetoing!");
         }
+      }
+      logger.debug("Not yet Running. Not Vetoing!");
+      return false; // if we get here, it checked all running WFs and did not find a match.
 
-        String newJobName = pJobExecutionContext.getJobDetail().getKey().getName();
-        // logger.debug(JobClass);
-
-        try {
-
-            List<JobExecutionContext> currentlyExecutingJobs = SundialJobScheduler.getScheduler().getCurrentlyExecutingJobs();
-            // logger.debug("currentlyExecutingJobs.size(): " + currentlyExecutingJobs.size());
-
-            for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
-
-                String alreadyRunningJobName = lJobExecutionContext.getJobDetail().getKey().getName();
-                logger.debug("alreadyRunningJobName: " + alreadyRunningJobName);
-
-                if (newJobName.equals(alreadyRunningJobName)) {
-                    logger.debug("Already Running. Vetoing!");
-                    return true;
-                } else {
-                    logger.debug("Non-matching Job found. Not Vetoing!");
-                }
-            }
-            logger.debug("Not yet Running. Not Vetoing!");
-            return false; // if we get here, it checked all running WFs and did not find a match.
-
-        } catch (SchedulerException e) {
-            logger.error("ERROR DURING VETO!!!" + e);
-            return true;
-        }
+    } catch (SchedulerException e) {
+      logger.error("ERROR DURING VETO!!!" + e);
+      return true;
     }
+  }
 
-    /**
-     * For whatever reason, Quartz needs this here.
-     * 
-     * @param s
-     * @return
-     */
-    public String setName(String s) {
-        return s;
-    }
+  /**
+   * For whatever reason, Quartz needs this here.
+   * 
+   * @param s
+   * @return
+   */
+  public String setName(String s) {
 
-    @Override
-    public String getName() {
-        return "DefaultTriggerListener";
-    }
+    return s;
+  }
 
-    @Override
-    public void triggerFired(Trigger arg0, JobExecutionContext arg1) {
-    }
+  @Override
+  public String getName() {
 
-    @Override
-    public void triggerMisfired(Trigger arg0) {
-    }
+    return "DefaultTriggerListener";
+  }
 
-    @Override
-    public void triggerComplete(Trigger trigger, JobExecutionContext context, CompletedExecutionInstruction triggerInstructionCode) {
-    }
+  @Override
+  public void triggerFired(Trigger arg0, JobExecutionContext arg1) {
+
+  }
+
+  @Override
+  public void triggerMisfired(Trigger arg0) {
+
+  }
+
+  @Override
+  public void triggerComplete(Trigger trigger, JobExecutionContext context, CompletedExecutionInstruction triggerInstructionCode) {
+
+  }
 }

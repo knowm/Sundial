@@ -20,46 +20,52 @@ import org.quartz.utils.Key;
 
 /**
  * Matches on group (ignores name) property of Keys.
- *  
+ * 
  * @author jhouse
  */
 public class GroupMatcher<T extends Key> extends StringMatcher<T> {
 
-    protected GroupMatcher(String compareTo, StringOperatorName compareWith) {
-        super(compareTo, compareWith);
-    }
-    
-    /**
-     * Create a GroupMatcher that matches groups equaling the given string.
-     */
-    public static GroupMatcher groupEquals(String compareTo) {
-        return new GroupMatcher(compareTo, StringOperatorName.EQUALS);
-    }
+  protected GroupMatcher(String compareTo, StringOperatorName compareWith) {
 
-    /**
-     * Create a GroupMatcher that matches groups starting with the given string.
-     */
-    public static GroupMatcher groupStartsWith(String compareTo) {
-        return new GroupMatcher(compareTo, StringOperatorName.STARTS_WITH);
-    }
+    super(compareTo, compareWith);
+  }
 
-    /**
-     * Create a GroupMatcher that matches groups ending with the given string.
-     */
-    public static GroupMatcher groupEndsWith(String compareTo) {
-        return new GroupMatcher(compareTo, StringOperatorName.ENDS_WITH);
-    }
+  /**
+   * Create a GroupMatcher that matches groups equaling the given string.
+   */
+  public static GroupMatcher groupEquals(String compareTo) {
 
-    /**
-     * Create a GroupMatcher that matches groups containing the given string.
-     */
-    public static GroupMatcher groupContains(String compareTo) {
-        return new GroupMatcher(compareTo, StringOperatorName.CONTAINS);
-    }
+    return new GroupMatcher(compareTo, StringOperatorName.EQUALS);
+  }
 
-    @Override
-    protected String getValue(T key) {
-        return key.getGroup();
-    }
+  /**
+   * Create a GroupMatcher that matches groups starting with the given string.
+   */
+  public static GroupMatcher groupStartsWith(String compareTo) {
+
+    return new GroupMatcher(compareTo, StringOperatorName.STARTS_WITH);
+  }
+
+  /**
+   * Create a GroupMatcher that matches groups ending with the given string.
+   */
+  public static GroupMatcher groupEndsWith(String compareTo) {
+
+    return new GroupMatcher(compareTo, StringOperatorName.ENDS_WITH);
+  }
+
+  /**
+   * Create a GroupMatcher that matches groups containing the given string.
+   */
+  public static GroupMatcher groupContains(String compareTo) {
+
+    return new GroupMatcher(compareTo, StringOperatorName.CONTAINS);
+  }
+
+  @Override
+  protected String getValue(T key) {
+
+    return key.getGroup();
+  }
 
 }

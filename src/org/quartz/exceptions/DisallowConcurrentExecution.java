@@ -28,15 +28,12 @@ import org.quartz.JobDetail;
 import org.quartz.JobKey;
 
 /**
- * An annotation that marks a {@link Job} class as one that must not have multiple
- * instances executed concurrently (where instance is based-upon a {@link JobDetail} 
- * definition - or in other words based upon a {@link JobKey}). 
- *   
- * <p>This can be used in lieu of implementing the StatefulJob marker interface that 
- * was used prior to Quartz 2.0</p>
+ * An annotation that marks a {@link Job} class as one that must not have multiple instances executed concurrently (where instance is based-upon a {@link JobDetail} definition - or in other words based upon a {@link JobKey}).
+ * <p>
+ * This can be used in lieu of implementing the StatefulJob marker interface that was used prior to Quartz 2.0
+ * </p>
  * 
  * @see PersistJobDataAfterExecution
- * 
  * @author jhouse
  */
 @Documented

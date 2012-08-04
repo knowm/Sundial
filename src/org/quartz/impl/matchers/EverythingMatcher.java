@@ -22,46 +22,50 @@ import org.quartz.TriggerKey;
 import org.quartz.utils.Key;
 
 /**
- * Matches on the complete key being equal (both name and group). 
- *  
+ * Matches on the complete key being equal (both name and group).
+ * 
  * @author jhouse
  */
 public class EverythingMatcher<T extends Key> implements Matcher<T> {
 
-    
-    protected EverythingMatcher() {
-    }
-    
-    /**
-     * Create an EverythingMatcher that matches all jobs.
-     */
-    public static EverythingMatcher<JobKey> allJobs() {
-        return new EverythingMatcher<JobKey>();
-    }
+  protected EverythingMatcher() {
 
-    /**
-     * Create an EverythingMatcher that matches all triggers.
-     */
-    public static EverythingMatcher<TriggerKey> allTriggers() {
-        return new EverythingMatcher<TriggerKey>();
-    }
-    
-    public boolean isMatch(T key) {
-        return true;
-    }
+  }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == null)
-            return false;
-        
-        return obj.getClass().equals(getClass());
-    }
+  /**
+   * Create an EverythingMatcher that matches all jobs.
+   */
+  public static EverythingMatcher<JobKey> allJobs() {
 
-    @Override
-    public int hashCode() {
-        return getClass().getName().hashCode();
-    }
+    return new EverythingMatcher<JobKey>();
+  }
 
-    
+  /**
+   * Create an EverythingMatcher that matches all triggers.
+   */
+  public static EverythingMatcher<TriggerKey> allTriggers() {
+
+    return new EverythingMatcher<TriggerKey>();
+  }
+
+  public boolean isMatch(T key) {
+
+    return true;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    if (obj == null)
+      return false;
+
+    return obj.getClass().equals(getClass());
+  }
+
+  @Override
+  public int hashCode() {
+
+    return getClass().getName().hashCode();
+  }
+
 }

@@ -22,24 +22,25 @@ package com.xeiam.sundial;
  */
 public abstract class JobAction extends JobContainer {
 
-    /**
-     * Call this method to start the Action
-     */
-    public void run() {
-        doRun();
-        cleanup();
-    }
+  /**
+   * Call this method to start the Action
+   */
+  public void run() {
 
-    /**
-     * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
-     */
-    public void cleanup() {
+    doRun();
+    cleanup();
+  }
 
-    }
+  /**
+   * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
+   */
+  public void cleanup() {
 
-    /**
-     * Implement this method. Don't not call it directly.
-     */
-    public abstract void doRun();
+  }
+
+  /**
+   * Implement this method. Don't not call it directly.
+   */
+  public abstract void doRun();
 
 }

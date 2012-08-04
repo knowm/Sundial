@@ -28,122 +28,119 @@ import org.quartz.Calendar;
 
 /**
  * <p>
- * This implementation of the Calendar stores a list of holidays (full days
- * that are excluded from scheduling).
+ * This implementation of the Calendar stores a list of holidays (full days that are excluded from scheduling).
  * </p>
- * 
  * <p>
- * The implementation DOES take the year into consideration, so if you want to
- * exclude July 4th for the next 10 years, you need to add 10 entries to the
- * exclude list.
+ * The implementation DOES take the year into consideration, so if you want to exclude July 4th for the next 10 years, you need to add 10 entries to the exclude list.
  * </p>
  * 
  * @author Sharada Jambula
  * @author Juergen Donnerstag
  */
-public class HolidayCalendar extends BaseCalendar implements Calendar,
-        Serializable {
-    static final long serialVersionUID = -7590908752291814693L;
-    
-    // A sorted set to store the holidays
-    private TreeSet dates = new TreeSet();
+public class HolidayCalendar extends BaseCalendar implements Calendar, Serializable {
 
-    public HolidayCalendar() {
+  static final long serialVersionUID = -7590908752291814693L;
+
+  // A sorted set to store the holidays
+  private TreeSet dates = new TreeSet();
+
+  public HolidayCalendar() {
+
+  }
+
+  public HolidayCalendar(Calendar baseCalendar) {
+
+    super(baseCalendar);
+  }
+
+  public HolidayCalendar(TimeZone timeZone) {
+
+    super(timeZone);
+  }
+
+  public HolidayCalendar(Calendar baseCalendar, TimeZone timeZone) {
+
+    super(baseCalendar, timeZone);
+  }
+
+  public Object clone() {
+
+    HolidayCalendar clone = (HolidayCalendar) super.clone();
+    clone.dates = new TreeSet(dates);
+    return clone;
+  }
+
+  /**
+   * <p>
+   * Determine whether the given time (in milliseconds) is 'included' by the Calendar.
+   * </p>
+   * <p>
+   * Note that this Calendar is only has full-day precision.
+   * </p>
+   */
+  public boolean isTimeIncluded(long timeStamp) {
+
+    if (super.isTimeIncluded(timeStamp) == false) {
+      return false;
     }
 
-    public HolidayCalendar(Calendar baseCalendar) {
-        super(baseCalendar);
+    Date lookFor = getStartOfDayJavaCalendar(timeStamp).getTime();
+
+    return !(dates.contains(lookFor));
+  }
+
+  /**
+   * <p>
+   * Determine the next time (in milliseconds) that is 'included' by the Calendar after the given time.
+   * </p>
+   * <p>
+   * Note that this Calendar is only has full-day precision.
+   * </p>
+   */
+  public long getNextIncludedTime(long timeStamp) {
+
+    // Call base calendar implementation first
+    long baseTime = super.getNextIncludedTime(timeStamp);
+    if ((baseTime > 0) && (baseTime > timeStamp)) {
+      timeStamp = baseTime;
     }
 
-    public HolidayCalendar(TimeZone timeZone) {
-        super(timeZone);
+    // Get timestamp for 00:00:00
+    java.util.Calendar day = getStartOfDayJavaCalendar(timeStamp);
+    while (isTimeIncluded(day.getTime().getTime()) == false) {
+      day.add(java.util.Calendar.DATE, 1);
     }
 
-    public HolidayCalendar(Calendar baseCalendar, TimeZone timeZone) {
-        super(baseCalendar, timeZone);
-    }
+    return day.getTime().getTime();
+  }
 
-    public Object clone() {
-        HolidayCalendar clone = (HolidayCalendar) super.clone();
-        clone.dates = new TreeSet(dates);
-        return clone;
-    }
-    
-    /**
-     * <p>
-     * Determine whether the given time (in milliseconds) is 'included' by the
-     * Calendar.
-     * </p>
-     * 
-     * <p>
-     * Note that this Calendar is only has full-day precision.
-     * </p>
+  /**
+   * <p>
+   * Add the given Date to the list of excluded days. Only the month, day and year of the returned dates are significant.
+   * </p>
+   */
+  public void addExcludedDate(Date excludedDate) {
+
+    Date date = getStartOfDayJavaCalendar(excludedDate.getTime()).getTime();
+    /*
+     * System.err.println( "HolidayCalendar.add(): date=" + excludedDate.toLocaleString());
      */
-    public boolean isTimeIncluded(long timeStamp) {
-        if (super.isTimeIncluded(timeStamp) == false) {
-            return false;
-        }
+    this.dates.add(date);
+  }
 
-        Date lookFor = getStartOfDayJavaCalendar(timeStamp).getTime();
+  public void removeExcludedDate(Date dateToRemove) {
 
-        return !(dates.contains(lookFor));
-    }
+    Date date = getStartOfDayJavaCalendar(dateToRemove.getTime()).getTime();
+    dates.remove(date);
+  }
 
-    /**
-     * <p>
-     * Determine the next time (in milliseconds) that is 'included' by the
-     * Calendar after the given time.
-     * </p>
-     * 
-     * <p>
-     * Note that this Calendar is only has full-day precision.
-     * </p>
-     */
-    public long getNextIncludedTime(long timeStamp) {
+  /**
+   * <p>
+   * Returns a <code>SortedSet</code> of Dates representing the excluded days. Only the month, day and year of the returned dates are significant.
+   * </p>
+   */
+  public SortedSet getExcludedDates() {
 
-        // Call base calendar implementation first
-        long baseTime = super.getNextIncludedTime(timeStamp);
-        if ((baseTime > 0) && (baseTime > timeStamp)) {
-            timeStamp = baseTime;
-        }
-
-        // Get timestamp for 00:00:00
-        java.util.Calendar day = getStartOfDayJavaCalendar(timeStamp);
-        while (isTimeIncluded(day.getTime().getTime()) == false) {
-            day.add(java.util.Calendar.DATE, 1);
-        }
-
-        return day.getTime().getTime();
-    }
-
-    /**
-     * <p>
-     * Add the given Date to the list of excluded days. Only the month, day and
-     * year of the returned dates are significant.
-     * </p>
-     */
-    public void addExcludedDate(Date excludedDate) {
-        Date date = getStartOfDayJavaCalendar(excludedDate.getTime()).getTime();
-        /*
-         * System.err.println( "HolidayCalendar.add(): date=" +
-         * excludedDate.toLocaleString());
-         */
-        this.dates.add(date);
-    }
-
-    public void removeExcludedDate(Date dateToRemove) {
-        Date date = getStartOfDayJavaCalendar(dateToRemove.getTime()).getTime();
-        dates.remove(date);
-    }
-
-    /**
-     * <p>
-     * Returns a <code>SortedSet</code> of Dates representing the excluded
-     * days. Only the month, day and year of the returned dates are
-     * significant.
-     * </p>
-     */
-    public SortedSet getExcludedDates() {
-        return Collections.unmodifiableSortedSet(dates);
-    }
+    return Collections.unmodifiableSortedSet(dates);
+  }
 }

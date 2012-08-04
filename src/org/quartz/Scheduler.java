@@ -78,531 +78,531 @@ import org.quartz.spi.JobFactory;
  */
 public interface Scheduler {
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    // /**
-    // * A (possibly) useful constant that can be used for specifying the group that <code>Job</code> and <code>Trigger</code> instances belong to.
-    // */
-    // String DEFAULT_GROUP = Key.DEFAULT_GROUP;
+  // /**
+  // * A (possibly) useful constant that can be used for specifying the group that <code>Job</code> and <code>Trigger</code> instances belong to.
+  // */
+  // String DEFAULT_GROUP = Key.DEFAULT_GROUP;
 
-    /**
-     * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("RECOVERING_JOBS") for the name of a <code>Trigger</code>'s group.
-     * 
-     * @see org.quartz.JobDetail#requestsRecovery()
-     */
-    String DEFAULT_RECOVERY_GROUP = "RECOVERING_JOBS";
+  /**
+   * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("RECOVERING_JOBS") for the name of a <code>Trigger</code>'s group.
+   * 
+   * @see org.quartz.JobDetail#requestsRecovery()
+   */
+  String DEFAULT_RECOVERY_GROUP = "RECOVERING_JOBS";
 
-    /**
-     * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("FAILED_OVER_JOBS") for the name of a <code>Trigger</code>'s group.
-     * 
-     * @see org.quartz.JobDetail#requestsRecovery()
-     */
-    String DEFAULT_FAIL_OVER_GROUP = "FAILED_OVER_JOBS";
+  /**
+   * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("FAILED_OVER_JOBS") for the name of a <code>Trigger</code>'s group.
+   * 
+   * @see org.quartz.JobDetail#requestsRecovery()
+   */
+  String DEFAULT_FAIL_OVER_GROUP = "FAILED_OVER_JOBS";
 
-    /**
-     * A constant <code>JobDataMap</code> key that can be used to retrieve the name of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-     * 
-     * @see org.quartz.JobDetail#requestsRecovery()
-     */
-    String FAILED_JOB_ORIGINAL_TRIGGER_NAME = "QRTZ_FAILED_JOB_ORIG_TRIGGER_NAME";
+  /**
+   * A constant <code>JobDataMap</code> key that can be used to retrieve the name of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
+   * 
+   * @see org.quartz.JobDetail#requestsRecovery()
+   */
+  String FAILED_JOB_ORIGINAL_TRIGGER_NAME = "QRTZ_FAILED_JOB_ORIG_TRIGGER_NAME";
 
-    /**
-     * A constant <code>JobDataMap</code> key that can be used to retrieve the group of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-     * 
-     * @see org.quartz.JobDetail#requestsRecovery()
-     */
-    String FAILED_JOB_ORIGINAL_TRIGGER_GROUP = "QRTZ_FAILED_JOB_ORIG_TRIGGER_GROUP";
+  /**
+   * A constant <code>JobDataMap</code> key that can be used to retrieve the group of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
+   * 
+   * @see org.quartz.JobDetail#requestsRecovery()
+   */
+  String FAILED_JOB_ORIGINAL_TRIGGER_GROUP = "QRTZ_FAILED_JOB_ORIG_TRIGGER_GROUP";
 
-    /**
-     * A constant <code>JobDataMap</code> key that can be used to retrieve the scheduled fire time of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-     * 
-     * @see org.quartz.JobDetail#requestsRecovery()
-     */
-    String FAILED_JOB_ORIGINAL_TRIGGER_FIRETIME_IN_MILLISECONDS = "QRTZ_FAILED_JOB_ORIG_TRIGGER_FIRETIME_IN_MILLISECONDS_AS_STRING";
+  /**
+   * A constant <code>JobDataMap</code> key that can be used to retrieve the scheduled fire time of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
+   * 
+   * @see org.quartz.JobDetail#requestsRecovery()
+   */
+  String FAILED_JOB_ORIGINAL_TRIGGER_FIRETIME_IN_MILLISECONDS = "QRTZ_FAILED_JOB_ORIG_TRIGGER_FIRETIME_IN_MILLISECONDS_AS_STRING";
 
-    /*
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+  /*
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   */
 
-    /**
-     * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
-     */
-    SchedulerContext getContext() throws SchedulerException;
+  /**
+   * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
+   */
+  SchedulerContext getContext() throws SchedulerException;
 
-    // /////////////////////////////////////////////////////////////////////////
-    // /
-    // / Scheduler State Management Methods
-    // /
-    // /////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////
+  // /
+  // / Scheduler State Management Methods
+  // /
+  // /////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Starts the <code>Scheduler</code>'s threads that fire <code>{@link Trigger}s</code>. When a scheduler is first created it is in "stand-by" mode, and will not fire triggers. The scheduler can also be put into stand-by mode by calling the
-     * <code>standby()</code> method.
-     * <p>
-     * The misfire/recovery process will be started, if it is the initial call to this method on this scheduler instance.
-     * </p>
-     * 
-     * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
-     * @see #startDelayed(int)
-     * @see #standby()
-     * @see #shutdown()
-     */
-    void start() throws SchedulerException;
+  /**
+   * Starts the <code>Scheduler</code>'s threads that fire <code>{@link Trigger}s</code>. When a scheduler is first created it is in "stand-by" mode, and will not fire triggers. The scheduler can also be put into stand-by mode by calling the
+   * <code>standby()</code> method.
+   * <p>
+   * The misfire/recovery process will be started, if it is the initial call to this method on this scheduler instance.
+   * </p>
+   * 
+   * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
+   * @see #startDelayed(int)
+   * @see #standby()
+   * @see #shutdown()
+   */
+  void start() throws SchedulerException;
 
-    /**
-     * Calls {#start()} after the indicated number of seconds. (This call does not block). This can be useful within applications that have initializers that create the scheduler immediately, before the resources needed by the executing jobs have
-     * been fully initialized.
-     * 
-     * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
-     * @see #start()
-     * @see #standby()
-     * @see #shutdown()
-     */
-    void startDelayed(int seconds) throws SchedulerException;
+  /**
+   * Calls {#start()} after the indicated number of seconds. (This call does not block). This can be useful within applications that have initializers that create the scheduler immediately, before the resources needed by the executing jobs have been
+   * fully initialized.
+   * 
+   * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
+   * @see #start()
+   * @see #standby()
+   * @see #shutdown()
+   */
+  void startDelayed(int seconds) throws SchedulerException;
 
-    /**
-     * Whether the scheduler has been started.
-     * <p>
-     * Note: This only reflects whether <code>{@link #start()}</code> has ever been called on this Scheduler, so it will return <code>true</code> even if the <code>Scheduler</code> is currently in standby mode or has been since shutdown.
-     * </p>
-     * 
-     * @see #start()
-     * @see #isShutdown()
-     * @see #isInStandbyMode()
-     */
-    boolean isStarted() throws SchedulerException;
+  /**
+   * Whether the scheduler has been started.
+   * <p>
+   * Note: This only reflects whether <code>{@link #start()}</code> has ever been called on this Scheduler, so it will return <code>true</code> even if the <code>Scheduler</code> is currently in standby mode or has been since shutdown.
+   * </p>
+   * 
+   * @see #start()
+   * @see #isShutdown()
+   * @see #isInStandbyMode()
+   */
+  boolean isStarted() throws SchedulerException;
 
-    /**
-     * Temporarily halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>.
-     * <p>
-     * When <code>start()</code> is called (to bring the scheduler out of stand-by mode), trigger misfire instructions will NOT be applied during the execution of the <code>start()</code> method - any misfires will be detected immediately afterward
-     * (by the <code>JobStore</code>'s normal process).
-     * </p>
-     * <p>
-     * The scheduler is not destroyed, and can be re-started at any time.
-     * </p>
-     * 
-     * @see #start()
-     * @see #pauseAll()
-     */
-    void standby() throws SchedulerException;
+  /**
+   * Temporarily halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>.
+   * <p>
+   * When <code>start()</code> is called (to bring the scheduler out of stand-by mode), trigger misfire instructions will NOT be applied during the execution of the <code>start()</code> method - any misfires will be detected immediately afterward (by
+   * the <code>JobStore</code>'s normal process).
+   * </p>
+   * <p>
+   * The scheduler is not destroyed, and can be re-started at any time.
+   * </p>
+   * 
+   * @see #start()
+   * @see #pauseAll()
+   */
+  void standby() throws SchedulerException;
 
-    /**
-     * Reports whether the <code>Scheduler</code> is in stand-by mode.
-     * 
-     * @see #standby()
-     * @see #start()
-     */
-    boolean isInStandbyMode() throws SchedulerException;
+  /**
+   * Reports whether the <code>Scheduler</code> is in stand-by mode.
+   * 
+   * @see #standby()
+   * @see #start()
+   */
+  boolean isInStandbyMode() throws SchedulerException;
 
-    /**
-     * Halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>, and cleans up all resources associated with the Scheduler. Equivalent to <code>shutdown(false)</code>.
-     * <p>
-     * The scheduler cannot be re-started.
-     * </p>
-     * 
-     * @see #shutdown(boolean)
-     */
-    void shutdown() throws SchedulerException;
+  /**
+   * Halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>, and cleans up all resources associated with the Scheduler. Equivalent to <code>shutdown(false)</code>.
+   * <p>
+   * The scheduler cannot be re-started.
+   * </p>
+   * 
+   * @see #shutdown(boolean)
+   */
+  void shutdown() throws SchedulerException;
 
-    /**
-     * Halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>, and cleans up all resources associated with the Scheduler.
-     * <p>
-     * The scheduler cannot be re-started.
-     * </p>
-     * 
-     * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
-     * @see #shutdown
-     */
-    void shutdown(boolean waitForJobsToComplete) throws SchedulerException;
+  /**
+   * Halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>, and cleans up all resources associated with the Scheduler.
+   * <p>
+   * The scheduler cannot be re-started.
+   * </p>
+   * 
+   * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
+   * @see #shutdown
+   */
+  void shutdown(boolean waitForJobsToComplete) throws SchedulerException;
 
-    /**
-     * Reports whether the <code>Scheduler</code> has been shutdown.
-     */
-    boolean isShutdown() throws SchedulerException;
+  /**
+   * Reports whether the <code>Scheduler</code> has been shutdown.
+   */
+  boolean isShutdown() throws SchedulerException;
 
-    /**
-     * Return a list of <code>JobExecutionContext</code> objects that represent all currently executing Jobs in this Scheduler instance.
-     * <p>
-     * This method is not cluster aware. That is, it will only return Jobs currently executing in this Scheduler instance, not across the entire cluster.
-     * </p>
-     * <p>
-     * Note that the list returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the true list of executing jobs may be different. Also please read the doc associated with <code>JobExecutionContext</code>- especially if you're
-     * using RMI.
-     * </p>
-     * 
-     * @see JobExecutionContext
-     */
-    List<JobExecutionContext> getCurrentlyExecutingJobs() throws SchedulerException;
+  /**
+   * Return a list of <code>JobExecutionContext</code> objects that represent all currently executing Jobs in this Scheduler instance.
+   * <p>
+   * This method is not cluster aware. That is, it will only return Jobs currently executing in this Scheduler instance, not across the entire cluster.
+   * </p>
+   * <p>
+   * Note that the list returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the true list of executing jobs may be different. Also please read the doc associated with <code>JobExecutionContext</code>- especially if you're
+   * using RMI.
+   * </p>
+   * 
+   * @see JobExecutionContext
+   */
+  List<JobExecutionContext> getCurrentlyExecutingJobs() throws SchedulerException;
 
-    /**
-     * Set the <code>JobFactory</code> that will be responsible for producing instances of <code>Job</code> classes.
-     * <p>
-     * JobFactories may be of use to those wishing to have their application produce <code>Job</code> instances via some special mechanism, such as to give the opportunity for dependency injection.
-     * </p>
-     * 
-     * @see org.quartz.spi.JobFactory
-     */
-    void setJobFactory(JobFactory factory) throws SchedulerException;
+  /**
+   * Set the <code>JobFactory</code> that will be responsible for producing instances of <code>Job</code> classes.
+   * <p>
+   * JobFactories may be of use to those wishing to have their application produce <code>Job</code> instances via some special mechanism, such as to give the opportunity for dependency injection.
+   * </p>
+   * 
+   * @see org.quartz.spi.JobFactory
+   */
+  void setJobFactory(JobFactory factory) throws SchedulerException;
 
-    /**
-     * Get a reference to the scheduler's <code>ListenerManager</code>, through which listeners may be registered.
-     * 
-     * @return the scheduler's <code>ListenerManager</code>
-     * @throws SchedulerException if the scheduler is not local
-     * @see ListenerManager
-     * @see JobListener
-     * @see TriggerListener
-     * @see SchedulerListener
-     */
-    ListenerManager getListenerManager() throws SchedulerException;
+  /**
+   * Get a reference to the scheduler's <code>ListenerManager</code>, through which listeners may be registered.
+   * 
+   * @return the scheduler's <code>ListenerManager</code>
+   * @throws SchedulerException if the scheduler is not local
+   * @see ListenerManager
+   * @see JobListener
+   * @see TriggerListener
+   * @see SchedulerListener
+   */
+  ListenerManager getListenerManager() throws SchedulerException;
 
-    // /////////////////////////////////////////////////////////////////////////
-    // /
-    // / Scheduling-related Methods
-    // /
-    // /////////////////////////////////////////////////////////////////////////
+  // /////////////////////////////////////////////////////////////////////////
+  // /
+  // / Scheduling-related Methods
+  // /
+  // /////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Add the given <code>{@link org.quartz.JobDetail}</code> to the Scheduler, and associate the given <code>{@link Trigger}</code> with it.
-     * <p>
-     * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
-     * </p>
-     * 
-     * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
-     */
-    Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException;
+  /**
+   * Add the given <code>{@link org.quartz.JobDetail}</code> to the Scheduler, and associate the given <code>{@link Trigger}</code> with it.
+   * <p>
+   * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
+   * </p>
+   * 
+   * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
+   */
+  Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException;
 
-    /**
-     * Schedule the given <code>{@link org.quartz.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
-     * 
-     * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
-     */
-    Date scheduleJob(Trigger trigger) throws SchedulerException;
+  /**
+   * Schedule the given <code>{@link org.quartz.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
+   * 
+   * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
+   */
+  Date scheduleJob(Trigger trigger) throws SchedulerException;
 
-    /**
-     * Schedule all of the given jobs with the related set of triggers.
-     * <p>
-     * If any of the given jobs or triggers already exist (or more specifically, if the keys are not unique) and the replace parameter is not set to true then an exception will be thrown.
-     * </p>
-     * 
-     * @throws ObjectAlreadyExistsException if the job/trigger keys are not unique and the replace flag is not set to true.
-     */
-    void scheduleJobs(Map<JobDetail, List<Trigger>> triggersAndJobs, boolean replace) throws SchedulerException;
+  /**
+   * Schedule all of the given jobs with the related set of triggers.
+   * <p>
+   * If any of the given jobs or triggers already exist (or more specifically, if the keys are not unique) and the replace parameter is not set to true then an exception will be thrown.
+   * </p>
+   * 
+   * @throws ObjectAlreadyExistsException if the job/trigger keys are not unique and the replace flag is not set to true.
+   */
+  void scheduleJobs(Map<JobDetail, List<Trigger>> triggersAndJobs, boolean replace) throws SchedulerException;
 
-    /**
-     * Remove the indicated <code>{@link Trigger}</code> from the scheduler.
-     * <p>
-     * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
-     * </p>
-     */
-    boolean unscheduleJob(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Remove the indicated <code>{@link Trigger}</code> from the scheduler.
+   * <p>
+   * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
+   * </p>
+   */
+  boolean unscheduleJob(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Remove all of the indicated <code>{@link Trigger}</code>s from the scheduler.
-     * <p>
-     * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
-     * </p>
-     * <p>
-     * Note that while this bulk operation is likely more efficient than invoking <code>unscheduleJob(TriggerKey triggerKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than
-     * lots of small durations of time).
-     * </p>
-     */
-    boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException;
+  /**
+   * Remove all of the indicated <code>{@link Trigger}</code>s from the scheduler.
+   * <p>
+   * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
+   * </p>
+   * <p>
+   * Note that while this bulk operation is likely more efficient than invoking <code>unscheduleJob(TriggerKey triggerKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than lots
+   * of small durations of time).
+   * </p>
+   */
+  boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException;
 
-    /**
-     * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job (the new trigger must have the job name & group specified) - however, the new trigger need
-     * not have the same name as the old trigger.
-     * 
-     * @param triggerKey identity of the trigger to replace
-     * @param newTrigger The new <code>Trigger</code> to be stored.
-     * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first fire time of the newly scheduled trigger.
-     */
-    Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException;
+  /**
+   * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job (the new trigger must have the job name & group specified) - however, the new trigger need
+   * not have the same name as the old trigger.
+   * 
+   * @param triggerKey identity of the trigger to replace
+   * @param newTrigger The new <code>Trigger</code> to be stored.
+   * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first fire time of the newly scheduled trigger.
+   */
+  Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException;
 
-    /**
-     * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a <code>Trigger</code>, or <code>Scheduler.triggerJob()</code> is called for it.
-     * <p>
-     * The <code>Job</code> must by definition be 'durable', if it is not, SchedulerException will be thrown.
-     * </p>
-     * 
-     * @throws SchedulerException if there is an internal Scheduler error, or if the Job is not durable, or a Job with the same name already exists, and <code>replace</code> is <code>false</code>.
-     */
-    void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException;
+  /**
+   * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a <code>Trigger</code>, or <code>Scheduler.triggerJob()</code> is called for it.
+   * <p>
+   * The <code>Job</code> must by definition be 'durable', if it is not, SchedulerException will be thrown.
+   * </p>
+   * 
+   * @throws SchedulerException if there is an internal Scheduler error, or if the Job is not durable, or a Job with the same name already exists, and <code>replace</code> is <code>false</code>.
+   */
+  void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException;
 
-    /**
-     * Delete the identified <code>Job</code> from the Scheduler - and any associated <code>Trigger</code>s.
-     * 
-     * @return true if the Job was found and deleted.
-     * @throws SchedulerException if there is an internal Scheduler error.
-     */
-    boolean deleteJob(JobKey jobKey) throws SchedulerException;
+  /**
+   * Delete the identified <code>Job</code> from the Scheduler - and any associated <code>Trigger</code>s.
+   * 
+   * @return true if the Job was found and deleted.
+   * @throws SchedulerException if there is an internal Scheduler error.
+   */
+  boolean deleteJob(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Delete the identified <code>Job</code>s from the Scheduler - and any associated <code>Trigger</code>s.
-     * <p>
-     * Note that while this bulk operation is likely more efficient than invoking <code>deleteJob(JobKey jobKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than lots of small
-     * durations of time).
-     * </p>
-     * 
-     * @return true if all of the Jobs were found and deleted, false if one or more were not deleted.
-     * @throws SchedulerException if there is an internal Scheduler error.
-     */
-    boolean deleteJobs(List<JobKey> jobKeys) throws SchedulerException;
+  /**
+   * Delete the identified <code>Job</code>s from the Scheduler - and any associated <code>Trigger</code>s.
+   * <p>
+   * Note that while this bulk operation is likely more efficient than invoking <code>deleteJob(JobKey jobKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than lots of small
+   * durations of time).
+   * </p>
+   * 
+   * @return true if all of the Jobs were found and deleted, false if one or more were not deleted.
+   * @throws SchedulerException if there is an internal Scheduler error.
+   */
+  boolean deleteJobs(List<JobKey> jobKeys) throws SchedulerException;
 
-    /**
-     * Trigger the identified <code>{@link org.quartz.JobDetail}</code> (execute it now).
-     */
-    void triggerJob(JobKey jobKey) throws SchedulerException;
+  /**
+   * Trigger the identified <code>{@link org.quartz.JobDetail}</code> (execute it now).
+   */
+  void triggerJob(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Trigger the identified <code>{@link org.quartz.JobDetail}</code> (execute it now).
-     * 
-     * @param data the (possibly <code>null</code>) JobDataMap to be associated with the trigger that fires the job immediately.
-     */
-    void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException;
+  /**
+   * Trigger the identified <code>{@link org.quartz.JobDetail}</code> (execute it now).
+   * 
+   * @param data the (possibly <code>null</code>) JobDataMap to be associated with the trigger that fires the job immediately.
+   */
+  void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException;
 
-    /**
-     * Pause the <code>{@link org.quartz.JobDetail}</code> with the given key - by pausing all of its current <code>Trigger</code>s.
-     * 
-     * @see #resumeJob(JobKey)
-     */
-    void pauseJob(JobKey jobKey) throws SchedulerException;
+  /**
+   * Pause the <code>{@link org.quartz.JobDetail}</code> with the given key - by pausing all of its current <code>Trigger</code>s.
+   * 
+   * @see #resumeJob(JobKey)
+   */
+  void pauseJob(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Pause all of the <code>{@link org.quartz.JobDetail}s</code> in the matching groups - by pausing all of their <code>Trigger</code>s.
-     * <p>
-     * The Scheduler will "remember" the groups paused, and impose the pause on any new jobs that are added to any of those groups until it is resumed.
-     * </p>
-     * 
-     * @param matcher The matcher to evaluate against know groups
-     * @throws SchedulerException On error
-     * @see #resumeJobs(org.quartz.impl.matchers.GroupMatcher)
-     */
-    void pauseJobs(GroupMatcher<JobKey> matcher) throws SchedulerException;
+  /**
+   * Pause all of the <code>{@link org.quartz.JobDetail}s</code> in the matching groups - by pausing all of their <code>Trigger</code>s.
+   * <p>
+   * The Scheduler will "remember" the groups paused, and impose the pause on any new jobs that are added to any of those groups until it is resumed.
+   * </p>
+   * 
+   * @param matcher The matcher to evaluate against know groups
+   * @throws SchedulerException On error
+   * @see #resumeJobs(org.quartz.impl.matchers.GroupMatcher)
+   */
+  void pauseJobs(GroupMatcher<JobKey> matcher) throws SchedulerException;
 
-    /**
-     * Pause the <code>{@link Trigger}</code> with the given key.
-     * 
-     * @see #resumeTrigger(TriggerKey)
-     */
-    void pauseTrigger(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Pause the <code>{@link Trigger}</code> with the given key.
+   * 
+   * @see #resumeTrigger(TriggerKey)
+   */
+  void pauseTrigger(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Pause all of the <code>{@link Trigger}s</code> in the groups matching.
-     * <p>
-     * The Scheduler will "remember" all the groups paused, and impose the pause on any new triggers that are added to any of those groups until it is resumed.
-     * </p>
-     * 
-     * @param matcher The matcher to evaluate against know groups
-     * @throws SchedulerException
-     * @see #resumeTriggers(org.quartz.impl.matchers.GroupMatcher)
-     */
-    void pauseTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
+  /**
+   * Pause all of the <code>{@link Trigger}s</code> in the groups matching.
+   * <p>
+   * The Scheduler will "remember" all the groups paused, and impose the pause on any new triggers that are added to any of those groups until it is resumed.
+   * </p>
+   * 
+   * @param matcher The matcher to evaluate against know groups
+   * @throws SchedulerException
+   * @see #resumeTriggers(org.quartz.impl.matchers.GroupMatcher)
+   */
+  void pauseTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
 
-    /**
-     * Resume (un-pause) the <code>{@link org.quartz.JobDetail}</code> with the given key.
-     * <p>
-     * If any of the <code>Job</code>'s<code>Trigger</code> s missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-     * </p>
-     * 
-     * @see #pauseJob(JobKey)
-     */
-    void resumeJob(JobKey jobKey) throws SchedulerException;
+  /**
+   * Resume (un-pause) the <code>{@link org.quartz.JobDetail}</code> with the given key.
+   * <p>
+   * If any of the <code>Job</code>'s<code>Trigger</code> s missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
+   * </p>
+   * 
+   * @see #pauseJob(JobKey)
+   */
+  void resumeJob(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Resume (un-pause) all of the <code>{@link org.quartz.JobDetail}s</code> in matching groups.
-     * <p>
-     * If any of the <code>Job</code> s had <code>Trigger</code> s that missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-     * </p>
-     * 
-     * @param matcher The matcher to evaluate against known paused groups
-     * @throws SchedulerException On error
-     * @see #pauseJobs(GroupMatcher)
-     */
-    void resumeJobs(GroupMatcher<JobKey> matcher) throws SchedulerException;
+  /**
+   * Resume (un-pause) all of the <code>{@link org.quartz.JobDetail}s</code> in matching groups.
+   * <p>
+   * If any of the <code>Job</code> s had <code>Trigger</code> s that missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
+   * </p>
+   * 
+   * @param matcher The matcher to evaluate against known paused groups
+   * @throws SchedulerException On error
+   * @see #pauseJobs(GroupMatcher)
+   */
+  void resumeJobs(GroupMatcher<JobKey> matcher) throws SchedulerException;
 
-    /**
-     * Resume (un-pause) the <code>{@link Trigger}</code> with the given key.
-     * <p>
-     * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-     * </p>
-     * 
-     * @see #pauseTrigger(TriggerKey)
-     */
-    void resumeTrigger(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Resume (un-pause) the <code>{@link Trigger}</code> with the given key.
+   * <p>
+   * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
+   * </p>
+   * 
+   * @see #pauseTrigger(TriggerKey)
+   */
+  void resumeTrigger(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Resume (un-pause) all of the <code>{@link Trigger}s</code> in matching groups.
-     * <p>
-     * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-     * </p>
-     * 
-     * @param matcher The matcher to evaluate against know paused groups
-     * @throws SchedulerException On error
-     * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
-     */
-    void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
+  /**
+   * Resume (un-pause) all of the <code>{@link Trigger}s</code> in matching groups.
+   * <p>
+   * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
+   * </p>
+   * 
+   * @param matcher The matcher to evaluate against know paused groups
+   * @throws SchedulerException On error
+   * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
+   */
+  void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
 
-    /**
-     * Pause all triggers - similar to calling <code>pauseTriggerGroup(group)</code> on every group, however, after using this method <code>resumeAll()</code> must be called to clear the scheduler's state of 'remembering' that all new triggers will
-     * be paused as they are added.
-     * <p>
-     * When <code>resumeAll()</code> is called (to un-pause), trigger misfire instructions WILL be applied.
-     * </p>
-     * 
-     * @see #resumeAll()
-     * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
-     * @see #standby()
-     */
-    void pauseAll() throws SchedulerException;
+  /**
+   * Pause all triggers - similar to calling <code>pauseTriggerGroup(group)</code> on every group, however, after using this method <code>resumeAll()</code> must be called to clear the scheduler's state of 'remembering' that all new triggers will be
+   * paused as they are added.
+   * <p>
+   * When <code>resumeAll()</code> is called (to un-pause), trigger misfire instructions WILL be applied.
+   * </p>
+   * 
+   * @see #resumeAll()
+   * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
+   * @see #standby()
+   */
+  void pauseAll() throws SchedulerException;
 
-    /**
-     * Resume (un-pause) all triggers - similar to calling <code>resumeTriggerGroup(group)</code> on every group.
-     * <p>
-     * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-     * </p>
-     * 
-     * @see #pauseAll()
-     */
-    void resumeAll() throws SchedulerException;
+  /**
+   * Resume (un-pause) all triggers - similar to calling <code>resumeTriggerGroup(group)</code> on every group.
+   * <p>
+   * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
+   * </p>
+   * 
+   * @see #pauseAll()
+   */
+  void resumeAll() throws SchedulerException;
 
-    /**
-     * Get the names of all known <code>{@link org.quartz.JobDetail}</code> groups.
-     */
-    List<String> getJobGroupNames() throws SchedulerException;
+  /**
+   * Get the names of all known <code>{@link org.quartz.JobDetail}</code> groups.
+   */
+  List<String> getJobGroupNames() throws SchedulerException;
 
-    /**
-     * Get the keys of all the <code>{@link org.quartz.JobDetail}s</code> in the matching groups.
-     * 
-     * @param matcher Matcher to evaluate against known groups
-     * @return Set of all keys matching
-     * @throws SchedulerException On error
-     */
-    Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException;
+  /**
+   * Get the keys of all the <code>{@link org.quartz.JobDetail}s</code> in the matching groups.
+   * 
+   * @param matcher Matcher to evaluate against known groups
+   * @return Set of all keys matching
+   * @throws SchedulerException On error
+   */
+  Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException;
 
-    /**
-     * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
-     * <p>
-     * The returned Trigger objects will be snap-shots of the actual stored triggers. If you wish to modify a trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
-     * </p>
-     */
-    List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException;
+  /**
+   * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
+   * <p>
+   * The returned Trigger objects will be snap-shots of the actual stored triggers. If you wish to modify a trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
+   * </p>
+   */
+  List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Get the names of all known <code>{@link Trigger}</code> groups.
-     */
-    List<String> getTriggerGroupNames() throws SchedulerException;
+  /**
+   * Get the names of all known <code>{@link Trigger}</code> groups.
+   */
+  List<String> getTriggerGroupNames() throws SchedulerException;
 
-    /**
-     * Get the names of all the <code>{@link Trigger}s</code> in the given group.
-     * 
-     * @param matcher Matcher to evaluate against known groups
-     * @return List of all keys matching
-     * @throws SchedulerException On error
-     */
-    Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
+  /**
+   * Get the names of all the <code>{@link Trigger}s</code> in the given group.
+   * 
+   * @param matcher Matcher to evaluate against known groups
+   * @return List of all keys matching
+   * @throws SchedulerException On error
+   */
+  Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
 
-    /**
-     * Get the names of all <code>{@link Trigger}</code> groups that are paused.
-     */
-    Set<String> getPausedTriggerGroups() throws SchedulerException;
+  /**
+   * Get the names of all <code>{@link Trigger}</code> groups that are paused.
+   */
+  Set<String> getPausedTriggerGroups() throws SchedulerException;
 
-    /**
-     * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.
-     * <p>
-     * The returned JobDetail object will be a snap-shot of the actual stored JobDetail. If you wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see {@link #addJob(JobDetail, boolean)}).
-     * </p>
-     */
-    JobDetail getJobDetail(JobKey jobKey) throws SchedulerException;
+  /**
+   * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.
+   * <p>
+   * The returned JobDetail object will be a snap-shot of the actual stored JobDetail. If you wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see {@link #addJob(JobDetail, boolean)}).
+   * </p>
+   */
+  JobDetail getJobDetail(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Get the <code>{@link Trigger}</code> instance with the given key.
-     * <p>
-     * The returned Trigger object will be a snap-shot of the actual stored trigger. If you wish to modify the trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
-     * </p>
-     */
-    Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Get the <code>{@link Trigger}</code> instance with the given key.
+   * <p>
+   * The returned Trigger object will be a snap-shot of the actual stored trigger. If you wish to modify the trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
+   * </p>
+   */
+  Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Get the current state of the identified <code>{@link Trigger}</code>.
-     * 
-     * @see Trigger.TriggerState
-     */
-    TriggerState getTriggerState(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Get the current state of the identified <code>{@link Trigger}</code>.
+   * 
+   * @see Trigger.TriggerState
+   */
+  TriggerState getTriggerState(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Add (register) the given <code>Calendar</code> to the Scheduler.
-     * 
-     * @param updateTriggers whether or not to update existing triggers that referenced the already existing calendar so that they are 'correct' based on the new trigger.
-     * @throws SchedulerException if there is an internal Scheduler error, or a Calendar with the same name already exists, and <code>replace</code> is <code>false</code>.
-     */
-    void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers) throws SchedulerException;
+  /**
+   * Add (register) the given <code>Calendar</code> to the Scheduler.
+   * 
+   * @param updateTriggers whether or not to update existing triggers that referenced the already existing calendar so that they are 'correct' based on the new trigger.
+   * @throws SchedulerException if there is an internal Scheduler error, or a Calendar with the same name already exists, and <code>replace</code> is <code>false</code>.
+   */
+  void addCalendar(String calName, Calendar calendar, boolean replace, boolean updateTriggers) throws SchedulerException;
 
-    /**
-     * Delete the identified <code>Calendar</code> from the Scheduler.
-     * 
-     * @return true if the Calendar was found and deleted.
-     * @throws SchedulerException if there is an internal Scheduler error.
-     */
-    boolean deleteCalendar(String calName) throws SchedulerException;
+  /**
+   * Delete the identified <code>Calendar</code> from the Scheduler.
+   * 
+   * @return true if the Calendar was found and deleted.
+   * @throws SchedulerException if there is an internal Scheduler error.
+   */
+  boolean deleteCalendar(String calName) throws SchedulerException;
 
-    /**
-     * Get the <code>{@link Calendar}</code> instance with the given name.
-     */
-    Calendar getCalendar(String calName) throws SchedulerException;
+  /**
+   * Get the <code>{@link Calendar}</code> instance with the given name.
+   */
+  Calendar getCalendar(String calName) throws SchedulerException;
 
-    /**
-     * Get the names of all registered <code>{@link Calendar}s</code>.
-     */
-    List<String> getCalendarNames() throws SchedulerException;
+  /**
+   * Get the names of all registered <code>{@link Calendar}s</code>.
+   */
+  List<String> getCalendarNames() throws SchedulerException;
 
-    /**
-     * Request the interruption, within this Scheduler instance, of all currently executing instances of the identified <code>Job</code>, which must be an implementor of the <code>InterruptableJob</code> interface.
-     * <p>
-     * If more than one instance of the identified job is currently executing, the <code>InterruptableJob#interrupt()</code> method will be called on each instance. However, there is a limitation that in the case that <code>interrupt()</code> on one
-     * instances throws an exception, all remaining instances (that have not yet been interrupted) will not have their <code>interrupt()</code> method called.
-     * </p>
-     * <p>
-     * If you wish to interrupt a specific instance of a job (when more than one is executing) you can do so by calling <code>{@link #getCurrentlyExecutingJobs()}</code> to obtain a handle to the job instance, and then invoke <code>interrupt()</code>
-     * on it yourself.
-     * </p>
-     * <p>
-     * This method is not cluster aware. That is, it will only interrupt instances of the identified InterruptableJob currently executing in this Scheduler instance, not across the entire cluster.
-     * </p>
-     * 
-     * @return true is at least one instance of the identified job was found and interrupted.
-     * @throws UnableToInterruptJobException if the job does not implement <code>InterruptableJob</code>, or there is an exception while interrupting the job.
-     * @see InterruptableJob#interrupt()
-     * @see #getCurrentlyExecutingJobs()
-     */
-    boolean interrupt(JobKey jobKey) throws UnableToInterruptJobException;
+  /**
+   * Request the interruption, within this Scheduler instance, of all currently executing instances of the identified <code>Job</code>, which must be an implementor of the <code>InterruptableJob</code> interface.
+   * <p>
+   * If more than one instance of the identified job is currently executing, the <code>InterruptableJob#interrupt()</code> method will be called on each instance. However, there is a limitation that in the case that <code>interrupt()</code> on one
+   * instances throws an exception, all remaining instances (that have not yet been interrupted) will not have their <code>interrupt()</code> method called.
+   * </p>
+   * <p>
+   * If you wish to interrupt a specific instance of a job (when more than one is executing) you can do so by calling <code>{@link #getCurrentlyExecutingJobs()}</code> to obtain a handle to the job instance, and then invoke <code>interrupt()</code>
+   * on it yourself.
+   * </p>
+   * <p>
+   * This method is not cluster aware. That is, it will only interrupt instances of the identified InterruptableJob currently executing in this Scheduler instance, not across the entire cluster.
+   * </p>
+   * 
+   * @return true is at least one instance of the identified job was found and interrupted.
+   * @throws UnableToInterruptJobException if the job does not implement <code>InterruptableJob</code>, or there is an exception while interrupting the job.
+   * @see InterruptableJob#interrupt()
+   * @see #getCurrentlyExecutingJobs()
+   */
+  boolean interrupt(JobKey jobKey) throws UnableToInterruptJobException;
 
-    /**
-     * Determine whether a {@link Job} with the given identifier already exists within the scheduler.
-     * 
-     * @param jobKey the identifier to check for
-     * @return true if a Job exists with the given identifier
-     * @throws SchedulerException
-     */
-    boolean checkExists(JobKey jobKey) throws SchedulerException;
+  /**
+   * Determine whether a {@link Job} with the given identifier already exists within the scheduler.
+   * 
+   * @param jobKey the identifier to check for
+   * @return true if a Job exists with the given identifier
+   * @throws SchedulerException
+   */
+  boolean checkExists(JobKey jobKey) throws SchedulerException;
 
-    /**
-     * Determine whether a {@link Trigger} with the given identifier already exists within the scheduler.
-     * 
-     * @param triggerKey the identifier to check for
-     * @return true if a Trigger exists with the given identifier
-     * @throws SchedulerException
-     */
-    boolean checkExists(TriggerKey triggerKey) throws SchedulerException;
+  /**
+   * Determine whether a {@link Trigger} with the given identifier already exists within the scheduler.
+   * 
+   * @param triggerKey the identifier to check for
+   * @return true if a Trigger exists with the given identifier
+   * @throws SchedulerException
+   */
+  boolean checkExists(TriggerKey triggerKey) throws SchedulerException;
 
-    /**
-     * Clears (deletes!) all scheduling data - all {@link Job}s, {@link Trigger}s {@link Calendar}s.
-     * 
-     * @throws SchedulerException
-     */
-    void clear() throws SchedulerException;
+  /**
+   * Clears (deletes!) all scheduling data - all {@link Job}s, {@link Trigger}s {@link Calendar}s.
+   * 
+   * @throws SchedulerException
+   */
+  void clear() throws SchedulerException;
 
 }
