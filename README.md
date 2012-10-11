@@ -23,7 +23,7 @@ Download Jar: http://xeiam.com/sundial.jsp
 
 Maven
 -----
-The Yank artifacts are currently hosted on the Xeiam Nexus repository here:
+The Sundial artifacts are currently hosted on the Xeiam Nexus repository here:
 
     <repositories>
       <repository>
