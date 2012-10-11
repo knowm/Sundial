@@ -43,7 +43,7 @@ Add this to dependencies in pom.xml:
     <dependency>
       <groupId>com.xeiam</groupId>
       <artifactId>sundial</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
     </dependency>
 
 Building
