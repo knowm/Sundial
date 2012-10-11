@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2001-2010 Terracotta, Inc.
  * Copyright 2011 Xeiam LLC
  *
@@ -15,7 +15,6 @@
  * under the License.
  *
  */
-
 package com.xeiam.sundial.ee;
 
 import javax.servlet.ServletContext;
