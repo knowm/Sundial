@@ -21,7 +21,7 @@ package com.xeiam.sundial;
 public class SampleRun {
 
   /**
-   * Make sure jobs.xml and log4j.xml are on the classpath!
+   * Make sure jobs.xml is on the classpath!
    */
   public static void main(String[] args) {
 

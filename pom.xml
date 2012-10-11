@@ -67,7 +67,14 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.6</version>
 		</dependency>
+
 		<!-- test -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.6</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
