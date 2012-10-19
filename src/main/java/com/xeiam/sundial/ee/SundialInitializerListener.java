@@ -67,18 +67,18 @@ public class SundialInitializerListener implements ServletContextListener {
     ServletContext servletContext = pServletContextEvent.getServletContext();
     try {
 
-      String shutdownPref = servletContext.getInitParameter("shutdown-on-unload");
+      String shutdownPrefString = servletContext.getInitParameter("shutdown-on-unload");
 
-      if (shutdownPref != null) {
-        performShutdown = Boolean.valueOf(shutdownPref).booleanValue();
+      if (shutdownPrefString != null) {
+        performShutdown = Boolean.valueOf(shutdownPrefString).booleanValue();
       }
-      String shutdownWaitPref = servletContext.getInitParameter("wait-on-shutdown");
-      if (shutdownPref != null) {
-        waitOnShutdown = Boolean.valueOf(shutdownWaitPref).booleanValue();
+      String shutdownWaitPrefString = servletContext.getInitParameter("wait-on-shutdown");
+      if (shutdownPrefString != null) {
+        waitOnShutdown = Boolean.valueOf(shutdownWaitPrefString).booleanValue();
       }
 
       // THREAD POOL SIZE
-      int threadPoolSize = 0;
+      int threadPoolSize = 10; // ten is default
       String ThreadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
 
       try {
@@ -86,33 +86,32 @@ public class SundialInitializerListener implements ServletContextListener {
           threadPoolSize = Integer.parseInt(ThreadPoolSizeString);
         }
       } catch (Exception e) {
-        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
-        threadPoolSize = 10;
+        logger.error("Cannot parse value of 'thread-pool-size' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
       }
 
       // Always want to get the scheduler, even if it isn't starting,
       // to make sure it is both initialized and registered.
-      SundialJobScheduler.createScheduler(10);
+      SundialJobScheduler.createScheduler(threadPoolSize);
 
       // Give a reference to the servletContext so jobs can access "global" webapp objects
       SundialJobScheduler.setServletContext(servletContext);
 
       // Should the Scheduler being started now or later
-      String startOnLoad = servletContext.getInitParameter("start-scheduler-on-load");
+      String startOnLoadString = servletContext.getInitParameter("start-scheduler-on-load");
 
       int startDelay = 0;
-      String startDelayS = servletContext.getInitParameter("start-delay-seconds");
+      String startDelayString = servletContext.getInitParameter("start-delay-seconds");
 
       try {
-        if (startDelayS != null && startDelayS.trim().length() > 0) {
-          startDelay = Integer.parseInt(startDelayS);
+        if (startDelayString != null && startDelayString.trim().length() > 0) {
+          startDelay = Integer.parseInt(startDelayString);
         }
       } catch (Exception e) {
-        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + startDelayS + ", defaulting to 5 seconds.");
+        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + startDelayString + ", defaulting to 5 seconds.");
         startDelay = 5;
       }
 
-      if (startOnLoad == null || (Boolean.valueOf(startOnLoad).booleanValue())) {
+      if (startOnLoadString == null || (Boolean.valueOf(startOnLoadString).booleanValue())) {
         if (startDelay <= 0) {
           // Start now
           SundialJobScheduler.getScheduler().start();
@@ -132,6 +131,7 @@ public class SundialInitializerListener implements ServletContextListener {
         globalLockOnLoad = Boolean.valueOf(globalLockOnLoadString).booleanValue();
         if (globalLockOnLoad) {
           SundialJobScheduler.lockScheduler();
+          logger.info("Sundial scheduler has been locked.");
         }
       }
 
@@ -153,10 +153,10 @@ public class SundialInitializerListener implements ServletContextListener {
         SundialJobScheduler.getScheduler().shutdown(waitOnShutdown);
       }
     } catch (Exception e) {
-      logger.error("Quartz Scheduler failed to shutdown cleanly: ", e);
+      logger.error("Sundial Scheduler failed to shutdown cleanly: ", e);
     }
 
-    logger.info("Quartz Scheduler successful shutdown.");
+    logger.info("Sundial Scheduler successful shutdown.");
   }
 
 }
