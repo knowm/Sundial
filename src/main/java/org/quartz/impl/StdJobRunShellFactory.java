@@ -17,7 +17,6 @@
 
 package org.quartz.impl;
 
-import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.core.JobRunShell;
 import org.quartz.core.JobRunShellFactory;

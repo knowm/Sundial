@@ -18,7 +18,6 @@
 package org.quartz;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.quartz.impl.triggers.CronTriggerImpl;

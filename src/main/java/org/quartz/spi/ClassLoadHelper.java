@@ -17,8 +17,8 @@
 
 package org.quartz.spi;
 
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * An interface for classes wishing to provide the service of loading classes and resources within the scheduler...

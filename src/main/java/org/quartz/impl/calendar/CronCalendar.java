@@ -1,7 +1,6 @@
 package org.quartz.impl.calendar;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 

@@ -17,12 +17,12 @@
 
 package org.quartz.simpl;
 
-import org.quartz.spi.ClassLoadHelper;
-
+import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.io.InputStream;
+
+import org.quartz.spi.ClassLoadHelper;
 
 /**
  * A <code>ClassLoadHelper</code> that simply calls <code>Class.forName(..)</code>.

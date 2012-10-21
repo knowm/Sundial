@@ -20,9 +20,6 @@ package org.quartz;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.LinkedList;
-
-import org.quartz.utils.Key;
 
 /**
  * The base interface with properties common to all <code>Trigger</code>s - use {@link TriggerBuilder} to instantiate an actual Trigger.

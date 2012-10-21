@@ -18,9 +18,7 @@
 package org.quartz.impl.calendar;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.TimeZone;
-import java.util.TreeSet;
 
 import org.quartz.Calendar;
 

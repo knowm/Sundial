@@ -20,6 +20,7 @@ package org.quartz;
 import java.util.List;
 
 import org.quartz.exceptions.SchedulerException;
+import org.quartz.impl.matchers.EverythingMatcher;
 
 /**
  * Client programs may be interested in the 'listener' interfaces that are available from Quartz. The <code>{@link JobListener}</code> interface provides notifications of <code>Job</code> executions. The <code>{@link TriggerListener}</code> interface

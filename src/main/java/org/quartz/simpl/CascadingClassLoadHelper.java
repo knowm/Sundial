@@ -17,10 +17,10 @@
 
 package org.quartz.simpl;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.net.URL;
-import java.io.InputStream;
 
 import org.quartz.spi.ClassLoadHelper;
 

@@ -16,7 +16,6 @@
  */
 package org.quartz.impl.matchers;
 
-import org.quartz.Matcher;
 import org.quartz.utils.Key;
 
 /**

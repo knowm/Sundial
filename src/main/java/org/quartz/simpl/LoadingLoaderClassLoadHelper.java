@@ -17,10 +17,10 @@
 
 package org.quartz.simpl;
 
-import org.quartz.spi.ClassLoadHelper;
-
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
+
+import org.quartz.spi.ClassLoadHelper;
 
 /**
  * A <code>ClassLoadHelper</code> that uses either the loader of it's own class (<code>this.getClass().getClassLoader().loadClass( .. )</code>).

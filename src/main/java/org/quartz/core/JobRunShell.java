@@ -17,13 +17,10 @@
 
 package org.quartz.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
-import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.JobPersistenceException;
@@ -32,6 +29,8 @@ import org.quartz.impl.JobExecutionContextImpl;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.TriggerFiredBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>

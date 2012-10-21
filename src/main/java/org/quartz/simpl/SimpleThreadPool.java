@@ -17,14 +17,14 @@
 
 package org.quartz.simpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.quartz.exceptions.SchedulerConfigException;
-import org.quartz.spi.ThreadPool;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.quartz.exceptions.SchedulerConfigException;
+import org.quartz.spi.ThreadPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>

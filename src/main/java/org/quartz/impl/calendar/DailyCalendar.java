@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-import org.quartz.CronExpression;
-
 /**
  * This implementation of the Calendar excludes (or includes - see below) a specified time range each day. For example, you could use this calendar to exclude business hours (8AM - 5PM) every day. Each <CODE>DailyCalendar</CODE> only allows a single
  * time range to be specified, and that time range may not cross daily boundaries (i.e. you cannot specify a time range from 8PM - 5AM). If the property <CODE>invertTimeRange</CODE> is <CODE>false</CODE> (default), the time range defines a range of
