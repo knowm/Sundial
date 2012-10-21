@@ -55,7 +55,7 @@ import org.quartz.exceptions.SchedulerException;
  * @since 1.7
  * @author James House
  */
-public class CalendarIntervalTriggerImpl extends AbstractTrigger implements CalendarIntervalTrigger, CoreTrigger {
+public class CalendarIntervalTriggerImpl extends AbstractTrigger implements CalendarIntervalTrigger {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +83,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
   private int timesTriggered = 0;
 
-  private boolean complete = false;
+  private final boolean complete = false;
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,6 +248,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * (non-Javadoc)
    * @see org.quartz.DateIntervalTriggerI#getRepeatIntervalUnit()
    */
+  @Override
   public IntervalUnit getRepeatIntervalUnit() {
 
     return repeatIntervalUnit;
@@ -267,6 +268,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * (non-Javadoc)
    * @see org.quartz.DateIntervalTriggerI#getRepeatInterval()
    */
+  @Override
   public int getRepeatInterval() {
 
     return repeatInterval;
@@ -292,6 +294,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * (non-Javadoc)
    * @see org.quartz.DateIntervalTriggerI#getTimesTriggered()
    */
+  @Override
   public int getTimesTriggered() {
 
     return timesTriggered;
@@ -492,6 +495,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * <b>This method should not be invoked by client code.</b>
    * </p>
    */
+  @Override
   public void setNextFireTime(Date nextFireTime) {
 
     this.nextFireTime = nextFireTime;
@@ -505,6 +509,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * <b>This method should not be invoked by client code.</b>
    * </p>
    */
+  @Override
   public void setPreviousFireTime(Date previousFireTime) {
 
     this.previousFireTime = previousFireTime;
@@ -515,6 +520,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * Returns the next time at which the <code>DateIntervalTrigger</code> will fire, after the given time. If the trigger will not fire after the given time, <code>null</code> will be returned.
    * </p>
    */
+  @Override
   public Date getFireTimeAfter(Date afterTime) {
 
     return getFireTimeAfter(afterTime, false);
@@ -669,6 +675,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * Note that the return time may be in the past.
    * </p>
    */
+  @Override
   public Date getFinalFireTime() {
 
     if (complete || getEndTime() == null) {
@@ -714,6 +721,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * Determines whether or not the <code>DateIntervalTrigger</code> will occur again.
    * </p>
    */
+  @Override
   public boolean mayFireAgain() {
 
     return (getNextFireTime() != null);
@@ -725,6 +733,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * 
    * @throws IllegalStateException if a required property (such as Name, Group, Class) is not set.
    */
+  @Override
   public void validate() throws SchedulerException {
 
     super.validate();
@@ -739,6 +748,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * 
    * @see #getTriggerBuilder()
    */
+  @Override
   public ScheduleBuilder<CalendarIntervalTrigger> getScheduleBuilder() {
 
     CalendarIntervalScheduleBuilder cb = CalendarIntervalScheduleBuilder.calendarIntervalSchedule().withInterval(getRepeatInterval(), getRepeatIntervalUnit());
