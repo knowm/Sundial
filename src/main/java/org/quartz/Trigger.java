@@ -1,4 +1,4 @@
-/* 
+/**
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
@@ -14,7 +14,6 @@
  * under the License.
  * 
  */
-
 package org.quartz;
 
 import java.io.Serializable;
@@ -219,6 +218,7 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * 
    * @return true if the key of this Trigger equals that of the given Trigger.
    */
+  @Override
   public boolean equals(Object other);
 
   /**
@@ -226,6 +226,7 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * Compare the next fire time of this <code>Trigger</code> to that of another by comparing their keys, or in other words, sorts them according to the natural (i.e. alphabetical) order of their keys.
    * </p>
    */
+  @Override
   public int compareTo(Trigger other);
 
   /**
@@ -234,6 +235,7 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    */
   class TriggerTimeComparator implements Comparator<Trigger>, Serializable {
 
+    @Override
     public int compare(Trigger trig1, Trigger trig2) {
 
       Date t1 = trig1.getNextFireTime();

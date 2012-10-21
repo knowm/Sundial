@@ -1,4 +1,4 @@
-/* 
+/** 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
@@ -14,7 +14,6 @@
  * under the License.
  * 
  */
-
 package org.quartz.core;
 
 import java.util.ArrayList;
@@ -82,21 +81,21 @@ public class QuartzScheduler implements Scheduler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private QuartzSchedulerResources mQuartzSchedulerResources;
+  private final QuartzSchedulerResources mQuartzSchedulerResources;
 
-  private QuartzSchedulerThread mQuartzSchedulerThread;
+  private final QuartzSchedulerThread mQuartzSchedulerThread;
 
   private ThreadGroup threadGroup;
 
-  private SchedulerContext context = new SchedulerContext();
+  private final SchedulerContext context = new SchedulerContext();
 
-  private ListenerManager listenerManager = new ListenerManagerImpl();
+  private final ListenerManager listenerManager = new ListenerManagerImpl();
 
-  private HashMap<String, JobListener> internalJobListeners = new HashMap<String, JobListener>(10);
+  private final HashMap<String, JobListener> internalJobListeners = new HashMap<String, JobListener>(10);
 
-  private HashMap<String, TriggerListener> internalTriggerListeners = new HashMap<String, TriggerListener>(10);
+  private final HashMap<String, TriggerListener> internalTriggerListeners = new HashMap<String, TriggerListener>(10);
 
-  private ArrayList<SchedulerListener> internalSchedulerListeners = new ArrayList<SchedulerListener>(10);
+  private final ArrayList<SchedulerListener> internalSchedulerListeners = new ArrayList<SchedulerListener>(10);
 
   private JobFactory jobFactory = new SimpleJobFactory();
 
@@ -104,11 +103,11 @@ public class QuartzScheduler implements Scheduler {
 
   ErrorLogger errLogger = null;
 
-  private SchedulerSignaler signaler;
+  private final SchedulerSignaler signaler;
 
-  private Random random = new Random();
+  private final Random random = new Random();
 
-  private ArrayList<Object> holdToPreventGC = new ArrayList<Object>(5);
+  private final ArrayList<Object> holdToPreventGC = new ArrayList<Object>(5);
 
   private boolean signalOnSchedulingChange = true;
 

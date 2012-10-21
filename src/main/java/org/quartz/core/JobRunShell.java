@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2001-2009 Terracotta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +14,6 @@
  * under the License.
  *
  */
-
 package org.quartz.core;
 
 import org.quartz.Job;
@@ -95,6 +94,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     requestShutdown();
   }
 
+  @Override
   protected Logger getLog() {
 
     return log;
@@ -126,6 +126,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     shutdownRequested = true;
   }
 
+  @Override
   public void run() {
 
     qs.addInternalSchedulerListener(this);

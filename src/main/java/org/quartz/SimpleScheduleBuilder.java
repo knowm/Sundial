@@ -1,4 +1,4 @@
-/*
+/**
  * All content copyright Terracotta, Inc., unless otherwise indicated. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
@@ -14,7 +14,6 @@
  * under the License.
  * 
  */
-
 package org.quartz;
 
 import org.quartz.impl.triggers.SimpleTriggerImpl;
@@ -31,6 +30,7 @@ import org.quartz.spi.MutableTrigger;
  * </p>
  * 
  * <pre>
+ * 
  * 
  * 
  * 
@@ -253,6 +253,7 @@ public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
    * 
    * @see TriggerBuilder#withSchedule(ScheduleBuilder)
    */
+  @Override
   public MutableTrigger build() {
 
     SimpleTriggerImpl st = new SimpleTriggerImpl();
