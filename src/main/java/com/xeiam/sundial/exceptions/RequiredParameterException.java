@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
  */
 public class RequiredParameterException extends RuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   /** slf4J logger wrapper */
   Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
 

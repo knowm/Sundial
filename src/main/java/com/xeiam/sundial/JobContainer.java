@@ -95,34 +95,4 @@ public abstract class JobContainer {
     mTerminate = true;
   }
 
-  protected void logTrace(String pMessage) {
-
-    logger.trace(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logDebug(String pMessage) {
-
-    logger.debug(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logInfo(String pMessage) {
-
-    logger.info(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logWarning(String pMessage) {
-
-    logger.warn(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logError(String pMessage) {
-
-    logger.error(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logError(String pMessage, Throwable e) {
-
-    logger.error(" [" + this.getClass().getName() + "] " + pMessage, e);
-  }
-
 }

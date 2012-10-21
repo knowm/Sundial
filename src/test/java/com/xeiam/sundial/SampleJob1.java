@@ -15,6 +15,9 @@
  */
 package com.xeiam.sundial;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
 /**
@@ -22,13 +25,15 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  */
 public class SampleJob1 extends Job {
 
+  private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
+
   @Override
   public void doRun() throws JobInterruptException {
 
-    logInfo("RUNNING!");
+    logger.info("RUNNING!");
 
     // Do something interesting...
 
-    logInfo("DONE!");
+    logger.info("DONE!");
   }
 }

@@ -15,6 +15,9 @@
  */
 package com.xeiam.sundial;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A sample Job Action that simply logs a message every time it's called.
  * 
@@ -22,11 +25,13 @@ package com.xeiam.sundial;
  */
 public class SampleJobAction extends JobAction {
 
+  private final Logger logger = LoggerFactory.getLogger(SampleJobAction.class);
+
   @Override
   public void doRun() {
 
     Integer myValue = getJobContext().get("MyValue");
-    logInfo("myValue: " + myValue);
+    logger.info("myValue: " + myValue);
 
   }
 

@@ -19,6 +19,8 @@ import org.quartz.InterruptableJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.UnableToInterruptJobException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.exceptions.JobInterruptException;
 import com.xeiam.sundial.exceptions.RequiredParameterException;
@@ -27,6 +29,8 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
  * @author timmolter
  */
 public abstract class Job extends JobContainer implements InterruptableJob {
+
+  private final Logger logger = LoggerFactory.getLogger(Job.class);
 
   /**
    * Required no-arg constructor
@@ -41,7 +45,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
     // check for global lock
     if (SundialJobScheduler.getGlobalLock()) {
-      logInfo("Global Lock in place! Job aborted.");
+      logger.info("Global Lock in place! Job aborted.");
       return;
     }
 
@@ -54,7 +58,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
     } catch (RequiredParameterException e) {
     } catch (JobInterruptException e) {
     } catch (Exception e) {
-      logError("Error executing Job! Job aborted!!!", e);
+      logger.error("Error executing Job! Job aborted!!!", e);
     } finally {
       cleanup();
       destroyContext(); // remove the JobContext from the ThreadLocal
@@ -66,7 +70,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
   public void interrupt() throws UnableToInterruptJobException {
 
     setTerminate();
-    logInfo("Interrupt called!");
+    logger.info("Interrupt called!");
 
   }
 

@@ -15,12 +15,17 @@
  */
 package com.xeiam.sundial;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
 /**
  * @author timmolter
  */
 public class SampleJob2 extends Job {
+
+  private final Logger logger = LoggerFactory.getLogger(SampleJob2.class);
 
   @Override
   public void doRun() throws JobInterruptException {
@@ -29,7 +34,7 @@ public class SampleJob2 extends Job {
 
     String value = (String) context.get("MyParam");
 
-    logInfo("value=" + value);
+    logger.info("value=" + value);
 
   }
 }

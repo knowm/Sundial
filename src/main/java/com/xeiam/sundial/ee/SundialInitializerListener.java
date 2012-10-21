@@ -115,14 +115,14 @@ public class SundialInitializerListener implements ServletContextListener {
         if (startDelay <= 0) {
           // Start now
           SundialJobScheduler.getScheduler().start();
-          logger.info("Scheduler has been started...");
+          logger.info("Sundial Scheduler has been started...");
         } else {
           // Start delayed
           SundialJobScheduler.getScheduler().startDelayed(startDelay);
-          logger.info("Scheduler will start in " + startDelay + " seconds.");
+          logger.info("Sundial Scheduler will start in " + startDelay + " seconds.");
         }
       } else {
-        logger.info("Scheduler has not been started. Use scheduler.start()");
+        logger.info("Sundial Scheduler has not been started. Use scheduler.start()");
       }
 
       String globalLockOnLoadString = servletContext.getInitParameter("global-lock-on-load");
@@ -131,12 +131,12 @@ public class SundialInitializerListener implements ServletContextListener {
         globalLockOnLoad = Boolean.valueOf(globalLockOnLoadString).booleanValue();
         if (globalLockOnLoad) {
           SundialJobScheduler.lockScheduler();
-          logger.info("Sundial scheduler has been locked.");
+          logger.info("Sundial Scheduler has been locked.");
         }
       }
 
     } catch (Exception e) {
-      logger.error("Quartz Scheduler failed to initialize: ", e);
+      logger.error("Sundial Scheduler failed to initialize: ", e);
     }
 
   }
