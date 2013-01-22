@@ -1,53 +1,86 @@
-Description
-===============
+## Sundial
+A Lightweight Job Scheduling Framework
 
+## Description
 Sundial is a lightweight Java job scheduling framework forked from
-Quartz (http://www.quartz-scheduler.org/). Sundial hides the 
+Quartz (http://www.quartz-scheduler.org/) and peared down to the bare essentials. Sundial also hides the 
 nitty-gritty configuration details of Quartz, reducing the time
 needed to get a simple RAM job scheduler up and running. Sundial
 uses a ThreadLocal wrapper for each job containing a HashMap for
 job key-value pairs. Convenience methods allow easy access to these
-parameters. Built in logging methods are accessible from all jobs
-and job actions. JobActions are reusable job snippets that also have
-access to the context parameters and logging. If you are looking 
-for an all-Java job scheduling framework, that is easy to integrate
+parameters. JobActions are reusable conponents that also have
+access to the context parameters. If you are looking 
+for an all-Java job scheduling framework that is easy to integrate
 into your applications, Sundial is for you.
 
+Usage is very simple: create a Job, configure the Job's in jobs.xml, and start the scheduler.
 
-Getting Started
-===============
+## Example
 
-Non-Maven
----------
-Download Jar: http://xeiam.com/sundial.jsp
+    public class SampleJob1 extends Job {
 
-Maven
------
-The Sundial artifacts are currently hosted on the Xeiam Nexus repository here:
+        private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
 
-    <repositories>
-      <repository>
-        <id>xchange-release</id>
-        <releases/>
-        <url>http://nexus.xeiam.com/content/repositories/releases</url>
-      </repository>
-      <repository>
-        <id>xchange-snapshot</id>
-        <snapshots/>
-        <url>http://nexus.xeiam.com/content/repositories/snapshots/</url>
-      </repository>
-    </repositories>
-  
-Add this to dependencies in pom.xml:
+        @Override
+        public void doRun() throws JobInterruptException {
+
+        logger.info("RUNNING!");
+
+        // Do something interesting...
+
+        logger.info("DONE!");
+        }
+    }
+    
+Now go ahead and [study some more examples](http://xeiam.com/sundial_examplecode.jsp), [download the thing](http://xeiam.com/sundial_changelog.jsp) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+
+## Features
+* Depends only on slf4j
+* ~250KB Jar
+* Apache 2.0 license
+* Easy to use
+
+## Getting Started
+### Non-Maven
+Download Jar: http://xeiam.com/sundial_changelog.jsp
+#### Dependencies
+* org.slf4j.slf4j-api-1.6.5
+
+### Maven
+The Sundial release artifacts are hosted on Maven Central.
+
+Add the Sundial library as a dependency to your pom.xml file:
 
     <dependency>
-      <groupId>com.xeiam</groupId>
-      <artifactId>sundial</artifactId>
-      <version>1.1.2-SNAPSHOT</version>
+        <groupId>com.xeiam</groupId>
+        <artifactId>sundial</artifactId>
+        <version>1.1.2</version>
     </dependency>
 
-Building
-===============
+For snapshots, add the following to your pom.xml file:
+
+    <repository>
+      <id>sonatype-oss-public</id>
+      <snapshots/>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+    
+    <dependency>
+        <groupId>com.xeiam</groupId>
+        <artifactId>sundial</artifactId>
+        <version>1.1.3-SNAPSHOT</version>
+    </dependency>
+
+## Building
 mvn clean package  
 mvn javadoc:javadoc  
-    
+
+## Bugs
+Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
+
+## More Info
+Sonar Code Quality: http://sonar.xeiam.com/  
+Jenkins CI: http://ci.xeiam.com/  
+
+## Donations
+17dQktcAmU4urXz7tGk2sbuiCqykm3WLs6  
