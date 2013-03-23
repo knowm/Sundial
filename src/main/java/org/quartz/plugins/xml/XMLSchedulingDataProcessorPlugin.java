@@ -62,7 +62,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private String mFileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-  private JobFile mJobFile;
+  private JobFile jobFile;
 
   private long scanInterval = 0;
 
@@ -162,7 +162,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
     classLoadHelper = new CascadingClassLoadHelper();
     classLoadHelper.initialize();
 
-    mJobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
+    jobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
 
     log.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
 
@@ -171,7 +171,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   @Override
   public void start() {
 
-    processFile(mJobFile);
+    processFile(jobFile);
 
     started = true;
   }

@@ -83,8 +83,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data. The xml document must conform to the format defined in "job_scheduling_data_1_8.xsd" The same instance can be used again and again, however a
- * single instance is not thread-safe.
+ * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data. The xml document must conform to the format defined in "job_scheduling_data_1_8.xsd" The same
+ * instance can be used again and again, however a single instance is not thread-safe.
  * 
  * @author James House
  * @author Past contributions from <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
@@ -257,7 +257,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    */
 
   /**
-   * Process the xml file in the default location (a file named "quartz_jobs.xml" in the current working directory).
+   * Process the xml file in the default location (a file named "jobs.xml" in the current working directory).
    */
   protected void processFile() throws Exception {
 
@@ -354,8 +354,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param fileName meta data file name.
    * @param systemId system ID.
    */
-  protected void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
-      XPathException {
+  protected void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException,
+      ParseException, XPathException {
 
     prepForProcessing();
 
@@ -374,8 +374,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param stream an input stream containing the xml content.
    * @param systemId system ID.
    */
-  public void processStreamAndScheduleJobs(InputStream stream, String systemId, Scheduler sched) throws ValidationException, ParserConfigurationException, SAXException, XPathException, IOException, SchedulerException,
-      ClassNotFoundException, ParseException {
+  public void processStreamAndScheduleJobs(InputStream stream, String systemId, Scheduler sched) throws ValidationException, ParserConfigurationException, SAXException, XPathException, IOException,
+      SchedulerException, ClassNotFoundException, ParseException {
 
     prepForProcessing();
 
@@ -541,8 +541,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
-      Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-          .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+      Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime)
+          .endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
 
