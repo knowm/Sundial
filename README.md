@@ -78,9 +78,9 @@ mvn javadoc:javadoc
 ## Bugs
 Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
 
-## More Info
-Sonar Code Quality: http://sonar.xeiam.com/  
-Jenkins CI: http://ci.xeiam.com/  
+## Continuous Integration Status
+[![Build Status](https://travis-ci.org/timmolter/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
+[Build History](https://travis-ci.org/timmolter/Sundial/builds)  
 
 ## Donations
 17dQktcAmU4urXz7tGk2sbuiCqykm3WLs6  
