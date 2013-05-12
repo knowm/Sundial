@@ -78,7 +78,7 @@ mvn javadoc:javadoc
 ## Bugs
 Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
 
-## Continuous Integration Status
+## Continuous Integration
 [![Build Status](https://travis-ci.org/timmolter/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
 [Build History](https://travis-ci.org/timmolter/Sundial/builds)  
 
