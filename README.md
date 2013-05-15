@@ -83,4 +83,4 @@ Please report any bugs or submit feature requests to [Sundial's Github issue tra
 [Build History](https://travis-ci.org/timmolter/Sundial/builds)  
 
 ## Donations
-17dQktcAmU4urXz7tGk2sbuiCqykm3WLs6  
+15MvtM8e3bzepmZ5vTe8cHvrEZg6eDzw2w  
