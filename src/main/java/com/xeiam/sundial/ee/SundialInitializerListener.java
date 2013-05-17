@@ -1,6 +1,6 @@
 /**
  * Copyright 2001-2010 Terracotta, Inc.
- * Copyright 2011 Xeiam LLC
+ * Copyright 2011 - 2013 Xeiam LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -31,16 +31,17 @@ import com.xeiam.sundial.SundialJobScheduler;
  * A ServletContextListner that can be used to initialize Quartz.
  * </p>
  * <p>
- * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being shutdown). Possible values are "true" or "false". The
- * default is "true".
+ * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being
+ * shutdown). Possible values are "true" or "false". The default is "true".
  * </p>
  * <p>
- * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want scheduler.shutdown(true) called when the listener is unloaded (usually when the application server is
- * being shutdown). Passing "true" to the shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or "false". The default is "false".
+ * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want scheduler.shutdown(true) called when the listener is
+ * unloaded (usually when the application server is being shutdown). Passing "true" to the shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or
+ * "false". The default is "false".
  * </p>
  * <p>
- * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first loaded. If set to false, your application will need to call the start() method before the scheduler
- * begins to run and process jobs. Possible values are "true" or "false". The default is "true", which means the scheduler is started.
+ * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first loaded. If set to false, your application will need
+ * to call the start() method before the scheduler begins to run and process jobs. Possible values are "true" or "false". The default is "true", which means the scheduler is started.
  * </p>
  * <p>
  * The init parameter 'quartz:start-delay-seconds' can be used to specify the amount of time to wait after initializing the scheduler before scheduler.start() is called.
@@ -116,12 +117,14 @@ public class SundialInitializerListener implements ServletContextListener {
           // Start now
           SundialJobScheduler.getScheduler().start();
           logger.info("Sundial Scheduler has been started...");
-        } else {
+        }
+        else {
           // Start delayed
           SundialJobScheduler.getScheduler().startDelayed(startDelay);
           logger.info("Sundial Scheduler will start in " + startDelay + " seconds.");
         }
-      } else {
+      }
+      else {
         logger.info("Sundial Scheduler has not been started. Use scheduler.start()");
       }
 

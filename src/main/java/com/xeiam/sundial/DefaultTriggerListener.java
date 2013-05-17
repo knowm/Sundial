@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,8 @@ public class DefaultTriggerListener implements TriggerListener {
         if (newJobName.equals(alreadyRunningJobName)) {
           logger.debug("Already Running. Vetoing!");
           return true;
-        } else {
+        }
+        else {
           logger.debug("Non-matching Job found. Not Vetoing!");
         }
       }

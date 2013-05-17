@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,10 +187,12 @@ public class SundialJobScheduler {
           logger.debug("Matching Job found. Now Stopping!");
           if (lJobExecutionContext.getJobInstance() instanceof Job) {
             ((Job) lJobExecutionContext.getJobInstance()).interrupt();
-          } else {
+          }
+          else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        } else {
+        }
+        else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
@@ -219,10 +221,12 @@ public class SundialJobScheduler {
             if (value != null & value.equalsIgnoreCase(pValue)) {
               ((Job) lJobExecutionContext.getJobInstance()).interrupt();
             }
-          } else {
+          }
+          else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        } else {
+        }
+        else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
