@@ -44,7 +44,7 @@
 	</scm>
 
 	<ciManagement>
-		<url>http://ci.xeiam.com/</url>
+		<url>https://travis-ci.org/timmolter/Sundial</url>
 	</ciManagement>
 
 	<dependencies>
