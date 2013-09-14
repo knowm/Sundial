@@ -75,6 +75,18 @@ For snapshots, add the following to your pom.xml file:
 mvn clean package  
 mvn javadoc:javadoc  
 
+## Cron Expressions in jobs.xml
+
+See the Cron Trigger tutorial over at [quartz-scheduler.org](http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/crontrigger).
+Here are a few examples:  
+
+Expression | Meaning 
+------------- | -------------
+0 0 12 * * ? | Fire at 12pm (noon) every day
+0 15 10 * * ? | Fire at 10:15am every day
+0 15 10 ? * MON-FRI | Fire at 10:15am every Monday, Tuesday, Wednesday, Thursday and Friday
+0 0/10 * * * ? | Fire every 10 mintes starting at 12 am (midnight) every day
+
 ## Bugs
 Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
 
