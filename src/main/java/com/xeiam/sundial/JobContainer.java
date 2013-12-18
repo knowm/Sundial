@@ -16,8 +16,6 @@
 package com.xeiam.sundial;
 
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
@@ -32,7 +30,7 @@ public abstract class JobContainer {
   private static ThreadLocal<JobContext> sContextContainer = new ThreadLocal<JobContext>();
 
   /** slf4J logger wrapper */
-  Logger logger = LoggerFactory.getLogger(JobContainer.class);
+  // Logger logger = LoggerFactory.getLogger(JobContainer.class);
 
   /** terminate flag */
   private boolean mTerminate = false;

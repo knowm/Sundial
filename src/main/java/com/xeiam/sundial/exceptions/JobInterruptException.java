@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class JobInterruptException extends RuntimeException {
 
   /** slf4J logger wrapper */
-  Logger logger = LoggerFactory.getLogger(JobInterruptException.class);
+  private Logger logger = LoggerFactory.getLogger(JobInterruptException.class);
 
   public JobInterruptException() {
 

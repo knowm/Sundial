@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class RequiredParameterException extends RuntimeException {
 
   /** slf4J logger wrapper */
-  Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
+  private Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
 
   public RequiredParameterException() {
 

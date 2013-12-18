@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.exceptions.RequiredParameterException;
 
@@ -32,7 +30,7 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
  */
 public class JobContext {
 
-  Logger logger = LoggerFactory.getLogger(JobContext.class);
+  // Logger logger = LoggerFactory.getLogger(JobContext.class);
 
   private static final String KEY_JOB_NAME = "KEY_JOB_NAME";
 
