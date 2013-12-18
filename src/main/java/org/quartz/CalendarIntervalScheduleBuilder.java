@@ -17,7 +17,7 @@
 
 package org.quartz;
 
-import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.CalendarIntervalTrigger.IntervalUnit;
 import org.quartz.impl.triggers.CalendarIntervalTriggerImpl;
 import org.quartz.spi.MutableTrigger;
 
@@ -33,6 +33,7 @@ import org.quartz.spi.MutableTrigger;
  * </p>
  * 
  * <pre>
+ * 
  * 
  * 
  * 
@@ -99,7 +100,7 @@ public class CalendarIntervalScheduleBuilder extends ScheduleBuilder<CalendarInt
    * @see CalendarIntervalTrigger#getRepeatInterval()
    * @see CalendarIntervalTrigger#getRepeatIntervalUnit()
    */
-  public CalendarIntervalScheduleBuilder withInterval(int interval, IntervalUnit unit) {
+  public CalendarIntervalScheduleBuilder withInterval(int interval, CalendarIntervalTrigger.IntervalUnit unit) {
 
     if (unit == null) {
       throw new IllegalArgumentException("TimeUnit must be specified.");

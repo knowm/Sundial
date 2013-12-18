@@ -19,7 +19,7 @@ package org.quartz;
 
 import java.util.Calendar;
 
-import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.CalendarIntervalTrigger.IntervalUnit;
 
 /**
  * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.JobDetail}</code> based upon repeating calendar time intervals.
@@ -42,6 +42,10 @@ import org.quartz.DateBuilder.IntervalUnit;
  * @author James House
  */
 public interface CalendarIntervalTrigger extends Trigger {
+
+  public enum IntervalUnit {
+    MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
+  };
 
   /**
    * <p>
