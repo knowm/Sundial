@@ -31,95 +31,43 @@ import org.quartz.spi.JobFactory;
 /**
  * This is the main interface of a Quartz Scheduler.
  * <p>
- * A <code>Scheduler</code> maintains a registry of <code>{@link org.quartz.JobDetail}</code>s and <code>{@link Trigger}</code>s. Once registered, the <code>Scheduler</code> is responsible for executing <code>Job</code> s when their associated
- * <code>Trigger</code> s fire (when their scheduled time arrives).
+ * A <code>Scheduler</code> maintains a registry of <code>{@link org.quartz.JobDetail}</code>s and <code>{@link Trigger}</code>s. Once registered, the <code>Scheduler</code> is responsible for
+ * executing <code>Job</code> s when their associated <code>Trigger</code> s fire (when their scheduled time arrives).
  * </p>
  * <p>
- * <code>Scheduler</code> instances are produced by a <code>{@link SchedulerFactory}</code>. A scheduler that has already been created/initialized can be found and used through the same factory that produced it. After a <code>Scheduler</code> has
- * been created, it is in "stand-by" mode, and must have its <code>start()</code> method called before it will fire any <code>Job</code>s.
+ * <code>Scheduler</code> instances are produced by a <code>{@link SchedulerFactory}</code>. A scheduler that has already been created/initialized can be found and used through the same factory that
+ * produced it. After a <code>Scheduler</code> has been created, it is in "stand-by" mode, and must have its <code>start()</code> method called before it will fire any <code>Job</code>s.
  * </p>
  * <p>
- * <code>Job</code> s are to be created by the 'client program', by defining a class that implements the <code>{@link org.quartz.Job}</code> interface. <code>{@link JobDetail}</code> objects are then created (also by the client) to define a
- * individual instances of the <code>Job</code>. <code>JobDetail</code> instances can then be registered with the <code>Scheduler</code> via the <code>scheduleJob(JobDetail, Trigger)</code> or <code>addJob(JobDetail, boolean)</code> method.
+ * <code>Job</code> s are to be created by the 'client program', by defining a class that implements the <code>{@link org.quartz.Job}</code> interface. <code>{@link JobDetail}</code> objects are then
+ * created (also by the client) to define a individual instances of the <code>Job</code>. <code>JobDetail</code> instances can then be registered with the <code>Scheduler</code> via the
+ * <code>scheduleJob(JobDetail, Trigger)</code> or <code>addJob(JobDetail, boolean)</code> method.
  * </p>
  * <p>
- * <code>Trigger</code> s can then be defined to fire individual <code>Job</code> instances based on given schedules. <code>SimpleTrigger</code> s are most useful for one-time firings, or firing at an exact moment in time, with N repeats with a given
- * delay between them. <code>CronTrigger</code> s allow scheduling based on time of day, day of week, day of month, and month of year.
+ * <code>Trigger</code> s can then be defined to fire individual <code>Job</code> instances based on given schedules. <code>SimpleTrigger</code> s are most useful for one-time firings, or firing at an
+ * exact moment in time, with N repeats with a given delay between them. <code>CronTrigger</code> s allow scheduling based on time of day, day of week, day of month, and month of year.
  * </p>
  * <p>
- * <code>Job</code> s and <code>Trigger</code> s have a name and group associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>. The 'group' feature may be useful for creating logical groupings or
- * categorizations of <code>Jobs</code> s and <code>Triggers</code>s. If you don't have need for assigning a group to a given <code>Jobs</code> of <code>Triggers</code>, then you can use the <code>DEFAULT_GROUP</code> constant defined on this
- * interface.
+ * <code>Job</code> s and <code>Trigger</code> s have a name and group associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>. The 'group' feature may
+ * be useful for creating logical groupings or categorizations of <code>Jobs</code> s and <code>Triggers</code>s. If you don't have need for assigning a group to a given <code>Jobs</code> of
+ * <code>Triggers</code>, then you can use the <code>DEFAULT_GROUP</code> constant defined on this interface.
  * </p>
  * <p>
  * Stored <code>Job</code> s can also be 'manually' triggered through the use of the <code>triggerJob(String jobName, String jobGroup)</code> function.
  * </p>
  * <p>
- * Client programs may also be interested in the 'listener' interfaces that are available from Quartz. The <code>{@link JobListener}</code> interface provides notifications of <code>Job</code> executions. The <code>{@link TriggerListener}</code>
- * interface provides notifications of <code>Trigger</code> firings. The <code>{@link SchedulerListener}</code> interface provides notifications of <code>Scheduler</code> events and errors. Listeners can be associated with local schedulers through
- * the {@link ListenerManager} interface.
+ * Client programs may also be interested in the 'listener' interfaces that are available from Quartz. The <code>{@link JobListener}</code> interface provides notifications of <code>Job</code>
+ * executions. The <code>{@link TriggerListener}</code> interface provides notifications of <code>Trigger</code> firings. The <code>{@link SchedulerListener}</code> interface provides notifications of
+ * <code>Scheduler</code> events and errors. Listeners can be associated with local schedulers through the {@link ListenerManager} interface.
  * </p>
  * <p>
  * The setup/configuration of a <code>Scheduler</code> instance is very customizable. Please consult the documentation distributed with Quartz.
  * </p>
  * 
- * @see Job
- * @see JobDetail
- * @see JobBuilder
- * @see Trigger
- * @see TriggerBuilder
- * @see
- * @see JobListener
- * @see TriggerListener
- * @see SchedulerListener
  * @author James House
  * @author Sharada Jambula
  */
 public interface Scheduler {
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
-
-  // /**
-  // * A (possibly) useful constant that can be used for specifying the group that <code>Job</code> and <code>Trigger</code> instances belong to.
-  // */
-  // String DEFAULT_GROUP = Key.DEFAULT_GROUP;
-
-  /**
-   * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("RECOVERING_JOBS") for the name of a <code>Trigger</code>'s group.
-   * 
-   * @see org.quartz.JobDetail#requestsRecovery()
-   */
-  String DEFAULT_RECOVERY_GROUP = "RECOVERING_JOBS";
-
-  /**
-   * A constant <code>Trigger</code> group name used internally by the scheduler - clients should not use the value of this constant ("FAILED_OVER_JOBS") for the name of a <code>Trigger</code>'s group.
-   * 
-   * @see org.quartz.JobDetail#requestsRecovery()
-   */
-  String DEFAULT_FAIL_OVER_GROUP = "FAILED_OVER_JOBS";
-
-  /**
-   * A constant <code>JobDataMap</code> key that can be used to retrieve the name of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-   * 
-   * @see org.quartz.JobDetail#requestsRecovery()
-   */
-  String FAILED_JOB_ORIGINAL_TRIGGER_NAME = "QRTZ_FAILED_JOB_ORIG_TRIGGER_NAME";
-
-  /**
-   * A constant <code>JobDataMap</code> key that can be used to retrieve the group of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-   * 
-   * @see org.quartz.JobDetail#requestsRecovery()
-   */
-  String FAILED_JOB_ORIGINAL_TRIGGER_GROUP = "QRTZ_FAILED_JOB_ORIG_TRIGGER_GROUP";
-
-  /**
-   * A constant <code>JobDataMap</code> key that can be used to retrieve the scheduled fire time of the original <code>Trigger</code> from a recovery trigger's data map in the case of a job recovering after a failed scheduler instance.
-   * 
-   * @see org.quartz.JobDetail#requestsRecovery()
-   */
-  String FAILED_JOB_ORIGINAL_TRIGGER_FIRETIME_IN_MILLISECONDS = "QRTZ_FAILED_JOB_ORIG_TRIGGER_FIRETIME_IN_MILLISECONDS_AS_STRING";
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,62 +85,48 @@ public interface Scheduler {
   // /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Starts the <code>Scheduler</code>'s threads that fire <code>{@link Trigger}s</code>. When a scheduler is first created it is in "stand-by" mode, and will not fire triggers. The scheduler can also be put into stand-by mode by calling the
-   * <code>standby()</code> method.
+   * Starts the <code>Scheduler</code>'s threads that fire <code>{@link Trigger}s</code>. When a scheduler is first created it is in "stand-by" mode, and will not fire triggers. The scheduler can also
+   * be put into stand-by mode by calling the <code>standby()</code> method.
    * <p>
    * The misfire/recovery process will be started, if it is the initial call to this method on this scheduler instance.
    * </p>
    * 
    * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
-   * @see #startDelayed(int)
-   * @see #standby()
-   * @see #shutdown()
    */
   void start() throws SchedulerException;
 
   /**
-   * Calls {#start()} after the indicated number of seconds. (This call does not block). This can be useful within applications that have initializers that create the scheduler immediately, before the resources needed by the executing jobs have been
+   * Calls {#start()} after the indicated number of seconds. (This call does not block). This can be useful within applications that have initializers that create the scheduler immediately, before the
+   * resources needed by the executing jobs have been
    * fully initialized.
    * 
    * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
-   * @see #start()
-   * @see #standby()
-   * @see #shutdown()
    */
   void startDelayed(int seconds) throws SchedulerException;
 
   /**
    * Whether the scheduler has been started.
    * <p>
-   * Note: This only reflects whether <code>{@link #start()}</code> has ever been called on this Scheduler, so it will return <code>true</code> even if the <code>Scheduler</code> is currently in standby mode or has been since shutdown.
+   * Note: This only reflects whether <code>{@link #start()}</code> has ever been called on this Scheduler, so it will return <code>true</code> even if the <code>Scheduler</code> is currently in
+   * standby mode or has been since shutdown.
    * </p>
-   * 
-   * @see #start()
-   * @see #isShutdown()
-   * @see #isInStandbyMode()
    */
-  boolean isStarted() throws SchedulerException;
+  public boolean isStarted() throws SchedulerException;
 
   /**
    * Temporarily halts the <code>Scheduler</code>'s firing of <code>{@link Trigger}s</code>.
    * <p>
-   * When <code>start()</code> is called (to bring the scheduler out of stand-by mode), trigger misfire instructions will NOT be applied during the execution of the <code>start()</code> method - any misfires will be detected immediately afterward (by
-   * the <code>JobStore</code>'s normal process).
+   * When <code>start()</code> is called (to bring the scheduler out of stand-by mode), trigger misfire instructions will NOT be applied during the execution of the <code>start()</code> method - any
+   * misfires will be detected immediately afterward (by the <code>JobStore</code>'s normal process).
    * </p>
    * <p>
    * The scheduler is not destroyed, and can be re-started at any time.
    * </p>
-   * 
-   * @see #start()
-   * @see #pauseAll()
    */
   void standby() throws SchedulerException;
 
   /**
    * Reports whether the <code>Scheduler</code> is in stand-by mode.
-   * 
-   * @see #standby()
-   * @see #start()
    */
   boolean isInStandbyMode() throws SchedulerException;
 
@@ -201,8 +135,6 @@ public interface Scheduler {
    * <p>
    * The scheduler cannot be re-started.
    * </p>
-   * 
-   * @see #shutdown(boolean)
    */
   void shutdown() throws SchedulerException;
 
@@ -213,7 +145,6 @@ public interface Scheduler {
    * </p>
    * 
    * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
-   * @see #shutdown
    */
   void shutdown(boolean waitForJobsToComplete) throws SchedulerException;
 
@@ -228,11 +159,9 @@ public interface Scheduler {
    * This method is not cluster aware. That is, it will only return Jobs currently executing in this Scheduler instance, not across the entire cluster.
    * </p>
    * <p>
-   * Note that the list returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the true list of executing jobs may be different. Also please read the doc associated with <code>JobExecutionContext</code>- especially if you're
-   * using RMI.
+   * Note that the list returned is an 'instantaneous' snap-shot, and that as soon as it's returned, the true list of executing jobs may be different. Also please read the doc associated with
+   * <code>JobExecutionContext</code>- especially if you're using RMI.
    * </p>
-   * 
-   * @see JobExecutionContext
    */
   List<JobExecutionContext> getCurrentlyExecutingJobs() throws SchedulerException;
 
@@ -241,8 +170,6 @@ public interface Scheduler {
    * <p>
    * JobFactories may be of use to those wishing to have their application produce <code>Job</code> instances via some special mechanism, such as to give the opportunity for dependency injection.
    * </p>
-   * 
-   * @see org.quartz.spi.JobFactory
    */
   void setJobFactory(JobFactory factory) throws SchedulerException;
 
@@ -251,10 +178,6 @@ public interface Scheduler {
    * 
    * @return the scheduler's <code>ListenerManager</code>
    * @throws SchedulerException if the scheduler is not local
-   * @see ListenerManager
-   * @see JobListener
-   * @see TriggerListener
-   * @see SchedulerListener
    */
   ListenerManager getListenerManager() throws SchedulerException;
 
@@ -305,14 +228,15 @@ public interface Scheduler {
    * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
    * </p>
    * <p>
-   * Note that while this bulk operation is likely more efficient than invoking <code>unscheduleJob(TriggerKey triggerKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than lots
-   * of small durations of time).
+   * Note that while this bulk operation is likely more efficient than invoking <code>unscheduleJob(TriggerKey triggerKey)</code> several times, it may have the adverse affect of holding data locks
+   * for a single long duration of time (rather than lots of small durations of time).
    * </p>
    */
   boolean unscheduleJobs(List<TriggerKey> triggerKeys) throws SchedulerException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job (the new trigger must have the job name & group specified) - however, the new trigger need
+   * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job (the new trigger must have the job name &
+   * group specified) - however, the new trigger need
    * not have the same name as the old trigger.
    * 
    * @param triggerKey identity of the trigger to replace
@@ -322,7 +246,8 @@ public interface Scheduler {
   Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException;
 
   /**
-   * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a <code>Trigger</code>, or <code>Scheduler.triggerJob()</code> is called for it.
+   * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a <code>Trigger</code>, or
+   * <code>Scheduler.triggerJob()</code> is called for it.
    * <p>
    * The <code>Job</code> must by definition be 'durable', if it is not, SchedulerException will be thrown.
    * </p>
@@ -342,8 +267,8 @@ public interface Scheduler {
   /**
    * Delete the identified <code>Job</code>s from the Scheduler - and any associated <code>Trigger</code>s.
    * <p>
-   * Note that while this bulk operation is likely more efficient than invoking <code>deleteJob(JobKey jobKey)</code> several times, it may have the adverse affect of holding data locks for a single long duration of time (rather than lots of small
-   * durations of time).
+   * Note that while this bulk operation is likely more efficient than invoking <code>deleteJob(JobKey jobKey)</code> several times, it may have the adverse affect of holding data locks for a single
+   * long duration of time (rather than lots of small durations of time).
    * </p>
    * 
    * @return true if all of the Jobs were found and deleted, false if one or more were not deleted.
@@ -446,7 +371,8 @@ public interface Scheduler {
   void resumeTriggers(GroupMatcher<TriggerKey> matcher) throws SchedulerException;
 
   /**
-   * Pause all triggers - similar to calling <code>pauseTriggerGroup(group)</code> on every group, however, after using this method <code>resumeAll()</code> must be called to clear the scheduler's state of 'remembering' that all new triggers will be
+   * Pause all triggers - similar to calling <code>pauseTriggerGroup(group)</code> on every group, however, after using this method <code>resumeAll()</code> must be called to clear the scheduler's
+   * state of 'remembering' that all new triggers will be
    * paused as they are added.
    * <p>
    * When <code>resumeAll()</code> is called (to un-pause), trigger misfire instructions WILL be applied.
@@ -485,7 +411,8 @@ public interface Scheduler {
   /**
    * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
    * <p>
-   * The returned Trigger objects will be snap-shots of the actual stored triggers. If you wish to modify a trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
+   * The returned Trigger objects will be snap-shots of the actual stored triggers. If you wish to modify a trigger, you must re-store the trigger afterward (e.g. see
+   * {@link #rescheduleJob(TriggerKey, Trigger)}).
    * </p>
    */
   List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException;
@@ -512,7 +439,8 @@ public interface Scheduler {
   /**
    * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.
    * <p>
-   * The returned JobDetail object will be a snap-shot of the actual stored JobDetail. If you wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see {@link #addJob(JobDetail, boolean)}).
+   * The returned JobDetail object will be a snap-shot of the actual stored JobDetail. If you wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see
+   * {@link #addJob(JobDetail, boolean)}).
    * </p>
    */
   JobDetail getJobDetail(JobKey jobKey) throws SchedulerException;
@@ -520,7 +448,8 @@ public interface Scheduler {
   /**
    * Get the <code>{@link Trigger}</code> instance with the given key.
    * <p>
-   * The returned Trigger object will be a snap-shot of the actual stored trigger. If you wish to modify the trigger, you must re-store the trigger afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
+   * The returned Trigger object will be a snap-shot of the actual stored trigger. If you wish to modify the trigger, you must re-store the trigger afterward (e.g. see
+   * {@link #rescheduleJob(TriggerKey, Trigger)}).
    * </p>
    */
   Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException;
@@ -559,14 +488,16 @@ public interface Scheduler {
   List<String> getCalendarNames() throws SchedulerException;
 
   /**
-   * Request the interruption, within this Scheduler instance, of all currently executing instances of the identified <code>Job</code>, which must be an implementor of the <code>InterruptableJob</code> interface.
+   * Request the interruption, within this Scheduler instance, of all currently executing instances of the identified <code>Job</code>, which must be an implementor of the
+   * <code>InterruptableJob</code> interface.
    * <p>
-   * If more than one instance of the identified job is currently executing, the <code>InterruptableJob#interrupt()</code> method will be called on each instance. However, there is a limitation that in the case that <code>interrupt()</code> on one
-   * instances throws an exception, all remaining instances (that have not yet been interrupted) will not have their <code>interrupt()</code> method called.
+   * If more than one instance of the identified job is currently executing, the <code>InterruptableJob#interrupt()</code> method will be called on each instance. However, there is a limitation that
+   * in the case that <code>interrupt()</code> on one instances throws an exception, all remaining instances (that have not yet been interrupted) will not have their <code>interrupt()</code> method
+   * called.
    * </p>
    * <p>
-   * If you wish to interrupt a specific instance of a job (when more than one is executing) you can do so by calling <code>{@link #getCurrentlyExecutingJobs()}</code> to obtain a handle to the job instance, and then invoke <code>interrupt()</code>
-   * on it yourself.
+   * If you wish to interrupt a specific instance of a job (when more than one is executing) you can do so by calling <code>{@link #getCurrentlyExecutingJobs()}</code> to obtain a handle to the job
+   * instance, and then invoke <code>interrupt()</code> on it yourself.
    * </p>
    * <p>
    * This method is not cluster aware. That is, it will only interrupt instances of the identified InterruptableJob currently executing in this Scheduler instance, not across the entire cluster.

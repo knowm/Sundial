@@ -39,14 +39,4 @@ public class UnableToInterruptJobException extends SchedulerException {
     super(msg);
   }
 
-  /**
-   * <p>
-   * Create a <code>UnableToInterruptJobException</code> with the given cause.
-   * </p>
-   */
-  public UnableToInterruptJobException(Throwable cause) {
-
-    super(cause);
-  }
-
 }

@@ -18,7 +18,6 @@
 package org.quartz;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -34,6 +33,14 @@ import java.util.TimeZone;
  * </p>
  * 
  * <pre>
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * 
  * 
@@ -67,27 +74,9 @@ public class DateBuilder {
     MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
   };
 
-  public static final int SUNDAY = 1;
-
-  public static final int MONDAY = 2;
-
-  public static final int TUESDAY = 3;
-
-  public static final int WEDNESDAY = 4;
-
-  public static final int THURSDAY = 5;
-
-  public static final int FRIDAY = 6;
-
-  public static final int SATURDAY = 7;
-
   public static final long MILLISECONDS_IN_MINUTE = 60l * 1000l;
 
   public static final long MILLISECONDS_IN_HOUR = 60l * 60l * 1000l;
-
-  public static final long SECONDS_IN_MOST_DAYS = 24l * 60l * 60L;
-
-  public static final long MILLISECONDS_IN_DAY = SECONDS_IN_MOST_DAYS * 1000l;
 
   private int month;
   private int day;
@@ -162,111 +151,6 @@ public class DateBuilder {
     second = cal.get(Calendar.SECOND);
   }
 
-  /**
-   * <p>
-   * Returns a date that is rounded to the next even multiple of the given minute.
-   * </p>
-   * <p>
-   * The rules for calculating the second are the same as those for calculating the minute in the method <code>getNextGivenMinuteDate(..)<code>.
-   * </p>
-   * 
-   * @param date the Date to round, if <code>null</code> the current time will be used
-   * @param secondBase the base-second to set the time on
-   * @return the new rounded date
-   * @see #nextGivenMinuteDate(Date, int)
-   */
-  public static Date nextGivenSecondDate(Date date, int secondBase) {
-
-    if (secondBase < 0 || secondBase > 59) {
-      throw new IllegalArgumentException("secondBase must be >=0 and <= 59");
-    }
-
-    if (date == null) {
-      date = new Date();
-    }
-
-    Calendar c = Calendar.getInstance();
-    c.setTime(date);
-    c.setLenient(true);
-
-    if (secondBase == 0) {
-      c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 1);
-      c.set(Calendar.SECOND, 0);
-      c.set(Calendar.MILLISECOND, 0);
-
-      return c.getTime();
-    }
-
-    int second = c.get(Calendar.SECOND);
-
-    int arItr = second / secondBase;
-
-    int nextSecondOccurance = secondBase * (arItr + 1);
-
-    if (nextSecondOccurance < 60) {
-      c.set(Calendar.SECOND, nextSecondOccurance);
-      c.set(Calendar.MILLISECOND, 0);
-
-      return c.getTime();
-    }
-    else {
-      c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 1);
-      c.set(Calendar.SECOND, 0);
-      c.set(Calendar.MILLISECOND, 0);
-
-      return c.getTime();
-    }
-  }
-
-  public static void validateDayOfWeek(int dayOfWeek) {
-
-    if (dayOfWeek < SUNDAY || dayOfWeek > SATURDAY) {
-      throw new IllegalArgumentException("Invalid day of week.");
-    }
-  }
-
-  public static void validateHour(int hour) {
-
-    if (hour < 0 || hour > 23) {
-      throw new IllegalArgumentException("Invalid hour (must be >= 0 and <= 23).");
-    }
-  }
-
-  public static void validateMinute(int minute) {
-
-    if (minute < 0 || minute > 59) {
-      throw new IllegalArgumentException("Invalid minute (must be >= 0 and <= 59).");
-    }
-  }
-
-  public static void validateSecond(int second) {
-
-    if (second < 0 || second > 59) {
-      throw new IllegalArgumentException("Invalid second (must be >= 0 and <= 59).");
-    }
-  }
-
-  public static void validateDayOfMonth(int day) {
-
-    if (day < 1 || day > 31) {
-      throw new IllegalArgumentException("Invalid day of month.");
-    }
-  }
-
-  public static void validateMonth(int month) {
-
-    if (month < 1 || month > 12) {
-      throw new IllegalArgumentException("Invalid month (must be >= 1 and <= 12.");
-    }
-  }
-
   private static final int MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) + 100;
-
-  public static void validateYear(int year) {
-
-    if (year < 0 || year > MAX_YEAR) {
-      throw new IllegalArgumentException("Invalid year (must be >= 0 and <= " + MAX_YEAR);
-    }
-  }
 
 }

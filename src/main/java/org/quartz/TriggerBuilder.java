@@ -24,14 +24,17 @@ import org.quartz.utils.Key;
 /**
  * <code>TriggerBuilder</code> is used to instantiate {@link Trigger}s.
  * <p>
- * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>,
- * <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the
+ * methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code>
+ * implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:
  * </p>
  * 
  * <pre>
+ * 
+ * 
  * 
  * 
  * 
@@ -83,42 +86,29 @@ public class TriggerBuilder<T extends Trigger> {
    */
   public T build() {
 
-    if (scheduleBuilder == null)
+    if (scheduleBuilder == null) {
       scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+    }
     MutableTrigger trig = scheduleBuilder.build();
 
     trig.setCalendarName(calendarName);
     trig.setDescription(description);
     trig.setEndTime(endTime);
-    if (key == null)
+    if (key == null) {
       key = new TriggerKey(Key.createUniqueName(null), null);
+    }
     trig.setKey(key);
-    if (jobKey != null)
+    if (jobKey != null) {
       trig.setJobKey(jobKey);
+    }
     trig.setPriority(priority);
     trig.setStartTime(startTime);
 
-    if (!jobDataMap.isEmpty())
+    if (!jobDataMap.isEmpty()) {
       trig.setJobDataMap(jobDataMap);
+    }
 
     return (T) trig;
-  }
-
-  /**
-   * Use a <code>TriggerKey</code> with the given name and default group to identify the Trigger.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
-   * </p>
-   * 
-   * @param name the name element for the Trigger's TriggerKey
-   * @return the updated TriggerBuilder
-   * @see TriggerKey
-   * @see Trigger#getKey()
-   */
-  public TriggerBuilder<T> withIdentity(String name) {
-
-    key = new TriggerKey(name, null);
-    return this;
   }
 
   /**
@@ -198,7 +188,8 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Set the time the Trigger should start at - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger. However the Trigger will NOT fire before this time, regardless of the Trigger's schedule.
+   * Set the time the Trigger should start at - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger. However the Trigger will NOT fire before this
+   * time, regardless of the Trigger's schedule.
    * 
    * @param startTime the start time for the Trigger.
    * @return the updated TriggerBuilder
@@ -208,18 +199,6 @@ public class TriggerBuilder<T extends Trigger> {
   public TriggerBuilder<T> startAt(Date startTime) {
 
     this.startTime = startTime;
-    return this;
-  }
-
-  /**
-   * Set the time the Trigger should start at to the current moment - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getStartTime()
-   */
-  public TriggerBuilder<T> startNow() {
-
-    this.startTime = new Date();
     return this;
   }
 
@@ -270,19 +249,6 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Set the identity of the Job which should be fired by the produced Trigger - a <code>JobKey</code> will be produced with the given name and default group.
-   * 
-   * @param jobName the name of the job (in default group) to fire.
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobKey()
-   */
-  public TriggerBuilder<T> forJob(String jobName) {
-
-    this.jobKey = new JobKey(jobName, null);
-    return this;
-  }
-
-  /**
    * Set the identity of the Job which should be fired by the produced Trigger - a <code>JobKey</code> will be produced with the given name and group.
    * 
    * @param jobName the name of the job to fire.
@@ -293,94 +259,6 @@ public class TriggerBuilder<T extends Trigger> {
   public TriggerBuilder<T> forJob(String jobName, String jobGroup) {
 
     this.jobKey = new JobKey(jobName, jobGroup);
-    return this;
-  }
-
-  /**
-   * Set the identity of the Job which should be fired by the produced Trigger, by extracting the JobKey from the given job.
-   * 
-   * @param jobDetail the Job to fire.
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobKey()
-   */
-  public TriggerBuilder<T> forJob(JobDetail jobDetail) {
-
-    JobKey k = jobDetail.getKey();
-    if (k.getName() == null)
-      throw new IllegalArgumentException("The given job has not yet had a name assigned to it.");
-    this.jobKey = k;
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, String value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, Integer value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, Long value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, Float value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, Double value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the Trigger's {@link JobDataMap}.
-   * 
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
-   */
-  public TriggerBuilder<T> usingJobData(String key, Boolean value) {
-
-    jobDataMap.put(key, value);
     return this;
   }
 

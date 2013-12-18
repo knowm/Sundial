@@ -21,7 +21,8 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 /**
- * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.Job}</code> at given moments in time, defined with Unix 'cron-like' schedule definitions.
+ * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.Job}</code> at given moments in time, defined with Unix 'cron-like'
+ * schedule definitions.
  * <p>
  * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or "At 1:30am every last Friday of the month".
  * </p>
@@ -152,8 +153,8 @@ public interface CronTrigger extends Trigger {
 
   /**
    * <p>
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to have it's next-fire-time updated to the next time in the schedule after the current time (taking into account any
-   * associated <code>{@link Calendar}</code>, but it does not want to be fired now.
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to have it's next-fire-time updated to the next time in the schedule after
+   * the current time (taking into account any associated <code>{@link Calendar}</code>, but it does not want to be fired now.
    * </p>
    */
   public static final int MISFIRE_INSTRUCTION_DO_NOTHING = 2;
@@ -169,5 +170,4 @@ public interface CronTrigger extends Trigger {
 
   public String getExpressionSummary();
 
-  TriggerBuilder<CronTrigger> getTriggerBuilder();
 }

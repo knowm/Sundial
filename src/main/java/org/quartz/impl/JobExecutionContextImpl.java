@@ -100,6 +100,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getScheduler()
    */
+  @Override
   public Scheduler getScheduler() {
 
     return scheduler;
@@ -109,6 +110,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getTrigger()
    */
+  @Override
   public Trigger getTrigger() {
 
     return trigger;
@@ -118,6 +120,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getCalendar()
    */
+  @Override
   public Calendar getCalendar() {
 
     return calendar;
@@ -127,6 +130,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#isRecovering()
    */
+  @Override
   public boolean isRecovering() {
 
     return recovering;
@@ -141,6 +145,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getRefireCount()
    */
+  @Override
   public int getRefireCount() {
 
     return numRefires;
@@ -150,6 +155,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getMergedJobDataMap()
    */
+  @Override
   public JobDataMap getMergedJobDataMap() {
 
     return jobDataMap;
@@ -159,6 +165,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getJobDetail()
    */
+  @Override
   public JobDetail getJobDetail() {
 
     return jobDetail;
@@ -168,6 +175,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getJobInstance()
    */
+  @Override
   public Job getJobInstance() {
 
     return job;
@@ -177,6 +185,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getFireTime()
    */
+  @Override
   public Date getFireTime() {
 
     return fireTime;
@@ -186,6 +195,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getScheduledFireTime()
    */
+  @Override
   public Date getScheduledFireTime() {
 
     return scheduledFireTime;
@@ -195,6 +205,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getPreviousFireTime()
    */
+  @Override
   public Date getPreviousFireTime() {
 
     return prevFireTime;
@@ -204,21 +215,24 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getNextFireTime()
    */
+  @Override
   public Date getNextFireTime() {
 
     return nextFireTime;
   }
 
+  @Override
   public String toString() {
 
-    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getKey() + " fireTime: '" + getFireTime() + " scheduledFireTime: " + getScheduledFireTime() + " previousFireTime: '"
-        + getPreviousFireTime() + " nextFireTime: " + getNextFireTime() + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
+    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getKey() + " fireTime: '" + getFireTime() + " scheduledFireTime: " + getScheduledFireTime()
+        + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime() + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
   }
 
   /*
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getResult()
    */
+  @Override
   public Object getResult() {
 
     return result;
@@ -228,6 +242,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#setResult(java.lang.Object)
    */
+  @Override
   public void setResult(Object result) {
 
     this.result = result;
@@ -237,6 +252,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * (non-Javadoc)
    * @see org.quartz.JobExecutionContext#getJobRunTime()
    */
+  @Override
   public long getJobRunTime() {
 
     return jobRunTime;
@@ -250,21 +266,4 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
     this.jobRunTime = jobRunTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#put(java.lang.Object, java.lang.Object)
-   */
-  public void put(Object key, Object value) {
-
-    data.put(key, value);
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#get(java.lang.Object)
-   */
-  public Object get(Object key) {
-
-    return data.get(key);
-  }
 }

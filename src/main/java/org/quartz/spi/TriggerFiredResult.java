@@ -14,11 +14,6 @@ public class TriggerFiredResult {
     this.triggerFiredBundle = triggerFiredBundle;
   }
 
-  public TriggerFiredResult(Exception exception) {
-
-    this.exception = exception;
-  }
-
   public TriggerFiredBundle getTriggerFiredBundle() {
 
     return triggerFiredBundle;

@@ -116,12 +116,6 @@ public class QuartzSchedulerThread extends Thread {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  void setIdleWaitTime(long waitTime) {
-
-    idleWaitTime = waitTime;
-    idleWaitVariablness = (int) (waitTime * 0.2);
-  }
-
   private long getRandomizedIdleWaitTime() {
 
     return idleWaitTime - random.nextInt(idleWaitVariablness);
@@ -139,7 +133,8 @@ public class QuartzSchedulerThread extends Thread {
 
       if (paused) {
         signalSchedulingChange(0);
-      } else {
+      }
+      else {
         sigLock.notifyAll();
       }
     }
@@ -157,7 +152,8 @@ public class QuartzSchedulerThread extends Thread {
 
       if (paused) {
         sigLock.notifyAll();
-      } else {
+      }
+      else {
         signalSchedulingChange(0);
       }
     }
@@ -173,7 +169,8 @@ public class QuartzSchedulerThread extends Thread {
    * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occuring while waiting for the fire time to arrive.
    * </p>
    * 
-   * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other even (rather than scheduling a trigger), the caller should pass zero (0).
+   * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other even (rather than scheduling a trigger), the
+   *          caller should pass zero (0).
    */
   public void signalSchedulingChange(long candidateNewNextFireTime) {
 
@@ -184,7 +181,7 @@ public class QuartzSchedulerThread extends Thread {
     }
   }
 
-  public void clearSignaledSchedulingChange() {
+  private void clearSignaledSchedulingChange() {
 
     synchronized (sigLock) {
       signaled = false;
@@ -242,8 +239,9 @@ public class QuartzSchedulerThread extends Thread {
 
           clearSignaledSchedulingChange();
           try {
-            triggers = mQuartzSchedulerResources.getJobStore().acquireNextTriggers(now + idleWaitTime, Math.min(availThreadCount, mQuartzSchedulerResources.getMaxBatchSize()),
-                mQuartzSchedulerResources.getBatchTimeWindow());
+            triggers =
+                mQuartzSchedulerResources.getJobStore().acquireNextTriggers(now + idleWaitTime, Math.min(availThreadCount, mQuartzSchedulerResources.getMaxBatchSize()),
+                    mQuartzSchedulerResources.getBatchTimeWindow());
             lastAcquireFailed = false;
             if (logger.isDebugEnabled()) {
               logger.debug("batch acquisition of " + (triggers == null ? 0 : triggers.size()) + " triggers");
@@ -376,7 +374,8 @@ public class QuartzSchedulerThread extends Thread {
 
             continue; // while (!halted)
           }
-        } else { // if(availThreadCount > 0)
+        }
+        else { // if(availThreadCount > 0)
           // should never happen, if threadPool.blockForAvailableThreads() follows contract
           continue; // while (!halted)
         }
@@ -453,7 +452,8 @@ public class QuartzSchedulerThread extends Thread {
 
       if (getSignaledNextFireTime() == 0) {
         earlier = true;
-      } else if (getSignaledNextFireTime() < oldTime) {
+      }
+      else if (getSignaledNextFireTime() < oldTime) {
         earlier = true;
       }
 

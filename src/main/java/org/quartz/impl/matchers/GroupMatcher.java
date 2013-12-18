@@ -25,11 +25,6 @@ import org.quartz.utils.Key;
  */
 public class GroupMatcher<T extends Key> extends StringMatcher<T> {
 
-  protected GroupMatcher(String compareTo, StringOperatorName compareWith) {
-
-    super(compareTo, compareWith);
-  }
-
   /**
    * Create a GroupMatcher that matches groups equaling the given string.
    */
@@ -38,28 +33,9 @@ public class GroupMatcher<T extends Key> extends StringMatcher<T> {
     return new GroupMatcher(compareTo, StringOperatorName.EQUALS);
   }
 
-  /**
-   * Create a GroupMatcher that matches groups starting with the given string.
-   */
-  public static GroupMatcher groupStartsWith(String compareTo) {
+  private GroupMatcher(String compareTo, StringOperatorName compareWith) {
 
-    return new GroupMatcher(compareTo, StringOperatorName.STARTS_WITH);
-  }
-
-  /**
-   * Create a GroupMatcher that matches groups ending with the given string.
-   */
-  public static GroupMatcher groupEndsWith(String compareTo) {
-
-    return new GroupMatcher(compareTo, StringOperatorName.ENDS_WITH);
-  }
-
-  /**
-   * Create a GroupMatcher that matches groups containing the given string.
-   */
-  public static GroupMatcher groupContains(String compareTo) {
-
-    return new GroupMatcher(compareTo, StringOperatorName.CONTAINS);
+    super(compareTo, compareWith);
   }
 
   @Override

@@ -38,7 +38,8 @@ import org.quartz.impl.matchers.GroupMatcher;
 
 /**
  * <p>
- * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.Job}</code> and <code>{@link org.quartz.Trigger}</code> storage mechanism for the <code>{@link org.quartz.core.QuartzScheduler}</code>'s use.
+ * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.Job}</code> and <code>{@link org.quartz.Trigger}</code> storage mechanism for the
+ * <code>{@link org.quartz.core.QuartzScheduler}</code>'s use.
  * </p>
  * <p>
  * Storage of <code>Job</code> s and <code>Trigger</code> s should be keyed on the combination of their name and group for uniqueness.
@@ -75,11 +76,6 @@ public interface JobStore {
   void shutdown();
 
   boolean supportsPersistence();
-
-  /**
-   * How long (in milliseconds) the <code>JobStore</code> implementation estimates that it will take to release a trigger and acquire a new one.
-   */
-  long getEstimatedTimeToReleaseAndAcquireTrigger();
 
   // ///////////////////////////////////////////////////////////////////////////
   //
@@ -196,7 +192,8 @@ public interface JobStore {
    * 
    * @param calendar The <code>Calendar</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Calendar</code> existing in the <code>JobStore</code> with the same name & group should be over-written.
-   * @param updateTriggers If <code>true</code>, any <code>Trigger</code>s existing in the <code>JobStore</code> that reference an existing Calendar with the same name with have their next fire time re-computed with the new <code>Calendar</code>.
+   * @param updateTriggers If <code>true</code>, any <code>Trigger</code>s existing in the <code>JobStore</code> that reference an existing Calendar with the same name with have their next fire time
+   *          re-computed with the new <code>Calendar</code>.
    * @throws ObjectAlreadyExistsException if a <code>Calendar</code> with the same name already exists, and replaceExisting is set to false.
    */
   void storeCalendar(String name, Calendar calendar, boolean replaceExisting, boolean updateTriggers) throws ObjectAlreadyExistsException, JobPersistenceException;
@@ -226,21 +223,6 @@ public interface JobStore {
   // Informational methods
   //
   // ///////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Get the number of <code>{@link org.quartz.Job}</code> s that are stored in the <code>JobsStore</code>.
-   */
-  int getNumberOfJobs() throws JobPersistenceException;
-
-  /**
-   * Get the number of <code>{@link org.quartz.Trigger}</code> s that are stored in the <code>JobsStore</code>.
-   */
-  int getNumberOfTriggers() throws JobPersistenceException;
-
-  /**
-   * Get the number of <code>{@link org.quartz.Calendar}</code> s that are stored in the <code>JobsStore</code>.
-   */
-  int getNumberOfCalendars() throws JobPersistenceException;
 
   /**
    * Get the keys of all of the <code>{@link org.quartz.Job}</code> s that have the given group name.
@@ -422,13 +404,14 @@ public interface JobStore {
   /**
    * Inform the <code>JobStore</code> that the scheduler is now firing the given <code>Trigger</code> (executing its associated <code>Job</code>), that it had previously acquired (reserved).
    * 
-   * @return may return null if all the triggers or their calendars no longer exist, or if the trigger was not successfully put into the 'executing' state. Preference is to return an empty list if none of the triggers could be fired.
+   * @return may return null if all the triggers or their calendars no longer exist, or if the trigger was not successfully put into the 'executing' state. Preference is to return an empty list if
+   *         none of the triggers could be fired.
    */
   List<TriggerFiredResult> triggersFired(List<OperableTrigger> triggers) throws JobPersistenceException;
 
   /**
-   * Inform the <code>JobStore</code> that the scheduler has completed the firing of the given <code>Trigger</code> (and the execution of its associated <code>Job</code> completed, threw an exception, or was vetoed), and that the
-   * <code>{@link org.quartz.JobDataMap}</code> in the given <code>JobDetail</code> should be updated if the <code>Job</code> is stateful.
+   * Inform the <code>JobStore</code> that the scheduler has completed the firing of the given <code>Trigger</code> (and the execution of its associated <code>Job</code> completed, threw an exception,
+   * or was vetoed), and that the <code>{@link org.quartz.JobDataMap}</code> in the given <code>JobDetail</code> should be updated if the <code>Job</code> is stateful.
    */
   void triggeredJobComplete(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode) throws JobPersistenceException;
 

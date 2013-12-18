@@ -25,14 +25,16 @@ import org.quartz.utils.Key;
  * Keys are composed of both a name and group, and the name must be unique within the group. If only a group is specified then the default group name will be used.
  * </p>
  * <p>
- * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>,
- * <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the
+ * methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code>
+ * implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:
  * </p>
  * 
  * <pre>
+ * 
  * 
  * 
  * 
@@ -58,16 +60,6 @@ public final class JobKey extends Key<JobKey> {
   public JobKey(String name, String group) {
 
     super(name, group);
-  }
-
-  public static JobKey jobKey(String name) {
-
-    return new JobKey(name, null);
-  }
-
-  public static JobKey jobKey(String name, String group) {
-
-    return new JobKey(name, group);
   }
 
 }

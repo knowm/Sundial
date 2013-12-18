@@ -29,7 +29,6 @@ import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.TriggerUtils;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.SchedulerException;
 
@@ -38,13 +37,15 @@ import org.quartz.exceptions.SchedulerException;
  * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.JobDetail}</code> based upon repeating calendar time intervals.
  * </p>
  * <p>
- * The trigger will fire every N (see {@link #setRepeatInterval(int)} ) units of calendar time (see {@link #setRepeatIntervalUnit(IntervalUnit)}) as specified in the trigger's definition. This trigger can achieve schedules that are not possible with
- * {@link SimpleTrigger} (e.g because months are not a fixed number of seconds) or {@link CronTrigger} (e.g. because "every 5 months" is not an even divisor of 12).
+ * The trigger will fire every N (see {@link #setRepeatInterval(int)} ) units of calendar time (see {@link #setRepeatIntervalUnit(IntervalUnit)}) as specified in the trigger's definition. This trigger
+ * can achieve schedules that are not possible with {@link SimpleTrigger} (e.g because months are not a fixed number of seconds) or {@link CronTrigger} (e.g. because "every 5 months" is not an even
+ * divisor of 12).
  * </p>
  * <p>
- * If you use an interval unit of <code>MONTH</code> then care should be taken when setting a <code>startTime</code> value that is on a day near the end of the month. For example, if you choose a start time that occurs on January 31st, and have a
- * trigger with unit <code>MONTH</code> and interval <code>1</code>, then the next fire time will be February 28th, and the next time after that will be March 28th - and essentially each subsequent firing will occur on the 28th of the month, even if
- * a 31st day exists. If you want a trigger that always fires on the last day of the month - regardless of the number of days in the month, you should use <code>CronTrigger</code>.
+ * If you use an interval unit of <code>MONTH</code> then care should be taken when setting a <code>startTime</code> value that is on a day near the end of the month. For example, if you choose a
+ * start time that occurs on January 31st, and have a trigger with unit <code>MONTH</code> and interval <code>1</code>, then the next fire time will be February 28th, and the next time after that will
+ * be March 28th - and essentially each subsequent firing will occur on the 28th of the month, even if a 31st day exists. If you want a trigger that always fires on the last day of the month -
+ * regardless of the number of days in the month, you should use <code>CronTrigger</code>.
  * </p>
  * 
  * @see Trigger
@@ -104,17 +105,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * Create a <code>DateIntervalTrigger</code> that will occur immediately, and repeat at the the given interval.
    * </p>
    */
-  public CalendarIntervalTriggerImpl(String name, IntervalUnit intervalUnit, int repeatInterval) {
-
-    this(name, null, intervalUnit, repeatInterval);
-  }
-
-  /**
-   * <p>
-   * Create a <code>DateIntervalTrigger</code> that will occur immediately, and repeat at the the given interval.
-   * </p>
-   */
-  public CalendarIntervalTriggerImpl(String name, String group, IntervalUnit intervalUnit, int repeatInterval) {
+  private CalendarIntervalTriggerImpl(String name, String group, IntervalUnit intervalUnit, int repeatInterval) {
 
     this(name, group, new Date(), null, intervalUnit, repeatInterval);
   }
@@ -129,44 +120,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * @param intervalUnit The repeat interval unit (minutes, days, months, etc).
    * @param repeatInterval The number of milliseconds to pause between the repeat firing.
    */
-  public CalendarIntervalTriggerImpl(String name, Date startTime, Date endTime, IntervalUnit intervalUnit, int repeatInterval) {
-
-    this(name, null, startTime, endTime, intervalUnit, repeatInterval);
-  }
-
-  /**
-   * <p>
-   * Create a <code>DateIntervalTrigger</code> that will occur at the given time, and repeat at the the given interval until the given end time.
-   * </p>
-   * 
-   * @param startTime A <code>Date</code> set to the time for the <code>Trigger</code> to fire.
-   * @param endTime A <code>Date</code> set to the time for the <code>Trigger</code> to quit repeat firing.
-   * @param intervalUnit The repeat interval unit (minutes, days, months, etc).
-   * @param repeatInterval The number of milliseconds to pause between the repeat firing.
-   */
-  public CalendarIntervalTriggerImpl(String name, String group, Date startTime, Date endTime, IntervalUnit intervalUnit, int repeatInterval) {
+  private CalendarIntervalTriggerImpl(String name, String group, Date startTime, Date endTime, IntervalUnit intervalUnit, int repeatInterval) {
 
     super(name, group);
-
-    setStartTime(startTime);
-    setEndTime(endTime);
-    setRepeatIntervalUnit(intervalUnit);
-    setRepeatInterval(repeatInterval);
-  }
-
-  /**
-   * <p>
-   * Create a <code>DateIntervalTrigger</code> that will occur at the given time, fire the identified <code>Job</code> and repeat at the the given interval until the given end time.
-   * </p>
-   * 
-   * @param startTime A <code>Date</code> set to the time for the <code>Trigger</code> to fire.
-   * @param endTime A <code>Date</code> set to the time for the <code>Trigger</code> to quit repeat firing.
-   * @param intervalUnit The repeat interval unit (minutes, days, months, etc).
-   * @param repeatInterval The number of milliseconds to pause between the repeat firing.
-   */
-  public CalendarIntervalTriggerImpl(String name, String group, String jobName, String jobGroup, Date startTime, Date endTime, IntervalUnit intervalUnit, int repeatInterval) {
-
-    super(name, group, jobName, jobGroup);
 
     setStartTime(startTime);
     setEndTime(endTime);
@@ -186,8 +142,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
   @Override
   public Date getStartTime() {
 
-    if (startTime == null)
+    if (startTime == null) {
       startTime = new Date();
+    }
     return startTime;
   }
 
@@ -340,8 +297,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
     int instr = getMisfireInstruction();
 
-    if (instr == Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY)
+    if (instr == Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
       return;
+    }
 
     if (instr == MISFIRE_INSTRUCTION_SMART_POLICY) {
       instr = MISFIRE_INSTRUCTION_FIRE_ONCE_NOW;
@@ -353,7 +311,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
         newFireTime = getFireTimeAfter(newFireTime);
       }
       setNextFireTime(newFireTime);
-    } else if (instr == MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
+    }
+    else if (instr == MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
       // fire once now...
       setNextFireTime(new Date());
       // the new fire time afterward will magically preserve the original
@@ -365,7 +324,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
   /**
    * <p>
-   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the <code>Trigger</code> a chance to update itself for its next triggering (if any).
+   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the <code>Trigger</code> a chance to update itself for
+   * its next triggering (if any).
    * </p>
    * 
    * @see #executionComplete(JobExecutionContext, JobExecutionException)
@@ -381,8 +341,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
       nextFireTime = getFireTimeAfter(nextFireTime);
 
-      if (nextFireTime == null)
+      if (nextFireTime == null) {
         break;
+      }
 
       // avoid infinite loop
       java.util.Calendar c = java.util.Calendar.getInstance();
@@ -410,8 +371,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
       nextFireTime = getFireTimeAfter(nextFireTime);
 
-      if (nextFireTime == null)
+      if (nextFireTime == null) {
         break;
+      }
 
       // avoid infinite loop
       java.util.Calendar c = java.util.Calendar.getInstance();
@@ -431,13 +393,15 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
   /**
    * <p>
-   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated calendar.
+   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated
+   * calendar.
    * </p>
    * <p>
    * After this method has been called, <code>getNextFireTime()</code> should return a valid answer.
    * </p>
    * 
-   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>). </p>
+   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value <code>getNextFireTime()</code> will return (until after the first firing of
+   *         the <code>Trigger</code>). </p>
    */
   @Override
   public Date computeFirstFireTime(org.quartz.Calendar calendar) {
@@ -448,8 +412,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
       nextFireTime = getFireTimeAfter(nextFireTime);
 
-      if (nextFireTime == null)
+      if (nextFireTime == null) {
         break;
+      }
 
       // avoid infinite loop
       java.util.Calendar c = java.util.Calendar.getInstance();
@@ -464,8 +429,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
   /**
    * <p>
-   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be in the past, if the time that was computed for the
-   * trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of resources e.g. threads).
+   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be
+   * in the past, if the time that was computed for the trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of
+   * resources e.g. threads).
    * </p>
    * <p>
    * The value returned is not guaranteed to be valid until after the <code>Trigger</code> has been added to the scheduler.
@@ -536,7 +502,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     // comparing against a time after it!
     if (afterTime == null) {
       afterTime = new Date(System.currentTimeMillis() + 1000L);
-    } else {
+    }
+    else {
       afterTime = new Date(afterTime.getTime() + 1000L);
     }
 
@@ -566,23 +533,29 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
     if (getRepeatIntervalUnit().equals(IntervalUnit.SECOND)) {
       long jumpCount = secondsAfterStart / repeatLong;
-      if (secondsAfterStart % repeatLong != 0)
+      if (secondsAfterStart % repeatLong != 0) {
         jumpCount++;
+      }
       sTime.add(Calendar.SECOND, getRepeatInterval() * (int) jumpCount);
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.MINUTE)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.MINUTE)) {
       long jumpCount = secondsAfterStart / (repeatLong * 60L);
-      if (secondsAfterStart % (repeatLong * 60L) != 0)
+      if (secondsAfterStart % (repeatLong * 60L) != 0) {
         jumpCount++;
+      }
       sTime.add(Calendar.MINUTE, getRepeatInterval() * (int) jumpCount);
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.HOUR)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.HOUR)) {
       long jumpCount = secondsAfterStart / (repeatLong * 60L * 60L);
-      if (secondsAfterStart % (repeatLong * 60L * 60L) != 0)
+      if (secondsAfterStart % (repeatLong * 60L * 60L) != 0) {
         jumpCount++;
+      }
       sTime.add(Calendar.HOUR_OF_DAY, getRepeatInterval() * (int) jumpCount);
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.DAY)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.DAY)) {
       sTime.setLenient(true);
 
       // Because intervals greater than an hour have an non-fixed number
@@ -598,12 +571,15 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
       // if we need to make a big jump, jump most of the way there,
       // but not all the way because in some cases we may over-shoot or under-shoot
       if (jumpCount > 20) {
-        if (jumpCount < 50)
+        if (jumpCount < 50) {
           jumpCount = (long) (jumpCount * 0.80);
-        else if (jumpCount < 500)
+        }
+        else if (jumpCount < 500) {
           jumpCount = (long) (jumpCount * 0.90);
-        else
+        }
+        else {
           jumpCount = (long) (jumpCount * 0.95);
+        }
         sTime.add(java.util.Calendar.DAY_OF_YEAR, (int) (getRepeatInterval() * jumpCount));
       }
 
@@ -612,7 +588,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
         sTime.add(java.util.Calendar.DAY_OF_YEAR, getRepeatInterval());
       }
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.WEEK)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.WEEK)) {
       sTime.setLenient(true);
 
       // Because intervals greater than an hour have an non-fixed number
@@ -628,12 +605,15 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
       // if we need to make a big jump, jump most of the way there,
       // but not all the way because in some cases we may over-shoot or under-shoot
       if (jumpCount > 20) {
-        if (jumpCount < 50)
+        if (jumpCount < 50) {
           jumpCount = (long) (jumpCount * 0.80);
-        else if (jumpCount < 500)
+        }
+        else if (jumpCount < 500) {
           jumpCount = (long) (jumpCount * 0.90);
-        else
+        }
+        else {
           jumpCount = (long) (jumpCount * 0.95);
+        }
         sTime.add(java.util.Calendar.WEEK_OF_YEAR, (int) (getRepeatInterval() * jumpCount));
       }
 
@@ -641,7 +621,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
         sTime.add(java.util.Calendar.WEEK_OF_YEAR, getRepeatInterval());
       }
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.MONTH)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.MONTH)) {
       sTime.setLenient(true);
 
       // because of the large variation in size of months, and
@@ -652,7 +633,8 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
         sTime.add(java.util.Calendar.MONTH, getRepeatInterval());
       }
       time = sTime.getTime();
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.YEAR)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.YEAR)) {
 
       while (sTime.getTime().before(afterTime) && (sTime.get(java.util.Calendar.YEAR) < YEAR_TO_GIVEUP_SCHEDULING_AT)) {
         sTime.add(java.util.Calendar.YEAR, getRepeatInterval());
@@ -688,8 +670,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     fTime = getFireTimeAfter(fTime, true);
 
     // the the trigger fires at the end time, that's it!
-    if (fTime.equals(getEndTime()))
+    if (fTime.equals(getEndTime())) {
       return fTime;
+    }
 
     // otherwise we have to back up one interval from the fire time after the end time
 
@@ -699,17 +682,23 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
 
     if (getRepeatIntervalUnit().equals(IntervalUnit.SECOND)) {
       lTime.add(java.util.Calendar.SECOND, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.MINUTE)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.MINUTE)) {
       lTime.add(java.util.Calendar.MINUTE, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.HOUR)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.HOUR)) {
       lTime.add(java.util.Calendar.HOUR_OF_DAY, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.DAY)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.DAY)) {
       lTime.add(java.util.Calendar.DAY_OF_YEAR, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.WEEK)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.WEEK)) {
       lTime.add(java.util.Calendar.WEEK_OF_YEAR, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.MONTH)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.MONTH)) {
       lTime.add(java.util.Calendar.MONTH, -1 * getRepeatInterval());
-    } else if (getRepeatIntervalUnit().equals(IntervalUnit.YEAR)) {
+    }
+    else if (getRepeatIntervalUnit().equals(IntervalUnit.YEAR)) {
       lTime.add(java.util.Calendar.YEAR, -1 * getRepeatInterval());
     }
 
@@ -765,8 +754,4 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     return cb;
   }
 
-  public boolean hasAdditionalProperties() {
-
-    return false;
-  }
 }

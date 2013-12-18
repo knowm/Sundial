@@ -30,7 +30,6 @@ import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
-import org.quartz.TriggerUtils;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.OperableTrigger;
@@ -44,7 +43,8 @@ import org.quartz.utils.Key;
  * <code>Triggers</code> s have a name and group associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>.
  * </p>
  * <p>
- * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code> s are scheduled. Many <code>Trigger</code> s can point to the same <code>Job</code>, but a single <code>Trigger</code> can only point to one <code>Job</code>.
+ * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code> s are scheduled. Many <code>Trigger</code> s can point to the same <code>Job</code>, but a single <code>Trigger</code> can only
+ * point to one <code>Job</code>.
  * </p>
  * <p>
  * Triggers can 'send' parameters/data to <code>Job</code>s by placing contents into the <code>JobDataMap</code> on the <code>Trigger</code>.
@@ -100,29 +100,13 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * Create a <code>Trigger</code> with no specified name, group, or <code>{@link org.quartz.JobDetail}</code>.
    * </p>
    * <p>
-   * Note that the {@link #setName(String)},{@link #setGroup(String)}and the {@link #setJobName(String)}and {@link #setJobGroup(String)}methods must be called before the <code>Trigger</code> can be placed into a {@link Scheduler}.
+   * Note that the {@link #setName(String)},{@link #setGroup(String)}and the {@link #setJobName(String)}and {@link #setJobGroup(String)}methods must be called before the <code>Trigger</code> can be
+   * placed into a {@link Scheduler}.
    * </p>
    */
   public AbstractTrigger() {
 
     // do nothing...
-  }
-
-  /**
-   * <p>
-   * Create a <code>Trigger</code> with the given name, and default group.
-   * </p>
-   * <p>
-   * Note that the {@link #setJobName(String)}and {@link #setJobGroup(String)}methods must be called before the <code>Trigger</code> can be placed into a {@link Scheduler}.
-   * </p>
-   * 
-   * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-   * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-   */
-  public AbstractTrigger(String name) {
-
-    setName(name);
-    setGroup(null);
   }
 
   /**
@@ -414,7 +398,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
   }
 
   /**
-   * The priority of a <code>Trigger</code> acts as a tiebreaker such that if two <code>Trigger</code>s have the same scheduled fire time, then the one with the higher priority will get first access to a worker thread.
+   * The priority of a <code>Trigger</code> acts as a tiebreaker such that if two <code>Trigger</code>s have the same scheduled fire time, then the one with the higher priority will get first access
+   * to a worker thread.
    * <p>
    * If not explicitly set, the default value is <code>5</code>.
    * </p>
@@ -428,7 +413,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
   }
 
   /**
-   * The priority of a <code>Trigger</code> acts as a tie breaker such that if two <code>Trigger</code>s have the same scheduled fire time, then Quartz will do its best to give the one with the higher priority first access to a worker thread.
+   * The priority of a <code>Trigger</code> acts as a tie breaker such that if two <code>Trigger</code>s have the same scheduled fire time, then Quartz will do its best to give the one with the higher
+   * priority first access to a worker thread.
    * <p>
    * If not explicitly set, the default value is <code>5</code>.
    * </p>
@@ -446,7 +432,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * This method should not be used by the Quartz client.
    * </p>
    * <p>
-   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the <code>Trigger</code> a chance to update itself for its next triggering (if any).
+   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the <code>Trigger</code> a chance to update itself for
+   * its next triggering (if any).
    * </p>
    * 
    * @see #executionComplete(JobExecutionContext, JobExecutionException)
@@ -459,13 +446,15 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * This method should not be used by the Quartz client.
    * </p>
    * <p>
-   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated calendar.
+   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated
+   * calendar.
    * </p>
    * <p>
    * After this method has been called, <code>getNextFireTime()</code> should return a valid answer.
    * </p>
    * 
-   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>). </p>
+   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value <code>getNextFireTime()</code> will return (until after the first firing of
+   *         the <code>Trigger</code>). </p>
    */
   @Override
   public abstract Date computeFirstFireTime(Calendar calendar);
@@ -475,7 +464,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * This method should not be used by the Quartz client.
    * </p>
    * <p>
-   * Called after the <code>{@link Scheduler}</code> has executed the <code>{@link org.quartz.JobDetail}</code> associated with the <code>Trigger</code> in order to get the final instruction code from the trigger.
+   * Called after the <code>{@link Scheduler}</code> has executed the <code>{@link org.quartz.JobDetail}</code> associated with the <code>Trigger</code> in order to get the final instruction code from
+   * the trigger.
    * </p>
    * 
    * @param context is the <code>JobExecutionContext</code> that was used by the <code>Job</code>'s<code>execute(xx)</code> method.
@@ -527,8 +517,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
 
   /**
    * <p>
-   * The time at which the trigger's scheduling should start. May or may not be the first actual fire time of the trigger, depending upon the type of trigger and the settings of the other properties of the trigger. However the first actual first time
-   * will not be before this date.
+   * The time at which the trigger's scheduling should start. May or may not be the first actual fire time of the trigger, depending upon the type of trigger and the settings of the other properties
+   * of the trigger. However the first actual first time will not be before this date.
    * </p>
    * <p>
    * Setting a value in the past may cause a new trigger to compute a first fire time that is in the past, which may cause an immediate misfire of the trigger.
@@ -559,8 +549,9 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
 
   /**
    * <p>
-   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be in the past, if the time that was computed for the
-   * trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of resources e.g. threads).
+   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be
+   * in the past, if the time that was computed for the trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of
+   * resources e.g. threads).
    * </p>
    * <p>
    * The value returned is not guaranteed to be valid until after the <code>Trigger</code> has been added to the scheduler.
@@ -599,8 +590,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
 
   /**
    * <p>
-   * Set the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have defined a set of additional
-   * <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
+   * Set the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have
+   * defined a set of additional <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
    * </p>
    * <p>
    * If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.
@@ -624,8 +615,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
 
   /**
    * <p>
-   * Get the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have defined a set of additional
-   * <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
+   * Get the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have
+   * defined a set of additional <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
    * </p>
    * <p>
    * If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.
@@ -664,7 +655,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * To be implemented by the concrete class.
    * </p>
    * <p>
-   * The implementation should update the <code>Trigger</code>'s state based on the given new version of the associated <code>Calendar</code> (the state should be updated so that it's next fire time is appropriate given the Calendar's new settings).
+   * The implementation should update the <code>Trigger</code>'s state based on the given new version of the associated <code>Calendar</code> (the state should be updated so that it's next fire time
+   * is appropriate given the Calendar's new settings).
    * </p>
    * 
    * @param cal
@@ -731,7 +723,8 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
   @Override
   public String toString() {
 
-    return "Trigger '" + getFullName() + "':  triggerClass: '" + getClass().getName() + " calendar: '" + getCalendarName() + "' misfireInstruction: " + getMisfireInstruction() + " nextFireTime: " + getNextFireTime();
+    return "Trigger '" + getFullName() + "':  triggerClass: '" + getClass().getName() + " calendar: '" + getCalendarName() + "' misfireInstruction: " + getMisfireInstruction() + " nextFireTime: "
+        + getNextFireTime();
   }
 
   /**
@@ -809,8 +802,9 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
   @Override
   public TriggerBuilder<T> getTriggerBuilder() {
 
-    TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobKey()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap()).withDescription(getDescription()).endAt(getEndTime()).withIdentity(getKey())
-        .withPriority(getPriority()).startAt(getStartTime()).withSchedule(getScheduleBuilder());
+    TriggerBuilder<T> b =
+        TriggerBuilder.newTrigger().forJob(getJobKey()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap()).withDescription(getDescription()).endAt(getEndTime())
+            .withIdentity(getKey()).withPriority(getPriority()).startAt(getStartTime()).withSchedule(getScheduleBuilder());
     return b;
   }
 

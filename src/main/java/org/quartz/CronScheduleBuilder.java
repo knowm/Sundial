@@ -39,6 +39,10 @@ import org.quartz.spi.MutableTrigger;
  * 
  * 
  * 
+ * 
+ * 
+ * 
+ * 
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;)).withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
@@ -102,74 +106,6 @@ public class CronScheduleBuilder extends ScheduleBuilder<CronTrigger> {
   }
 
   /**
-   * Create a CronScheduleBuilder with a cron-expression that sets the schedule to fire every day at the given time (hour and minute).
-   * 
-   * @param hour the hour of day to fire
-   * @param minute the minute of the given hour to fire
-   * @return the new CronScheduleBuilder
-   * @throws ParseException
-   * @see CronExpression
-   */
-  public static CronScheduleBuilder dailyAtHourAndMinute(int hour, int minute) {
-
-    DateBuilder.validateHour(hour);
-    DateBuilder.validateMinute(minute);
-
-    String cronExpression = String.format("0 %d %d ? * *", minute, hour);
-
-    return new CronScheduleBuilder(cronExpression);
-  }
-
-  /**
-   * Create a CronScheduleBuilder with a cron-expression that sets the schedule to fire one per week on the given day at the given time (hour and minute).
-   * 
-   * @param dayOfWeek the day of the week to fire
-   * @param hour the hour of day to fire
-   * @param minute the minute of the given hour to fire
-   * @return the new CronScheduleBuilder
-   * @throws ParseException
-   * @see CronExpression
-   * @see DateBuilder#MONDAY
-   * @see DateBuilder#TUESDAY
-   * @see DateBuilder#WEDNESDAY
-   * @see DateBuilder#THURSDAY
-   * @see DateBuilder#FRIDAY
-   * @see DateBuilder#SATURDAY
-   * @see DateBuilder#SUNDAY
-   */
-  public static CronScheduleBuilder weeklyOnDayAndHourAndMinute(int dayOfWeek, int hour, int minute) {
-
-    DateBuilder.validateDayOfWeek(dayOfWeek);
-    DateBuilder.validateHour(hour);
-    DateBuilder.validateMinute(minute);
-
-    String cronExpression = String.format("0 %d %d ? * %d", minute, hour, dayOfWeek);
-
-    return new CronScheduleBuilder(cronExpression);
-  }
-
-  /**
-   * Create a CronScheduleBuilder with a cron-expression that sets the schedule to fire one per month on the given day of month at the given time (hour and minute).
-   * 
-   * @param dayOfMonth the day of the month to fire
-   * @param hour the hour of day to fire
-   * @param minute the minute of the given hour to fire
-   * @return the new CronScheduleBuilder
-   * @throws ParseException
-   * @see CronExpression
-   */
-  public static CronScheduleBuilder monthlyOnDayAndHourAndMinute(int dayOfMonth, int hour, int minute) {
-
-    DateBuilder.validateDayOfMonth(dayOfMonth);
-    DateBuilder.validateHour(hour);
-    DateBuilder.validateMinute(minute);
-
-    String cronExpression = String.format("0 %d %d %d * ?", minute, hour, dayOfMonth);
-
-    return new CronScheduleBuilder(cronExpression);
-  }
-
-  /**
    * The <code>TimeZone</code> in which to base the schedule.
    * 
    * @param tz the time-zone for the schedule.
@@ -179,18 +115,6 @@ public class CronScheduleBuilder extends ScheduleBuilder<CronTrigger> {
   public CronScheduleBuilder inTimeZone(TimeZone tz) {
 
     this.tz = tz;
-    return this;
-  }
-
-  /**
-   * If the Trigger misfires, use the {@link Trigger#MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY} instruction.
-   * 
-   * @return the updated CronScheduleBuilder
-   * @see Trigger#MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY
-   */
-  public CronScheduleBuilder withMisfireHandlingInstructionIgnoreMisfires() {
-
-    misfireInstruction = Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY;
     return this;
   }
 

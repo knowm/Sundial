@@ -561,7 +561,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * 
    * @param fileName meta data file name.
    */
-  public void processFileAndScheduleJobs(String fileName, Scheduler sched) throws Exception {
+  private void processFileAndScheduleJobs(String fileName, Scheduler sched) throws Exception {
 
     processFileAndScheduleJobs(fileName, getSystemIdForFileName(fileName), sched);
   }
