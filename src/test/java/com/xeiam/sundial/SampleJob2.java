@@ -32,9 +32,11 @@ public class SampleJob2 extends Job {
 
     JobContext context = getJobContext();
 
-    String value = (String) context.get("MyParam");
+    String valueAsString = context.get("MyParam");
+    logger.info("valueAsString = " + valueAsString);
 
-    logger.info("value=" + value);
+    Integer valueAsInt = Integer.valueOf(valueAsString);
+    logger.info("valueAsInt = " + valueAsInt);
 
   }
 }

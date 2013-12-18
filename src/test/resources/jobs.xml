@@ -8,12 +8,6 @@
 		<job>
 			<name>SampleJob3</name>
 			<job-class>com.xeiam.sundial.SampleJob3</job-class>
-			<job-data-map>
-				<entry>
-					<key>MyParam</key>
-					<value>ABC</value>
-				</entry>
-			</job-data-map>
 		</job>
 		<trigger>
 			<cron>
@@ -23,6 +17,26 @@
 				<cron-expression>0/45 * * * * ?</cron-expression>
 			</cron>
 		</trigger>
+
+		<job>
+			<name>SampleJob2</name>
+			<job-class>com.xeiam.sundial.SampleJob2</job-class>
+			<job-data-map>
+				<entry>
+					<key>MyParam</key>
+					<value>42</value>
+				</entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>SampleJob2-Trigger</name>
+				<group>CRON</group>
+				<job-name>SampleJob2</job-name>
+				<cron-expression>0/25 * * * * ?</cron-expression>
+			</cron>
+		</trigger>
+
 	</schedule>
 
 </job-scheduling-data>
