@@ -99,7 +99,7 @@ public class StringKeyDirtyFlagMap extends DirtyFlagMap {
    * @deprecated JDBCJobStores no longer prune out transient data. If you include non-Serializable values in the Map, you will now get an exception when attempting to store it in a database.
    */
   @Deprecated
-  public boolean containsTransientData() {
+  private boolean containsTransientData() {
 
     if (!getAllowsTransientData()) { // short circuit...
       return false;
@@ -158,111 +158,6 @@ public class StringKeyDirtyFlagMap extends DirtyFlagMap {
     }
 
     return super.put(key, value);
-  }
-
-  /**
-   * <p>
-   * Retrieve the identified <code>int</code> value from the <code>StringKeyDirtyFlagMap</code>.
-   * </p>
-   * 
-   * @throws ClassCastException if the identified object is not an Integer.
-   */
-  public int getInt(String key) {
-
-    Object obj = get(key);
-
-    try {
-      if (obj instanceof Integer) {
-        return ((Integer) obj).intValue();
-      }
-      return Integer.parseInt((String) obj);
-    } catch (Exception e) {
-      throw new ClassCastException("Identified object is not an Integer.");
-    }
-  }
-
-  /**
-   * <p>
-   * Retrieve the identified <code>long</code> value from the <code>StringKeyDirtyFlagMap</code>.
-   * </p>
-   * 
-   * @throws ClassCastException if the identified object is not a Long.
-   */
-  public long getLong(String key) {
-
-    Object obj = get(key);
-
-    try {
-      if (obj instanceof Long) {
-        return ((Long) obj).longValue();
-      }
-      return Long.parseLong((String) obj);
-    } catch (Exception e) {
-      throw new ClassCastException("Identified object is not a Long.");
-    }
-  }
-
-  /**
-   * <p>
-   * Retrieve the identified <code>float</code> value from the <code>StringKeyDirtyFlagMap</code>.
-   * </p>
-   * 
-   * @throws ClassCastException if the identified object is not a Float.
-   */
-  public float getFloat(String key) {
-
-    Object obj = get(key);
-
-    try {
-      if (obj instanceof Float) {
-        return ((Float) obj).floatValue();
-      }
-      return Float.parseFloat((String) obj);
-    } catch (Exception e) {
-      throw new ClassCastException("Identified object is not a Float.");
-    }
-  }
-
-  /**
-   * <p>
-   * Retrieve the identified <code>double</code> value from the <code>StringKeyDirtyFlagMap</code>.
-   * </p>
-   * 
-   * @throws ClassCastException if the identified object is not a Double.
-   */
-  public double getDouble(String key) {
-
-    Object obj = get(key);
-
-    try {
-      if (obj instanceof Double) {
-        return ((Double) obj).doubleValue();
-      }
-      return Double.parseDouble((String) obj);
-    } catch (Exception e) {
-      throw new ClassCastException("Identified object is not a Double.");
-    }
-  }
-
-  /**
-   * <p>
-   * Retrieve the identified <code>boolean</code> value from the <code>StringKeyDirtyFlagMap</code>.
-   * </p>
-   * 
-   * @throws ClassCastException if the identified object is not a Boolean.
-   */
-  public boolean getBoolean(String key) {
-
-    Object obj = get(key);
-
-    try {
-      if (obj instanceof Boolean) {
-        return ((Boolean) obj).booleanValue();
-      }
-      return Boolean.parseBoolean((String) obj);
-    } catch (Exception e) {
-      throw new ClassCastException("Identified object is not a Boolean.");
-    }
   }
 
   /**

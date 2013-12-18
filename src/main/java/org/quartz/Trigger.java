@@ -26,7 +26,8 @@ import java.util.Date;
  * <code>Triggers</code>s have a {@link TriggerKey} associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>.
  * </p>
  * <p>
- * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many <code>Trigger</code>s can point to the same <code>Job</code>, but a single <code>Trigger</code> can only point to one <code>Job</code>.
+ * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many <code>Trigger</code>s can point to the same <code>Job</code>, but a single <code>Trigger</code> can only
+ * point to one <code>Job</code>.
  * </p>
  * <p>
  * Triggers can 'send' parameters/data to <code>Job</code>s by placing contents into the <code>JobDataMap</code> on the <code>Trigger</code>.
@@ -55,8 +56,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * <code>NOOP</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> has no further instructions.
    * </p>
    * <p>
-   * <code>RE_EXECUTE_JOB</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> wants the <code>{@link org.quartz.JobDetail}</code> to re-execute immediately. If not in a 'RECOVERING' or 'FAILED_OVER' situation,
-   * the execution context will be re-used (giving the <code>Job</code> the ability to 'see' anything placed in the context by its last execution).
+   * <code>RE_EXECUTE_JOB</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> wants the <code>{@link org.quartz.JobDetail}</code> to re-execute immediately. If
+   * not in a 'RECOVERING' or 'FAILED_OVER' situation, the execution context will be re-used (giving the <code>Job</code> the ability to 'see' anything placed in the context by its last execution).
    * </p>
    * <p>
    * <code>SET_TRIGGER_COMPLETE</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> should be put in the <code>COMPLETE</code> state.
@@ -65,10 +66,12 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * <code>DELETE_TRIGGER</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> wants itself deleted.
    * </p>
    * <p>
-   * <code>SET_ALL_JOB_TRIGGERS_COMPLETE</code> Instructs the <code>{@link Scheduler}</code> that all <code>Trigger</code>s referencing the same <code>{@link org.quartz.JobDetail}</code> as this one should be put in the <code>COMPLETE</code> state.
+   * <code>SET_ALL_JOB_TRIGGERS_COMPLETE</code> Instructs the <code>{@link Scheduler}</code> that all <code>Trigger</code>s referencing the same <code>{@link org.quartz.JobDetail}</code> as this one
+   * should be put in the <code>COMPLETE</code> state.
    * </p>
    * <p>
-   * <code>SET_TRIGGER_ERROR</code> Instructs the <code>{@link Scheduler}</code> that all <code>Trigger</code>s referencing the same <code>{@link org.quartz.JobDetail}</code> as this one should be put in the <code>ERROR</code> state.
+   * <code>SET_TRIGGER_ERROR</code> Instructs the <code>{@link Scheduler}</code> that all <code>Trigger</code>s referencing the same <code>{@link org.quartz.JobDetail}</code> as this one should be put
+   * in the <code>ERROR</code> state.
    * </p>
    * <p>
    * <code>SET_ALL_JOB_TRIGGERS_ERROR</code> Instructs the <code>{@link Scheduler}</code> that the <code>Trigger</code> should be put in the <code>ERROR</code> state.
@@ -79,16 +82,19 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
   };
 
   /**
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>updateAfterMisfire()</code> method will be called on the <code>Trigger</code> to determine the mis-fire instruction, which logic will be
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>updateAfterMisfire()</code> method will be called on the <code>Trigger</code> to determine the mis-fire
+   * instruction, which logic will be
    * trigger-implementation-dependent.
    * <p>
-   * In order to see if this instruction fits your needs, you should look at the documentation for the <code>getSmartMisfirePolicy()</code> method on the particular <code>Trigger</code> implementation you are using.
+   * In order to see if this instruction fits your needs, you should look at the documentation for the <code>getSmartMisfirePolicy()</code> method on the particular <code>Trigger</code> implementation
+   * you are using.
    * </p>
    */
   public static final int MISFIRE_INSTRUCTION_SMART_POLICY = 0;
 
   /**
-   * Instructs the <code>{@link Scheduler}</code> that the <code>Trigger</code> will never be evaluated for a misfire situation, and that the scheduler will simply try to fire it as soon as it can, and then update the Trigger as if it had fired at
+   * Instructs the <code>{@link Scheduler}</code> that the <code>Trigger</code> will never be evaluated for a misfire situation, and that the scheduler will simply try to fire it as soon as it can,
+   * and then update the Trigger as if it had fired at
    * the proper time.
    * <p>
    * NOTE: if a trigger uses this instruction, and it has missed several of its scheduled firings, then
@@ -127,7 +133,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
   public JobDataMap getJobDataMap();
 
   /**
-   * The priority of a <code>Trigger</code> acts as a tiebreaker such that if two <code>Trigger</code>s have the same scheduled fire time, then the one with the higher priority will get first access to a worker thread.
+   * The priority of a <code>Trigger</code> acts as a tiebreaker such that if two <code>Trigger</code>s have the same scheduled fire time, then the one with the higher priority will get first access
+   * to a worker thread.
    * <p>
    * If not explicitly set, the default value is <code>5</code>.
    * </p>
@@ -157,7 +164,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
   public Date getEndTime();
 
   /**
-   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be in the past, if the time that was computed for the
+   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be
+   * in the past, if the time that was computed for the
    * trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of resources e.g. threads).
    * <p>
    * The value returned is not guaranteed to be valid until after the <code>Trigger</code> has been added to the scheduler.
@@ -186,8 +194,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
   public Date getFinalFireTime();
 
   /**
-   * Get the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have defined a set of additional
-   * <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be set as this property's value.
+   * Get the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have
+   * defined a set of additional <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be set as this property's value.
    * <p>
    * If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.
    * </p>
@@ -222,15 +230,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
   public boolean equals(Object other);
 
   /**
-   * <p>
-   * Compare the next fire time of this <code>Trigger</code> to that of another by comparing their keys, or in other words, sorts them according to the natural (i.e. alphabetical) order of their keys.
-   * </p>
-   */
-  @Override
-  public int compareTo(Trigger other);
-
-  /**
-   * A Comparator that compares trigger's next fire times, or in other words, sorts them according to earliest next fire time. If the fire times are the same, then the triggers are sorted according to priority (highest value first), if the priorities
+   * A Comparator that compares trigger's next fire times, or in other words, sorts them according to earliest next fire time. If the fire times are the same, then the triggers are sorted according to
+   * priority (highest value first), if the priorities
    * are the same, then they are sorted by key.
    */
   class TriggerTimeComparator implements Comparator<Trigger>, Serializable {

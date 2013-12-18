@@ -35,33 +35,6 @@ public abstract class StringMatcher<T extends Key> implements Matcher<T> {
 
         return value.equals(compareTo);
       }
-    },
-
-    STARTS_WITH {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.startsWith(compareTo);
-      }
-    },
-
-    ENDS_WITH {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.endsWith(compareTo);
-      }
-    },
-
-    CONTAINS {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.contains(compareTo);
-      }
     };
 
     public abstract boolean evaluate(String value, String compareTo);

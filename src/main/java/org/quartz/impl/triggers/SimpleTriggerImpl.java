@@ -427,43 +427,6 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
   }
 
   /**
-   * @see org.quartz.Trigger#updateWithNewCalendar(org.quartz.Calendar, long)
-   */
-  @Override
-  public void updateWithNewCalendar(Calendar calendar, long misfireThreshold) {
-
-    nextFireTime = getFireTimeAfter(previousFireTime);
-
-    if (nextFireTime == null || calendar == null) {
-      return;
-    }
-
-    Date now = new Date();
-    while (nextFireTime != null && !calendar.isTimeIncluded(nextFireTime.getTime())) {
-
-      nextFireTime = getFireTimeAfter(nextFireTime);
-
-      if (nextFireTime == null) {
-        break;
-      }
-
-      // avoid infinite loop
-      java.util.Calendar c = java.util.Calendar.getInstance();
-      c.setTime(nextFireTime);
-      if (c.get(java.util.Calendar.YEAR) > YEAR_TO_GIVEUP_SCHEDULING_AT) {
-        nextFireTime = null;
-      }
-
-      if (nextFireTime != null && nextFireTime.before(now)) {
-        long diff = now.getTime() - nextFireTime.getTime();
-        if (diff >= misfireThreshold) {
-          nextFireTime = getFireTimeAfter(nextFireTime);
-        }
-      }
-    }
-  }
-
-  /**
    * <p>
    * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated
    * calendar.
@@ -610,7 +573,7 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
    * Returns the last time at which the <code>SimpleTrigger</code> will fire, before the given time. If the trigger will not fire before the given time, <code>null</code> will be returned.
    * </p>
    */
-  public Date getFireTimeBefore(Date end) {
+  private Date getFireTimeBefore(Date end) {
 
     if (end.getTime() < getStartTime().getTime()) {
       return null;
@@ -621,7 +584,7 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
     return new Date(getStartTime().getTime() + (numFires * repeatInterval));
   }
 
-  public int computeNumTimesFiredBetween(Date start, Date end) {
+  private int computeNumTimesFiredBetween(Date start, Date end) {
 
     if (repeatInterval < 1) {
       return 0;

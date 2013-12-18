@@ -126,22 +126,6 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
     setGroup(group);
   }
 
-  /**
-   * <p>
-   * Create a <code>Trigger</code> with the given name, and group.
-   * </p>
-   * 
-   * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-   * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-   */
-  public AbstractTrigger(String name, String group, String jobName, String jobGroup) {
-
-    setName(name);
-    setGroup(group);
-    setJobName(jobName);
-    setJobGroup(jobGroup);
-  }
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
@@ -646,23 +630,6 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    */
   @Override
   public abstract void updateAfterMisfire(Calendar cal);
-
-  /**
-   * <p>
-   * This method should not be used by the Quartz client.
-   * </p>
-   * <p>
-   * To be implemented by the concrete class.
-   * </p>
-   * <p>
-   * The implementation should update the <code>Trigger</code>'s state based on the given new version of the associated <code>Calendar</code> (the state should be updated so that it's next fire time
-   * is appropriate given the Calendar's new settings).
-   * </p>
-   * 
-   * @param cal
-   */
-  @Override
-  public abstract void updateWithNewCalendar(Calendar cal, long misfireThreshold);
 
   /**
    * <p>

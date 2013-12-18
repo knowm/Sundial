@@ -355,7 +355,7 @@ public class CronExpression implements Serializable, Cloneable {
     }
   }
 
-  protected int storeExpressionVals(int pos, String s, int type) throws ParseException {
+  private int storeExpressionVals(int pos, String s, int type) throws ParseException {
 
     int incr = 0;
     int i = skipWhiteSpace(pos, s);
@@ -753,7 +753,7 @@ public class CronExpression implements Serializable, Cloneable {
     return buf.toString();
   }
 
-  protected int skipWhiteSpace(int i, String s) {
+  private int skipWhiteSpace(int i, String s) {
 
     for (; i < s.length() && (s.charAt(i) == ' ' || s.charAt(i) == '\t'); i++) {
       ;
@@ -920,7 +920,7 @@ public class CronExpression implements Serializable, Cloneable {
     }
   }
 
-  protected TreeSet<Integer> getSet(int type) {
+  private TreeSet<Integer> getSet(int type) {
 
     switch (type) {
     case SECOND:
@@ -1442,12 +1442,12 @@ public class CronExpression implements Serializable, Cloneable {
     return null;
   }
 
-  protected boolean isLeapYear(int year) {
+  private boolean isLeapYear(int year) {
 
     return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
   }
 
-  protected int getLastDayOfMonth(int monthNum, int year) {
+  private int getLastDayOfMonth(int monthNum, int year) {
 
     switch (monthNum) {
     case 1:

@@ -23,7 +23,8 @@ import org.quartz.Scheduler;
 import org.quartz.Trigger;
 
 /**
- * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>{@link org.quartz.JobDetail}</code>,<code>{@link Trigger}</code> or <code>{@link Calendar}</code>) in a <code>{@link Scheduler}</code> failed, because one
+ * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>{@link org.quartz.JobDetail}</code>,<code>{@link Trigger}</code> or <code>{@link Calendar}</code>) in a
+ * <code>{@link Scheduler}</code> failed, because one
  * with the same name & group already exists.
  * 
  * @author James House
@@ -33,16 +34,6 @@ public class ObjectAlreadyExistsException extends JobPersistenceException {
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-
-  /**
-   * <p>
-   * Create a <code>ObjectAlreadyExistsException</code> with the given message.
-   * </p>
-   */
-  public ObjectAlreadyExistsException(String msg) {
-
-    super(msg);
-  }
 
   /**
    * <p>
@@ -69,7 +60,8 @@ public class ObjectAlreadyExistsException extends JobPersistenceException {
    */
   public ObjectAlreadyExistsException(Trigger offendingTrigger) {
 
-    super("Unable to store Trigger with name: '" + offendingTrigger.getKey().getName() + "' and group: '" + offendingTrigger.getKey().getGroup() + "', because one already exists with this identification.");
+    super("Unable to store Trigger with name: '" + offendingTrigger.getKey().getName() + "' and group: '" + offendingTrigger.getKey().getGroup()
+        + "', because one already exists with this identification.");
   }
 
 }

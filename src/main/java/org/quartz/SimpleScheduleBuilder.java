@@ -38,6 +38,7 @@ import org.quartz.spi.MutableTrigger;
  * 
  * 
  * 
+ * 
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;)).withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
@@ -103,48 +104,6 @@ public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
   }
 
   /**
-   * Specify a repeat interval in seconds - which will then be multiplied by 1000 to produce milliseconds.
-   * 
-   * @param intervalInSeconds the number of seconds at which the trigger should repeat.
-   * @return the updated SimpleScheduleBuilder
-   * @see SimpleTrigger#getRepeatInterval()
-   * @see #withRepeatCount(int)
-   */
-  public SimpleScheduleBuilder withIntervalInSeconds(int intervalInSeconds) {
-
-    this.interval = intervalInSeconds * 1000L;
-    return this;
-  }
-
-  /**
-   * Specify a repeat interval in minutes - which will then be multiplied by 60 * 1000 to produce milliseconds.
-   * 
-   * @param intervalInMinutes the number of seconds at which the trigger should repeat.
-   * @return the updated SimpleScheduleBuilder
-   * @see SimpleTrigger#getRepeatInterval()
-   * @see #withRepeatCount(int)
-   */
-  public SimpleScheduleBuilder withIntervalInMinutes(int intervalInMinutes) {
-
-    this.interval = intervalInMinutes * DateBuilder.MILLISECONDS_IN_MINUTE;
-    return this;
-  }
-
-  /**
-   * Specify a repeat interval in minutes - which will then be multiplied by 60 * 60 * 1000 to produce milliseconds.
-   * 
-   * @param intervalInHours the number of seconds at which the trigger should repeat.
-   * @return the updated SimpleScheduleBuilder
-   * @see SimpleTrigger#getRepeatInterval()
-   * @see #withRepeatCount(int)
-   */
-  public SimpleScheduleBuilder withIntervalInHours(int intervalInHours) {
-
-    this.interval = intervalInHours * DateBuilder.MILLISECONDS_IN_HOUR;
-    return this;
-  }
-
-  /**
    * Specify a the number of time the trigger will repeat - total number of firings will be this number + 1.
    * 
    * @param repeatCount the number of seconds at which the trigger should repeat.
@@ -155,23 +114,6 @@ public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
   public SimpleScheduleBuilder withRepeatCount(int repeatCount) {
 
     this.repeatCount = repeatCount;
-    return this;
-  }
-
-  /**
-   * Specify that the trigger will repeat indefinitely.
-   * 
-   * @return the updated SimpleScheduleBuilder
-   * @see SimpleTrigger#getRepeatCount()
-   * @see SimpleTrigger#REPEAT_INDEFINITELY
-   * @see #withIntervalInMilliseconds(long)
-   * @see #withIntervalInSeconds(int)
-   * @see #withIntervalInMinutes(int)
-   * @see #withIntervalInHours(int)
-   */
-  public SimpleScheduleBuilder repeatForever() {
-
-    this.repeatCount = SimpleTrigger.REPEAT_INDEFINITELY;
     return this;
   }
 

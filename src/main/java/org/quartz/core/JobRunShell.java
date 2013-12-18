@@ -121,7 +121,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     this.jec = new JobExecutionContextImpl(scheduler, firedTriggerBundle, job);
   }
 
-  public void requestShutdown() {
+  private void requestShutdown() {
 
     shutdownRequested = true;
   }
@@ -245,11 +245,11 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     }
   }
 
-  protected void begin() throws SchedulerException {
+  private void begin() throws SchedulerException {
 
   }
 
-  protected void complete(boolean successfulExecution) throws SchedulerException {
+  private void complete(boolean successfulExecution) throws SchedulerException {
 
   }
 
@@ -323,7 +323,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     return true;
   }
 
-  public boolean completeTriggerRetryLoop(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction instCode) {
+  private boolean completeTriggerRetryLoop(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction instCode) {
 
     long count = 0;
     while (!shutdownRequested && !qs.isShuttingDown()) {
@@ -343,7 +343,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     return false;
   }
 
-  public boolean vetoedJobRetryLoop(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction instCode) {
+  private boolean vetoedJobRetryLoop(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction instCode) {
 
     while (!shutdownRequested) {
       try {

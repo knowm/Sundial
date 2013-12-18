@@ -49,7 +49,7 @@ public class StdSchedulerFactory {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  QuartzScheduler mQuartzScheduler = null;
+  private QuartzScheduler mQuartzScheduler = null;
 
   private int mThreadPoolSize = 10; // default size is 10
 
@@ -160,21 +160,24 @@ public class StdSchedulerFactory {
     } catch (SchedulerException e) {
       if (qsInited) {
         mQuartzScheduler.shutdown(false);
-      } else if (tpInited) {
+      }
+      else if (tpInited) {
         threadpool.shutdown(false);
       }
       throw e;
     } catch (RuntimeException re) {
       if (qsInited) {
         mQuartzScheduler.shutdown(false);
-      } else if (tpInited) {
+      }
+      else if (tpInited) {
         threadpool.shutdown(false);
       }
       throw re;
     } catch (Error re) {
       if (qsInited) {
         mQuartzScheduler.shutdown(false);
-      } else if (tpInited) {
+      }
+      else if (tpInited) {
         threadpool.shutdown(false);
       }
       throw re;

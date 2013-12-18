@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class SchedulerListenerSupport implements SchedulerListener {
 
-  protected final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * Get the <code>{@link org.slf4j.Logger}</code> for this class's category. This should be used by subclasses for logging.

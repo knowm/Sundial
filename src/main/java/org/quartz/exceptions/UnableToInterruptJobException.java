@@ -25,18 +25,4 @@ package org.quartz.exceptions;
  */
 public class UnableToInterruptJobException extends SchedulerException {
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
-
-  /**
-   * <p>
-   * Create a <code>UnableToInterruptJobException</code> with the given message.
-   * </p>
-   */
-  public UnableToInterruptJobException(String msg) {
-
-    super(msg);
-  }
-
 }

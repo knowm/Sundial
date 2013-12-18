@@ -92,7 +92,7 @@ public class QuartzSchedulerThread extends Thread {
    * Construct a new <code>QuartzSchedulerThread</code> for the given <code>QuartzScheduler</code> as a <code>Thread</code> with the given attributes.
    * </p>
    */
-  QuartzSchedulerThread(QuartzScheduler pQuartzScheduler, QuartzSchedulerResources pQuartzSchedulerResources, boolean setDaemon, int threadPrio) {
+  private QuartzSchedulerThread(QuartzScheduler pQuartzScheduler, QuartzSchedulerResources pQuartzSchedulerResources, boolean setDaemon, int threadPrio) {
 
     super(pQuartzScheduler.getSchedulerThreadGroup(), pQuartzSchedulerResources.getThreadName());
     mQuartzScheduler = pQuartzScheduler;

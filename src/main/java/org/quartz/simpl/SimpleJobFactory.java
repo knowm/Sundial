@@ -36,11 +36,7 @@ public class SimpleJobFactory implements JobFactory {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
-  protected Logger getLog() {
-
-    return log;
-  }
-
+  @Override
   public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler) throws SchedulerException {
 
     JobDetail jobDetail = bundle.getJobDetail();

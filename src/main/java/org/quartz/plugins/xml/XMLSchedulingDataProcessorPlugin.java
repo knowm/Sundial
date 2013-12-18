@@ -85,7 +85,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   /**
    * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
    */
-  protected Scheduler getScheduler() {
+  private Scheduler getScheduler() {
 
     return scheduler;
   }

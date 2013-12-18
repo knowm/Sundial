@@ -31,14 +31,14 @@ import org.slf4j.LoggerFactory;
  */
 public class SchedulerSignalerImpl implements SchedulerSignaler {
 
-  Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
+  private Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  protected QuartzScheduler sched;
-  protected QuartzSchedulerThread schedThread;
+  private QuartzScheduler sched;
+  private QuartzSchedulerThread schedThread;
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,6 +56,7 @@ public class SchedulerSignalerImpl implements SchedulerSignaler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
+  @Override
   public void notifyTriggerListenersMisfired(Trigger trigger) {
 
     try {
@@ -66,16 +67,19 @@ public class SchedulerSignalerImpl implements SchedulerSignaler {
     }
   }
 
+  @Override
   public void notifySchedulerListenersFinalized(Trigger trigger) {
 
     sched.notifySchedulerListenersFinalized(trigger);
   }
 
+  @Override
   public void signalSchedulingChange(long candidateNewNextFireTime) {
 
     schedThread.signalSchedulingChange(candidateNewNextFireTime);
   }
 
+  @Override
   public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
 
     sched.notifySchedulerListenersJobDeleted(jobKey);

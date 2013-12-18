@@ -52,7 +52,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
    */
   private static final long serialVersionUID = -8644953146451592766L;
 
-  protected static final int YEAR_TO_GIVEUP_SCHEDULING_AT = CronExpression.MAX_YEAR;
+  private static final int YEAR_TO_GIVEUP_SCHEDULING_AT = CronExpression.MAX_YEAR;
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -476,45 +476,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
     while (nextFireTime != null && calendar != null && !calendar.isTimeIncluded(nextFireTime.getTime())) {
       nextFireTime = getFireTimeAfter(nextFireTime);
-    }
-  }
-
-  /**
-   * @see org.quartz.Trigger#updateWithNewCalendar(org.quartz.Calendar, long)
-   */
-  @Override
-  public void updateWithNewCalendar(org.quartz.Calendar calendar, long misfireThreshold) {
-
-    nextFireTime = getFireTimeAfter(previousFireTime);
-
-    if (nextFireTime == null || calendar == null) {
-      return;
-    }
-
-    Date now = new Date();
-    while (nextFireTime != null && !calendar.isTimeIncluded(nextFireTime.getTime())) {
-
-      nextFireTime = getFireTimeAfter(nextFireTime);
-
-      if (nextFireTime == null) {
-        break;
-      }
-
-      // avoid infinite loop
-      // Use gregorian only because the constant is based on Gregorian
-      java.util.Calendar c = new java.util.GregorianCalendar();
-      c.setTime(nextFireTime);
-      if (c.get(java.util.Calendar.YEAR) > YEAR_TO_GIVEUP_SCHEDULING_AT) {
-        nextFireTime = null;
-      }
-
-      if (nextFireTime != null && nextFireTime.before(now)) {
-        long diff = now.getTime() - nextFireTime.getTime();
-        if (diff >= misfireThreshold) {
-          nextFireTime = getFireTimeAfter(nextFireTime);
-          continue;
-        }
-      }
     }
   }
 

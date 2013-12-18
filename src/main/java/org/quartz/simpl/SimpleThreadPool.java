@@ -204,12 +204,6 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   @Override
-  public void setInstanceName(String schedName) {
-
-    schedulerInstanceName = schedName;
-  }
-
-  @Override
   public void initialize() throws SchedulerConfigException {
 
     if (workers != null && workers.size() > 0) {
@@ -253,7 +247,7 @@ public class SimpleThreadPool implements ThreadPool {
     }
   }
 
-  protected List<WorkerThread> createWorkerThreads(int count) {
+  private List<WorkerThread> createWorkerThreads(int count) {
 
     workers = new LinkedList<WorkerThread>();
     for (int i = 1; i <= count; ++i) {
@@ -402,7 +396,7 @@ public class SimpleThreadPool implements ThreadPool {
     }
   }
 
-  protected void makeAvailable(WorkerThread wt) {
+  private void makeAvailable(WorkerThread wt) {
 
     synchronized (nextRunnableLock) {
       if (!isShutdown) {
@@ -413,7 +407,7 @@ public class SimpleThreadPool implements ThreadPool {
     }
   }
 
-  protected void clearFromBusyWorkersList(WorkerThread wt) {
+  private void clearFromBusyWorkersList(WorkerThread wt) {
 
     synchronized (nextRunnableLock) {
       busyWorkers.remove(wt);

@@ -153,7 +153,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * 
    * @throws ParserConfigurationException
    */
-  protected void initDocumentParser() throws ParserConfigurationException {
+  private void initDocumentParser() throws ParserConfigurationException {
 
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -210,7 +210,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     xpath.setNamespaceContext(nsContext);
   }
 
-  protected Object resolveSchemaSource() {
+  private Object resolveSchemaSource() {
 
     InputSource inputSource = null;
 
@@ -266,7 +266,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @see #processFileAndScheduleJobs(Scheduler, boolean)
    * @see #processFileAndScheduleJobs(String, Scheduler, boolean)
    */
-  protected String getSystemIdForFileName(String fileName) {
+  private String getSystemIdForFileName(String fileName) {
 
     InputStream fileInputStream = null;
     try {
@@ -320,12 +320,12 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param fileName file name.
    * @return an <code>URL</code> from the fileName as a resource.
    */
-  protected URL getURL(String fileName) {
+  private URL getURL(String fileName) {
 
     return classLoadHelper.getResource(fileName);
   }
 
-  protected void prepForProcessing() {
+  private void prepForProcessing() {
 
     clearValidationExceptions();
 
@@ -339,7 +339,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param fileName meta data file name.
    * @param systemId system ID.
    */
-  protected void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException,
+  private void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException,
       ParseException, XPathException {
 
     prepForProcessing();
@@ -541,7 +541,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
   }
 
-  protected String getTrimmedToNullString(XPath xpath, String elementName, Node parentNode) throws XPathExpressionException {
+  private String getTrimmedToNullString(XPath xpath, String elementName, Node parentNode) throws XPathExpressionException {
 
     String str = (String) xpath.evaluate(elementName, parentNode, XPathConstants.STRING);
 
@@ -584,7 +584,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * 
    * @return a <code>List</code> of jobs.
    */
-  protected List<JobDetail> getLoadedJobs() {
+  private List<JobDetail> getLoadedJobs() {
 
     return Collections.unmodifiableList(loadedJobs);
   }
@@ -595,7 +595,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * 
    * @return a <code>List</code> of triggers.
    */
-  protected List<Trigger> getLoadedTriggers() {
+  private List<Trigger> getLoadedTriggers() {
 
     return Collections.unmodifiableList(loadedTriggers);
   }
@@ -606,7 +606,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param fileName file name.
    * @return an <code>InputStream</code> from the fileName as a resource.
    */
-  protected InputStream getInputStream(String fileName) {
+  private InputStream getInputStream(String fileName) {
 
     return this.classLoadHelper.getResourceAsStream(fileName);
   }
