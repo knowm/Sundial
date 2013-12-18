@@ -84,24 +84,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     setTimeZone(TimeZone.getDefault());
   }
 
-  /**
-   * <p>
-   * Create a <code>CronTrigger</code> with the given name and group.
-   * </p>
-   * <p>
-   * The start-time will also be set to the current time, and the time zone will be set the the system's default time zone.
-   * </p>
-   * 
-   * @deprecated use a TriggerBuilder instead
-   */
-  @Deprecated
-  private CronTriggerImpl(String name, String group) {
-
-    super(name, group);
-    setStartTime(new Date());
-    setTimeZone(TimeZone.getDefault());
-  }
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
@@ -404,60 +386,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     else if (instr == MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
       setNextFireTime(new Date());
     }
-  }
-
-  /**
-   * <p>
-   * Determines whether the date and (optionally) time of the given Calendar instance falls on a scheduled fire-time of this trigger.
-   * </p>
-   * <p>
-   * Note that the value returned is NOT validated against the related org.quartz.Calendar (if any)
-   * </p>
-   * 
-   * @param test the date to compare
-   * @param dayOnly if set to true, the method will only determine if the trigger will fire during the day represented by the given Calendar (hours, minutes and seconds will be ignored).
-   * @see #willFireOn(Calendar)
-   */
-  private boolean willFireOn(Calendar test, boolean dayOnly) {
-
-    test = (Calendar) test.clone();
-
-    test.set(Calendar.MILLISECOND, 0); // don't compare millis.
-
-    if (dayOnly) {
-      test.set(Calendar.HOUR_OF_DAY, 0);
-      test.set(Calendar.MINUTE, 0);
-      test.set(Calendar.SECOND, 0);
-    }
-
-    Date testTime = test.getTime();
-
-    Date fta = getFireTimeAfter(new Date(test.getTime().getTime() - 1000));
-
-    if (fta == null) {
-      return false;
-    }
-
-    Calendar p = Calendar.getInstance(test.getTimeZone());
-    p.setTime(fta);
-
-    int year = p.get(Calendar.YEAR);
-    int month = p.get(Calendar.MONTH);
-    int day = p.get(Calendar.DATE);
-
-    if (dayOnly) {
-      return (year == test.get(Calendar.YEAR) && month == test.get(Calendar.MONTH) && day == test.get(Calendar.DATE));
-    }
-
-    while (fta.before(testTime)) {
-      fta = getFireTimeAfter(fta);
-    }
-
-    if (fta.equals(testTime)) {
-      return true;
-    }
-
-    return false;
   }
 
   /**

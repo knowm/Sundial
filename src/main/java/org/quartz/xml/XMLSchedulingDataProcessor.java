@@ -25,14 +25,8 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 import static org.quartz.TriggerKey.triggerKey;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -256,74 +250,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-
-  /**
-   * For the given <code>fileName</code>, attempt to expand it to its full path for use as a system id.
-   * 
-   * @see #getURL(String)
-   * @see #processFile()
-   * @see #processFile(String)
-   * @see #processFileAndScheduleJobs(Scheduler, boolean)
-   * @see #processFileAndScheduleJobs(String, Scheduler, boolean)
-   */
-  private String getSystemIdForFileName(String fileName) {
-
-    InputStream fileInputStream = null;
-    try {
-      String urlPath = null;
-
-      File file = new File(fileName); // files in filesystem
-      if (!file.exists()) {
-        URL url = getURL(fileName);
-        if (url != null) {
-          try {
-            urlPath = URLDecoder.decode(url.getPath(), "UTF-8");
-          } catch (UnsupportedEncodingException e) {
-            loggger.warn("Unable to decode file path URL", e);
-          }
-          try {
-            if (url != null) {
-              fileInputStream = url.openStream();
-            }
-          } catch (IOException ignore) {
-          }
-        }
-      }
-      else {
-        try {
-          fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException ignore) {
-        }
-      }
-
-      if (fileInputStream == null) {
-        loggger.debug("Unable to resolve '" + fileName + "' to full path, so using it as is for system id.");
-        return fileName;
-      }
-      else {
-        return (urlPath != null) ? urlPath : file.getAbsolutePath();
-      }
-    } finally {
-      try {
-        if (fileInputStream != null) {
-          fileInputStream.close();
-        }
-      } catch (IOException ioe) {
-        loggger.warn("Error closing jobs file: " + fileName, ioe);
-      }
-    }
-  }
-
-  /**
-   * Returns an <code>URL</code> from the fileName as a resource.
-   * 
-   * @param fileName file name.
-   * @return an <code>URL</code> from the fileName as a resource.
-   */
-  private URL getURL(String fileName) {
-
-    return classLoadHelper.getResource(fileName);
-  }
 
   private void prepForProcessing() {
 
@@ -554,16 +480,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     return str;
-  }
-
-  /**
-   * Process the xml file in the given location, and schedule all of the jobs defined within it.
-   * 
-   * @param fileName meta data file name.
-   */
-  private void processFileAndScheduleJobs(String fileName, Scheduler sched) throws Exception {
-
-    processFileAndScheduleJobs(fileName, getSystemIdForFileName(fileName), sched);
   }
 
   /**

@@ -99,36 +99,6 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     super();
   }
 
-  /**
-   * <p>
-   * Create a <code>DateIntervalTrigger</code> that will occur immediately, and repeat at the the given interval.
-   * </p>
-   */
-  private CalendarIntervalTriggerImpl(String name, String group, IntervalUnit intervalUnit, int repeatInterval) {
-
-    this(name, group, new Date(), null, intervalUnit, repeatInterval);
-  }
-
-  /**
-   * <p>
-   * Create a <code>DateIntervalTrigger</code> that will occur at the given time, and repeat at the the given interval until the given end time.
-   * </p>
-   * 
-   * @param startTime A <code>Date</code> set to the time for the <code>Trigger</code> to fire.
-   * @param endTime A <code>Date</code> set to the time for the <code>Trigger</code> to quit repeat firing.
-   * @param intervalUnit The repeat interval unit (minutes, days, months, etc).
-   * @param repeatInterval The number of milliseconds to pause between the repeat firing.
-   */
-  private CalendarIntervalTriggerImpl(String name, String group, Date startTime, Date endTime, IntervalUnit intervalUnit, int repeatInterval) {
-
-    super(name, group);
-
-    setStartTime(startTime);
-    setEndTime(endTime);
-    setRepeatIntervalUnit(intervalUnit);
-    setRepeatInterval(repeatInterval);
-  }
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */

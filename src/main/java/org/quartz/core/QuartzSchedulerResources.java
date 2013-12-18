@@ -184,7 +184,8 @@ public class QuartzSchedulerResources {
 
   /**
    * <p>
-   * Add the given <code>{@link org.quartz.spi.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects the plugin's "initialize" method to be invoked externally (either before or after this method is called).
+   * Add the given <code>{@link org.quartz.spi.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects the plugin's "initialize" method to be invoked
+   * externally (either before or after this method is called).
    * </p>
    */
   public void addSchedulerPlugin(SchedulerPlugin plugin) {
@@ -219,7 +220,7 @@ public class QuartzSchedulerResources {
    */
   public void setMakeSchedulerThreadDaemon(boolean makeSchedulerThreadDaemon) {
 
-    makeSchedulerThreadDaemon = makeSchedulerThreadDaemon;
+    this.makeSchedulerThreadDaemon = makeSchedulerThreadDaemon;
   }
 
   /**
