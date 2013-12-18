@@ -59,7 +59,7 @@ import org.quartz.utils.Key;
  * @author James House
  * @author Sharada Jambula
  */
-public abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
+abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
 
   private static final long serialVersionUID = -3904243490805975570L;
 

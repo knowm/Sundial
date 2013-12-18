@@ -175,14 +175,6 @@ public interface JobStore {
   Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws JobPersistenceException;
 
   /**
-   * Get the names of all of the <code>{@link org.quartz.Trigger}</code> s that have the given group name.
-   * <p>
-   * If there are no triggers in the given group name, the result should be a zero-length array (not <code>null</code>).
-   * </p>
-   */
-  Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws JobPersistenceException;
-
-  /**
    * Get all of the Triggers that are associated to the given Job.
    * <p>
    * If there are no matches, a zero-length array should be returned.
@@ -195,23 +187,6 @@ public interface JobStore {
   // Trigger State manipulation methods
   //
   // ///////////////////////////////////////////////////////////////////////////
-
-  /**
-   * Pause the <code>{@link org.quartz.Trigger}</code> with the given key.
-   * 
-   * @see #resumeTrigger(TriggerKey)
-   */
-  void pauseTrigger(TriggerKey triggerKey) throws JobPersistenceException;
-
-  /**
-   * Resume (un-pause) the <code>{@link org.quartz.Trigger}</code> with the given key.
-   * <p>
-   * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-   * </p>
-   * 
-   * @see #pauseTrigger(TriggerKey)
-   */
-  void resumeTrigger(TriggerKey triggerKey) throws JobPersistenceException;
 
   // ///////////////////////////////////////////////////////////////////////////
   //

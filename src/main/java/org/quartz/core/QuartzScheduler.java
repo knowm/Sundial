@@ -977,7 +977,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifyJobListenersWasExecuted(JobExecutionContext jec, JobExecutionException je) throws SchedulerException {
+  void notifyJobListenersWasExecuted(JobExecutionContext jec, JobExecutionException je) throws SchedulerException {
 
     // build a list of all job listeners that are to be notified...
     List<JobListener> jobListeners = buildJobListenerList();

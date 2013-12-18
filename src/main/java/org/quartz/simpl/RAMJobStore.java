@@ -18,7 +18,6 @@
 package org.quartz.simpl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -536,54 +535,6 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Get the names of all of the <code>{@link org.quartz.Trigger}</code> s that match the given groupMatcher.
-   * </p>
-   */
-  @Override
-  public Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) {
-
-    Set<TriggerKey> outList = null;
-    synchronized (lock) {
-
-      StringMatcher.StringOperatorName operator = matcher.getCompareWithOperator();
-      String compareToValue = matcher.getCompareToValue();
-
-      switch (operator) {
-      case EQUALS:
-        HashMap<TriggerKey, TriggerWrapper> grpMap = triggersByGroup.get(compareToValue);
-        if (grpMap != null) {
-          outList = new HashSet<TriggerKey>();
-
-          for (TriggerWrapper tw : grpMap.values()) {
-
-            if (tw != null) {
-              outList.add(tw.trigger.getKey());
-            }
-          }
-        }
-        break;
-
-      default:
-        for (Map.Entry<String, HashMap<TriggerKey, TriggerWrapper>> entry : triggersByGroup.entrySet()) {
-          if (operator.evaluate(entry.getKey(), compareToValue) && entry.getValue() != null) {
-            if (outList == null) {
-              outList = new HashSet<TriggerKey>();
-            }
-            for (TriggerWrapper triggerWrapper : entry.getValue().values()) {
-              if (triggerWrapper != null) {
-                outList.add(triggerWrapper.trigger.getKey());
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return outList == null ? Collections.<TriggerKey> emptySet() : outList;
-  }
-
-  /**
-   * <p>
    * Get all of the Triggers that are associated to the given Job.
    * </p>
    * <p>
@@ -621,79 +572,6 @@ public class RAMJobStore implements JobStore {
     }
 
     return trigList;
-  }
-
-  /**
-   * <p>
-   * Pause the <code>{@link Trigger}</code> with the given name.
-   * </p>
-   */
-  @Override
-  public void pauseTrigger(TriggerKey triggerKey) {
-
-    synchronized (lock) {
-      TriggerWrapper tw = triggersByKey.get(triggerKey);
-
-      // does the trigger exist?
-      if (tw == null || tw.trigger == null) {
-        return;
-      }
-
-      // if the trigger is "complete" pausing it does not make sense...
-      if (tw.state == TriggerWrapper.STATE_COMPLETE) {
-        return;
-      }
-
-      if (tw.state == TriggerWrapper.STATE_BLOCKED) {
-        tw.state = TriggerWrapper.STATE_PAUSED_BLOCKED;
-      }
-      else {
-        tw.state = TriggerWrapper.STATE_PAUSED;
-      }
-
-      timeTriggers.remove(tw);
-    }
-  }
-
-  /**
-   * <p>
-   * Resume (un-pause) the <code>{@link Trigger}</code> with the given key.
-   * </p>
-   * <p>
-   * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-   * </p>
-   */
-  @Override
-  public void resumeTrigger(TriggerKey triggerKey) {
-
-    synchronized (lock) {
-      TriggerWrapper tw = triggersByKey.get(triggerKey);
-
-      // does the trigger exist?
-      if (tw == null || tw.trigger == null) {
-        return;
-      }
-
-      OperableTrigger trig = tw.getTrigger();
-
-      // if the trigger is not paused resuming it does not make sense...
-      if (tw.state != TriggerWrapper.STATE_PAUSED && tw.state != TriggerWrapper.STATE_PAUSED_BLOCKED) {
-        return;
-      }
-
-      if (blockedJobs.contains(trig.getJobKey())) {
-        tw.state = TriggerWrapper.STATE_BLOCKED;
-      }
-      else {
-        tw.state = TriggerWrapper.STATE_WAITING;
-      }
-
-      applyMisfire(tw);
-
-      if (tw.state == TriggerWrapper.STATE_WAITING) {
-        timeTriggers.add(tw);
-      }
-    }
   }
 
   private boolean applyMisfire(TriggerWrapper tw) {
