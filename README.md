@@ -8,7 +8,7 @@ nitty-gritty configuration details of Quartz, reducing the time
 needed to get a simple RAM job scheduler up and running. Sundial
 uses a ThreadLocal wrapper for each job containing a HashMap for
 job key-value pairs. Convenience methods allow easy access to these
-parameters. JobActions are reusable conponents that also have
+parameters. JobActions are reusable components that also have
 access to the context parameters. If you are looking 
 for an all-Java job scheduling framework that is easy to integrate
 into your applications, Sundial is for you.
