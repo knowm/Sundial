@@ -26,14 +26,16 @@ import org.quartz.spi.MutableTrigger;
 /**
  * <code>CronScheduleBuilder</code> is a {@link ScheduleBuilder} that defines {@link CronExpression}-based schedules for <code>Trigger</code>s.
  * <p>
- * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>,
- * <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the
+ * methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code>
+ * implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:
  * </p>
  * 
  * <pre>
+ * 
  * 
  * 
  * 
@@ -68,6 +70,7 @@ public class CronScheduleBuilder extends ScheduleBuilder<CronTrigger> {
    * 
    * @see TriggerBuilder#withSchedule(ScheduleBuilder)
    */
+  @Override
   public MutableTrigger build() {
 
     CronTriggerImpl ct = new CronTriggerImpl();
