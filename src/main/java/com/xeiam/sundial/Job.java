@@ -41,7 +41,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
   }
 
   @Override
-  public final void execute(JobExecutionContext pJobExecutionContext) throws JobExecutionException {
+  public final void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
     // check for global lock
     if (SundialJobScheduler.getGlobalLock()) {
@@ -51,7 +51,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
     try {
 
-      initContextContainer(pJobExecutionContext);
+      initContextContainer(jobExecutionContext);
 
       doRun();
 

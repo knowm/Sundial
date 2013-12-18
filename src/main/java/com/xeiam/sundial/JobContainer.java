@@ -42,10 +42,10 @@ public abstract class JobContainer {
    * 
    * @param pJobContext
    */
-  protected void initContextContainer(JobExecutionContext pJobExecutionContext) {
+  protected void initContextContainer(JobExecutionContext jobExecutionContext) {
 
     JobContext lJobContext = new JobContext();
-    lJobContext.addQuartzContext(pJobExecutionContext);
+    lJobContext.addQuartzContext(jobExecutionContext);
     sContextContainer.set(lJobContext);
   }
 

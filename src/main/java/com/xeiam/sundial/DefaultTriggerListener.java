@@ -37,15 +37,15 @@ public class DefaultTriggerListener implements TriggerListener {
    * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
    */
   @Override
-  public boolean vetoJobExecution(Trigger pTrigger, JobExecutionContext pJobExecutionContext) {
+  public boolean vetoJobExecution(Trigger trigger, JobExecutionContext jobExecutionContext) {
 
-    String lConcurrency = (String) pJobExecutionContext.getJobDetail().getJobDataMap().get("Concurrency");
-    if (lConcurrency != null && lConcurrency.equals("Y")) {
+    String concurrency = (String) jobExecutionContext.getJobDetail().getJobDataMap().get("Concurrency");
+    if (concurrency != null && concurrency.equals("Y")) {
       logger.debug("Concurrency allowed. Not Vetoing!");
       return false;
     }
 
-    String newJobName = pJobExecutionContext.getJobDetail().getKey().getName();
+    String newJobName = jobExecutionContext.getJobDetail().getKey().getName();
     // logger.debug(JobClass);
 
     try {

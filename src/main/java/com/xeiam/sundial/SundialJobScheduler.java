@@ -45,12 +45,12 @@ public class SundialJobScheduler {
   static Logger logger = LoggerFactory.getLogger(SundialJobScheduler.class);
 
   /** Quartz scheduler */
-  private static Scheduler mScheduler = null;
+  private static Scheduler scheduler = null;
 
   /** global lock */
-  private static boolean mGlobalLock = false;
+  private static boolean globalLock = false;
 
-  private static ServletContext mServletContext = null;
+  private static ServletContext servletContext = null;
 
   /**
    * Gets the underlying Sundial scheduler
@@ -59,29 +59,29 @@ public class SundialJobScheduler {
    */
   public static Scheduler getScheduler() {
 
-    if (mScheduler == null) {
-      mScheduler = createScheduler(10);
+    if (scheduler == null) {
+      scheduler = createScheduler(10);
     }
-    return mScheduler;
+    return scheduler;
   }
 
   /**
    * Creates the Sundial Scheduler
    * 
-   * @param pThreadPoolSize
+   * @param threadPoolSize
    * @return
    */
-  public static Scheduler createScheduler(int pThreadPoolSize) {
+  public static Scheduler createScheduler(int threadPoolSize) {
 
-    if (mScheduler == null) {
+    if (scheduler == null) {
       try {
-        mScheduler = new StdSchedulerFactory().getScheduler(pThreadPoolSize);
+        scheduler = new StdSchedulerFactory().getScheduler(threadPoolSize);
 
       } catch (SchedulerException e) {
         logger.error("COULD NOT CREATE QUARTZ SCHEDULER!!!" + e);
       }
     }
-    return mScheduler;
+    return scheduler;
   }
 
   /**
@@ -99,22 +99,22 @@ public class SundialJobScheduler {
 
   public static void toggleGlobalLock() {
 
-    mGlobalLock = !mGlobalLock;
+    globalLock = !globalLock;
   }
 
   public static void lockScheduler() {
 
-    mGlobalLock = true;
+    globalLock = true;
   }
 
   public static void unlockScheduler() {
 
-    mGlobalLock = false;
+    globalLock = false;
   }
 
   public static boolean getGlobalLock() {
 
-    return mGlobalLock;
+    return globalLock;
   }
 
   /**
@@ -122,26 +122,26 @@ public class SundialJobScheduler {
    */
   public static ServletContext getServletContext() {
 
-    return mServletContext;
+    return servletContext;
   }
 
   /**
-   * @param mServletContext the mServletContext to set
+   * @param servletContext the mServletContext to set
    */
-  public static void setServletContext(ServletContext mServletContext) {
+  public static void setServletContext(ServletContext servletContext) {
 
-    SundialJobScheduler.mServletContext = mServletContext;
+    SundialJobScheduler.servletContext = servletContext;
   }
 
   /**
    * Starts a Job matching the the given Job Name found in jobs.xml
    * 
-   * @param pJobName
+   * @param jobName
    */
-  public static void startJob(String pJobName) {
+  public static void startJob(String jobName) {
 
     try {
-      JobKey jobKey = new JobKey(pJobName);
+      JobKey jobKey = new JobKey(jobName);
       getScheduler().triggerJob(jobKey, null);
     } catch (SchedulerException e) {
       logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
@@ -152,20 +152,20 @@ public class SundialJobScheduler {
   /**
    * Starts a Job matching the the given Job Name found in jobs.xml
    * 
-   * @param pJobName
+   * @param jobName
    */
-  public static void startJob(String pJobName, Map<String, Object> pParams) {
+  public static void startJob(String jobName, Map<String, Object> params) {
 
     try {
 
-      JobDataMap lJobDataMap = new JobDataMap();
-      for (String key : pParams.keySet()) {
+      JobDataMap jobDataMap = new JobDataMap();
+      for (String key : params.keySet()) {
         // logger.debug("key= " + key);
         // logger.debug("value= " + pParams.get(key));
-        lJobDataMap.put(key, pParams.get(key));
+        jobDataMap.put(key, params.get(key));
       }
-      JobKey jobKey = new JobKey(pJobName);
-      getScheduler().triggerJob(jobKey, lJobDataMap);
+      JobKey jobKey = new JobKey(jobName);
+      getScheduler().triggerJob(jobKey, jobDataMap);
     } catch (SchedulerException e) {
       logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
     }
@@ -175,18 +175,18 @@ public class SundialJobScheduler {
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name
    * 
-   * @param pJobName
+   * @param jobName
    */
-  public static void stopJob(String pJobName) {
+  public static void stopJob(String jobName) {
 
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
-      for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = lJobExecutionContext.getJobDetail().getKey().getName();
-        if (currentlyExecutingJobName.equals(pJobName)) {
+      for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching Job found. Now Stopping!");
-          if (lJobExecutionContext.getJobInstance() instanceof Job) {
-            ((Job) lJobExecutionContext.getJobInstance()).interrupt();
+          if (jobExecutionContext.getJobInstance() instanceof Job) {
+            ((Job) jobExecutionContext.getJobInstance()).interrupt();
           }
           else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
@@ -204,22 +204,22 @@ public class SundialJobScheduler {
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name, key and value
    * 
-   * @param pJobName
+   * @param jobName
    */
-  public static void stopJob(String pJobName, String pKey, String pValue) {
+  public static void stopJob(String jobName, String key, String pValue) {
 
-    logger.debug("key= " + pKey);
+    logger.debug("key= " + key);
     logger.debug("value= " + pValue);
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
-      for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = lJobExecutionContext.getJobDetail().getKey().getName();
-        if (currentlyExecutingJobName.equals(pJobName)) {
-          if (lJobExecutionContext.getJobInstance() instanceof Job) {
-            JobDataMap lJobDataMap = lJobExecutionContext.getMergedJobDataMap();
-            String value = lJobDataMap.getString(pKey);
+      for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        if (currentlyExecutingJobName.equals(jobName)) {
+          if (jobExecutionContext.getJobInstance() instanceof Job) {
+            JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
+            String value = jobDataMap.getString(key);
             if (value != null & value.equalsIgnoreCase(pValue)) {
-              ((Job) lJobExecutionContext.getJobInstance()).interrupt();
+              ((Job) jobExecutionContext.getJobInstance()).interrupt();
             }
           }
           else {
@@ -242,18 +242,18 @@ public class SundialJobScheduler {
    */
   public static List<String> getAllJobNames() {
 
-    List<String> lAllJobNames = new ArrayList<String>();
+    List<String> allJobNames = new ArrayList<String>();
     try {
       Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
       for (JobKey jobKey : allJobKeys) {
-        lAllJobNames.add(jobKey.getName());
+        allJobNames.add(jobKey.getName());
       }
     } catch (SchedulerException e) {
       logger.error("COULD NOT GET JOB NAMES!!!" + e);
     }
-    Collections.sort(lAllJobNames);
+    Collections.sort(allJobNames);
 
-    return lAllJobNames;
+    return allJobNames;
   }
 
   /**
@@ -263,27 +263,27 @@ public class SundialJobScheduler {
    */
   public static Map<String, List<Trigger>> getAllJobsAndTriggers() {
 
-    Map<String, List<Trigger>> lAllJobsMap = new TreeMap<String, List<Trigger>>();
+    Map<String, List<Trigger>> allJobsMap = new TreeMap<String, List<Trigger>>();
     try {
       Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
-      for (JobKey lJobKey : allJobKeys) {
-        List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(lJobKey);
-        lAllJobsMap.put(lJobKey.getName(), lTriggers);
+      for (JobKey jobKey : allJobKeys) {
+        List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
+        allJobsMap.put(jobKey.getName(), lTriggers);
       }
 
     } catch (SchedulerException e) {
       logger.error("COULD NOT GET JOB NAMES!!!" + e);
     }
-    return lAllJobsMap;
+    return allJobsMap;
   }
 
-  public static boolean isJobRunning(String pJobName) {
+  public static boolean isJobRunning(String jobName) {
 
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
-      for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = lJobExecutionContext.getJobDetail().getKey().getName();
-        if (currentlyExecutingJobName.equals(pJobName)) {
+      for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching running Job found!");
           return true;
         }

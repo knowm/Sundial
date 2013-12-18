@@ -61,11 +61,11 @@ public class SundialInitializerListener implements ServletContextListener {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Override
-  public void contextInitialized(ServletContextEvent pServletContextEvent) {
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
 
     logger.info("Sundial Initializer Servlet loaded, initializing Scheduler...");
 
-    ServletContext servletContext = pServletContextEvent.getServletContext();
+    ServletContext servletContext = servletContextEvent.getServletContext();
     try {
 
       String shutdownPrefString = servletContext.getInitParameter("shutdown-on-unload");

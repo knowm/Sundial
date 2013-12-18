@@ -66,37 +66,37 @@ public class JobContext {
   /**
    * Add a key/value pair to the JobContext
    * 
-   * @param pKey
-   * @param pValue
+   * @param key
+   * @param value
    */
-  public void put(String pKey, Object pValue) {
+  public void put(String key, Object value) {
 
-    map.put(pKey, pValue);
+    map.put(key, value);
   }
 
   /**
    * Get a value from a key out of the JobContext
    * 
-   * @param pKey
+   * @param key
    * @return
    */
   @SuppressWarnings("unchecked")
-  public <T> T get(String pKey) {
+  public <T> T get(String key) {
 
-    T value = (T) map.get(pKey);
+    T value = (T) map.get(key);
     return value;
   }
 
   /**
    * Get a required value from a key out of the Job Context
    * 
-   * @param pKey
+   * @param key
    * @return
    */
   @SuppressWarnings("unchecked")
-  public <T> T getRequiredValue(String pKey) {
+  public <T> T getRequiredValue(String key) {
 
-    T value = (T) map.get(pKey);
+    T value = (T) map.get(key);
     if (value == null) {
       throw new RequiredParameterException();
     }
