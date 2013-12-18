@@ -90,28 +90,6 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
     super();
   }
 
-  /**
-   * <p>
-   * Create a <code>SimpleTrigger</code> that will occur at the given time, and repeat at the the given interval the given number of times, or until the given end time.
-   * </p>
-   * 
-   * @param startTime A <code>Date</code> set to the time for the <code>Trigger</code> to fire.
-   * @param endTime A <code>Date</code> set to the time for the <code>Trigger</code> to quit repeat firing.
-   * @param repeatCount The number of times for the <code>Trigger</code> to repeat firing, use {@link #REPEAT_INDEFINITELY} for unlimited times.
-   * @param repeatInterval The number of milliseconds to pause between the repeat firing.
-   * @deprecated use a TriggerBuilder instead
-   */
-  @Deprecated
-  private SimpleTriggerImpl(String name, String group, Date startTime, Date endTime, int repeatCount, long repeatInterval) {
-
-    super(name, group);
-
-    setStartTime(startTime);
-    setEndTime(endTime);
-    setRepeatCount(repeatCount);
-    setRepeatInterval(repeatInterval);
-  }
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
