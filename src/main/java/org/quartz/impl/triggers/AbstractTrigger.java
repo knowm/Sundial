@@ -109,23 +109,6 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
     // do nothing...
   }
 
-  /**
-   * <p>
-   * Create a <code>Trigger</code> with the given name, and group.
-   * </p>
-   * <p>
-   * Note that the {@link #setJobName(String)}and {@link #setJobGroup(String)}methods must be called before the <code>Trigger</code> can be placed into a {@link Scheduler}.
-   * </p>
-   * 
-   * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
-   * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
-   */
-  AbstractTrigger(String name, String group) {
-
-    setName(name);
-    setGroup(group);
-  }
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */

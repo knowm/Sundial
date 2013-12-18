@@ -170,10 +170,6 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     this.endTime = endTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.DateIntervalTriggerI#getRepeatIntervalUnit()
-   */
   @Override
   public IntervalUnit getRepeatIntervalUnit() {
 
@@ -190,10 +186,6 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     this.repeatIntervalUnit = intervalUnit;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.DateIntervalTriggerI#getRepeatInterval()
-   */
   @Override
   public int getRepeatInterval() {
 
@@ -216,10 +208,6 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     this.repeatInterval = repeatInterval;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.DateIntervalTriggerI#getTimesTriggered()
-   */
   @Override
   public int getTimesTriggered() {
 

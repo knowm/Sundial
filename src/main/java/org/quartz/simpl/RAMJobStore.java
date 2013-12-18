@@ -731,10 +731,10 @@ public class RAMJobStore implements JobStore {
         JobDetail job = bndle.getJobDetail();
 
         if (job.isConcurrentExectionDisallowed()) {
-          ArrayList trigs = getTriggerWrappersForJob(job.getKey());
-          Iterator itr = trigs.iterator();
+          ArrayList<TriggerWrapper> trigs = getTriggerWrappersForJob(job.getKey());
+          Iterator<TriggerWrapper> itr = trigs.iterator();
           while (itr.hasNext()) {
-            TriggerWrapper ttw = (TriggerWrapper) itr.next();
+            TriggerWrapper ttw = itr.next();
             if (ttw.state == TriggerWrapper.STATE_WAITING) {
               ttw.state = TriggerWrapper.STATE_BLOCKED;
             }

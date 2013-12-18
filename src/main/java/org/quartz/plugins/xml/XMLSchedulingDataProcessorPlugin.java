@@ -279,5 +279,3 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
 }
-
-// EOF

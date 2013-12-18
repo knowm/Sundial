@@ -57,20 +57,6 @@ public interface SchedulerListener {
 
   /**
    * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code> has been paused.
-   * </p>
-   */
-  void triggerPaused(TriggerKey triggerKey);
-
-  /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code> has been un-paused.
-   * </p>
-   */
-  void triggerResumed(TriggerKey triggerKey);
-
-  /**
-   * <p>
    * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.JobDetail}</code> has been added.
    * </p>
    */

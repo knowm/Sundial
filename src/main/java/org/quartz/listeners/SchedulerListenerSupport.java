@@ -95,16 +95,6 @@ public abstract class SchedulerListenerSupport implements SchedulerListener {
   }
 
   @Override
-  public void triggerPaused(TriggerKey triggerKey) {
-
-  }
-
-  @Override
-  public void triggerResumed(TriggerKey triggerKey) {
-
-  }
-
-  @Override
   public void schedulingDataCleared() {
 
   }

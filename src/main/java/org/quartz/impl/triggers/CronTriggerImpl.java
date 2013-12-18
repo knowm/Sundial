@@ -105,10 +105,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     this.cronEx.setTimeZone(origTz);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.CronTriggerI#getCronExpression()
-   */
   @Override
   public String getCronExpression() {
 
@@ -237,10 +233,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     this.previousFireTime = previousFireTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.CronTriggerI#getTimeZone()
-   */
   @Override
   public TimeZone getTimeZone() {
 
@@ -431,10 +423,6 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     return nextFireTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.CronTriggerI#getExpressionSummary()
-   */
   @Override
   public String getExpressionSummary() {
 

@@ -158,10 +158,6 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
     this.endTime = endTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.SimpleTriggerI#getRepeatCount()
-   */
   @Override
   public int getRepeatCount() {
 
@@ -185,10 +181,6 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
     this.repeatCount = repeatCount;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.SimpleTriggerI#getRepeatInterval()
-   */
   @Override
   public long getRepeatInterval() {
 

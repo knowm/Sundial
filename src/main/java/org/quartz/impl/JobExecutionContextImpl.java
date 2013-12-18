@@ -96,40 +96,24 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getScheduler()
-   */
   @Override
   public Scheduler getScheduler() {
 
     return scheduler;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getTrigger()
-   */
   @Override
   public Trigger getTrigger() {
 
     return trigger;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getCalendar()
-   */
   @Override
   public Calendar getCalendar() {
 
     return calendar;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#isRecovering()
-   */
   @Override
   public boolean isRecovering() {
 
@@ -141,80 +125,48 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
     numRefires++;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getRefireCount()
-   */
   @Override
   public int getRefireCount() {
 
     return numRefires;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getMergedJobDataMap()
-   */
   @Override
   public JobDataMap getMergedJobDataMap() {
 
     return jobDataMap;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getJobDetail()
-   */
   @Override
   public JobDetail getJobDetail() {
 
     return jobDetail;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getJobInstance()
-   */
   @Override
   public Job getJobInstance() {
 
     return job;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getFireTime()
-   */
   @Override
   public Date getFireTime() {
 
     return fireTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getScheduledFireTime()
-   */
   @Override
   public Date getScheduledFireTime() {
 
     return scheduledFireTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getPreviousFireTime()
-   */
   @Override
   public Date getPreviousFireTime() {
 
     return prevFireTime;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getNextFireTime()
-   */
   @Override
   public Date getNextFireTime() {
 
@@ -228,30 +180,18 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
         + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime() + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getResult()
-   */
   @Override
   public Object getResult() {
 
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#setResult(java.lang.Object)
-   */
   @Override
   public void setResult(Object result) {
 
     this.result = result;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.quartz.JobExecutionContext#getJobRunTime()
-   */
   @Override
   public long getJobRunTime() {
 
