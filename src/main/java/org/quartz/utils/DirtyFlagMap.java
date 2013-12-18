@@ -31,7 +31,7 @@ import java.util.Set;
  * 
  * @author James House
  */
-public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
+class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,7 +64,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
    * 
    * @see java.util.HashMap
    */
-  public DirtyFlagMap(int initialCapacity) {
+  DirtyFlagMap(int initialCapacity) {
 
     map = new HashMap(initialCapacity);
   }

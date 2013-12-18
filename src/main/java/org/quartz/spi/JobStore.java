@@ -17,12 +17,10 @@
 
 package org.quartz.spi;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.quartz.Calendar;
-import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
@@ -155,24 +153,6 @@ public interface JobStore {
   OperableTrigger retrieveTrigger(TriggerKey triggerKey) throws JobPersistenceException;
 
   /**
-   * Determine whether a {@link Job} with the given identifier already exists within the scheduler.
-   * 
-   * @param jobKey the identifier to check for
-   * @return true if a Job exists with the given identifier
-   * @throws SchedulerException
-   */
-  boolean checkExists(JobKey jobKey) throws JobPersistenceException;
-
-  /**
-   * Determine whether a {@link Trigger} with the given identifier already exists within the scheduler.
-   * 
-   * @param triggerKey the identifier to check for
-   * @return true if a Trigger exists with the given identifier
-   * @throws SchedulerException
-   */
-  boolean checkExists(TriggerKey triggerKey) throws JobPersistenceException;
-
-  /**
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
    * 
    * @param calName The name of the <code>Calendar</code> to be retrieved.
@@ -203,14 +183,6 @@ public interface JobStore {
   Set<TriggerKey> getTriggerKeys(GroupMatcher<TriggerKey> matcher) throws JobPersistenceException;
 
   /**
-   * Get the names of all of the <code>{@link org.quartz.Trigger}</code> groups.
-   * <p>
-   * If there are no known group names, the result should be a zero-length array (not <code>null</code>).
-   * </p>
-   */
-  List<String> getTriggerGroupNames() throws JobPersistenceException;
-
-  /**
    * Get all of the Triggers that are associated to the given Job.
    * <p>
    * If there are no matches, a zero-length array should be returned.
@@ -232,16 +204,6 @@ public interface JobStore {
   void pauseTrigger(TriggerKey triggerKey) throws JobPersistenceException;
 
   /**
-   * Pause all of the <code>{@link org.quartz.Trigger}s</code> in the given group.
-   * <p>
-   * The JobStore should "remember" that the group is paused, and impose the pause on any new triggers that are added to the group while the group is paused.
-   * </p>
-   * 
-   * @see #resumeTriggerGroup(String)
-   */
-  Collection<String> pauseTriggers(GroupMatcher<TriggerKey> matcher) throws JobPersistenceException;
-
-  /**
    * Resume (un-pause) the <code>{@link org.quartz.Trigger}</code> with the given key.
    * <p>
    * If the <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
@@ -250,16 +212,6 @@ public interface JobStore {
    * @see #pauseTrigger(TriggerKey)
    */
   void resumeTrigger(TriggerKey triggerKey) throws JobPersistenceException;
-
-  /**
-   * Resume (un-pause) all of the <code>{@link org.quartz.Trigger}s</code> in the given group.
-   * <p>
-   * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-   * </p>
-   * 
-   * @see #pauseTriggers(String)
-   */
-  Collection<String> resumeTriggers(GroupMatcher<TriggerKey> matcher) throws JobPersistenceException;
 
   // ///////////////////////////////////////////////////////////////////////////
   //

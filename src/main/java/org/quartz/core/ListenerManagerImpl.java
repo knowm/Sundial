@@ -16,7 +16,7 @@ import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.quartz.impl.matchers.EverythingMatcher;
 
-public class ListenerManagerImpl implements ListenerManager {
+class ListenerManagerImpl implements ListenerManager {
 
   private HashMap<String, JobListener> globalJobListeners = new HashMap<String, JobListener>(10);
 

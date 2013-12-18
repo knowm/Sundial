@@ -55,27 +55,7 @@ public abstract class SchedulerListenerSupport implements SchedulerListener {
   }
 
   @Override
-  public void jobPaused(JobKey jobKey) {
-
-  }
-
-  @Override
-  public void jobResumed(JobKey jobKey) {
-
-  }
-
-  @Override
   public void jobScheduled(Trigger trigger) {
-
-  }
-
-  @Override
-  public void jobsPaused(String jobGroup) {
-
-  }
-
-  @Override
-  public void jobsResumed(String jobGroup) {
 
   }
 
@@ -121,16 +101,6 @@ public abstract class SchedulerListenerSupport implements SchedulerListener {
 
   @Override
   public void triggerResumed(TriggerKey triggerKey) {
-
-  }
-
-  @Override
-  public void triggersPaused(String triggerGroup) {
-
-  }
-
-  @Override
-  public void triggersResumed(String triggerGroup) {
 
   }
 

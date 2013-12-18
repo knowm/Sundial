@@ -17,9 +17,6 @@
 
 package org.quartz;
 
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * <code>DateBuilder</code> is used to conveniently create <code>java.util.Date</code> instances that meet particular criteria.
@@ -33,23 +30,6 @@ import java.util.TimeZone;
  * </p>
  * 
  * <pre>
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  * 
  * 
  * 
@@ -77,80 +57,5 @@ public class DateBuilder {
   public static final long MILLISECONDS_IN_MINUTE = 60l * 1000l;
 
   public static final long MILLISECONDS_IN_HOUR = 60l * 60l * 1000l;
-
-  private int month;
-  private int day;
-  private int year;
-  private int hour;
-  private int minute;
-  private int second;
-  private TimeZone tz;
-  private Locale lc;
-
-  /**
-   * Create a DateBuilder, with initial settings for the current date and time in the system default timezone.
-   */
-  private DateBuilder() {
-
-    Calendar cal = Calendar.getInstance();
-
-    month = cal.get(Calendar.MONTH);
-    day = cal.get(Calendar.DAY_OF_MONTH);
-    year = cal.get(Calendar.YEAR);
-    hour = cal.get(Calendar.HOUR_OF_DAY);
-    minute = cal.get(Calendar.MINUTE);
-    second = cal.get(Calendar.SECOND);
-  }
-
-  /**
-   * Create a DateBuilder, with initial settings for the current date and time in the given timezone.
-   */
-  private DateBuilder(TimeZone tz) {
-
-    Calendar cal = Calendar.getInstance(tz);
-
-    this.tz = tz;
-    month = cal.get(Calendar.MONTH);
-    day = cal.get(Calendar.DAY_OF_MONTH);
-    year = cal.get(Calendar.YEAR);
-    hour = cal.get(Calendar.HOUR_OF_DAY);
-    minute = cal.get(Calendar.MINUTE);
-    second = cal.get(Calendar.SECOND);
-  }
-
-  /**
-   * Create a DateBuilder, with initial settings for the current date and time in the given locale.
-   */
-  private DateBuilder(Locale lc) {
-
-    Calendar cal = Calendar.getInstance(lc);
-
-    this.lc = lc;
-    month = cal.get(Calendar.MONTH);
-    day = cal.get(Calendar.DAY_OF_MONTH);
-    year = cal.get(Calendar.YEAR);
-    hour = cal.get(Calendar.HOUR_OF_DAY);
-    minute = cal.get(Calendar.MINUTE);
-    second = cal.get(Calendar.SECOND);
-  }
-
-  /**
-   * Create a DateBuilder, with initial settings for the current date and time in the given timezone and locale.
-   */
-  private DateBuilder(TimeZone tz, Locale lc) {
-
-    Calendar cal = Calendar.getInstance(tz, lc);
-
-    this.tz = tz;
-    this.lc = lc;
-    month = cal.get(Calendar.MONTH);
-    day = cal.get(Calendar.DAY_OF_MONTH);
-    year = cal.get(Calendar.YEAR);
-    hour = cal.get(Calendar.HOUR_OF_DAY);
-    minute = cal.get(Calendar.MINUTE);
-    second = cal.get(Calendar.SECOND);
-  }
-
-  private static final int MAX_YEAR = Calendar.getInstance().get(Calendar.YEAR) + 100;
 
 }

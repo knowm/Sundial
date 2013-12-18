@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @see Trigger
  * @author James House
  */
-public class QuartzSchedulerThread extends Thread {
+class QuartzSchedulerThread extends Thread {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,7 +172,7 @@ public class QuartzSchedulerThread extends Thread {
    * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other even (rather than scheduling a trigger), the
    *          caller should pass zero (0).
    */
-  public void signalSchedulingChange(long candidateNewNextFireTime) {
+  void signalSchedulingChange(long candidateNewNextFireTime) {
 
     synchronized (sigLock) {
       signaled = true;

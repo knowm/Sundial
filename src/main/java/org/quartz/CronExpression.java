@@ -257,7 +257,7 @@ public class CronExpression implements Serializable, Cloneable {
     return cronExpression;
   }
 
-  public static void validateExpression(String cronExpression) throws ParseException {
+  static void validateExpression(String cronExpression) throws ParseException {
 
     new CronExpression(cronExpression);
   }
@@ -727,7 +727,7 @@ public class CronExpression implements Serializable, Cloneable {
     return buf.toString();
   }
 
-  protected String getExpressionSetSummary(java.util.Set set) {
+  private String getExpressionSetSummary(java.util.Set set) {
 
     if (set.contains(NO_SPEC)) {
       return "?";

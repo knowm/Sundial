@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @see org.quartz.Trigger
  * @author James House
  */
-public class JobRunShell extends SchedulerListenerSupport implements Runnable {
+class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,7 +78,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
    * @param scheduler The <code>Scheduler</code> instance that should be made available within the <code>JobExecutionContext</code>.
    * @param schdCtxt the <code>SchedulingContext</code> that should be used by the <code>JobRunShell</code> when making updates to the <code>JobStore</code>.
    */
-  public JobRunShell(Scheduler scheduler, TriggerFiredBundle bndle) {
+  JobRunShell(Scheduler scheduler, TriggerFiredBundle bndle) {
 
     this.scheduler = scheduler;
     this.firedTriggerBundle = bndle;
@@ -100,7 +100,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     return log;
   }
 
-  public void initialize(QuartzScheduler qs) throws SchedulerException {
+  void initialize(QuartzScheduler qs) throws SchedulerException {
 
     this.qs = qs;
 

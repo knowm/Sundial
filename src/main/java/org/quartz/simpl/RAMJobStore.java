@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +31,6 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.quartz.Calendar;
-import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
@@ -465,39 +463,6 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * Determine whether a {@link Job} with the given identifier already exists within the scheduler.
-   * 
-   * @param jobKey the identifier to check for
-   * @return true if a Job exists with the given identifier
-   * @throws SchedulerException
-   */
-  @Override
-  public boolean checkExists(JobKey jobKey) {
-
-    synchronized (lock) {
-      JobWrapper jw = jobsByKey.get(jobKey);
-      return (jw != null);
-    }
-  }
-
-  /**
-   * Determine whether a {@link Trigger} with the given identifier already exists within the scheduler.
-   * 
-   * @param triggerKey the identifier to check for
-   * @return true if a Trigger exists with the given identifier
-   * @throws SchedulerException
-   */
-  @Override
-  public boolean checkExists(TriggerKey triggerKey) {
-
-    synchronized (lock) {
-      TriggerWrapper tw = triggersByKey.get(triggerKey);
-
-      return (tw != null);
-    }
-  }
-
-  /**
    * <p>
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
    * </p>
@@ -619,23 +584,6 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Get the names of all of the <code>{@link org.quartz.Trigger}</code> groups.
-   * </p>
-   */
-  @Override
-  public List<String> getTriggerGroupNames() {
-
-    LinkedList<String> outList = null;
-
-    synchronized (lock) {
-      outList = new LinkedList<String>(triggersByGroup.keySet());
-    }
-
-    return outList;
-  }
-
-  /**
-   * <p>
    * Get all of the Triggers that are associated to the given Job.
    * </p>
    * <p>
@@ -709,50 +657,6 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Pause all of the known <code>{@link Trigger}s</code> matching.
-   * </p>
-   * <p>
-   * The JobStore should "remember" the groups paused, and impose the pause on any new triggers that are added to one of these groups while the group is paused.
-   * </p>
-   */
-  @Override
-  public List<String> pauseTriggers(GroupMatcher<TriggerKey> matcher) {
-
-    List<String> pausedGroups;
-    synchronized (lock) {
-      pausedGroups = new LinkedList<String>();
-
-      StringMatcher.StringOperatorName operator = matcher.getCompareWithOperator();
-      switch (operator) {
-      case EQUALS:
-        if (pausedTriggerGroups.add(matcher.getCompareToValue())) {
-          pausedGroups.add(matcher.getCompareToValue());
-        }
-        break;
-      default:
-        for (String group : triggersByGroup.keySet()) {
-          if (operator.evaluate(group, matcher.getCompareToValue())) {
-            if (pausedTriggerGroups.add(matcher.getCompareToValue())) {
-              pausedGroups.add(group);
-            }
-          }
-        }
-      }
-
-      for (String pausedGroup : pausedGroups) {
-        Set<TriggerKey> keys = getTriggerKeys(GroupMatcher.groupEquals(pausedGroup));
-
-        for (TriggerKey key : keys) {
-          pauseTrigger(key);
-        }
-      }
-    }
-
-    return pausedGroups;
-  }
-
-  /**
-   * <p>
    * Resume (un-pause) the <code>{@link Trigger}</code> with the given key.
    * </p>
    * <p>
@@ -790,40 +694,6 @@ public class RAMJobStore implements JobStore {
         timeTriggers.add(tw);
       }
     }
-  }
-
-  /**
-   * <p>
-   * Resume (un-pause) all of the <code>{@link Trigger}s</code> in the given group.
-   * </p>
-   * <p>
-   * If any <code>Trigger</code> missed one or more fire-times, then the <code>Trigger</code>'s misfire instruction will be applied.
-   * </p>
-   */
-  @Override
-  public List<String> resumeTriggers(GroupMatcher<TriggerKey> matcher) {
-
-    Set<String> groups = new HashSet<String>();
-
-    synchronized (lock) {
-      Set<TriggerKey> keys = getTriggerKeys(matcher);
-
-      for (TriggerKey triggerKey : keys) {
-        groups.add(triggerKey.getGroup());
-        if (triggersByKey.get(triggerKey) != null) {
-          String jobGroup = triggersByKey.get(triggerKey).jobKey.getGroup();
-          if (pausedJobGroups.contains(jobGroup)) {
-            continue;
-          }
-        }
-        resumeTrigger(triggerKey);
-      }
-      for (String group : groups) {
-        pausedTriggerGroups.remove(group);
-      }
-    }
-
-    return new ArrayList<String>(groups);
   }
 
   private boolean applyMisfire(TriggerWrapper tw) {

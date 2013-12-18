@@ -16,7 +16,6 @@
  */
 package org.quartz.impl.matchers;
 
-import org.quartz.JobKey;
 import org.quartz.Matcher;
 import org.quartz.TriggerKey;
 import org.quartz.utils.Key;
@@ -33,14 +32,6 @@ public class EverythingMatcher<T extends Key> implements Matcher<T> {
   }
 
   /**
-   * Create an EverythingMatcher that matches all jobs.
-   */
-  public static EverythingMatcher<JobKey> allJobs() {
-
-    return new EverythingMatcher<JobKey>();
-  }
-
-  /**
    * Create an EverythingMatcher that matches all triggers.
    */
   public static EverythingMatcher<TriggerKey> allTriggers() {
@@ -48,6 +39,7 @@ public class EverythingMatcher<T extends Key> implements Matcher<T> {
     return new EverythingMatcher<TriggerKey>();
   }
 
+  @Override
   public boolean isMatch(T key) {
 
     return true;
@@ -56,8 +48,9 @@ public class EverythingMatcher<T extends Key> implements Matcher<T> {
   @Override
   public boolean equals(Object obj) {
 
-    if (obj == null)
+    if (obj == null) {
       return false;
+    }
 
     return obj.getClass().equals(getClass());
   }

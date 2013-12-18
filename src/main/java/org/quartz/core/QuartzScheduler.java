@@ -769,7 +769,7 @@ public class QuartzScheduler implements Scheduler {
    * Register the given <code>{@link SchedulerListener}</code> with the <code>Scheduler</code>'s list of internal listeners.
    * </p>
    */
-  public void addInternalSchedulerListener(SchedulerListener schedulerListener) {
+  void addInternalSchedulerListener(SchedulerListener schedulerListener) {
 
     synchronized (internalSchedulerListeners) {
       internalSchedulerListeners.add(schedulerListener);
@@ -783,7 +783,7 @@ public class QuartzScheduler implements Scheduler {
    * 
    * @return true if the identified listener was found in the list, and removed.
    */
-  public boolean removeInternalSchedulerListener(SchedulerListener schedulerListener) {
+  boolean removeInternalSchedulerListener(SchedulerListener schedulerListener) {
 
     synchronized (internalSchedulerListeners) {
       return internalSchedulerListeners.remove(schedulerListener);
@@ -874,7 +874,7 @@ public class QuartzScheduler implements Scheduler {
     return false;
   }
 
-  public boolean notifyTriggerListenersFired(JobExecutionContext jec) throws SchedulerException {
+  boolean notifyTriggerListenersFired(JobExecutionContext jec) throws SchedulerException {
 
     boolean vetoedExecution = false;
 
@@ -901,7 +901,7 @@ public class QuartzScheduler implements Scheduler {
     return vetoedExecution;
   }
 
-  public void notifyTriggerListenersMisfired(Trigger trigger) throws SchedulerException {
+  void notifyTriggerListenersMisfired(Trigger trigger) throws SchedulerException {
 
     // build a list of all trigger listeners that are to be notified...
     List<TriggerListener> triggerListeners = buildTriggerListenerList();
@@ -920,7 +920,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifyTriggerListenersComplete(JobExecutionContext jec, CompletedExecutionInstruction instCode) throws SchedulerException {
+  void notifyTriggerListenersComplete(JobExecutionContext jec, CompletedExecutionInstruction instCode) throws SchedulerException {
 
     // build a list of all trigger listeners that are to be notified...
     List<TriggerListener> triggerListeners = buildTriggerListenerList();
@@ -939,7 +939,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifyJobListenersToBeExecuted(JobExecutionContext jec) throws SchedulerException {
+  void notifyJobListenersToBeExecuted(JobExecutionContext jec) throws SchedulerException {
 
     // build a list of all job listeners that are to be notified...
     List<JobListener> jobListeners = buildJobListenerList();
@@ -958,7 +958,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifyJobListenersWasVetoed(JobExecutionContext jec) throws SchedulerException {
+  void notifyJobListenersWasVetoed(JobExecutionContext jec) throws SchedulerException {
 
     // build a list of all job listeners that are to be notified...
     List<JobListener> jobListeners = buildJobListenerList();
@@ -996,7 +996,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifySchedulerListenersError(String msg, SchedulerException se) {
+  void notifySchedulerListenersError(String msg, SchedulerException se) {
 
     // build a list of all scheduler listeners that are to be notified...
     List<SchedulerListener> schedListeners = buildSchedulerListenerList();
@@ -1167,7 +1167,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
+  void notifySchedulerListenersJobDeleted(JobKey jobKey) {
 
     // build a list of all scheduler listeners that are to be notified...
     List<SchedulerListener> schedListeners = buildSchedulerListenerList();

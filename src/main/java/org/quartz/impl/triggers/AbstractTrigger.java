@@ -120,7 +120,7 @@ public abstract class AbstractTrigger<T extends Trigger> implements OperableTrig
    * @param group if <code>null</code>, Scheduler.DEFAULT_GROUP will be used.
    * @exception IllegalArgumentException if name is null or empty, or the group is an empty string.
    */
-  public AbstractTrigger(String name, String group) {
+  AbstractTrigger(String name, String group) {
 
     setName(name);
     setGroup(group);

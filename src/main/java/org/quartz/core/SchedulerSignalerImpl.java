@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author jhouse
  */
-public class SchedulerSignalerImpl implements SchedulerSignaler {
+class SchedulerSignalerImpl implements SchedulerSignaler {
 
   private Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
@@ -44,7 +44,7 @@ public class SchedulerSignalerImpl implements SchedulerSignaler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  public SchedulerSignalerImpl(QuartzScheduler sched, QuartzSchedulerThread schedThread) {
+  SchedulerSignalerImpl(QuartzScheduler sched, QuartzSchedulerThread schedThread) {
 
     this.sched = sched;
     this.schedThread = schedThread;
