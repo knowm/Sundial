@@ -27,25 +27,6 @@ import org.quartz.utils.counter.Counter;
 public interface SampledCounter extends Counter {
 
   /**
-   * Shutdown this counter
-   */
-  void shutdown();
-
-  /**
-   * Returns the most recent sampled value
-   * 
-   * @return Value of the most recent sampled value
-   */
-  TimeStampedCounterValue getMostRecentSample();
-
-  /**
-   * Returns all samples in history
-   * 
-   * @return An array containing the TimeStampedCounterValue's
-   */
-  TimeStampedCounterValue[] getAllSampleValues();
-
-  /**
    * Returns the current value of the counter and resets it to 0
    * 
    * @return current value of the counter

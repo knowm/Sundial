@@ -25,22 +25,6 @@ package org.quartz.utils.counter.sampled;
 public interface SampledRateCounter extends SampledCounter {
 
   /**
-   * Increments the numerator and denominator by the passed values
-   * 
-   * @param numerator
-   * @param denominator
-   */
-  public void increment(long numerator, long denominator);
-
-  /**
-   * Decrements the numerator and denominator by the passed values
-   * 
-   * @param numerator
-   * @param denominator
-   */
-  public void decrement(long numerator, long denominator);
-
-  /**
    * Sets the values of the numerator and denominator to the passed values
    * 
    * @param numerator
