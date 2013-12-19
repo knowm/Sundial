@@ -1,9 +1,12 @@
 ## Sundial
+
+[![Sundial](http://xeiam.com/images/Sundial_64_64.png)](http://xeiam.com/sundial.jsp)
+
 A Lightweight Job Scheduling Framework
 
 ## Description
 Sundial is a lightweight Java job scheduling framework forked from
-Quartz (http://www.quartz-scheduler.org/) and peared down to the bare essentials. Sundial also hides the 
+Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the 
 nitty-gritty configuration details of Quartz, reducing the time
 needed to get a simple RAM job scheduler up and running. Sundial
 uses a ThreadLocal wrapper for each job containing a HashMap for
@@ -36,7 +39,7 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial_examplecode
 
 ## Features
 * Depends only on slf4j
-* ~250KB Jar
+* ~175 KB Jar
 * Apache 2.0 license
 * Easy to use
 
