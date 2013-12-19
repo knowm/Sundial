@@ -1,6 +1,4 @@
-[![Sundial](http://xeiam.com/images/Sundial_64_64.png)](http://xeiam.com/sundial.jsp)
-
-## Sundial
+## Sundial [![Sundial](http://xeiam.com/images/Sundial_64_64.png)](http://xeiam.com/sundial.jsp)
 
 A Lightweight Job Scheduling Framework
 
