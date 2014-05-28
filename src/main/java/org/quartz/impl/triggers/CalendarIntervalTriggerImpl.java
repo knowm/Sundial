@@ -55,7 +55,7 @@ import org.quartz.exceptions.SchedulerException;
  * @since 1.7
  * @author James House
  */
-public class CalendarIntervalTriggerImpl extends AbstractTrigger implements CalendarIntervalTrigger {
+public class CalendarIntervalTriggerImpl extends AbstractTrigger<CalendarIntervalTrigger> implements CalendarIntervalTrigger {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

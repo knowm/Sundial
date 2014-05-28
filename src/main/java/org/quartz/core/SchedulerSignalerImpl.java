@@ -1,5 +1,6 @@
-/* 
+/** 
  * Copyright 2001-2009 Terracotta, Inc. 
+ * Copyright 2014 Xeiam 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
@@ -12,9 +13,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
  * License for the specific language governing permissions and limitations 
  * under the License.
- * 
  */
-
 package org.quartz.core;
 
 import org.quartz.JobKey;
@@ -31,57 +30,51 @@ import org.slf4j.LoggerFactory;
  */
 class SchedulerSignalerImpl implements SchedulerSignaler {
 
-  private Logger log = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
+  private Logger logger = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  private QuartzScheduler quartzScheduler;
+  private QuartzSchedulerThread quartzSchedulerThread;
+
+  /**
+   * Constructor
+   * 
+   * @param quartzScheduler
+   * @param quartzSchedulerThread
    */
+  SchedulerSignalerImpl(QuartzScheduler quartzScheduler, QuartzSchedulerThread quartzSchedulerThread) {
 
-  private QuartzScheduler sched;
-  private QuartzSchedulerThread schedThread;
+    this.quartzScheduler = quartzScheduler;
+    this.quartzSchedulerThread = quartzSchedulerThread;
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
-
-  SchedulerSignalerImpl(QuartzScheduler sched, QuartzSchedulerThread schedThread) {
-
-    this.sched = sched;
-    this.schedThread = schedThread;
-
-    log.info("Initialized Scheduler Signaller of type: " + getClass());
+    logger.info("Initialized Scheduler Signaler of type: " + getClass());
   }
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
 
   @Override
   public void notifyTriggerListenersMisfired(Trigger trigger) {
 
     try {
-      sched.notifyTriggerListenersMisfired(trigger);
+      quartzScheduler.notifyTriggerListenersMisfired(trigger);
     } catch (SchedulerException se) {
-      sched.getLog().error("Error notifying listeners of trigger misfire.", se);
-      sched.notifySchedulerListenersError("Error notifying listeners of trigger misfire.", se);
+      logger.error("Error notifying listeners of trigger misfire.", se);
+      quartzScheduler.notifySchedulerListenersError("Error notifying listeners of trigger misfire.", se);
     }
   }
 
   @Override
   public void notifySchedulerListenersFinalized(Trigger trigger) {
 
-    sched.notifySchedulerListenersFinalized(trigger);
+    quartzScheduler.notifySchedulerListenersFinalized(trigger);
   }
 
   @Override
   public void signalSchedulingChange(long candidateNewNextFireTime) {
 
-    schedThread.signalSchedulingChange(candidateNewNextFireTime);
+    quartzSchedulerThread.signalSchedulingChange(candidateNewNextFireTime);
   }
 
   @Override
   public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
 
-    sched.notifySchedulerListenersJobDeleted(jobKey);
+    quartzScheduler.notifySchedulerListenersJobDeleted(jobKey);
   }
 }

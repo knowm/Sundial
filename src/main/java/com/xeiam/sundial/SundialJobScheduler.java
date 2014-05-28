@@ -30,7 +30,7 @@ import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.SchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class SundialJobScheduler {
 
     if (scheduler == null) {
       try {
-        scheduler = new StdSchedulerFactory().getScheduler(threadPoolSize);
+        scheduler = new SchedulerFactory().getScheduler(threadPoolSize);
 
       } catch (SchedulerException e) {
         logger.error("COULD NOT CREATE QUARTZ SCHEDULER!!!" + e);

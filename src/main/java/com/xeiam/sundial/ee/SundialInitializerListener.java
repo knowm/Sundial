@@ -28,7 +28,7 @@ import com.xeiam.sundial.SundialJobScheduler;
 
 /**
  * <p>
- * A ServletContextListner that can be used to initialize Quartz.
+ * A ServletContextListner that can be used to initialize Sundial.
  * </p>
  * <p>
  * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being

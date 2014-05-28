@@ -1,5 +1,6 @@
 /** 
  * Copyright 2001-2009 Terracotta, Inc. 
+ * Copyright 2014 Xeiam, LLC
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
@@ -77,9 +78,9 @@ public class QuartzScheduler implements Scheduler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private final QuartzSchedulerResources mQuartzSchedulerResources;
+  private final QuartzSchedulerResources quartzSchedulerResources;
 
-  private final QuartzSchedulerThread mQuartzSchedulerThread;
+  private final QuartzSchedulerThread quartzSchedulerThread;
 
   private ThreadGroup threadGroup;
 
@@ -113,7 +114,7 @@ public class QuartzScheduler implements Scheduler {
 
   private Date initialStart = null;
 
-  private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(QuartzScheduler.class);
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,27 +127,27 @@ public class QuartzScheduler implements Scheduler {
    * 
    * @see QuartzSchedulerResources
    */
-  public QuartzScheduler(QuartzSchedulerResources pQuartzSchedulerResources) throws SchedulerException {
+  public QuartzScheduler(QuartzSchedulerResources quartzSchedulerResources) throws SchedulerException {
 
-    mQuartzSchedulerResources = pQuartzSchedulerResources;
-    if (pQuartzSchedulerResources.getJobStore() instanceof JobListener) {
-      addInternalJobListener((JobListener) pQuartzSchedulerResources.getJobStore());
+    this.quartzSchedulerResources = quartzSchedulerResources;
+    if (quartzSchedulerResources.getJobStore() instanceof JobListener) {
+      addInternalJobListener((JobListener) quartzSchedulerResources.getJobStore());
     }
 
-    mQuartzSchedulerThread = new QuartzSchedulerThread(this, pQuartzSchedulerResources);
+    this.quartzSchedulerThread = new QuartzSchedulerThread(this, quartzSchedulerResources);
 
     jobMgr = new ExecutingJobsManager();
     addInternalJobListener(jobMgr);
     errLogger = new ErrorLogger();
     addInternalSchedulerListener(errLogger);
 
-    signaler = new SchedulerSignalerImpl(this, this.mQuartzSchedulerThread);
+    signaler = new SchedulerSignalerImpl(this, this.quartzSchedulerThread);
 
   }
 
   public void initialize() throws SchedulerException {
 
-    mQuartzSchedulerThread.start();
+    this.quartzSchedulerThread.start();
   }
 
   /*
@@ -158,11 +159,6 @@ public class QuartzScheduler implements Scheduler {
     return signaler;
   }
 
-  public Logger getLog() {
-
-    return log;
-  }
-
   /**
    * <p>
    * Returns the name of the thread group for Quartz's main threads.
@@ -172,7 +168,7 @@ public class QuartzScheduler implements Scheduler {
 
     if (threadGroup == null) {
       threadGroup = new ThreadGroup("QuartzScheduler");
-      if (mQuartzSchedulerResources.getMakeSchedulerThreadDaemon()) {
+      if (quartzSchedulerResources.getMakeSchedulerThreadDaemon()) {
         threadGroup.setDaemon(true);
       }
     }
@@ -223,23 +219,19 @@ public class QuartzScheduler implements Scheduler {
 
     if (initialStart == null) {
       initialStart = new Date();
-      mQuartzSchedulerResources.getJobStore().schedulerStarted();
+      quartzSchedulerResources.getJobStore().schedulerStarted();
       startPlugins();
     }
 
-    mQuartzSchedulerThread.togglePause(false);
+    this.quartzSchedulerThread.togglePause(false);
 
-    getLog().info("Scheduler started.");
+    logger.info("Scheduler started.");
 
     notifySchedulerListenersStarted();
   }
 
   @Override
   public void startDelayed(final int seconds) throws SchedulerException {
-
-    if (shuttingDown || closed) {
-      throw new SchedulerException("The Scheduler cannot be restarted after shutdown() has been called.");
-    }
 
     Thread t = new Thread(new Runnable() {
 
@@ -253,7 +245,7 @@ public class QuartzScheduler implements Scheduler {
         try {
           start();
         } catch (SchedulerException se) {
-          getLog().error("Unable to start secheduler after startup delay.", se);
+          logger.error("Unable to start secheduler after startup delay.", se);
         }
       }
     });
@@ -271,8 +263,8 @@ public class QuartzScheduler implements Scheduler {
   @Override
   public void standby() {
 
-    mQuartzSchedulerThread.togglePause(true);
-    getLog().info("Scheduler paused.");
+    this.quartzSchedulerThread.togglePause(true);
+    logger.info("Scheduler paused.");
     notifySchedulerListenersInStandbyMode();
   }
 
@@ -284,22 +276,22 @@ public class QuartzScheduler implements Scheduler {
   @Override
   public boolean isInStandbyMode() {
 
-    return mQuartzSchedulerThread.isPaused();
+    return this.quartzSchedulerThread.isPaused();
   }
 
   public Class getJobStoreClass() {
 
-    return mQuartzSchedulerResources.getJobStore().getClass();
+    return quartzSchedulerResources.getJobStore().getClass();
   }
 
   public Class getThreadPoolClass() {
 
-    return mQuartzSchedulerResources.getThreadPool().getClass();
+    return quartzSchedulerResources.getThreadPool().getClass();
   }
 
   public int getThreadPoolSize() {
 
-    return mQuartzSchedulerResources.getThreadPool().getPoolSize();
+    return quartzSchedulerResources.getThreadPool().getPoolSize();
   }
 
   /**
@@ -321,15 +313,15 @@ public class QuartzScheduler implements Scheduler {
 
     shuttingDown = true;
 
-    getLog().info("Scheduler  shutting down.");
+    logger.info("Scheduler shutting down...");
 
     standby();
 
-    mQuartzSchedulerThread.halt();
+    this.quartzSchedulerThread.halt();
 
     notifySchedulerListenersShuttingdown();
 
-    if ((mQuartzSchedulerResources.isInterruptJobsOnShutdown() && !waitForJobsToComplete) || (mQuartzSchedulerResources.isInterruptJobsOnShutdownWithWait() && waitForJobsToComplete)) {
+    if ((quartzSchedulerResources.isInterruptJobsOnShutdown() && !waitForJobsToComplete) || (quartzSchedulerResources.isInterruptJobsOnShutdownWithWait() && waitForJobsToComplete)) {
       List<JobExecutionContext> jobs = getCurrentlyExecutingJobs();
       for (JobExecutionContext job : jobs) {
         if (job.getJobInstance() instanceof InterruptableJob) {
@@ -337,13 +329,13 @@ public class QuartzScheduler implements Scheduler {
             ((InterruptableJob) job.getJobInstance()).interrupt();
           } catch (Throwable e) {
             // do nothing, this was just a courtesy effort
-            getLog().warn("Encountered error when interrupting job {} during shutdown: {}", job.getJobDetail().getKey(), e);
+            logger.warn("Encountered error when interrupting job {} during shutdown: {}", job.getJobDetail().getKey(), e);
           }
         }
       }
     }
 
-    mQuartzSchedulerResources.getThreadPool().shutdown(waitForJobsToComplete);
+    quartzSchedulerResources.getThreadPool().shutdown(waitForJobsToComplete);
 
     if (waitForJobsToComplete) {
       while (jobMgr.getNumJobsCurrentlyExecuting() > 0) {
@@ -358,7 +350,7 @@ public class QuartzScheduler implements Scheduler {
     // trigger and need time to release the trigger once halted, so make sure
     // the thread is dead before continuing to shutdown the job store.
     try {
-      mQuartzSchedulerThread.join();
+      this.quartzSchedulerThread.join();
     } catch (InterruptedException ignore) {
     }
 
@@ -366,13 +358,13 @@ public class QuartzScheduler implements Scheduler {
 
     shutdownPlugins();
 
-    mQuartzSchedulerResources.getJobStore().shutdown();
+    quartzSchedulerResources.getJobStore().shutdown();
 
     notifySchedulerListenersShutdown();
 
     holdToPreventGC.clear();
 
-    getLog().info("Scheduler shutdown complete.");
+    logger.info("Scheduler shutdown complete.");
   }
 
   /**
@@ -474,7 +466,7 @@ public class QuartzScheduler implements Scheduler {
 
     Calendar cal = null;
     if (trigger.getCalendarName() != null) {
-      cal = mQuartzSchedulerResources.getJobStore().retrieveCalendar(trigger.getCalendarName());
+      cal = quartzSchedulerResources.getJobStore().retrieveCalendar(trigger.getCalendarName());
     }
     Date ft = trig.computeFirstFireTime(cal);
 
@@ -482,7 +474,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Based on configured schedule, the given trigger will never fire.");
     }
 
-    mQuartzSchedulerResources.getJobStore().storeJobAndTrigger(jobDetail, trig);
+    quartzSchedulerResources.getJobStore().storeJobAndTrigger(jobDetail, trig);
     notifySchedulerListenersJobAdded(jobDetail);
     notifySchedulerThread(trigger.getNextFireTime().getTime());
     notifySchedulerListenersSchduled(trigger);
@@ -513,7 +505,7 @@ public class QuartzScheduler implements Scheduler {
 
     Calendar cal = null;
     if (trigger.getCalendarName() != null) {
-      cal = mQuartzSchedulerResources.getJobStore().retrieveCalendar(trigger.getCalendarName());
+      cal = quartzSchedulerResources.getJobStore().retrieveCalendar(trigger.getCalendarName());
       if (cal == null) {
         throw new SchedulerException("Calendar not found: " + trigger.getCalendarName());
       }
@@ -524,7 +516,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Based on configured schedule, the given trigger will never fire.");
     }
 
-    mQuartzSchedulerResources.getJobStore().storeTrigger(trig, false);
+    quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
     notifySchedulerThread(trigger.getNextFireTime().getTime());
     notifySchedulerListenersSchduled(trigger);
 
@@ -552,7 +544,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Jobs added with no trigger must be durable.");
     }
 
-    mQuartzSchedulerResources.getJobStore().storeJob(jobDetail, replace);
+    quartzSchedulerResources.getJobStore().storeJob(jobDetail, replace);
     notifySchedulerThread(0L);
     notifySchedulerListenersJobAdded(jobDetail);
   }
@@ -590,7 +582,7 @@ public class QuartzScheduler implements Scheduler {
 
     Calendar cal = null;
     if (newTrigger.getCalendarName() != null) {
-      cal = mQuartzSchedulerResources.getJobStore().retrieveCalendar(newTrigger.getCalendarName());
+      cal = quartzSchedulerResources.getJobStore().retrieveCalendar(newTrigger.getCalendarName());
     }
     Date ft = trig.computeFirstFireTime(cal);
 
@@ -598,7 +590,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Based on configured schedule, the given trigger will never fire.");
     }
 
-    if (mQuartzSchedulerResources.getJobStore().replaceTrigger(triggerKey, trig)) {
+    if (quartzSchedulerResources.getJobStore().replaceTrigger(triggerKey, trig)) {
       notifySchedulerThread(newTrigger.getNextFireTime().getTime());
       notifySchedulerListenersUnscheduled(triggerKey);
       notifySchedulerListenersSchduled(newTrigger);
@@ -642,7 +634,7 @@ public class QuartzScheduler implements Scheduler {
     boolean collision = true;
     while (collision) {
       try {
-        mQuartzSchedulerResources.getJobStore().storeTrigger(trig, false);
+        quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
         collision = false;
       } catch (ObjectAlreadyExistsException oaee) {
         trig.setKey(new TriggerKey(newTriggerId(), Key.DEFAULT_GROUP));
@@ -668,7 +660,7 @@ public class QuartzScheduler implements Scheduler {
       matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
     }
 
-    return mQuartzSchedulerResources.getJobStore().getJobKeys(matcher);
+    return quartzSchedulerResources.getJobStore().getJobKeys(matcher);
   }
 
   /**
@@ -682,7 +674,7 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    return mQuartzSchedulerResources.getJobStore().getTriggersForJob(jobKey);
+    return quartzSchedulerResources.getJobStore().getTriggersForJob(jobKey);
   }
 
   /**
@@ -695,7 +687,7 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    return mQuartzSchedulerResources.getJobStore().retrieveJob(jobKey);
+    return quartzSchedulerResources.getJobStore().retrieveJob(jobKey);
   }
 
   /**
@@ -709,7 +701,7 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    return mQuartzSchedulerResources.getJobStore().retrieveTrigger(triggerKey);
+    return quartzSchedulerResources.getJobStore().retrieveTrigger(triggerKey);
   }
 
   /**
@@ -804,12 +796,12 @@ public class QuartzScheduler implements Scheduler {
 
   protected void notifyJobStoreJobComplete(OperableTrigger trigger, JobDetail detail, CompletedExecutionInstruction instCode) throws JobPersistenceException {
 
-    mQuartzSchedulerResources.getJobStore().triggeredJobComplete(trigger, detail, instCode);
+    quartzSchedulerResources.getJobStore().triggeredJobComplete(trigger, detail, instCode);
   }
 
   protected void notifyJobStoreJobVetoed(OperableTrigger trigger, JobDetail detail, CompletedExecutionInstruction instCode) throws JobPersistenceException {
 
-    mQuartzSchedulerResources.getJobStore().triggeredJobComplete(trigger, detail, instCode);
+    quartzSchedulerResources.getJobStore().triggeredJobComplete(trigger, detail, instCode);
   }
 
   private void notifySchedulerThread(long candidateNewNextFireTime) {
@@ -1006,8 +998,8 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.schedulerError(msg, se);
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of error: ", e);
-        getLog().error("  Original error (for notification) was: " + msg, se);
+        logger.error("Error while notifying SchedulerListener of error: ", e);
+        logger.error("  Original error (for notification) was: " + msg, se);
       }
     }
   }
@@ -1022,7 +1014,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobScheduled(trigger);
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of scheduled job." + "  Triger=" + trigger.getKey(), e);
+        logger.error("Error while notifying SchedulerListener of scheduled job." + "  Triger=" + trigger.getKey(), e);
       }
     }
   }
@@ -1042,7 +1034,7 @@ public class QuartzScheduler implements Scheduler {
           sl.jobUnscheduled(triggerKey);
         }
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of unscheduled job." + "  Triger=" + (triggerKey == null ? "ALL DATA" : triggerKey), e);
+        logger.error("Error while notifying SchedulerListener of unscheduled job." + "  Triger=" + (triggerKey == null ? "ALL DATA" : triggerKey), e);
       }
     }
   }
@@ -1057,7 +1049,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.triggerFinalized(trigger);
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of finalized trigger." + "  Triger=" + trigger.getKey(), e);
+        logger.error("Error while notifying SchedulerListener of finalized trigger." + "  Triger=" + trigger.getKey(), e);
       }
     }
   }
@@ -1072,7 +1064,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.schedulerInStandbyMode();
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of inStandByMode.", e);
+        logger.error("Error while notifying SchedulerListener of inStandByMode.", e);
       }
     }
   }
@@ -1087,7 +1079,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.schedulerStarted();
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of startup.", e);
+        logger.error("Error while notifying SchedulerListener of startup.", e);
       }
     }
   }
@@ -1102,7 +1094,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.schedulerShutdown();
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of shutdown.", e);
+        logger.error("Error while notifying SchedulerListener of shutdown.", e);
       }
     }
   }
@@ -1117,7 +1109,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.schedulerShuttingdown();
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of shutdown.", e);
+        logger.error("Error while notifying SchedulerListener of shutdown.", e);
       }
     }
   }
@@ -1132,7 +1124,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobAdded(jobDetail);
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of JobAdded.", e);
+        logger.error("Error while notifying SchedulerListener of JobAdded.", e);
       }
     }
   }
@@ -1147,7 +1139,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobDeleted(jobKey);
       } catch (Exception e) {
-        getLog().error("Error while notifying SchedulerListener of JobAdded.", e);
+        logger.error("Error while notifying SchedulerListener of JobAdded.", e);
       }
     }
   }
@@ -1159,7 +1151,7 @@ public class QuartzScheduler implements Scheduler {
 
   private void shutdownPlugins() {
 
-    java.util.Iterator itr = mQuartzSchedulerResources.getSchedulerPlugins().iterator();
+    java.util.Iterator itr = quartzSchedulerResources.getSchedulerPlugins().iterator();
     while (itr.hasNext()) {
       SchedulerPlugin plugin = (SchedulerPlugin) itr.next();
       plugin.shutdown();
@@ -1168,7 +1160,7 @@ public class QuartzScheduler implements Scheduler {
 
   private void startPlugins() {
 
-    java.util.Iterator itr = mQuartzSchedulerResources.getSchedulerPlugins().iterator();
+    java.util.Iterator itr = quartzSchedulerResources.getSchedulerPlugins().iterator();
     while (itr.hasNext()) {
       SchedulerPlugin plugin = (SchedulerPlugin) itr.next();
       plugin.start();
@@ -1185,6 +1177,11 @@ public class QuartzScheduler implements Scheduler {
 
 class ErrorLogger extends SchedulerListenerSupport {
 
+  private final Logger logger = LoggerFactory.getLogger(ErrorLogger.class);
+
+  /**
+   * Constructor
+   */
   ErrorLogger() {
 
   }
@@ -1192,7 +1189,7 @@ class ErrorLogger extends SchedulerListenerSupport {
   @Override
   public void schedulerError(String msg, SchedulerException cause) {
 
-    getLog().error(msg, cause);
+    logger.error(msg, cause);
   }
 
 }

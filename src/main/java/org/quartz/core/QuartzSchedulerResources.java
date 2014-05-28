@@ -1,6 +1,6 @@
-/* 
+/**
  * Copyright 2001-2009 Terracotta, Inc. 
- * 
+ * Copyright 2014 Xeiam, LLC
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
  * use this file except in compliance with the License. You may obtain a copy 
  * of the License at 
@@ -14,7 +14,6 @@
  * under the License.
  * 
  */
-
 package org.quartz.core;
 
 import java.util.ArrayList;
@@ -33,10 +32,6 @@ import org.quartz.spi.ThreadPool;
  * @author James House
  */
 public class QuartzSchedulerResources {
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
 
   private String threadName;
 
@@ -60,10 +55,6 @@ public class QuartzSchedulerResources {
 
   private boolean interruptJobsOnShutdownWithWait = false;
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
-
   /**
    * <p>
    * Create an instance with no properties initialized.
@@ -73,10 +64,6 @@ public class QuartzSchedulerResources {
 
     // do nothing...
   }
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
 
   /**
    * <p>
