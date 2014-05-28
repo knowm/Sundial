@@ -14,7 +14,7 @@ access to the context parameters. If you are looking
 for an all-Java job scheduling framework that is easy to integrate
 into your applications, Sundial is for you.
 
-Usage is very simple: create a Job, configure the Job's in jobs.xml, and start the scheduler.
+Usage is very simple: create a Job, configure the Job in jobs.xml, and start the scheduler.
 
 ## Example
 
