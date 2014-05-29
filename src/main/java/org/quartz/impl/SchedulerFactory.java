@@ -86,8 +86,8 @@ public class SchedulerFactory {
     // Setup SimpleThreadPool
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //
-    SimpleThreadPool threadpool = new SimpleThreadPool();
-    threadpool.setThreadCount(threadPoolSize);
+    SimpleThreadPool threadPool = new SimpleThreadPool();
+    threadPool.setThreadCount(threadPoolSize);
 
     // Setup RAMJobStore
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,16 +96,16 @@ public class SchedulerFactory {
 
     // Set up any SchedulerPlugins
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    XMLSchedulingDataProcessorPlugin lXMLSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
-    lXMLSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
-    lXMLSchedulingDataProcessorPlugin.setScanInterval(0);
+    XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
+    xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
+    xmlSchedulingDataProcessorPlugin.setScanInterval(0);
 
-    ShutdownHookPlugin lShutdownHookPlugin = new ShutdownHookPlugin();
+    ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
 
     // Set up any TriggerListeners
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    DefaultTriggerListener lDefaultTriggerListener = new DefaultTriggerListener();
+    DefaultTriggerListener defaultTriggerListener = new DefaultTriggerListener();
 
     boolean tpInited = false;
     boolean qsInited = false;
@@ -125,30 +125,30 @@ public class SchedulerFactory {
       quartzSchedulerResources.setMaxBatchSize(1);
       quartzSchedulerResources.setInterruptJobsOnShutdown(true);
       quartzSchedulerResources.setInterruptJobsOnShutdownWithWait(true);
-      quartzSchedulerResources.setThreadPool(threadpool);
-      threadpool.setThreadNamePrefix("Quartz_Scheduler_Worker");
-      threadpool.initialize();
+      quartzSchedulerResources.setThreadPool(threadPool);
+      threadPool.setThreadNamePrefix("Quartz_Scheduler_Worker");
+      threadPool.initialize();
       tpInited = true;
 
       quartzSchedulerResources.setJobStore(jobstore);
 
       // add plugins
-      quartzSchedulerResources.addSchedulerPlugin(lXMLSchedulingDataProcessorPlugin);
-      quartzSchedulerResources.addSchedulerPlugin(lShutdownHookPlugin);
+      quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
+      quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
 
       quartzScheduler = new QuartzScheduler(quartzSchedulerResources);
       qsInited = true;
 
       // add listeners
-      quartzScheduler.getListenerManager().addTriggerListener(lDefaultTriggerListener, EverythingMatcher.allTriggers());
+      quartzScheduler.getListenerManager().addTriggerListener(defaultTriggerListener, EverythingMatcher.allTriggers());
 
       // fire up job store, and runshell factory
       jobstore.initialize(quartzScheduler.getSchedulerSignaler());
-      jobstore.setThreadPoolSize(threadpool.getPoolSize());
+      jobstore.setThreadPoolSize(threadPool.getPoolSize());
 
       // Initialize plugins now that we have a Scheduler instance.
-      lXMLSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", quartzScheduler);
-      lShutdownHookPlugin.initialize("ShutdownHookPlugin", quartzScheduler);
+      xmlSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", quartzScheduler);
+      shutdownHookPlugin.initialize("ShutdownHookPlugin", quartzScheduler);
 
       jrsf.initialize(quartzScheduler);
 
@@ -161,7 +161,7 @@ public class SchedulerFactory {
         quartzScheduler.shutdown(false);
       }
       else if (tpInited) {
-        threadpool.shutdown(false);
+        threadPool.shutdown(false);
       }
       throw e;
     } catch (RuntimeException re) {
@@ -169,7 +169,7 @@ public class SchedulerFactory {
         quartzScheduler.shutdown(false);
       }
       else if (tpInited) {
-        threadpool.shutdown(false);
+        threadPool.shutdown(false);
       }
       throw re;
     } catch (Error re) {
@@ -177,7 +177,7 @@ public class SchedulerFactory {
         quartzScheduler.shutdown(false);
       }
       else if (tpInited) {
-        threadpool.shutdown(false);
+        threadPool.shutdown(false);
       }
       throw re;
     }
