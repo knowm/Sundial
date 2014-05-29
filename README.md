@@ -45,7 +45,7 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial_examplecode
 ### Non-Maven
 Download Jar: http://xeiam.com/sundial_changelog.jsp
 #### Dependencies
-* org.slf4j.slf4j-api-1.6.5
+* org.slf4j.slf4j-api-1.7.7
 
 ### Maven
 The Sundial release artifacts are hosted on Maven Central.
@@ -55,7 +55,7 @@ Add the Sundial library as a dependency to your pom.xml file:
     <dependency>
         <groupId>com.xeiam</groupId>
         <artifactId>sundial</artifactId>
-        <version>1.1.2</version>
+        <version>1.1.3</version>
     </dependency>
 
 For snapshots, add the following to your pom.xml file:
@@ -69,7 +69,7 @@ For snapshots, add the following to your pom.xml file:
     <dependency>
         <groupId>com.xeiam</groupId>
         <artifactId>sundial</artifactId>
-        <version>1.1.3-SNAPSHOT</version>
+        <version>1.1.4-SNAPSHOT</version>
     </dependency>
 
 ## Building
