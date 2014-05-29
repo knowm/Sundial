@@ -1,6 +1,6 @@
 /**
  * Copyright 2001-2010 Terracotta, Inc.
- * Copyright 2011 Xeiam LLC
+ * Copyright 2011 - 2013 Xeiam LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -28,19 +28,20 @@ import com.xeiam.sundial.SundialJobScheduler;
 
 /**
  * <p>
- * A ServletContextListner that can be used to initialize Quartz.
+ * A ServletContextListner that can be used to initialize Sundial.
  * </p>
  * <p>
- * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being shutdown). Possible values are "true" or "false". The
- * default is "true".
+ * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being
+ * shutdown). Possible values are "true" or "false". The default is "true".
  * </p>
  * <p>
- * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want scheduler.shutdown(true) called when the listener is unloaded (usually when the application server is
- * being shutdown). Passing "true" to the shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or "false". The default is "false".
+ * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want scheduler.shutdown(true) called when the listener is
+ * unloaded (usually when the application server is being shutdown). Passing "true" to the shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or
+ * "false". The default is "false".
  * </p>
  * <p>
- * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first loaded. If set to false, your application will need to call the start() method before the scheduler
- * begins to run and process jobs. Possible values are "true" or "false". The default is "true", which means the scheduler is started.
+ * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first loaded. If set to false, your application will need
+ * to call the start() method before the scheduler begins to run and process jobs. Possible values are "true" or "false". The default is "true", which means the scheduler is started.
  * </p>
  * <p>
  * The init parameter 'quartz:start-delay-seconds' can be used to specify the amount of time to wait after initializing the scheduler before scheduler.start() is called.
@@ -60,25 +61,25 @@ public class SundialInitializerListener implements ServletContextListener {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Override
-  public void contextInitialized(ServletContextEvent pServletContextEvent) {
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
 
     logger.info("Sundial Initializer Servlet loaded, initializing Scheduler...");
 
-    ServletContext servletContext = pServletContextEvent.getServletContext();
+    ServletContext servletContext = servletContextEvent.getServletContext();
     try {
 
-      String shutdownPref = servletContext.getInitParameter("shutdown-on-unload");
+      String shutdownPrefString = servletContext.getInitParameter("shutdown-on-unload");
 
-      if (shutdownPref != null) {
-        performShutdown = Boolean.valueOf(shutdownPref).booleanValue();
+      if (shutdownPrefString != null) {
+        performShutdown = Boolean.valueOf(shutdownPrefString).booleanValue();
       }
-      String shutdownWaitPref = servletContext.getInitParameter("wait-on-shutdown");
-      if (shutdownPref != null) {
-        waitOnShutdown = Boolean.valueOf(shutdownWaitPref).booleanValue();
+      String shutdownWaitPrefString = servletContext.getInitParameter("wait-on-shutdown");
+      if (shutdownPrefString != null) {
+        waitOnShutdown = Boolean.valueOf(shutdownWaitPrefString).booleanValue();
       }
 
       // THREAD POOL SIZE
-      int threadPoolSize = 0;
+      int threadPoolSize = 10; // ten is default
       String ThreadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
 
       try {
@@ -86,44 +87,45 @@ public class SundialInitializerListener implements ServletContextListener {
           threadPoolSize = Integer.parseInt(ThreadPoolSizeString);
         }
       } catch (Exception e) {
-        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
-        threadPoolSize = 10;
+        logger.error("Cannot parse value of 'thread-pool-size' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
       }
 
       // Always want to get the scheduler, even if it isn't starting,
       // to make sure it is both initialized and registered.
-      SundialJobScheduler.createScheduler(10);
+      SundialJobScheduler.createScheduler(threadPoolSize);
 
       // Give a reference to the servletContext so jobs can access "global" webapp objects
       SundialJobScheduler.setServletContext(servletContext);
 
       // Should the Scheduler being started now or later
-      String startOnLoad = servletContext.getInitParameter("start-scheduler-on-load");
+      String startOnLoadString = servletContext.getInitParameter("start-scheduler-on-load");
 
       int startDelay = 0;
-      String startDelayS = servletContext.getInitParameter("start-delay-seconds");
+      String startDelayString = servletContext.getInitParameter("start-delay-seconds");
 
       try {
-        if (startDelayS != null && startDelayS.trim().length() > 0) {
-          startDelay = Integer.parseInt(startDelayS);
+        if (startDelayString != null && startDelayString.trim().length() > 0) {
+          startDelay = Integer.parseInt(startDelayString);
         }
       } catch (Exception e) {
-        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + startDelayS + ", defaulting to 5 seconds.");
+        logger.error("Cannot parse value of 'start-delay-seconds' to an integer: " + startDelayString + ", defaulting to 5 seconds.");
         startDelay = 5;
       }
 
-      if (startOnLoad == null || (Boolean.valueOf(startOnLoad).booleanValue())) {
+      if (startOnLoadString == null || (Boolean.valueOf(startOnLoadString).booleanValue())) {
         if (startDelay <= 0) {
           // Start now
           SundialJobScheduler.getScheduler().start();
-          logger.info("Scheduler has been started...");
-        } else {
+          logger.info("Sundial Scheduler has been started...");
+        }
+        else {
           // Start delayed
           SundialJobScheduler.getScheduler().startDelayed(startDelay);
-          logger.info("Scheduler will start in " + startDelay + " seconds.");
+          logger.info("Sundial Scheduler will start in " + startDelay + " seconds.");
         }
-      } else {
-        logger.info("Scheduler has not been started. Use scheduler.start()");
+      }
+      else {
+        logger.info("Sundial Scheduler has not been started. Use scheduler.start()");
       }
 
       String globalLockOnLoadString = servletContext.getInitParameter("global-lock-on-load");
@@ -132,11 +134,12 @@ public class SundialInitializerListener implements ServletContextListener {
         globalLockOnLoad = Boolean.valueOf(globalLockOnLoadString).booleanValue();
         if (globalLockOnLoad) {
           SundialJobScheduler.lockScheduler();
+          logger.info("Sundial Scheduler has been locked.");
         }
       }
 
     } catch (Exception e) {
-      logger.error("Quartz Scheduler failed to initialize: ", e);
+      logger.error("Sundial Scheduler failed to initialize: ", e);
     }
 
   }
@@ -153,10 +156,10 @@ public class SundialInitializerListener implements ServletContextListener {
         SundialJobScheduler.getScheduler().shutdown(waitOnShutdown);
       }
     } catch (Exception e) {
-      logger.error("Quartz Scheduler failed to shutdown cleanly: ", e);
+      logger.error("Sundial Scheduler failed to shutdown cleanly: ", e);
     }
 
-    logger.info("Quartz Scheduler successful shutdown.");
+    logger.info("Sundial Scheduler successful shutdown.");
   }
 
 }

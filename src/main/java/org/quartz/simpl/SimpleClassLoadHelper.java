@@ -17,12 +17,12 @@
 
 package org.quartz.simpl;
 
-import org.quartz.spi.ClassLoadHelper;
-
+import java.io.InputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.io.InputStream;
+
+import org.quartz.spi.ClassLoadHelper;
 
 /**
  * A <code>ClassLoadHelper</code> that simply calls <code>Class.forName(..)</code>.
@@ -34,7 +34,7 @@ import java.io.InputStream;
  * @author jhouse
  * @author pl47ypus
  */
-public class SimpleClassLoadHelper implements ClassLoadHelper {
+class SimpleClassLoadHelper implements ClassLoadHelper {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,6 +43,7 @@ public class SimpleClassLoadHelper implements ClassLoadHelper {
   /**
    * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling thread, which is the thread that is initializing Quartz.
    */
+  @Override
   public void initialize() {
 
   }
@@ -50,6 +51,7 @@ public class SimpleClassLoadHelper implements ClassLoadHelper {
   /**
    * Return the class with the given name.
    */
+  @Override
   public Class loadClass(String name) throws ClassNotFoundException {
 
     return Class.forName(name);
@@ -61,6 +63,7 @@ public class SimpleClassLoadHelper implements ClassLoadHelper {
    * @param name name of the desired resource
    * @return a java.net.URL object
    */
+  @Override
   public URL getResource(String name) {
 
     return getClassLoader().getResource(name);
@@ -72,6 +75,7 @@ public class SimpleClassLoadHelper implements ClassLoadHelper {
    * @param name name of the desired resource
    * @return a java.io.InputStream object
    */
+  @Override
   public InputStream getResourceAsStream(String name) {
 
     return getClassLoader().getResourceAsStream(name);
@@ -82,6 +86,7 @@ public class SimpleClassLoadHelper implements ClassLoadHelper {
    * 
    * @return the class-loader user be the helper.
    */
+  @Override
   public ClassLoader getClassLoader() {
 
     // To follow the same behavior of Class.forName(...) I had to play

@@ -62,13 +62,13 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private String mFileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-  private JobFile mJobFile;
+  private JobFile jobFile;
 
   private long scanInterval = 0;
 
-  boolean started = false;
+  private boolean started = false;
 
-  protected ClassLoadHelper classLoadHelper = null;
+  private ClassLoadHelper classLoadHelper = null;
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,17 +85,9 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   /**
    * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
    */
-  protected Scheduler getScheduler() {
+  private Scheduler getScheduler() {
 
     return scheduler;
-  }
-
-  /**
-   * Get the name of this plugin. Set as part of initialize().
-   */
-  protected String getName() {
-
-    return name;
   }
 
   /**
@@ -162,7 +154,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
     classLoadHelper = new CascadingClassLoadHelper();
     classLoadHelper.initialize();
 
-    mJobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
+    jobFile = new JobFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME);
 
     log.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
 
@@ -171,7 +163,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   @Override
   public void start() {
 
-    processFile(mJobFile);
+    processFile(jobFile);
 
     started = true;
   }
@@ -205,7 +197,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
     }
   }
 
-  class JobFile {
+  private class JobFile {
 
     private String fileName;
 
@@ -230,16 +222,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
       return fileFound;
     }
 
-    protected String getFilePath() {
-
-      return filePath;
-    }
-
-    protected String getFileBasename() {
-
-      return fileBasename;
-    }
-
     private void initialize() throws SchedulerException {
 
       InputStream f = null;
@@ -262,7 +244,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
               // Swallow the exception
             }
           }
-        } else {
+        }
+        else {
           try {
             f = new java.io.FileInputStream(file);
           } catch (FileNotFoundException e) {
@@ -273,10 +256,12 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
         if (f == null) {
           if (isFailOnFileNotFound()) {
             throw new SchedulerException("File named '" + getFileName() + "' does not exist.");
-          } else {
+          }
+          else {
             log.warn("File named '" + getFileName() + "' does not exist. This is OK if you don't want to use an XML job config file.");
           }
-        } else {
+        }
+        else {
           fileFound = true;
           filePath = (furl != null) ? furl : file.getAbsolutePath();
           fileBasename = file.getName();
@@ -294,5 +279,3 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
 }
-
-// EOF

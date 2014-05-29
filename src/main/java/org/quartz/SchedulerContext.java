@@ -18,14 +18,14 @@
 package org.quartz;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import org.quartz.utils.StringKeyDirtyFlagMap;
 
 /**
  * Holds context/environment data that can be made available to Jobs as they are executed. This feature is much like the ServletContext feature when working with J2EE servlets.
  * <p>
- * Future versions of Quartz may make distinctions on how it propagates data in <code>SchedulerContext</code> between instances of proxies to a single scheduler instance - i.e. if Quartz is being used via RMI.
+ * Future versions of Quartz may make distinctions on how it propagates data in <code>SchedulerContext</code> between instances of proxies to a single scheduler instance - i.e. if Quartz is being used
+ * via RMI.
  * </p>
  * 
  * @see Scheduler#getContext
@@ -41,13 +41,4 @@ public class SchedulerContext extends StringKeyDirtyFlagMap implements Serializa
     super(15);
   }
 
-  /**
-   * Create a <code>SchedulerContext</code> with the given data.
-   */
-  public SchedulerContext(Map map) {
-
-    this();
-
-    putAll(map);
-  }
 }

@@ -16,14 +16,14 @@
  */
 package org.quartz.simpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.JobFactory;
 import org.quartz.spi.TriggerFiredBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default JobFactory used by Quartz - simply calls <code>newInstance()</code> on the job class.
@@ -36,11 +36,7 @@ public class SimpleJobFactory implements JobFactory {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
-  protected Logger getLog() {
-
-    return log;
-  }
-
+  @Override
   public Job newJob(TriggerFiredBundle bundle, Scheduler Scheduler) throws SchedulerException {
 
     JobDetail jobDetail = bundle.getJobDetail();

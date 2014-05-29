@@ -29,7 +29,7 @@ import org.quartz.exceptions.SchedulerException;
  * <code>TriggerListener</code>, and/or <code>SchedulerListener</code>.
  * </p>
  * <p>
- * If you use <code>{@link org.quartz.impl.StdSchedulerFactory}</code> to initialize your Scheduler, it can also create and initialize your plugins - look at the configuration docs for details.
+ * If you use <code>{@link org.quartz.impl.SchedulerFactory}</code> to initialize your Scheduler, it can also create and initialize your plugins - look at the configuration docs for details.
  * </p>
  * <p>
  * If you need direct access your plugin, you can have it explicitly put a reference to itself in the <code>Scheduler</code>'s <code>SchedulerContext</code> as part of its <code>{@link #initialize(String, Scheduler)}</code> method.

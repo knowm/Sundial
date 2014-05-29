@@ -35,47 +35,22 @@ public abstract class StringMatcher<T extends Key> implements Matcher<T> {
 
         return value.equals(compareTo);
       }
-    },
-
-    STARTS_WITH {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.startsWith(compareTo);
-      }
-    },
-
-    ENDS_WITH {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.endsWith(compareTo);
-      }
-    },
-
-    CONTAINS {
-
-      @Override
-      public boolean evaluate(final String value, final String compareTo) {
-
-        return value.contains(compareTo);
-      }
     };
 
     public abstract boolean evaluate(String value, String compareTo);
   }
 
-  protected String compareTo;
-  protected StringOperatorName compareWith;
+  private String compareTo;
+  private StringOperatorName compareWith;
 
   protected StringMatcher(String compareTo, StringOperatorName compareWith) {
 
-    if (compareTo == null)
+    if (compareTo == null) {
       throw new IllegalArgumentException("CompareTo value cannot be null!");
-    if (compareWith == null)
+    }
+    if (compareWith == null) {
       throw new IllegalArgumentException("CompareWith operator cannot be null!");
+    }
 
     this.compareTo = compareTo;
     this.compareWith = compareWith;
@@ -83,6 +58,7 @@ public abstract class StringMatcher<T extends Key> implements Matcher<T> {
 
   protected abstract String getValue(T key);
 
+  @Override
   public boolean isMatch(T key) {
 
     return compareWith.evaluate(getValue(key), compareTo);
@@ -101,23 +77,32 @@ public abstract class StringMatcher<T extends Key> implements Matcher<T> {
   @Override
   public boolean equals(Object obj) {
 
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     StringMatcher other = (StringMatcher) obj;
     if (compareTo == null) {
-      if (other.compareTo != null)
+      if (other.compareTo != null) {
         return false;
-    } else if (!compareTo.equals(other.compareTo))
+      }
+    }
+    else if (!compareTo.equals(other.compareTo)) {
       return false;
+    }
     if (compareWith == null) {
-      if (other.compareWith != null)
+      if (other.compareWith != null) {
         return false;
-    } else if (!compareWith.equals(other.compareWith))
+      }
+    }
+    else if (!compareWith.equals(other.compareWith)) {
       return false;
+    }
     return true;
   }
 

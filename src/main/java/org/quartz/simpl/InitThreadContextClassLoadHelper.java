@@ -17,10 +17,10 @@
 
 package org.quartz.simpl;
 
-import org.quartz.spi.ClassLoadHelper;
-
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
+
+import org.quartz.spi.ClassLoadHelper;
 
 /**
  * A <code>ClassLoadHelper</code> that uses either the context class loader of the thread that initialized Quartz.
@@ -33,7 +33,7 @@ import java.io.InputStream;
  * @author jhouse
  * @author pl47ypus
  */
-public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
+class InitThreadContextClassLoadHelper implements ClassLoadHelper {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,6 +48,7 @@ public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
   /**
    * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling thread, which is the thread that is initializing Quartz.
    */
+  @Override
   public void initialize() {
 
     initClassLoader = Thread.currentThread().getContextClassLoader();
@@ -56,6 +57,7 @@ public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
   /**
    * Return the class with the given name.
    */
+  @Override
   public Class loadClass(String name) throws ClassNotFoundException {
 
     return initClassLoader.loadClass(name);
@@ -67,6 +69,7 @@ public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
    * @param name name of the desired resource
    * @return a java.net.URL object
    */
+  @Override
   public URL getResource(String name) {
 
     return initClassLoader.getResource(name);
@@ -78,6 +81,7 @@ public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
    * @param name name of the desired resource
    * @return a java.io.InputStream object
    */
+  @Override
   public InputStream getResourceAsStream(String name) {
 
     return initClassLoader.getResourceAsStream(name);
@@ -88,6 +92,7 @@ public class InitThreadContextClassLoadHelper implements ClassLoadHelper {
    * 
    * @return the class-loader user be the helper.
    */
+  @Override
   public ClassLoader getClassLoader() {
 
     return this.initClassLoader;

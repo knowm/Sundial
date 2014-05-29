@@ -27,7 +27,7 @@ import java.util.Iterator;
  * 
  * @author <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
  */
-public class ValidationException extends Exception {
+class ValidationException extends Exception {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,21 +52,9 @@ public class ValidationException extends Exception {
    * 
    * @param message exception message.
    */
-  public ValidationException(String message) {
+  private ValidationException(String message) {
 
     super(message);
-  }
-
-  /**
-   * Constructor for ValidationException.
-   * 
-   * @param errors collection of validation exceptions.
-   */
-  public ValidationException(Collection<Exception> errors) {
-
-    this();
-    this.validationExceptions = Collections.unmodifiableCollection(validationExceptions);
-    initCause(errors.iterator().next());
   }
 
   /**
@@ -75,7 +63,7 @@ public class ValidationException extends Exception {
    * @param message exception message.
    * @param errors collection of validation exceptions.
    */
-  public ValidationException(String message, Collection<Exception> errors) {
+  ValidationException(String message, Collection<Exception> errors) {
 
     this(message);
     this.validationExceptions = Collections.unmodifiableCollection(validationExceptions);
@@ -101,6 +89,7 @@ public class ValidationException extends Exception {
    * 
    * @return the detail message string.
    */
+  @Override
   public String getMessage() {
 
     if (getValidationExceptions().size() == 0) {

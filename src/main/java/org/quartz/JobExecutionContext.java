@@ -20,16 +20,19 @@ package org.quartz;
 import java.util.Date;
 
 /**
- * A context bundle containing handles to various environment information, that is given to a <code>{@link org.quartz.JobDetail}</code> instance as it is executed, and to a <code>{@link Trigger}</code> instance after the execution completes.
+ * A context bundle containing handles to various environment information, that is given to a <code>{@link org.quartz.JobDetail}</code> instance as it is executed, and to a
+ * <code>{@link Trigger}</code> instance after the execution completes.
  * <p>
- * The <code>JobDataMap</code> found on this object (via the <code>getMergedJobDataMap()</code> method) serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the <code>JobDetail</code> and the one found on the
- * <code>Trigger</code>, with the value in the latter overriding any same-named values in the former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the JobDataMap found on this object</i> NOTE: Do not
- * expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s own JobDataMap.
+ * The <code>JobDataMap</code> found on this object (via the <code>getMergedJobDataMap()</code> method) serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the
+ * <code>JobDetail</code> and the one found on the <code>Trigger</code>, with the value in the latter overriding any same-named values in the former. <i>It is thus considered a 'best practice' that
+ * the execute code of a Job retrieve data from the JobDataMap found on this object</i> NOTE: Do not expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s
+ * own JobDataMap.
  * </p>
  * <p>
- * <code>JobExecutionContext</code> s are also returned from the <code>Scheduler.getCurrentlyExecutingJobs()</code> method. These are the same instances as those passed into the jobs that are currently executing within the scheduler. The exception to
- * this is when your application is using Quartz remotely (i.e. via RMI) - in which case you get a clone of the <code>JobExecutionContext</code>s, and their references to the <code>Scheduler</code> and <code>Job</code> instances have been lost (a
- * clone of the <code>JobDetail</code> is still available - just not a handle to the job instance that is running).
+ * <code>JobExecutionContext</code> s are also returned from the <code>Scheduler.getCurrentlyExecutingJobs()</code> method. These are the same instances as those passed into the jobs that are
+ * currently executing within the scheduler. The exception to this is when your application is using Quartz remotely (i.e. via RMI) - in which case you get a clone of the
+ * <code>JobExecutionContext</code>s, and their references to the <code>Scheduler</code> and <code>Job</code> instances have been lost (a clone of the <code>JobDetail</code> is still available - just
+ * not a handle to the job instance that is running).
  * </p>
  * 
  * @see #getScheduler()
@@ -77,8 +80,9 @@ public interface JobExecutionContext {
    * Get the convenience <code>JobDataMap</code> of this execution context.
    * </p>
    * <p>
-   * The <code>JobDataMap</code> found on this object serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the <code>JobDetail</code> and the one found on the <code>Trigger</code>, with the value in the latter overriding
-   * any same-named values in the former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the JobDataMap found on this object.</i>
+   * The <code>JobDataMap</code> found on this object serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the <code>JobDetail</code> and the one found on the
+   * <code>Trigger</code>, with the value in the latter overriding any same-named values in the former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the
+   * JobDataMap found on this object.</i>
    * </p>
    * <p>
    * NOTE: Do not expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s own JobDataMap.
@@ -145,29 +149,11 @@ public interface JobExecutionContext {
   public void setResult(Object result);
 
   /**
-   * The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed (or thrown an exception), and is therefore generally only useful to <code>JobListener</code>s and
-   * <code>TriggerListener</code>s.
+   * The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed (or thrown an exception), and is therefore generally only useful to
+   * <code>JobListener</code>s and <code>TriggerListener</code>s.
    * 
    * @return Returns the jobRunTime.
    */
   public long getJobRunTime();
-
-  /**
-   * Put the specified value into the context's data map with the given key. Possibly useful for sharing data between listeners and jobs.
-   * <p>
-   * NOTE: this data is volatile - it is lost after the job execution completes, and all TriggerListeners and JobListeners have been notified.
-   * </p>
-   * 
-   * @param key
-   * @param value
-   */
-  public void put(Object key, Object value);
-
-  /**
-   * Get the value with the given key from the context's data map.
-   * 
-   * @param key
-   */
-  public Object get(Object key);
 
 }

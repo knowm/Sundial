@@ -1,4 +1,4 @@
-/* 
+/** 
  * Copyright 2001-2009 Terracotta, Inc. 
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class SchedulerListenerSupport implements SchedulerListener {
 
-  protected final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
   /**
    * Get the <code>{@link org.slf4j.Logger}</code> for this class's category. This should be used by subclasses for logging.
@@ -55,27 +55,7 @@ public abstract class SchedulerListenerSupport implements SchedulerListener {
   }
 
   @Override
-  public void jobPaused(JobKey jobKey) {
-
-  }
-
-  @Override
-  public void jobResumed(JobKey jobKey) {
-
-  }
-
-  @Override
   public void jobScheduled(Trigger trigger) {
-
-  }
-
-  @Override
-  public void jobsPaused(String jobGroup) {
-
-  }
-
-  @Override
-  public void jobsResumed(String jobGroup) {
 
   }
 
@@ -111,26 +91,6 @@ public abstract class SchedulerListenerSupport implements SchedulerListener {
 
   @Override
   public void triggerFinalized(Trigger trigger) {
-
-  }
-
-  @Override
-  public void triggerPaused(TriggerKey triggerKey) {
-
-  }
-
-  @Override
-  public void triggerResumed(TriggerKey triggerKey) {
-
-  }
-
-  @Override
-  public void triggersPaused(String triggerGroup) {
-
-  }
-
-  @Override
-  public void triggersResumed(String triggerGroup) {
 
   }
 

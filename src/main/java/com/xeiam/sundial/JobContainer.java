@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 package com.xeiam.sundial;
 
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
@@ -32,7 +30,7 @@ public abstract class JobContainer {
   private static ThreadLocal<JobContext> sContextContainer = new ThreadLocal<JobContext>();
 
   /** slf4J logger wrapper */
-  Logger logger = LoggerFactory.getLogger(JobContainer.class);
+  // Logger logger = LoggerFactory.getLogger(JobContainer.class);
 
   /** terminate flag */
   private boolean mTerminate = false;
@@ -42,10 +40,10 @@ public abstract class JobContainer {
    * 
    * @param pJobContext
    */
-  protected void initContextContainer(JobExecutionContext pJobExecutionContext) {
+  protected void initContextContainer(JobExecutionContext jobExecutionContext) {
 
     JobContext lJobContext = new JobContext();
-    lJobContext.addQuartzContext(pJobExecutionContext);
+    lJobContext.addQuartzContext(jobExecutionContext);
     sContextContainer.set(lJobContext);
   }
 
@@ -93,36 +91,6 @@ public abstract class JobContainer {
   public void setTerminate() {
 
     mTerminate = true;
-  }
-
-  protected void logTrace(String pMessage) {
-
-    logger.trace(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logDebug(String pMessage) {
-
-    logger.debug(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logInfo(String pMessage) {
-
-    logger.info(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logWarning(String pMessage) {
-
-    logger.warn(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logError(String pMessage) {
-
-    logger.error(" [" + this.getClass().getName() + "] " + pMessage);
-  }
-
-  protected void logError(String pMessage, Throwable e) {
-
-    logger.error(" [" + this.getClass().getName() + "] " + pMessage, e);
   }
 
 }

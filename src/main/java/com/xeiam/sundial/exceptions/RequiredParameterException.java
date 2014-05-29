@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ import org.slf4j.LoggerFactory;
  */
 public class RequiredParameterException extends RuntimeException {
 
-  private static final long serialVersionUID = 1L;
-
   /** slf4J logger wrapper */
-  Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
+  private Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
 
   public RequiredParameterException() {
 

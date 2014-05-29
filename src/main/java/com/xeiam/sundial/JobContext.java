@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import java.util.Map;
 
 import org.quartz.CronTrigger;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.exceptions.RequiredParameterException;
 
@@ -32,7 +30,7 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
  */
 public class JobContext {
 
-  Logger logger = LoggerFactory.getLogger(JobContext.class);
+  // Logger logger = LoggerFactory.getLogger(JobContext.class);
 
   private static final String KEY_JOB_NAME = "KEY_JOB_NAME";
 
@@ -41,24 +39,24 @@ public class JobContext {
   private static final String KEY_TRIGGER_CRON_EXPRESSION = "KEY_TRIGGER_CRON_EXPRESSION";
 
   /** The Map holding key/value pairs */
-  public Map<String, Object> mMap = new HashMap<String, Object>();
+  public Map<String, Object> map = new HashMap<String, Object>();
 
   /**
    * Add all the mappings from the JobExecutionContext to the JobContext
    * 
-   * @param pJobExecutionContext
+   * @param jobExecutionContext
    */
-  public void addQuartzContext(JobExecutionContext pJobExecutionContext) {
+  public void addQuartzContext(JobExecutionContext jobExecutionContext) {
 
-    for (Object lMapKey : pJobExecutionContext.getMergedJobDataMap().keySet()) {
-      // logger.debug("added key: " + (String) lMapKey);
-      // logger.debug("added value: " + (String) pJobExecutionContext.getMergedJobDataMap().get(lMapKey));
-      mMap.put((String) lMapKey, pJobExecutionContext.getMergedJobDataMap().get(lMapKey));
+    for (Object mapKey : jobExecutionContext.getMergedJobDataMap().keySet()) {
+      // logger.debug("added key: " + (String) mapKey);
+      // logger.debug("added value: " + (String) jobExecutionContext.getMergedJobDataMap().get(mapKey));
+      map.put((String) mapKey, jobExecutionContext.getMergedJobDataMap().get(mapKey));
     }
-    mMap.put(KEY_JOB_NAME, pJobExecutionContext.getJobDetail().getKey().getName());
-    mMap.put(KEY_TRIGGER_NAME, (pJobExecutionContext.getTrigger().getKey().getName()));
-    if (pJobExecutionContext.getTrigger() instanceof CronTrigger) {
-      mMap.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) pJobExecutionContext.getTrigger()).getCronExpression());
+    map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getKey().getName());
+    map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getKey().getName()));
+    if (jobExecutionContext.getTrigger() instanceof CronTrigger) {
+      map.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
     }
 
   }
@@ -66,37 +64,37 @@ public class JobContext {
   /**
    * Add a key/value pair to the JobContext
    * 
-   * @param pKey
-   * @param pValue
+   * @param key
+   * @param value
    */
-  public void put(String pKey, Object pValue) {
+  public void put(String key, Object value) {
 
-    mMap.put(pKey, pValue);
+    map.put(key, value);
   }
 
   /**
    * Get a value from a key out of the JobContext
    * 
-   * @param pKey
+   * @param key
    * @return
    */
   @SuppressWarnings("unchecked")
-  public <T> T get(String pKey) {
+  public <T> T get(String key) {
 
-    T value = (T) mMap.get(pKey);
+    T value = (T) map.get(key);
     return value;
   }
 
   /**
    * Get a required value from a key out of the Job Context
    * 
-   * @param pKey
+   * @param key
    * @return
    */
   @SuppressWarnings("unchecked")
-  public <T> T getRequiredValue(String pKey) {
+  public <T> T getRequiredValue(String key) {
 
-    T value = (T) mMap.get(pKey);
+    T value = (T) map.get(key);
     if (value == null) {
       throw new RequiredParameterException();
     }

@@ -130,5 +130,3 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
   }
 
 }
-
-// EOF

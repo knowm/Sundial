@@ -26,7 +26,6 @@ import org.quartz.JobKey;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
-import org.quartz.TriggerUtils;
 
 public interface MutableTrigger extends Trigger {
 
@@ -58,7 +57,8 @@ public interface MutableTrigger extends Trigger {
   public void setJobDataMap(JobDataMap jobDataMap);
 
   /**
-   * The priority of a <code>Trigger</code> acts as a tie breaker such that if two <code>Trigger</code>s have the same scheduled fire time, then Quartz will do its best to give the one with the higher priority first access to a worker thread.
+   * The priority of a <code>Trigger</code> acts as a tie breaker such that if two <code>Trigger</code>s have the same scheduled fire time, then Quartz will do its best to give the one with the higher
+   * priority first access to a worker thread.
    * <p>
    * If not explicitly set, the default value is <code>5</code>.
    * </p>
@@ -69,8 +69,8 @@ public interface MutableTrigger extends Trigger {
 
   /**
    * <p>
-   * The time at which the trigger's scheduling should start. May or may not be the first actual fire time of the trigger, depending upon the type of trigger and the settings of the other properties of the trigger. However the first actual first time
-   * will not be before this date.
+   * The time at which the trigger's scheduling should start. May or may not be the first actual fire time of the trigger, depending upon the type of trigger and the settings of the other properties
+   * of the trigger. However the first actual first time will not be before this date.
    * </p>
    * <p>
    * Setting a value in the past may cause a new trigger to compute a first fire time that is in the past, which may cause an immediate misfire of the trigger.
@@ -89,8 +89,8 @@ public interface MutableTrigger extends Trigger {
 
   /**
    * <p>
-   * Set the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have defined a set of additional
-   * <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
+   * Set the instruction the <code>Scheduler</code> should be given for handling misfire situations for this <code>Trigger</code>- the concrete <code>Trigger</code> type that you are using will have
+   * defined a set of additional <code>MISFIRE_INSTRUCTION_XXX</code> constants that may be passed to this method.
    * </p>
    * <p>
    * If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.

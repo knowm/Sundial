@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Xeiam LLC.
+ * Copyright 2011 - 2013 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package com.xeiam.sundial;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
 /**
@@ -22,14 +25,18 @@ import com.xeiam.sundial.exceptions.JobInterruptException;
  */
 public class SampleJob2 extends Job {
 
+  private final Logger logger = LoggerFactory.getLogger(SampleJob2.class);
+
   @Override
   public void doRun() throws JobInterruptException {
 
     JobContext context = getJobContext();
 
-    String value = (String) context.get("MyParam");
+    String valueAsString = context.get("MyParam");
+    logger.info("valueAsString = " + valueAsString);
 
-    logInfo("value=" + value);
+    Integer valueAsInt = Integer.valueOf(valueAsString);
+    logger.info("valueAsInt = " + valueAsInt);
 
   }
 }

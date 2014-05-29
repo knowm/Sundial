@@ -17,9 +17,6 @@
 
 package org.quartz.exceptions;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.quartz.Scheduler;
 
 /**
@@ -46,7 +43,7 @@ public class SchedulerException extends Exception {
     super(msg);
   }
 
-  public SchedulerException(Throwable cause) {
+  SchedulerException(Throwable cause) {
 
     super(cause);
   }
@@ -75,12 +72,14 @@ public class SchedulerException extends Exception {
     return super.getCause();
   }
 
+  @Override
   public String toString() {
 
     Throwable cause = getUnderlyingException();
     if (cause == null || cause == this) {
       return super.toString();
-    } else {
+    }
+    else {
       return super.toString() + " [See nested exception: " + cause + "]";
     }
   }

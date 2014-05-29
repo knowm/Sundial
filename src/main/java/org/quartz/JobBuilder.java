@@ -25,14 +25,23 @@ import org.quartz.utils.Key;
 /**
  * <code>JobBuilder</code> is used to instantiate {@link JobDetail}s.
  * <p>
- * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>,
- * <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the
+ * methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code>
+ * implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:
  * </p>
  * 
  * <pre>
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
@@ -109,23 +118,6 @@ public class JobBuilder {
   }
 
   /**
-   * Use a <code>JobKey</code> with the given name and default group to identify the JobDetail.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-   * </p>
-   * 
-   * @param name the name element for the Job's JobKey
-   * @return the updated JobBuilder
-   * @see JobKey
-   * @see JobDetail#getKey()
-   */
-  public JobBuilder withIdentity(String name) {
-
-    key = new JobKey(name, null);
-    return this;
-  }
-
-  /**
    * Use a <code>JobKey</code> with the given name and group to identify the JobDetail.
    * <p>
    * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
@@ -192,42 +184,12 @@ public class JobBuilder {
    * If not explicitly set, the default value is <code>false</code>.
    * </p>
    * 
-   * @return the updated JobBuilder
-   * @see JobDetail#requestsRecovery()
-   */
-  public JobBuilder requestRecovery() {
-
-    this.shouldRecover = true;
-    return this;
-  }
-
-  /**
-   * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is encountered.
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   * 
    * @param shouldRecover
    * @return the updated JobBuilder
    */
   public JobBuilder requestRecovery(boolean shouldRecover) {
 
     this.shouldRecover = shouldRecover;
-    return this;
-  }
-
-  /**
-   * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#isDurable()
-   */
-  public JobBuilder storeDurably() {
-
-    this.durability = true;
     return this;
   }
 
@@ -244,78 +206,6 @@ public class JobBuilder {
   public JobBuilder storeDurably(boolean durability) {
 
     this.durability = durability;
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, String value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, Integer value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, Long value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, Float value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, Double value) {
-
-    jobDataMap.put(key, value);
-    return this;
-  }
-
-  /**
-   * Add the given key-value pair to the JobDetail's {@link JobDataMap}.
-   * 
-   * @return the updated JobBuilder
-   * @see JobDetail#getJobDataMap()
-   */
-  public JobBuilder usingJobData(String key, Boolean value) {
-
-    jobDataMap.put(key, value);
     return this;
   }
 

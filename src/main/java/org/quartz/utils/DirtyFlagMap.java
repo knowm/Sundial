@@ -31,7 +31,7 @@ import java.util.Set;
  * 
  * @author James House
  */
-public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
+class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,36 +64,14 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
    * 
    * @see java.util.HashMap
    */
-  public DirtyFlagMap(int initialCapacity) {
+  DirtyFlagMap(int initialCapacity) {
 
     map = new HashMap(initialCapacity);
-  }
-
-  /**
-   * <p>
-   * Create a DirtyFlagMap that 'wraps' a <code>HashMap</code> that has the given initial capacity and load factor.
-   * </p>
-   * 
-   * @see java.util.HashMap
-   */
-  public DirtyFlagMap(int initialCapacity, float loadFactor) {
-
-    map = new HashMap(initialCapacity, loadFactor);
   }
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-
-  /**
-   * <p>
-   * Clear the 'dirty' flag (set dirty flag to <code>false</code>).
-   * </p>
-   */
-  public void clearDirtyFlag() {
-
-    dirty = false;
-  }
 
   /**
    * <p>
@@ -115,6 +93,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     return map;
   }
 
+  @Override
   public void clear() {
 
     if (map.isEmpty() == false) {
@@ -124,21 +103,25 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     map.clear();
   }
 
+  @Override
   public boolean containsKey(Object key) {
 
     return map.containsKey(key);
   }
 
+  @Override
   public boolean containsValue(Object val) {
 
     return map.containsValue(val);
   }
 
+  @Override
   public Set entrySet() {
 
     return new DirtyFlagMapEntrySet(map.entrySet());
   }
 
+  @Override
   public boolean equals(Object obj) {
 
     if (obj == null || !(obj instanceof DirtyFlagMap)) {
@@ -148,26 +131,31 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     return map.equals(((DirtyFlagMap) obj).getWrappedMap());
   }
 
+  @Override
   public int hashCode() {
 
     return map.hashCode();
   }
 
+  @Override
   public Object get(Object key) {
 
     return map.get(key);
   }
 
+  @Override
   public boolean isEmpty() {
 
     return map.isEmpty();
   }
 
+  @Override
   public Set keySet() {
 
     return new DirtyFlagSet(map.keySet());
   }
 
+  @Override
   public Object put(Object key, Object val) {
 
     dirty = true;
@@ -175,6 +163,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     return map.put(key, val);
   }
 
+  @Override
   public void putAll(Map t) {
 
     if (!t.isEmpty()) {
@@ -184,6 +173,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     map.putAll(t);
   }
 
+  @Override
   public Object remove(Object key) {
 
     Object obj = map.remove(key);
@@ -195,16 +185,19 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     return obj;
   }
 
+  @Override
   public int size() {
 
     return map.size();
   }
 
+  @Override
   public Collection values() {
 
     return new DirtyFlagCollection(map.values());
   }
 
+  @Override
   public Object clone() {
 
     DirtyFlagMap copy;
@@ -237,11 +230,13 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       return collection;
     }
 
+    @Override
     public Iterator iterator() {
 
       return new DirtyFlagIterator(collection.iterator());
     }
 
+    @Override
     public boolean remove(Object o) {
 
       boolean removed = collection.remove(o);
@@ -251,6 +246,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       return removed;
     }
 
+    @Override
     public boolean removeAll(Collection c) {
 
       boolean changed = collection.removeAll(c);
@@ -260,6 +256,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       return changed;
     }
 
+    @Override
     public boolean retainAll(Collection c) {
 
       boolean changed = collection.retainAll(c);
@@ -269,6 +266,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       return changed;
     }
 
+    @Override
     public void clear() {
 
       if (collection.isEmpty() == false) {
@@ -278,41 +276,49 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     }
 
     // Pure wrapper methods
+    @Override
     public int size() {
 
       return collection.size();
     }
 
+    @Override
     public boolean isEmpty() {
 
       return collection.isEmpty();
     }
 
+    @Override
     public boolean contains(Object o) {
 
       return collection.contains(o);
     }
 
+    @Override
     public boolean add(Object o) {
 
       return collection.add(o);
     } // Not supported
 
+    @Override
     public boolean addAll(Collection c) {
 
       return collection.addAll(c);
     } // Not supported
 
+    @Override
     public boolean containsAll(Collection c) {
 
       return collection.containsAll(c);
     }
 
+    @Override
     public Object[] toArray() {
 
       return collection.toArray();
     }
 
+    @Override
     public Object[] toArray(Object[] array) {
 
       return collection.toArray(array);
@@ -347,6 +353,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       this.iterator = iterator;
     }
 
+    @Override
     public void remove() {
 
       dirty = true;
@@ -354,11 +361,13 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     }
 
     // Pure wrapper methods
+    @Override
     public boolean hasNext() {
 
       return iterator.hasNext();
     }
 
+    @Override
     public Object next() {
 
       return iterator.next();
@@ -375,16 +384,19 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       super(set);
     }
 
+    @Override
     public Iterator iterator() {
 
       return new DirtyFlagMapEntryIterator(getWrappedSet().iterator());
     }
 
+    @Override
     public Object[] toArray() {
 
       return toArray(new Object[super.size()]);
     }
 
+    @Override
     public Object[] toArray(Object[] array) {
 
       if (array.getClass().getComponentType().isAssignableFrom(Map.Entry.class) == false) {
@@ -418,6 +430,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       super(iterator);
     }
 
+    @Override
     public Object next() {
 
       return new DirtyFlagMapEntry((Map.Entry) super.next());
@@ -436,6 +449,7 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
       this.entry = entry;
     }
 
+    @Override
     public Object setValue(Object o) {
 
       dirty = true;
@@ -443,11 +457,13 @@ public class DirtyFlagMap implements Map, Cloneable, java.io.Serializable {
     }
 
     // Pure wrapper methods
+    @Override
     public Object getKey() {
 
       return entry.getKey();
     }
 
+    @Override
     public Object getValue() {
 
       return entry.getValue();

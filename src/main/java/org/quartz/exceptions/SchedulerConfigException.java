@@ -38,14 +38,4 @@ public class SchedulerConfigException extends SchedulerException {
     super(msg);
   }
 
-  /**
-   * <p>
-   * Create a <code>JobPersistenceException</code> with the given message and cause.
-   * </p>
-   */
-  public SchedulerConfigException(String msg, Throwable cause) {
-
-    super(msg, cause);
-  }
-
 }
