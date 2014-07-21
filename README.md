@@ -1,4 +1,4 @@
-## [![Sundial](http://www.xeiam.com/images/Sundial_64_64.png)](http://www.xeiam.com/sundial) Sundial 
+## [![Sundial](http://xeiam.com/wp-content/uploads/sundiallogo.png)](http://xeiam.com/sundial) Sundial 
 
 A Lightweight Job Scheduling Framework
 
@@ -33,7 +33,7 @@ Usage is very simple: create a Job, configure the Job in jobs.xml, and start the
         }
     }
     
-Now go ahead and [study some more examples](http://www.xeiam.com/sundial_examplecode.jsp), [download the thing](http://www.xeiam.com/sundial_changelog.jsp) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Features
 * Depends only on slf4j
@@ -43,7 +43,7 @@ Now go ahead and [study some more examples](http://www.xeiam.com/sundial_example
 
 ## Getting Started
 ### Non-Maven
-Download Jar: http://www.xeiam.com/sundial_changelog.jsp
+Download Jar: http://xeiam.com/sundial-change-log
 #### Dependencies
 * org.slf4j.slf4j-api-1.7.7
 
