@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The thread responsible for performing the work of firing <code>{@link Trigger}</code> s that are registered with the <code>{@link QuartzScheduler}</code>.
  * </p>
- * 
+ *
  * @see QuartzScheduler
  * @see org.quartz.Job
  * @see Trigger
@@ -164,7 +164,7 @@ class QuartzSchedulerThread extends Thread {
    * <p>
    * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occuring while waiting for the fire time to arrive.
    * </p>
-   * 
+   *
    * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other even (rather than scheduling a trigger), the
    *          caller should pass zero (0).
    */
@@ -456,7 +456,7 @@ class QuartzSchedulerThread extends Thread {
       if (earlier) {
         // so the new time is considered earlier, but is it enough earlier?
         long diff = oldTime - System.currentTimeMillis();
-        if (diff < (quartzSchedulerResources.getJobStore().supportsPersistence() ? 70L : 7L)) {
+        if (diff < 7L) {
           earlier = false;
         }
       }

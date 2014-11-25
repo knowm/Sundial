@@ -1,19 +1,19 @@
-/** 
- * Copyright 2001-2009 Terracotta, Inc. 
+/**
+ * Copyright 2001-2009 Terracotta, Inc.
  * Copyright 2014 Xeiam, LLC
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 package org.quartz.core;
 
@@ -65,7 +65,7 @@ import org.slf4j.LoggerFactory;
  * This is the heart of Quartz, an indirect implementation of the <code>{@link org.quartz.Scheduler}</code> interface, containing methods to schedule <code>{@link org.quartz.Job}</code>s, register
  * <code>{@link org.quartz.JobListener}</code> instances, etc.
  * </p>
- * 
+ *
  * @see org.quartz.Scheduler
  * @see org.quartz.core.QuartzSchedulerThread
  * @see org.quartz.spi.JobStore
@@ -124,7 +124,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * Create a <code>QuartzScheduler</code> with the given configuration properties.
    * </p>
-   * 
+   *
    * @see QuartzSchedulerResources
    */
   public QuartzScheduler(QuartzSchedulerResources quartzSchedulerResources) throws SchedulerException {
@@ -301,7 +301,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * The scheduler cannot be re-started.
    * </p>
-   * 
+   *
    * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
    */
   @Override
@@ -357,8 +357,6 @@ public class QuartzScheduler implements Scheduler {
     closed = true;
 
     shutdownPlugins();
-
-    quartzSchedulerResources.getJobStore().shutdown();
 
     notifySchedulerListenersShutdown();
 
@@ -429,7 +427,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
    * </p>
-   * 
+   *
    * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
   @Override
@@ -486,7 +484,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * Schedule the given <code>{@link org.quartz.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
    * </p>
-   * 
+   *
    * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
 
@@ -531,7 +529,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * The <code>Job</code> must by definition be 'durable', if it is not, SchedulerException will be thrown.
    * </p>
-   * 
+   *
    * @throws SchedulerException if there is an internal Scheduler error, or if the Job is not durable, or a Job with the same name already exists, and <code>replace</code> is <code>false</code>.
    */
 
@@ -549,11 +547,21 @@ public class QuartzScheduler implements Scheduler {
     notifySchedulerListenersJobAdded(jobDetail);
   }
 
+  @Override
+  public void removeJob(JobKey jobKey) throws SchedulerException {
+
+    validateState();
+
+    quartzSchedulerResources.getJobStore().removeJob(jobKey);
+    notifySchedulerThread(0L);
+    notifySchedulerListenersJobDeleted(jobKey);
+  }
+
   /**
    * <p>
    * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given name, and store the new given one - which must be associated with the same job.
    * </p>
-   * 
+   *
    * @param newTrigger The new <code>Trigger</code> to be stored.
    * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first fire time of the newly scheduled trigger.
    */
@@ -706,7 +714,7 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * Clears (deletes!) all scheduling data - all {@link Job}s, {@link Trigger}s {@link Calendar}s.
-   * 
+   *
    * @throws SchedulerException
    */
 
@@ -772,7 +780,7 @@ public class QuartzScheduler implements Scheduler {
    * <p>
    * Remove the given <code>{@link SchedulerListener}</code> from the <code>Scheduler</code>'s list of internal listeners.
    * </p>
-   * 
+   *
    * @return true if the identified listener was found in the list, and removed.
    */
   boolean removeInternalSchedulerListener(SchedulerListener schedulerListener) {

@@ -20,31 +20,28 @@ import org.quartz.JobExecutionContext;
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
 /**
- * The highest class of the Job hierarchy which contains the ThreadLocal instance, the JobContext, the logging methods, and handles terminating of Jobs.
- * 
+ * The highest class of the Job hierarchy which contains the ThreadLocal instance, the JobContext, and handles terminating of Jobs.
+ *
  * @author timmolter
  */
 public abstract class JobContainer {
 
   /** ThreadLocal container */
-  private static ThreadLocal<JobContext> sContextContainer = new ThreadLocal<JobContext>();
-
-  /** slf4J logger wrapper */
-  // Logger logger = LoggerFactory.getLogger(JobContainer.class);
+  private static ThreadLocal<JobContext> contextContainer = new ThreadLocal<JobContext>();
 
   /** terminate flag */
-  private boolean mTerminate = false;
+  private boolean terminate = false;
 
   /**
    * Initialize the ThreadLocal with a JobExecutionContext object
-   * 
+   *
    * @param pJobContext
    */
   protected void initContextContainer(JobExecutionContext jobExecutionContext) {
 
-    JobContext lJobContext = new JobContext();
-    lJobContext.addQuartzContext(jobExecutionContext);
-    sContextContainer.set(lJobContext);
+    JobContext jobContext = new JobContext();
+    jobContext.addQuartzContext(jobExecutionContext);
+    contextContainer.set(jobContext);
   }
 
   /**
@@ -52,12 +49,12 @@ public abstract class JobContainer {
    */
   protected void destroyContext() {
 
-    sContextContainer.remove();
+    contextContainer.remove();
   }
 
   /**
    * Get the JobContext object
-   * 
+   *
    * @return
    */
   protected JobContext getJobContext() {
@@ -67,12 +64,12 @@ public abstract class JobContainer {
 
   /**
    * Get the JobContext object
-   * 
+   *
    * @return
    */
   private static JobContext getContext() {
 
-    return sContextContainer.get();
+    return contextContainer.get();
   }
 
   /**
@@ -80,7 +77,7 @@ public abstract class JobContainer {
    */
   public void checkTerminated() {
 
-    if (mTerminate) {
+    if (terminate) {
       throw new JobInterruptException();
     }
   }
@@ -90,7 +87,7 @@ public abstract class JobContainer {
    */
   public void setTerminate() {
 
-    mTerminate = true;
+    terminate = true;
   }
 
 }

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Main entry-point to the Sundial scheduler
- * 
+ *
  * @author timmolter
  */
 public class SundialJobScheduler {
@@ -54,7 +54,7 @@ public class SundialJobScheduler {
 
   /**
    * Gets the underlying Sundial scheduler
-   * 
+   *
    * @return
    */
   public static Scheduler getScheduler() {
@@ -67,7 +67,7 @@ public class SundialJobScheduler {
 
   /**
    * Creates the Sundial Scheduler
-   * 
+   *
    * @param threadPoolSize
    * @return
    */
@@ -78,7 +78,7 @@ public class SundialJobScheduler {
         scheduler = new SchedulerFactory().getScheduler(threadPoolSize);
 
       } catch (SchedulerException e) {
-        logger.error("COULD NOT CREATE QUARTZ SCHEDULER!!!" + e);
+        logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!" + e);
       }
     }
     return scheduler;
@@ -92,7 +92,7 @@ public class SundialJobScheduler {
     try {
       getScheduler().start();
     } catch (SchedulerException e) {
-      logger.error("COULD NOT START QUARTZ SCHEDULER!!!" + e);
+      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!" + e);
 
     }
   }
@@ -118,7 +118,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * @return the mServletContext
+   * @return the ServletContext
    */
   public static ServletContext getServletContext() {
 
@@ -126,7 +126,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * @param servletContext the mServletContext to set
+   * @param servletContext the ServletContext to set
    */
   public static void setServletContext(ServletContext servletContext) {
 
@@ -135,7 +135,7 @@ public class SundialJobScheduler {
 
   /**
    * Starts a Job matching the the given Job Name found in jobs.xml
-   * 
+   *
    * @param jobName
    */
   public static void startJob(String jobName) {
@@ -150,8 +150,24 @@ public class SundialJobScheduler {
   }
 
   /**
+   * Removes a Job matching the the given Job Name found in jobs.xml
+   *
+   * @param jobName
+   */
+  public static void removeJob(String jobName) {
+
+    try {
+      JobKey jobKey = new JobKey(jobName);
+      getScheduler().removeJob(jobKey);
+    } catch (SchedulerException e) {
+      logger.error("ERROR REMOVING JOB!!!", e);
+    }
+
+  }
+
+  /**
    * Starts a Job matching the the given Job Name found in jobs.xml
-   * 
+   *
    * @param jobName
    */
   public static void startJob(String jobName, Map<String, Object> params) {
@@ -174,7 +190,7 @@ public class SundialJobScheduler {
 
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name
-   * 
+   *
    * @param jobName
    */
   public static void stopJob(String jobName) {
@@ -203,7 +219,7 @@ public class SundialJobScheduler {
 
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name, key and value
-   * 
+   *
    * @param jobName
    */
   public static void stopJob(String jobName, String key, String pValue) {
@@ -237,7 +253,7 @@ public class SundialJobScheduler {
 
   /**
    * Generates an alphabetically sorted List of all Job names in the DEFAULT job group
-   * 
+   *
    * @return
    */
   public static List<String> getAllJobNames() {
@@ -258,7 +274,7 @@ public class SundialJobScheduler {
 
   /**
    * Generates a Map of all Job names with corresponding Triggers
-   * 
+   *
    * @return
    */
   public static Map<String, List<Trigger>> getAllJobsAndTriggers() {
@@ -267,8 +283,8 @@ public class SundialJobScheduler {
     try {
       Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
       for (JobKey jobKey : allJobKeys) {
-        List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
-        allJobsMap.put(jobKey.getName(), lTriggers);
+        List<Trigger> triggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
+        allJobsMap.put(jobKey.getName(), triggers);
       }
 
     } catch (SchedulerException e) {

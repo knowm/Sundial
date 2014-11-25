@@ -1,19 +1,19 @@
-/* 
- * Copyright 2001-2010 Terracotta, Inc. 
- * Copyright 2011 Xeiam LLC 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/*
+ * Copyright 2001-2010 Terracotta, Inc.
+ * Copyright 2011 Xeiam LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 
 package org.quartz.xml;
@@ -23,7 +23,6 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
-import static org.quartz.TriggerKey.triggerKey;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,7 +78,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data. The xml document must conform to the format defined in "job_scheduling_data_1_8.xsd" The same
  * instance can be used again and again, however a single instance is not thread-safe.
- * 
+ *
  * @author James House
  * @author Past contributions from <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
  * @author Past contributions from pl47ypus
@@ -132,7 +131,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Constructor for JobSchedulingDataLoader.
-   * 
+   *
    * @param clh class-loader helper to share with digester.
    * @throws ParserConfigurationException if the XML parser cannot be configured as needed.
    */
@@ -144,7 +143,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Initializes the XML parser.
-   * 
+   *
    * @throws ParserConfigurationException
    */
   private void initDocumentParser() throws ParserConfigurationException {
@@ -225,7 +224,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Add the given group to the list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-   * 
+   *
    * @param group
    */
   public void addJobGroupToNeverDelete(String group) {
@@ -237,7 +236,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Add the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
-   * 
+   *
    * @param group
    */
   public void addTriggerGroupToNeverDelete(String group) {
@@ -261,12 +260,12 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Process the xmlfile named <code>fileName</code> with the given system ID.
-   * 
+   *
    * @param fileName meta data file name.
    * @param systemId system ID.
    */
   private void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException,
-      ParseException, XPathException {
+  ParseException, XPathException {
 
     prepForProcessing();
 
@@ -357,7 +356,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
       Date triggerEndTime = endTimeString == null || endTimeString.length() == 0 ? null : dateFormat.parse(endTimeString);
 
-      TriggerKey triggerKey = triggerKey(triggerName, triggerGroup);
+      TriggerKey triggerKey = new TriggerKey(triggerName, triggerGroup);
 
       ScheduleBuilder sched = null;
 
@@ -448,7 +447,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       Trigger trigger =
           newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-              .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+          .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
 
@@ -484,7 +483,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Process the xml file in the given location, and schedule all of the jobs defined within it.
-   * 
+   *
    * @param fileName meta data file name.
    */
   public void processFileAndScheduleJobs(String fileName, String systemId, Scheduler sched) throws Exception {
@@ -497,7 +496,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   /**
    * Returns a <code>List</code> of jobs loaded from the xml file.
    * <p/>
-   * 
+   *
    * @return a <code>List</code> of jobs.
    */
   private List<JobDetail> getLoadedJobs() {
@@ -508,7 +507,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   /**
    * Returns a <code>List</code> of triggers loaded from the xml file.
    * <p/>
-   * 
+   *
    * @return a <code>List</code> of triggers.
    */
   private List<Trigger> getLoadedTriggers() {
@@ -518,7 +517,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Returns an <code>InputStream</code> from the fileName as a resource.
-   * 
+   *
    * @param fileName file name.
    * @return an <code>InputStream</code> from the fileName as a resource.
    */
@@ -555,7 +554,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Schedules the given sets of jobs and triggers.
-   * 
+   *
    * @param sched job scheduler.
    * @exception SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
@@ -696,7 +695,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * ErrorHandler interface. Receive notification of a warning.
-   * 
+   *
    * @param e The error information encapsulated in a SAX parse exception.
    * @exception SAXException Any SAX exception, possibly wrapping another exception.
    */
@@ -708,7 +707,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * ErrorHandler interface. Receive notification of a recoverable error.
-   * 
+   *
    * @param e The error information encapsulated in a SAX parse exception.
    * @exception SAXException Any SAX exception, possibly wrapping another exception.
    */
@@ -720,7 +719,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * ErrorHandler interface. Receive notification of a non-recoverable error.
-   * 
+   *
    * @param e The error information encapsulated in a SAX parse exception.
    * @exception SAXException Any SAX exception, possibly wrapping another exception.
    */
@@ -732,7 +731,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Adds a detected validation exception.
-   * 
+   *
    * @param e SAX exception.
    */
   private void addValidationException(SAXException e) {
@@ -750,7 +749,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /**
    * Throws a ValidationException if the number of validationExceptions detected is greater than zero.
-   * 
+   *
    * @exception ValidationException DTD validation exception.
    */
   private void maybeThrowValidationException() throws ValidationException {

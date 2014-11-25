@@ -1,18 +1,18 @@
-/** 
- * Copyright 2001-2009 Terracotta, Inc. 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/**
+ * Copyright 2001-2009 Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 package org.quartz;
 
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.quartz.exceptions.SchedulerException;
+import org.quartz.impl.SchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 /**
@@ -58,7 +59,7 @@ import org.quartz.impl.matchers.GroupMatcher;
  * <p>
  * The setup/configuration of a <code>Scheduler</code> instance is very customizable. Please consult the documentation distributed with Quartz.
  * </p>
- * 
+ *
  * @author James House
  * @author Sharada Jambula
  */
@@ -80,7 +81,7 @@ public interface Scheduler {
    * <p>
    * The misfire/recovery process will be started, if it is the initial call to this method on this scheduler instance.
    * </p>
-   * 
+   *
    * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
    */
   void start() throws SchedulerException;
@@ -89,7 +90,7 @@ public interface Scheduler {
    * Calls {#start()} after the indicated number of seconds. (This call does not block). This can be useful within applications that have initializers that create the scheduler immediately, before the
    * resources needed by the executing jobs have been
    * fully initialized.
-   * 
+   *
    * @throws SchedulerException if <code>shutdown()</code> has been called, or there is an error within the <code>Scheduler</code>.
    */
   void startDelayed(int seconds) throws SchedulerException;
@@ -125,7 +126,7 @@ public interface Scheduler {
    * <p>
    * The scheduler cannot be re-started.
    * </p>
-   * 
+   *
    * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to return until all currently executing jobs have completed.
    */
   void shutdown(boolean waitForJobsToComplete) throws SchedulerException;
@@ -149,7 +150,7 @@ public interface Scheduler {
 
   /**
    * Get a reference to the scheduler's <code>ListenerManager</code>, through which listeners may be registered.
-   * 
+   *
    * @return the scheduler's <code>ListenerManager</code>
    * @throws SchedulerException if the scheduler is not local
    */
@@ -166,14 +167,14 @@ public interface Scheduler {
    * <p>
    * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
    * </p>
-   * 
+   *
    * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
   Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException;
 
   /**
    * Schedule the given <code>{@link org.quartz.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
-   * 
+   *
    * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
   Date scheduleJob(Trigger trigger) throws SchedulerException;
@@ -182,7 +183,7 @@ public interface Scheduler {
    * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job (the new trigger must have the job name &
    * group specified) - however, the new trigger need
    * not have the same name as the old trigger.
-   * 
+   *
    * @param triggerKey identity of the trigger to replace
    * @param newTrigger The new <code>Trigger</code> to be stored.
    * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first fire time of the newly scheduled trigger.
@@ -195,21 +196,29 @@ public interface Scheduler {
    * <p>
    * The <code>Job</code> must by definition be 'durable', if it is not, SchedulerException will be thrown.
    * </p>
-   * 
+   *
    * @throws SchedulerException if there is an internal Scheduler error, or if the Job is not durable, or a Job with the same name already exists, and <code>replace</code> is <code>false</code>.
    */
   void addJob(JobDetail jobDetail, boolean replace) throws SchedulerException;
 
   /**
+   * Remove a Job from the Scheduler
+   *
+   * @param jobDetail
+   * @throws SchedulerException
+   */
+  void removeJob(JobKey jobKey) throws SchedulerException;
+
+  /**
    * Trigger the identified <code>{@link org.quartz.JobDetail}</code> (execute it now).
-   * 
+   *
    * @param data the (possibly <code>null</code>) JobDataMap to be associated with the trigger that fires the job immediately.
    */
   void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException;
 
   /**
    * Get the keys of all the <code>{@link org.quartz.JobDetail}s</code> in the matching groups.
-   * 
+   *
    * @param matcher Matcher to evaluate against known groups
    * @return Set of all keys matching
    * @throws SchedulerException On error

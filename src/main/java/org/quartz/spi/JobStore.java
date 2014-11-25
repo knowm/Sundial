@@ -40,7 +40,7 @@ import org.quartz.impl.matchers.GroupMatcher;
  * <p>
  * Storage of <code>Job</code> s and <code>Trigger</code> s should be keyed on the combination of their name and group for uniqueness.
  * </p>
- * 
+ *
  * @see org.quartz.core.QuartzScheduler
  * @see org.quartz.Trigger
  * @see org.quartz.Job
@@ -66,13 +66,6 @@ public interface JobStore {
    */
   void schedulerStarted() throws SchedulerException;
 
-  /**
-   * Called by the QuartzScheduler to inform the <code>JobStore</code> that it should free up all of it's resources because the scheduler is shutting down.
-   */
-  void shutdown();
-
-  boolean supportsPersistence();
-
   // ///////////////////////////////////////////////////////////////////////////
   //
   // Job & Trigger Storage methods
@@ -81,7 +74,7 @@ public interface JobStore {
 
   /**
    * Store the given <code>{@link org.quartz.JobDetail}</code> and <code>{@link org.quartz.Trigger}</code>.
-   * 
+   *
    * @param newJob The <code>JobDetail</code> to be stored.
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists.
@@ -90,7 +83,7 @@ public interface JobStore {
 
   /**
    * Store the given <code>{@link org.quartz.JobDetail}</code>.
-   * 
+   *
    * @param newJob The <code>JobDetail</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>JobStore</code> with the same name & group should be over-written.
    * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists, and replaceExisting is set to false.
@@ -102,21 +95,21 @@ public interface JobStore {
    * <p>
    * If removal of the <code>Job</code> results in an empty group, the group should be removed from the <code>JobStore</code>'s list of known group names.
    * </p>
-   * 
+   *
    * @return <code>true</code> if a <code>Job</code> with the given name & group was found and removed from the store.
    */
   boolean removeJob(JobKey jobKey) throws JobPersistenceException;
 
   /**
    * Retrieve the <code>{@link org.quartz.JobDetail}</code> for the given <code>{@link org.quartz.Job}</code>.
-   * 
+   *
    * @return The desired <code>Job</code>, or null if there is no match.
    */
   JobDetail retrieveJob(JobKey jobKey) throws JobPersistenceException;
 
   /**
    * Store the given <code>{@link org.quartz.Trigger}</code>.
-   * 
+   *
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>JobStore</code> with the same name & group should be over-written.
    * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already exists, and replaceExisting is set to false.
@@ -132,14 +125,14 @@ public interface JobStore {
    * <p>
    * If removal of the <code>Trigger</code> results in an 'orphaned' <code>Job</code> that is not 'durable', then the <code>Job</code> should be deleted also.
    * </p>
-   * 
+   *
    * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
    */
   boolean removeTrigger(TriggerKey triggerKey) throws JobPersistenceException;
 
   /**
    * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given key, and store the new given one - which must be associated with the same job.
-   * 
+   *
    * @param newTrigger The new <code>Trigger</code> to be stored.
    * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
    */
@@ -147,14 +140,14 @@ public interface JobStore {
 
   /**
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
-   * 
+   *
    * @return The desired <code>Trigger</code>, or null if there is no match.
    */
   OperableTrigger retrieveTrigger(TriggerKey triggerKey) throws JobPersistenceException;
 
   /**
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
-   * 
+   *
    * @param calName The name of the <code>Calendar</code> to be retrieved.
    * @return The desired <code>Calendar</code>, or null if there is no match.
    */
@@ -196,7 +189,7 @@ public interface JobStore {
 
   /**
    * Get a handle to the next trigger to be fired, and mark it as 'reserved' by the calling scheduler.
-   * 
+   *
    * @param noLaterThan If > 0, the JobStore should only return a Trigger that will fire no later than the time represented in this value as milliseconds.
    * @see #releaseAcquiredTrigger(Trigger)
    */
@@ -209,7 +202,7 @@ public interface JobStore {
 
   /**
    * Inform the <code>JobStore</code> that the scheduler is now firing the given <code>Trigger</code> (executing its associated <code>Job</code>), that it had previously acquired (reserved).
-   * 
+   *
    * @return may return null if all the triggers or their calendars no longer exist, or if the trigger was not successfully put into the 'executing' state. Preference is to return an empty list if
    *         none of the triggers could be fired.
    */
@@ -223,7 +216,7 @@ public interface JobStore {
 
   /**
    * Tells the JobStore the pool size used to execute jobs
-   * 
+   *
    * @param poolSize amount of threads allocated for job execution
    * @since 2.0
    */

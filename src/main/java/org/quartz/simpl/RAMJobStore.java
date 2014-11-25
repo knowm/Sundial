@@ -1,18 +1,18 @@
-/* 
- * Copyright 2001-2009 Terracotta, Inc. 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/*
+ * Copyright 2001-2009 Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 
 package org.quartz.simpl;
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * As you should know, the ramification of this is that access is extrememly fast, but the data is completely volatile - therefore this <code>JobStore</code> should not be used if true persistence
  * between program shutdowns is required.
  * </p>
- * 
+ *
  * @author James House
  * @author Sharada Jambula
  * @author Eric Mueller
@@ -90,7 +90,7 @@ public class RAMJobStore implements JobStore {
 
   private HashSet<JobKey> blockedJobs = new HashSet<JobKey>();
 
-  private long misfireThreshold = 5000l;
+  private long misfireThreshold = 5000L;
 
   private SchedulerSignaler mSignaler;
 
@@ -140,7 +140,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * The number of milliseconds by which a trigger must have missed its next-fire-time, in order for it to be considered "misfired" and thus have its misfire instruction applied.
-   * 
+   *
    * @param misfireThreshold
    */
   public void setMisfireThreshold(long misfireThreshold) {
@@ -153,25 +153,9 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Called by the QuartzScheduler to inform the <code>JobStore</code> that it should free up all of it's resources because the scheduler is shutting down.
-   * </p>
-   */
-  @Override
-  public void shutdown() {
-
-  }
-
-  @Override
-  public boolean supportsPersistence() {
-
-    return false;
-  }
-
-  /**
-   * <p>
    * Store the given <code>{@link org.quartz.JobDetail}</code> and <code>{@link org.quartz.Trigger}</code>.
    * </p>
-   * 
+   *
    * @param newJob The <code>JobDetail</code> to be stored.
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists.
@@ -187,7 +171,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Store the given <code>{@link org.quartz.Job}</code>.
    * </p>
-   * 
+   *
    * @param newJob The <code>Job</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>JobStore</code> with the same name & group should be over-written.
    * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists, and replaceExisting is set to false.
@@ -235,7 +219,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Remove (delete) the <code>{@link org.quartz.Job}</code> with the given name, and any <code>{@link org.quartz.Trigger}</code> s that reference it.
    * </p>
-   * 
+   *
    * @return <code>true</code> if a <code>Job</code> with the given name & group was found and removed from the store.
    */
   @Override
@@ -270,7 +254,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Store the given <code>{@link org.quartz.Trigger}</code>.
    * </p>
-   * 
+   *
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>JobStore</code> with the same name & group should be over-written.
    * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already exists, and replaceExisting is set to false.
@@ -325,7 +309,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Remove (delete) the <code>{@link org.quartz.Trigger}</code> with the given name.
    * </p>
-   * 
+   *
    * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
    */
   @Override
@@ -344,7 +328,7 @@ public class RAMJobStore implements JobStore {
       if (found) {
         TriggerWrapper tw = null;
         // remove from triggers by group
-        HashMap grpMap = triggersByGroup.get(key.getGroup());
+        HashMap<TriggerKey, TriggerWrapper> grpMap = triggersByGroup.get(key.getGroup());
         if (grpMap != null) {
           grpMap.remove(key);
           if (grpMap.size() == 0) {
@@ -352,9 +336,9 @@ public class RAMJobStore implements JobStore {
           }
         }
         // remove from triggers array
-        Iterator tgs = triggers.iterator();
+        Iterator<TriggerWrapper> tgs = triggers.iterator();
         while (tgs.hasNext()) {
-          tw = (TriggerWrapper) tgs.next();
+          tw = tgs.next();
           if (key.equals(tw.key)) {
             tgs.remove();
             break;
@@ -406,9 +390,9 @@ public class RAMJobStore implements JobStore {
           }
         }
         // remove from triggers array
-        Iterator tgs = triggers.iterator();
+        Iterator<TriggerWrapper> tgs = triggers.iterator();
         while (tgs.hasNext()) {
-          tw = (TriggerWrapper) tgs.next();
+          tw = tgs.next();
           if (triggerKey.equals(tw.key)) {
             tgs.remove();
             break;
@@ -432,7 +416,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Retrieve the <code>{@link org.quartz.JobDetail}</code> for the given <code>{@link org.quartz.Job}</code>.
    * </p>
-   * 
+   *
    * @return The desired <code>Job</code>, or null if there is no match.
    */
   @Override
@@ -448,7 +432,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
    * </p>
-   * 
+   *
    * @return The desired <code>Trigger</code>, or null if there is no match.
    */
   @Override
@@ -465,7 +449,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Retrieve the given <code>{@link org.quartz.Trigger}</code>.
    * </p>
-   * 
+   *
    * @param calName The name of the <code>Calendar</code> to be retrieved.
    * @return The desired <code>Calendar</code>, or null if there is no match.
    */
@@ -620,7 +604,7 @@ public class RAMJobStore implements JobStore {
    * <p>
    * Get a handle to the next trigger to be fired, and mark it as 'reserved' by the calling scheduler.
    * </p>
-   * 
+   *
    * @see #releaseAcquiredTrigger(SchedulingContext, Trigger)
    */
   @Override
