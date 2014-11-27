@@ -254,6 +254,92 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
   }
 
+  /**
+   * Process the xml file in the given location, and schedule all of the jobs defined within it.
+   *
+   * @param fileName meta data file name.
+   */
+  public void processFile(String fileName, boolean failOnFileNotFound) throws Exception {
+
+    boolean fileFound = false;
+    InputStream f = null;
+    try {
+      String furl = null;
+
+      File file = new File(fileName); // files in filesystem
+      if (!file.exists()) {
+        URL url = classLoadHelper.getResource(fileName);
+        if (url != null) {
+          try {
+            furl = URLDecoder.decode(url.getPath(), "UTF-8");
+          } catch (UnsupportedEncodingException e) {
+            furl = url.getPath();
+          }
+          file = new File(furl);
+          try {
+            f = url.openStream();
+          } catch (IOException ignor) {
+            // Swallow the exception
+          }
+        }
+      }
+      else {
+        try {
+          f = new java.io.FileInputStream(file);
+        } catch (FileNotFoundException e) {
+          // ignore
+        }
+      }
+
+      if (f == null) {
+        fileFound = false;
+      }
+      else {
+        fileFound = true;
+      }
+    } finally {
+      try {
+        if (f != null) {
+          f.close();
+        }
+      } catch (IOException ioe) {
+        loggger.warn("Error closing jobs file " + fileName, ioe);
+      }
+    }
+
+    if (!fileFound) {
+      if (failOnFileNotFound) {
+        throw new SchedulerException("File named '" + fileName + "' does not exist.");
+      }
+      else {
+        loggger.warn("File named '" + fileName + "' does not exist. This is OK if you don't want to use an XML job config file.");
+      }
+    }
+    else {
+      processFile(fileName);
+    }
+  }
+
+  /**
+   * Process the xmlfile named <code>fileName</code> with the given system ID.
+   *
+   * @param fileName meta data file name.
+   * @param systemId system ID.
+   */
+  private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
+  XPathException {
+
+    prepForProcessing();
+
+    loggger.info("Parsing XML file: " + fileName);
+    InputSource is = new InputSource(getInputStream(fileName));
+    // is.setSystemId(systemId);
+
+    process(is);
+
+    maybeThrowValidationException();
+  }
+
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
@@ -280,6 +366,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     loggger.debug("Found " + jobNodes.getLength() + " job definitions.");
 
     for (int i = 0; i < jobNodes.getLength(); i++) {
+
       Node jobDetailNode = jobNodes.item(i);
       String t = null;
 
@@ -316,6 +403,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     loggger.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
 
     for (int j = 0; j < triggerEntries.getLength(); j++) {
+
       Node triggerNode = triggerEntries.item(j);
       String triggerName = getTrimmedToNullString(xpath, "q:name", triggerNode);
       String triggerGroup = getTrimmedToNullString(xpath, "q:group", triggerNode);
@@ -435,7 +523,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       Trigger trigger =
           newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-          .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+              .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
 
@@ -467,92 +555,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     return str;
-  }
-
-  /**
-   * Process the xml file in the given location, and schedule all of the jobs defined within it.
-   *
-   * @param fileName meta data file name.
-   */
-  public void processFile(String fileName, boolean failOnFileNotFound) throws Exception {
-
-    boolean fileFound = false;
-    InputStream f = null;
-    try {
-      String furl = null;
-
-      File file = new File(fileName); // files in filesystem
-      if (!file.exists()) {
-        URL url = classLoadHelper.getResource(fileName);
-        if (url != null) {
-          try {
-            furl = URLDecoder.decode(url.getPath(), "UTF-8");
-          } catch (UnsupportedEncodingException e) {
-            furl = url.getPath();
-          }
-          file = new File(furl);
-          try {
-            f = url.openStream();
-          } catch (IOException ignor) {
-            // Swallow the exception
-          }
-        }
-      }
-      else {
-        try {
-          f = new java.io.FileInputStream(file);
-        } catch (FileNotFoundException e) {
-          // ignore
-        }
-      }
-
-      if (f == null) {
-        fileFound = false;
-      }
-      else {
-        fileFound = true;
-      }
-    } finally {
-      try {
-        if (f != null) {
-          f.close();
-        }
-      } catch (IOException ioe) {
-        loggger.warn("Error closing jobs file " + fileName, ioe);
-      }
-    }
-
-    if (!fileFound) {
-      if (failOnFileNotFound) {
-        throw new SchedulerException("File named '" + fileName + "' does not exist.");
-      }
-      else {
-        loggger.warn("File named '" + fileName + "' does not exist. This is OK if you don't want to use an XML job config file.");
-      }
-    }
-    else {
-      processFile(fileName);
-    }
-  }
-
-  /**
-   * Process the xmlfile named <code>fileName</code> with the given system ID.
-   *
-   * @param fileName meta data file name.
-   * @param systemId system ID.
-   */
-  private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
-      XPathException {
-
-    prepForProcessing();
-
-    loggger.info("Parsing XML file: " + fileName);
-    InputSource is = new InputSource(getInputStream(fileName));
-    // is.setSystemId(systemId);
-
-    process(is);
-
-    maybeThrowValidationException();
   }
 
   /**
