@@ -24,8 +24,13 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,6 +68,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
+import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.MutableTrigger;
 import org.slf4j.Logger;
@@ -116,14 +122,14 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   private Collection validationExceptions = new ArrayList();
 
-  private ClassLoadHelper classLoadHelper;
+  private ClassLoadHelper classLoadHelper = null;
   private List<String> jobGroupsToNeverDelete = new LinkedList<String>();
   private List<String> triggerGroupsToNeverDelete = new LinkedList<String>();
 
   private DocumentBuilder docBuilder = null;
   private XPath xpath = null;
 
-  private final Logger loggger = LoggerFactory.getLogger(getClass());
+  private final Logger loggger = LoggerFactory.getLogger(XMLSchedulingDataProcessor.class);
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -135,9 +141,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param clh class-loader helper to share with digester.
    * @throws ParserConfigurationException if the XML parser cannot be configured as needed.
    */
-  public XMLSchedulingDataProcessor(ClassLoadHelper clh) throws ParserConfigurationException {
+  public XMLSchedulingDataProcessor() throws ParserConfigurationException {
 
-    this.classLoadHelper = clh;
+    classLoadHelper = new CascadingClassLoadHelper();
+    classLoadHelper.initialize();
+
     initDocumentParser();
   }
 
@@ -256,26 +264,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     loadedJobs.clear();
     loadedTriggers.clear();
-  }
-
-  /**
-   * Process the xmlfile named <code>fileName</code> with the given system ID.
-   *
-   * @param fileName meta data file name.
-   * @param systemId system ID.
-   */
-  private void processFile(String fileName, String systemId) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException,
-  ParseException, XPathException {
-
-    prepForProcessing();
-
-    loggger.info("Parsing XML file: " + fileName + " with systemId: " + systemId);
-    InputSource is = new InputSource(getInputStream(fileName));
-    is.setSystemId(systemId);
-
-    process(is);
-
-    maybeThrowValidationException();
   }
 
   private void process(InputSource is) throws SAXException, IOException, ParseException, XPathException, ClassNotFoundException {
@@ -447,7 +435,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       Trigger trigger =
           newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-          .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+              .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
 
@@ -486,11 +474,88 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    *
    * @param fileName meta data file name.
    */
-  public void processFileAndScheduleJobs(String fileName, String systemId, Scheduler sched) throws Exception {
+  public void processFileAndScheduleJobs(String fileName, boolean failOnFileNotFound, Scheduler sched) throws Exception {
 
-    processFile(fileName, systemId);
-    // executePreProcessCommands(sched);
-    scheduleJobs(sched);
+    boolean fileFound = false;
+    InputStream f = null;
+    try {
+      String furl = null;
+
+      File file = new File(fileName); // files in filesystem
+      if (!file.exists()) {
+        URL url = classLoadHelper.getResource(fileName);
+        if (url != null) {
+          try {
+            furl = URLDecoder.decode(url.getPath(), "UTF-8");
+          } catch (UnsupportedEncodingException e) {
+            furl = url.getPath();
+          }
+          file = new File(furl);
+          try {
+            f = url.openStream();
+          } catch (IOException ignor) {
+            // Swallow the exception
+          }
+        }
+      }
+      else {
+        try {
+          f = new java.io.FileInputStream(file);
+        } catch (FileNotFoundException e) {
+          // ignore
+        }
+      }
+
+      if (f == null) {
+        fileFound = false;
+      }
+      else {
+        fileFound = true;
+      }
+    } finally {
+      try {
+        if (f != null) {
+          f.close();
+        }
+      } catch (IOException ioe) {
+        loggger.warn("Error closing jobs file " + fileName, ioe);
+      }
+    }
+
+    if (!fileFound) {
+      if (failOnFileNotFound) {
+        throw new SchedulerException("File named '" + fileName + "' does not exist.");
+      }
+      else {
+        loggger.warn("File named '" + fileName + "' does not exist. This is OK if you don't want to use an XML job config file.");
+      }
+    }
+    else {
+
+      processFile(fileName);
+      // executePreProcessCommands(sched);
+      scheduleJobs(sched);
+    }
+  }
+
+  /**
+   * Process the xmlfile named <code>fileName</code> with the given system ID.
+   *
+   * @param fileName meta data file name.
+   * @param systemId system ID.
+   */
+  private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
+  XPathException {
+
+    prepForProcessing();
+
+    loggger.info("Parsing XML file: " + fileName);
+    InputSource is = new InputSource(getInputStream(fileName));
+    // is.setSystemId(systemId);
+
+    process(is);
+
+    maybeThrowValidationException();
   }
 
   /**
