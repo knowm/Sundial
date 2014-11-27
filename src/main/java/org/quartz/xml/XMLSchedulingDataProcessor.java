@@ -435,7 +435,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       Trigger trigger =
           newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-              .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+          .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
 
@@ -474,7 +474,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    *
    * @param fileName meta data file name.
    */
-  public void processFileAndScheduleJobs(String fileName, boolean failOnFileNotFound, Scheduler sched) throws Exception {
+  public void processFile(String fileName, boolean failOnFileNotFound) throws Exception {
 
     boolean fileFound = false;
     InputStream f = null;
@@ -531,10 +531,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
     }
     else {
-
       processFile(fileName);
-      // executePreProcessCommands(sched);
-      scheduleJobs(sched);
     }
   }
 
@@ -545,7 +542,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
-  XPathException {
+      XPathException {
 
     prepForProcessing();
 
@@ -623,7 +620,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param sched job scheduler.
    * @exception SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
-  private void scheduleJobs(Scheduler sched) throws SchedulerException {
+  public void scheduleJobs(Scheduler sched) throws SchedulerException {
 
     List<JobDetail> jobs = new LinkedList(getLoadedJobs());
     List<MutableTrigger> triggers = new LinkedList(getLoadedTriggers());

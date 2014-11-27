@@ -143,11 +143,11 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
     try {
       XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor();
-
       processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
+      processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);
+      processor.scheduleJobs(getScheduler());
 
-      processor.processFileAndScheduleJobs(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound, getScheduler());
     } catch (Exception e) {
       logger.error("Error scheduling jobs: " + e.getMessage(), e);
     }
