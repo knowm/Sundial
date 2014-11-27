@@ -44,8 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,7 +95,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private static final String QUARTZ_NS = "http://www.sundial-scheduler.org/xml/JobSchedulingData";
+  private static final String QUARTZ_NS = "http://www.blah.com";
 
   private static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
 
@@ -120,7 +118,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   private List<JobDetail> loadedJobs = new LinkedList<JobDetail>();
   private List<Trigger> loadedTriggers = new LinkedList<Trigger>();
 
-  private Collection validationExceptions = new ArrayList();
+  private Collection<Exception> validationExceptions = new ArrayList<Exception>();
 
   private ClassLoadHelper classLoadHelper = null;
   private List<String> jobGroupsToNeverDelete = new LinkedList<String>();
@@ -158,7 +156,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    docBuilderFactory.setNamespaceAware(true);
+    docBuilderFactory.setNamespaceAware(false);
     docBuilderFactory.setValidating(true);
 
     docBuilderFactory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
@@ -169,46 +167,46 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     docBuilder.setErrorHandler(this);
 
-    NamespaceContext nsContext = new NamespaceContext() {
-
-      @Override
-      public String getNamespaceURI(String prefix) {
-
-        if (prefix == null) {
-          throw new IllegalArgumentException("Null prefix");
-        }
-        if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-          return XMLConstants.XML_NS_URI;
-        }
-        if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
-          return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-        }
-
-        if ("q".equals(prefix)) {
-          return QUARTZ_NS;
-        }
-
-        return XMLConstants.NULL_NS_URI;
-      }
-
-      @Override
-      public Iterator getPrefixes(String namespaceURI) {
-
-        // This method isn't necessary for XPath processing.
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public String getPrefix(String namespaceURI) {
-
-        // This method isn't necessary for XPath processing.
-        throw new UnsupportedOperationException();
-      }
-
-    };
+    // NamespaceContext nsContext = new NamespaceContext() {
+    //
+    // @Override
+    // public String getNamespaceURI(String prefix) {
+    //
+    // if (prefix == null) {
+    // throw new IllegalArgumentException("Null prefix");
+    // }
+    // if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+    // return XMLConstants.XML_NS_URI;
+    // }
+    // if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+    // return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+    // }
+    //
+    // if ("q".equals(prefix)) {
+    // return QUARTZ_NS;
+    // }
+    //
+    // return XMLConstants.NULL_NS_URI;
+    // }
+    //
+    // @Override
+    // public Iterator getPrefixes(String namespaceURI) {
+    //
+    // // This method isn't necessary for XPath processing.
+    // throw new UnsupportedOperationException();
+    // }
+    //
+    // @Override
+    // public String getPrefix(String namespaceURI) {
+    //
+    // // This method isn't necessary for XPath processing.
+    // throw new UnsupportedOperationException();
+    // }
+    //
+    // };
 
     xpath = XPathFactory.newInstance().newXPath();
-    xpath.setNamespaceContext(nsContext);
+    // xpath.setNamespaceContext(nsContext);
   }
 
   private Object resolveSchemaSource() {
@@ -361,7 +359,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     // Extract Job definitions...
     //
 
-    NodeList jobNodes = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:schedule/q:job", document, XPathConstants.NODESET);
+    NodeList jobNodes = (NodeList) xpath.evaluate("/job-scheduling-data/schedule/job", document, XPathConstants.NODESET);
 
     loggger.debug("Found " + jobNodes.getLength() + " job definitions.");
 
@@ -370,20 +368,20 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       Node jobDetailNode = jobNodes.item(i);
       String t = null;
 
-      String jobName = getTrimmedToNullString(xpath, "q:name", jobDetailNode);
-      String jobGroup = getTrimmedToNullString(xpath, "q:group", jobDetailNode);
-      String jobDescription = getTrimmedToNullString(xpath, "q:description", jobDetailNode);
-      String jobClassName = getTrimmedToNullString(xpath, "q:job-class", jobDetailNode);
+      String jobName = getTrimmedToNullString(xpath, "name", jobDetailNode);
+      String jobGroup = getTrimmedToNullString(xpath, "group", jobDetailNode);
+      String jobDescription = getTrimmedToNullString(xpath, "description", jobDetailNode);
+      String jobClassName = getTrimmedToNullString(xpath, "job-class", jobDetailNode);
       Class jobClass = classLoadHelper.loadClass(jobClassName);
 
       JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroup).withDescription(jobDescription).build();
 
-      NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", jobDetailNode, XPathConstants.NODESET);
+      NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", jobDetailNode, XPathConstants.NODESET);
 
       for (int k = 0; k < jobDataEntries.getLength(); k++) {
         Node entryNode = jobDataEntries.item(k);
-        String key = getTrimmedToNullString(xpath, "q:key", entryNode);
-        String value = getTrimmedToNullString(xpath, "q:value", entryNode);
+        String key = getTrimmedToNullString(xpath, "key", entryNode);
+        String value = getTrimmedToNullString(xpath, "value", entryNode);
         jobDetail.getJobDataMap().put(key, value);
       }
 
@@ -398,30 +396,30 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     // Extract Trigger definitions...
     //
 
-    NodeList triggerEntries = (NodeList) xpath.evaluate("/q:job-scheduling-data/q:schedule/q:trigger/*", document, XPathConstants.NODESET);
+    NodeList triggerEntries = (NodeList) xpath.evaluate("/job-scheduling-data/schedule/trigger/*", document, XPathConstants.NODESET);
 
     loggger.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
 
     for (int j = 0; j < triggerEntries.getLength(); j++) {
 
       Node triggerNode = triggerEntries.item(j);
-      String triggerName = getTrimmedToNullString(xpath, "q:name", triggerNode);
-      String triggerGroup = getTrimmedToNullString(xpath, "q:group", triggerNode);
-      String triggerDescription = getTrimmedToNullString(xpath, "q:description", triggerNode);
-      String triggerMisfireInstructionConst = getTrimmedToNullString(xpath, "q:misfire-instruction", triggerNode);
-      String triggerPriorityString = getTrimmedToNullString(xpath, "q:priority", triggerNode);
-      String triggerCalendarRef = getTrimmedToNullString(xpath, "q:calendar-name", triggerNode);
-      String triggerJobName = getTrimmedToNullString(xpath, "q:job-name", triggerNode);
-      String triggerJobGroup = getTrimmedToNullString(xpath, "q:job-group", triggerNode);
+      String triggerName = getTrimmedToNullString(xpath, "name", triggerNode);
+      String triggerGroup = getTrimmedToNullString(xpath, "group", triggerNode);
+      String triggerDescription = getTrimmedToNullString(xpath, "description", triggerNode);
+      String triggerMisfireInstructionConst = getTrimmedToNullString(xpath, "misfire-instruction", triggerNode);
+      String triggerPriorityString = getTrimmedToNullString(xpath, "priority", triggerNode);
+      String triggerCalendarRef = getTrimmedToNullString(xpath, "calendar-name", triggerNode);
+      String triggerJobName = getTrimmedToNullString(xpath, "job-name", triggerNode);
+      String triggerJobGroup = getTrimmedToNullString(xpath, "job-group", triggerNode);
 
       int triggerPriority = Trigger.DEFAULT_PRIORITY;
       if (triggerPriorityString != null) {
         triggerPriority = Integer.valueOf(triggerPriorityString);
       }
 
-      String startTimeString = getTrimmedToNullString(xpath, "q:start-time", triggerNode);
-      String startTimeFutureSecsString = getTrimmedToNullString(xpath, "q:start-time-seconds-in-future", triggerNode);
-      String endTimeString = getTrimmedToNullString(xpath, "q:end-time", triggerNode);
+      String startTimeString = getTrimmedToNullString(xpath, "start-time", triggerNode);
+      String startTimeFutureSecsString = getTrimmedToNullString(xpath, "start-time-seconds-in-future", triggerNode);
+      String endTimeString = getTrimmedToNullString(xpath, "end-time", triggerNode);
 
       Date triggerStartTime = null;
       if (startTimeFutureSecsString != null) {
@@ -437,8 +435,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       ScheduleBuilder sched = null;
 
       if (triggerNode.getNodeName().equals("simple")) {
-        String repeatCountString = getTrimmedToNullString(xpath, "q:repeat-count", triggerNode);
-        String repeatIntervalString = getTrimmedToNullString(xpath, "q:repeat-interval", triggerNode);
+        String repeatCountString = getTrimmedToNullString(xpath, "repeat-count", triggerNode);
+        String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
 
         int repeatCount = repeatCountString == null ? SimpleTrigger.REPEAT_INDEFINITELY : Integer.parseInt(repeatCountString);
         long repeatInterval = repeatIntervalString == null ? 0 : Long.parseLong(repeatIntervalString);
@@ -470,8 +468,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         }
       }
       else if (triggerNode.getNodeName().equals("cron")) {
-        String cronExpression = getTrimmedToNullString(xpath, "q:cron-expression", triggerNode);
-        String timezoneString = getTrimmedToNullString(xpath, "q:time-zone", triggerNode);
+        String cronExpression = getTrimmedToNullString(xpath, "cron-expression", triggerNode);
+        String timezoneString = getTrimmedToNullString(xpath, "time-zone", triggerNode);
 
         TimeZone tz = timezoneString == null ? null : TimeZone.getTimeZone(timezoneString);
 
@@ -493,8 +491,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         }
       }
       else if (triggerNode.getNodeName().equals("calendar-interval")) {
-        String repeatIntervalString = getTrimmedToNullString(xpath, "q:repeat-interval", triggerNode);
-        String repeatUnitString = getTrimmedToNullString(xpath, "q:repeat-interval-unit", triggerNode);
+        String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
+        String repeatUnitString = getTrimmedToNullString(xpath, "repeat-interval-unit", triggerNode);
 
         int repeatInterval = Integer.parseInt(repeatIntervalString);
 
@@ -525,12 +523,12 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
               .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
-      NodeList jobDataEntries = (NodeList) xpath.evaluate("q:job-data-map/q:entry", triggerNode, XPathConstants.NODESET);
+      NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 
       for (int k = 0; k < jobDataEntries.getLength(); k++) {
         Node entryNode = jobDataEntries.item(k);
-        String key = getTrimmedToNullString(xpath, "q:key", entryNode);
-        String value = getTrimmedToNullString(xpath, "q:value", entryNode);
+        String key = getTrimmedToNullString(xpath, "key", entryNode);
+        String value = getTrimmedToNullString(xpath, "value", entryNode);
         trigger.getJobDataMap().put(key, value);
       }
 

@@ -4,7 +4,7 @@
 	<name>Sundial</name>
 	<groupId>com.xeiam</groupId>
 	<artifactId>sundial</artifactId>
-	<version>1.1.4-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>A Lightweight Java Job Scheduling Framework</description>
 	<url>http://xeiam.com/sundial.jsp</url>

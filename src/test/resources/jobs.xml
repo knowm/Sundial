@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<job-scheduling-data
-	xmlns="http://www.sundial-scheduler.org/xml/JobSchedulingData"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.sundial-scheduler.org/xml/JobSchedulingData classpath:/com/xeiam/sundial/xml/job_scheduling_data.xsd">
+<job-scheduling-data>
 
 	<schedule>
 		<job>
