@@ -95,8 +95,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private static final String QUARTZ_NS = "http://www.blah.com";
-
   private static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
 
   public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
@@ -167,46 +165,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     docBuilder.setErrorHandler(this);
 
-    // NamespaceContext nsContext = new NamespaceContext() {
-    //
-    // @Override
-    // public String getNamespaceURI(String prefix) {
-    //
-    // if (prefix == null) {
-    // throw new IllegalArgumentException("Null prefix");
-    // }
-    // if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-    // return XMLConstants.XML_NS_URI;
-    // }
-    // if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
-    // return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-    // }
-    //
-    // if ("q".equals(prefix)) {
-    // return QUARTZ_NS;
-    // }
-    //
-    // return XMLConstants.NULL_NS_URI;
-    // }
-    //
-    // @Override
-    // public Iterator getPrefixes(String namespaceURI) {
-    //
-    // // This method isn't necessary for XPath processing.
-    // throw new UnsupportedOperationException();
-    // }
-    //
-    // @Override
-    // public String getPrefix(String namespaceURI) {
-    //
-    // // This method isn't necessary for XPath processing.
-    // throw new UnsupportedOperationException();
-    // }
-    //
-    // };
-
     xpath = XPathFactory.newInstance().newXPath();
-    // xpath.setNamespaceContext(nsContext);
   }
 
   private Object resolveSchemaSource() {
@@ -366,7 +325,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     for (int i = 0; i < jobNodes.getLength(); i++) {
 
       Node jobDetailNode = jobNodes.item(i);
-      String t = null;
 
       String jobName = getTrimmedToNullString(xpath, "name", jobDetailNode);
       String jobGroup = getTrimmedToNullString(xpath, "group", jobDetailNode);
@@ -622,7 +580,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    */
   public void scheduleJobs(Scheduler sched) throws SchedulerException {
 
-    List<JobDetail> jobs = new LinkedList(getLoadedJobs());
+    List<JobDetail> jobs = new LinkedList<JobDetail>(getLoadedJobs());
     List<MutableTrigger> triggers = new LinkedList(getLoadedTriggers());
 
     loggger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");

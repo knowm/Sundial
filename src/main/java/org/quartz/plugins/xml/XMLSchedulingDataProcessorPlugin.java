@@ -39,8 +39,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private String name;
-
   private Scheduler scheduler;
 
   /*
@@ -134,7 +132,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
     logger.info("Initializing XMLSchedulingDataProcessorPlugin Plug-in.");
 
-    this.name = name;
     this.scheduler = scheduler;
   }
 
