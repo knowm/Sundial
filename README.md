@@ -25,23 +25,26 @@ Usage is very simple: create a Job, configure the Job in jobs.xml, and start the
 
 ### Create a Job class With Your Custom Logic
 
-    public class SampleJob1 extends Job {
+```java
+public class SampleJob1 extends Job {
 
-        private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
+    private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
 
-        @Override
-        public void doRun() throws JobInterruptException {
+    @Override
+    public void doRun() throws JobInterruptException {
 
-        logger.info("RUNNING!");
+    logger.info("RUNNING!");
 
-        // Do something interesting...
+    // Do something interesting...
 
-        logger.info("DONE!");
-        }
+    logger.info("DONE!");
     }
-    
+}
+```
+   
 ### Put an XML File on the Classpath Defining the Jobs and Cron Triggers
 
+```xml
     <?xml version='1.0' encoding='utf-8'?>
     <job-scheduling-data>
     
@@ -62,27 +65,32 @@ Usage is very simple: create a Job, configure the Job in jobs.xml, and start the
         </schedule>
     
     </job-scheduling-data>
+```
     
 ### Run your App
 
+```java
     public static void main(String[] args) {
   
       SundialJobScheduler.startScheduler();
   
     }
+```
     
 ### Manually Start a Job
-    
+
+```java    
     SundialJobScheduler.startJob("SampleJob1");
-    
+```
     
 Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Features
-* Depends only on slf4j
-* ~175 KB Jar
-* Apache 2.0 license
-* Easy to use
+
+ * [x] Depends only on slf4j
+ * [x] ~175 KB Jar
+ * [x] Apache 2.0 license
+ * [x] Easy to use
 
 ## Getting Started
 ### Non-Maven
