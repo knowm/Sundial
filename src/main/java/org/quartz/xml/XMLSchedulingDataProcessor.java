@@ -80,8 +80,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data. The xml document must conform to the format defined in "job_scheduling_data_1_8.xsd" The same
- * instance can be used again and again, however a single instance is not thread-safe.
+ * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data. The xml document must conform to the format
+ * defined in "job_scheduling_data_1_8.xsd" The same instance can be used again and again, however a single instance is not thread-safe.
  *
  * @author James House
  * @author Past contributions from <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
@@ -92,7 +92,8 @@ import org.xml.sax.SAXParseException;
 public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
@@ -109,7 +110,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat(XSD_DATE_FORMAT);
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   // scheduling commands
@@ -125,10 +127,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   private DocumentBuilder docBuilder = null;
   private XPath xpath = null;
 
-  private final Logger loggger = LoggerFactory.getLogger(XMLSchedulingDataProcessor.class);
+  private final Logger logger = LoggerFactory.getLogger(XMLSchedulingDataProcessor.class);
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -178,9 +181,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
 
     if (is == null) {
-      loggger.warn("Could not load xml scheme from classpath");
-    }
-    else {
+      logger.warn("Could not load xml scheme from classpath");
+    } else {
       inputSource = new InputSource(is);
     }
 
@@ -188,7 +190,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   }
 
   /**
-   * Add the given group to the list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
+   * Add the given group to the list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group
+   * is encountered.
    *
    * @param group
    */
@@ -200,7 +203,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   }
 
   /**
-   * Add the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the group is encountered.
+   * Add the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the
+   * group is encountered.
    *
    * @param group
    */
@@ -239,8 +243,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             // Swallow the exception
           }
         }
-      }
-      else {
+      } else {
         try {
           f = new java.io.FileInputStream(file);
         } catch (FileNotFoundException e) {
@@ -250,8 +253,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       if (f == null) {
         fileFound = false;
-      }
-      else {
+      } else {
         fileFound = true;
       }
     } finally {
@@ -260,19 +262,17 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           f.close();
         }
       } catch (IOException ioe) {
-        loggger.warn("Error closing jobs file " + fileName, ioe);
+        logger.warn("Error closing jobs file " + fileName, ioe);
       }
     }
 
     if (!fileFound) {
       if (failOnFileNotFound) {
         throw new SchedulerException("File named '" + fileName + "' does not exist.");
+      } else {
+        logger.warn("File named '" + fileName + "' does not exist. This is OK if you don't want to use an XML job config file.");
       }
-      else {
-        loggger.warn("File named '" + fileName + "' does not exist. This is OK if you don't want to use an XML job config file.");
-      }
-    }
-    else {
+    } else {
       processFile(fileName);
     }
   }
@@ -283,12 +283,12 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param fileName meta data file name.
    * @param systemId system ID.
    */
-  private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException, ClassNotFoundException, ParseException,
-  XPathException {
+  private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
+  ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
-    loggger.info("Parsing XML file: " + fileName);
+    logger.info("Parsing XML file: " + fileName);
     InputSource is = new InputSource(getInputStream(fileName));
     // is.setSystemId(systemId);
 
@@ -298,7 +298,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private void prepForProcessing() {
@@ -320,7 +321,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     NodeList jobNodes = (NodeList) xpath.evaluate("/job-scheduling-data/schedule/job", document, XPathConstants.NODESET);
 
-    loggger.debug("Found " + jobNodes.getLength() + " job definitions.");
+    logger.debug("Found " + jobNodes.getLength() + " job definitions.");
 
     for (int i = 0; i < jobNodes.getLength(); i++) {
 
@@ -343,9 +344,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         jobDetail.getJobDataMap().put(key, value);
       }
 
-      if (loggger.isDebugEnabled()) {
-        loggger.debug("Parsed job definition: " + jobDetail);
-      }
+      logger.debug("Parsed job definition: " + jobDetail);
 
       addJobToSchedule(jobDetail);
     }
@@ -356,7 +355,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     NodeList triggerEntries = (NodeList) xpath.evaluate("/job-scheduling-data/schedule/trigger/*", document, XPathConstants.NODESET);
 
-    loggger.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
+    logger.debug("Found " + triggerEntries.getLength() + " trigger definitions.");
 
     for (int j = 0; j < triggerEntries.getLength(); j++) {
 
@@ -382,8 +381,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       Date triggerStartTime = null;
       if (startTimeFutureSecsString != null) {
         triggerStartTime = new Date(System.currentTimeMillis() + (Long.valueOf(startTimeFutureSecsString) * 1000L));
-      }
-      else {
+      } else {
         triggerStartTime = (startTimeString == null || startTimeString.length() == 0 ? new Date() : dateFormat.parse(startTimeString));
       }
       Date triggerEndTime = endTimeString == null || endTimeString.length() == 0 ? null : dateFormat.parse(endTimeString);
@@ -404,28 +402,22 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_NOW")) {
             ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionFireNow();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT")) {
             ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNextWithExistingCount();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT")) {
             ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNextWithRemainingCount();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT")) {
             ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNowWithExistingCount();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT")) {
             ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNowWithRemainingCount();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
-          }
-          else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerKey, -1);
+          } else {
+            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
+                + triggerKey, -1);
           }
         }
-      }
-      else if (triggerNode.getNodeName().equals("cron")) {
+      } else if (triggerNode.getNodeName().equals("cron")) {
         String cronExpression = getTrimmedToNullString(xpath, "cron-expression", triggerNode);
         String timezoneString = getTrimmedToNullString(xpath, "time-zone", triggerNode);
 
@@ -436,19 +428,16 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
             ((CronScheduleBuilder) sched).withMisfireHandlingInstructionDoNothing();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
             ((CronScheduleBuilder) sched).withMisfireHandlingInstructionFireAndProceed();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
-          }
-          else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerKey, -1);
+          } else {
+            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
+                + triggerKey, -1);
           }
         }
-      }
-      else if (triggerNode.getNodeName().equals("calendar-interval")) {
+      } else if (triggerNode.getNodeName().equals("calendar-interval")) {
         String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
         String repeatUnitString = getTrimmedToNullString(xpath, "repeat-interval-unit", triggerNode);
 
@@ -461,25 +450,22 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
             ((CalendarIntervalScheduleBuilder) sched).withMisfireHandlingInstructionDoNothing();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
             ((CalendarIntervalScheduleBuilder) sched).withMisfireHandlingInstructionFireAndProceed();
-          }
-          else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
+          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
-          }
-          else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerKey, -1);
+          } else {
+            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
+                + triggerKey, -1);
           }
         }
-      }
-      else {
+      } else {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
-      Trigger trigger =
-          newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription).forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime)
-              .withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+      Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription)
+          .forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
+          .modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 
@@ -490,9 +476,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         trigger.getJobDataMap().put(key, value);
       }
 
-      if (loggger.isDebugEnabled()) {
-        loggger.debug("Parsed trigger definition: " + trigger);
-      }
+      logger.debug("Parsed trigger definition: " + trigger);
 
       addTriggerToSchedule(trigger);
     }
@@ -583,7 +567,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     List<JobDetail> jobs = new LinkedList<JobDetail>(getLoadedJobs());
     List<MutableTrigger> triggers = new LinkedList(getLoadedTriggers());
 
-    loggger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
+    logger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
     Map<JobKey, List<MutableTrigger>> triggersByFQJobName = buildTriggersByFQJobNameMap(triggers);
 
@@ -597,10 +581,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       JobDetail dupeJ = sched.getJobDetail(detail.getKey());
 
       if (dupeJ != null) {
-        loggger.info("Replacing job: " + detail.getKey());
-      }
-      else {
-        loggger.info("Adding job: " + detail.getKey());
+        logger.info("Replacing job: " + detail.getKey());
+      } else {
+        logger.info("Adding job: " + detail.getKey());
       }
 
       List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(detail.getKey());
@@ -617,9 +600,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
 
       if (dupeJ != null || detail.isDurable()) {
-        sched.addJob(detail, true); // add the job if a replacement or durable
-      }
-      else {
+        sched.addJob(detail); // add the job if a replacement or durable
+      } else {
         boolean addJobWithFirstSchedule = true;
 
         // Add triggers related to the job...
@@ -638,33 +620,28 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             if (dupeT != null) {
 
               if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-                loggger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+                logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
               }
 
               sched.rescheduleJob(trigger.getKey(), trigger);
-            }
-            else {
-              if (loggger.isDebugEnabled()) {
-                loggger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
-              }
+            } else {
+              logger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
 
               try {
                 if (addJobWithFirstSchedule) {
-                  loggger.debug("here1");
+                  logger.debug("here1");
 
                   sched.scheduleJob(detail, trigger); // add the job if it's not in yet...
                   addJobWithFirstSchedule = false;
-                }
-                else {
-                  loggger.debug("here2");
+                } else {
+                  logger.debug("here2");
 
                   sched.scheduleJob(trigger);
                 }
               } catch (ObjectAlreadyExistsException e) {
-                if (loggger.isDebugEnabled()) {
-                  loggger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getKey() + " failed because the trigger already existed.  "
-                      + "This is likely due to a race condition between multiple instances " + "in the cluster.  Will try to reschedule instead.");
-                }
+                logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getKey()
+                    + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
+                    + "in the cluster.  Will try to reschedule instead.");
                 continue;
               }
             }
@@ -687,23 +664,19 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         if (dupeT != null) {
 
           if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-            loggger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+            logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
           }
 
           sched.rescheduleJob(trigger.getKey(), trigger);
-        }
-        else {
-          if (loggger.isDebugEnabled()) {
-            loggger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
-          }
+        } else {
+          logger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
 
           try {
             sched.scheduleJob(trigger);
           } catch (ObjectAlreadyExistsException e) {
-            if (loggger.isDebugEnabled()) {
-              loggger.debug("Adding trigger: " + trigger.getKey() + " for job: " + trigger.getJobKey() + " failed because the trigger already existed.  "
-                  + "This is likely due to a race condition between multiple instances " + "in the cluster.  Will try to reschedule instead.");
-            }
+            logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + trigger.getJobKey()
+                + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
+                + "in the cluster.  Will try to reschedule instead.");
             continue;
           }
         }

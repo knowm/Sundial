@@ -15,6 +15,11 @@
  */
 package com.xeiam.sundial;
 
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,12 +30,18 @@ import java.util.TreeMap;
 import javax.servlet.ServletContext;
 
 import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
+import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
+import org.quartz.TriggerKey;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.SchedulerFactory;
+import org.quartz.simpl.CascadingClassLoadHelper;
+import org.quartz.spi.ClassLoadHelper;
+import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,7 +145,32 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Starts a Job matching the the given Job Name found in jobs.xml
+   * Adds a Job matching to the scheduler. Replaces a matching existing Job.
+   * 
+   * @param jobName
+   * @param jobClassName
+   */
+  public static void addJob(String jobName, String jobClassName) {
+
+    try {
+
+      ClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
+      classLoadHelper.initialize();
+
+      Class jobClass = classLoadHelper.loadClass(jobClassName);
+
+      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, Key.DEFAULT_GROUP).build();
+
+      getScheduler().addJob(jobDetail);
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING JOB!!!", e);
+    } catch (ClassNotFoundException e) {
+      logger.error("ERROR ADDING JOB!!!", e);
+    }
+  }
+
+  /**
+   * Starts a Job matching the given Job Name
    *
    * @param jobName
    */
@@ -144,13 +180,12 @@ public class SundialJobScheduler {
       JobKey jobKey = new JobKey(jobName);
       getScheduler().triggerJob(jobKey, null);
     } catch (SchedulerException e) {
-      logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
+      logger.error("ERROR STARTING JOB!!!", e);
     }
-
   }
 
   /**
-   * Removes a Job matching the the given Job Name found in jobs.xml
+   * Removes a Job matching the given Job Name
    *
    * @param jobName
    */
@@ -158,7 +193,7 @@ public class SundialJobScheduler {
 
     try {
       JobKey jobKey = new JobKey(jobName);
-      getScheduler().removeJob(jobKey);
+      getScheduler().deleteJob(jobKey);
     } catch (SchedulerException e) {
       logger.error("ERROR REMOVING JOB!!!", e);
     }
@@ -183,7 +218,7 @@ public class SundialJobScheduler {
       JobKey jobKey = new JobKey(jobName);
       getScheduler().triggerJob(jobKey, jobDataMap);
     } catch (SchedulerException e) {
-      logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
+      logger.error("ERROR STARTING JOB!!!", e);
     }
 
   }
@@ -203,17 +238,15 @@ public class SundialJobScheduler {
           logger.debug("Matching Job found. Now Stopping!");
           if (jobExecutionContext.getJobInstance() instanceof Job) {
             ((Job) jobExecutionContext.getJobInstance()).interrupt();
-          }
-          else {
+          } else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        }
-        else {
+        } else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR DURING STOP Job!!!" + e);
+      logger.error("ERROR STOPPING JOB!!!" + e);
     }
   }
 
@@ -237,17 +270,55 @@ public class SundialJobScheduler {
             if (value != null & value.equalsIgnoreCase(pValue)) {
               ((Job) jobExecutionContext.getJobInstance()).interrupt();
             }
-          }
-          else {
+          } else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        }
-        else {
+        } else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
     } catch (SchedulerException e) {
       logger.error("ERROR DURING STOP Job!!!" + e);
+    }
+  }
+
+  // TRIGGERS /////////////////////////////////////////////
+
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param cronExpression
+   */
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression) {
+
+    try {
+
+      ScheduleBuilder sched = cronSchedule(cronExpression).inTimeZone(null);
+
+      Trigger trigger = newTrigger().withIdentity(triggerName, Key.DEFAULT_GROUP).forJob(jobName, Key.DEFAULT_GROUP)
+          .withPriority(Trigger.DEFAULT_PRIORITY).withSchedule(sched).build();
+
+      getScheduler().scheduleJob(trigger);
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+    } catch (ParseException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+
+    }
+  }
+
+  /**
+   * Removes a Trigger matching the the given Trigger Name
+   *
+   * @param triggerName
+   */
+  public static void removeTrigger(String triggerName) {
+
+    try {
+      TriggerKey triggerKey = new TriggerKey(triggerName, Key.DEFAULT_GROUP);
+      getScheduler().unscheduleJob(triggerKey);
+    } catch (SchedulerException e) {
+      logger.error("ERROR REMOVING TRIGGER!!!", e);
     }
   }
 
