@@ -77,10 +77,22 @@ public class SampleJob1 extends Job {
     }
 ```
     
-### Manually Start a Job
+### More Functions
 
-```java    
+```java
+    // start a job by name
     SundialJobScheduler.startJob("SampleJob1");
+    
+    // start a job by name with data
+    Map<String, Object> params = new HashMap<>();
+    params.put("MY_KEY", new Integer(660));
+    SundialJobScheduler.startJob("SampleJob1", params);
+    
+    // interrupt a running job
+    SundialJobScheduler.stopJob("SampleJob1");
+    
+    // remove a job from the scheduler
+    SundialJobScheduler.removeJob("SampleJob1");
 ```
     
 Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
