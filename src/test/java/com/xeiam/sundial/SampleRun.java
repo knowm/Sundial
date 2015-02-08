@@ -27,5 +27,7 @@ public class SampleRun {
 
     SundialJobScheduler.startScheduler();
 
+    SundialJobScheduler.startJob("SampleJob3");
+
   }
 }

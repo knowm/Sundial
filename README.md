@@ -2,7 +2,12 @@
 
 A Lightweight Job Scheduling Framework
 
-## Description
+## In a Nutshell
+
+Sundial makes adding cron jobs to your Java application a walk in the park. Simply define jobs, define crom triggers, and start the Sundial scheduler. 
+
+## Long Description
+
 Sundial is a lightweight Java job scheduling framework forked from
 Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the 
 nitty-gritty configuration details of Quartz, reducing the time
@@ -17,6 +22,8 @@ into your applications, Sundial is for you.
 Usage is very simple: create a Job, configure the Job in jobs.xml, and start the scheduler.
 
 ## Example
+
+### Create a Job class With Your Custom Logic
 
     public class SampleJob1 extends Job {
 
@@ -33,6 +40,42 @@ Usage is very simple: create a Job, configure the Job in jobs.xml, and start the
         }
     }
     
+### Put an XML File on the Classpath Defining the Jobs and Cron Triggers
+
+    <?xml version='1.0' encoding='utf-8'?>
+    <job-scheduling-data>
+    
+        <schedule>
+            <job>
+                <name>SampleJob1</name>
+                <job-class>com.xeiam.sundial.SampleJob1</job-class>
+            </job>
+            <trigger>
+                <cron>
+                    <name>SampleJob1-Trigger</name>
+                    <group>CRON</group>
+                    <job-name>SampleJob1</job-name>
+                    <cron-expression>0/45 * * * * ?</cron-expression>
+                </cron>
+            </trigger>
+    
+        </schedule>
+    
+    </job-scheduling-data>
+    
+### Run your App
+
+    public static void main(String[] args) {
+  
+      SundialJobScheduler.startScheduler();
+  
+    }
+    
+### Manually Start a Job
+    
+    SundialJobScheduler.startJob("SampleJob1");
+    
+    
 Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Features
@@ -45,7 +88,7 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial-example-cod
 ### Non-Maven
 Download Jar: http://xeiam.com/sundial-change-log
 #### Dependencies
-* org.slf4j.slf4j-api-1.7.7
+* org.slf4j.slf4j-api-1.7.10
 
 ### Maven
 The Sundial release artifacts are hosted on Maven Central.
@@ -69,7 +112,7 @@ For snapshots, add the following to your pom.xml file:
     <dependency>
         <groupId>com.xeiam</groupId>
         <artifactId>sundial</artifactId>
-        <version>1.1.4-SNAPSHOT</version>
+        <version>1.2.0-SNAPSHOT</version>
     </dependency>
 
 ## Building
