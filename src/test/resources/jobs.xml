@@ -9,7 +9,6 @@
 		<trigger>
 			<cron>
 				<name>SampleJob3-Trigger</name>
-				<group>CRON</group>
 				<job-name>SampleJob3</job-name>
 				<cron-expression>0/45 * * * * ?</cron-expression>
 			</cron>
@@ -28,7 +27,6 @@
 		<trigger>
 			<cron>
 				<name>SampleJob2-Trigger</name>
-				<group>CRON</group>
 				<job-name>SampleJob2</job-name>
 				<cron-expression>0/25 * * * * ?</cron-expression>
 			</cron>
