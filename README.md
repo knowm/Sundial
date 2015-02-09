@@ -4,7 +4,7 @@ A Lightweight Job Scheduling Framework
 
 ## In a Nutshell
 
-Sundial makes adding cron jobs to your Java application a walk in the park. Simply define jobs, define crom triggers, and start the Sundial scheduler. 
+Sundial makes adding cron jobs to your Java application a walk in the park. Simply define jobs, define cron triggers, and start the Sundial scheduler. 
 
 ## Long Description
 
@@ -56,7 +56,6 @@ public class SampleJob1 extends Job {
             <trigger>
                 <cron>
                     <name>SampleJob1-Trigger</name>
-                    <group>CRON</group>
                     <job-name>SampleJob1</job-name>
                     <cron-expression>0/45 * * * * ?</cron-expression>
                 </cron>
@@ -111,18 +110,22 @@ Download Jar: http://xeiam.com/sundial-change-log
 * org.slf4j.slf4j-api-1.7.10
 
 ### Maven
+
 The Sundial release artifacts are hosted on Maven Central.
 
 Add the Sundial library as a dependency to your pom.xml file:
 
+```xml
     <dependency>
         <groupId>com.xeiam</groupId>
         <artifactId>sundial</artifactId>
         <version>1.1.3</version>
     </dependency>
+```
 
 For snapshots, add the following to your pom.xml file:
 
+```xml
     <repository>
       <id>sonatype-oss-snapshot</id>
       <snapshots/>
@@ -134,10 +137,12 @@ For snapshots, add the following to your pom.xml file:
         <artifactId>sundial</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </dependency>
+```
 
 ## Building
-mvn clean package  
-mvn javadoc:javadoc  
+
+    mvn clean package  
+    mvn javadoc:javadoc  
 
 ## Cron Expressions in jobs.xml
 
