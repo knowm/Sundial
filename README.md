@@ -72,7 +72,6 @@ public class SampleJob1 extends Job {
     public static void main(String[] args) {
   
       SundialJobScheduler.startScheduler();
-  
     }
 ```
     
