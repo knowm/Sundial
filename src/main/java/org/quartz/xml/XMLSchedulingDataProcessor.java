@@ -69,6 +69,7 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.MutableTrigger;
+import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -283,7 +284,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-      ClassNotFoundException, ParseException, XPathException {
+  ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -327,12 +328,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       Node jobDetailNode = jobNodes.item(i);
 
       String jobName = getTrimmedToNullString(xpath, "name", jobDetailNode);
-      String jobGroup = getTrimmedToNullString(xpath, "group", jobDetailNode);
       String jobDescription = getTrimmedToNullString(xpath, "description", jobDetailNode);
       String jobClassName = getTrimmedToNullString(xpath, "job-class", jobDetailNode);
       Class jobClass = classLoadHelper.loadClass(jobClassName);
 
-      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, jobGroup).withDescription(jobDescription).build();
+      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, Key.DEFAULT_GROUP).withDescription(jobDescription).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", jobDetailNode, XPathConstants.NODESET);
 
@@ -360,13 +360,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       Node triggerNode = triggerEntries.item(j);
       String triggerName = getTrimmedToNullString(xpath, "name", triggerNode);
-      String triggerGroup = getTrimmedToNullString(xpath, "group", triggerNode);
       String triggerDescription = getTrimmedToNullString(xpath, "description", triggerNode);
       String triggerMisfireInstructionConst = getTrimmedToNullString(xpath, "misfire-instruction", triggerNode);
       String triggerPriorityString = getTrimmedToNullString(xpath, "priority", triggerNode);
       String triggerCalendarRef = getTrimmedToNullString(xpath, "calendar-name", triggerNode);
       String triggerJobName = getTrimmedToNullString(xpath, "job-name", triggerNode);
-      String triggerJobGroup = getTrimmedToNullString(xpath, "job-group", triggerNode);
 
       int triggerPriority = Trigger.DEFAULT_PRIORITY;
       if (triggerPriorityString != null) {
@@ -385,7 +383,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
       Date triggerEndTime = endTimeString == null || endTimeString.length() == 0 ? null : dateFormat.parse(endTimeString);
 
-      TriggerKey triggerKey = new TriggerKey(triggerName, triggerGroup);
+      TriggerKey triggerKey = new TriggerKey(triggerName, Key.DEFAULT_GROUP);
 
       ScheduleBuilder sched = null;
 
@@ -462,8 +460,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
-      Trigger trigger = newTrigger().withIdentity(triggerName, triggerGroup).withDescription(triggerDescription)
-          .forJob(triggerJobName, triggerJobGroup).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
+      Trigger trigger = newTrigger().withIdentity(triggerName, Key.DEFAULT_GROUP).withDescription(triggerDescription)
+          .forJob(triggerJobName, Key.DEFAULT_GROUP).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
           .modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
@@ -628,13 +626,10 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
               try {
                 if (addJobWithFirstSchedule) {
-                  logger.debug("here1");
 
                   sched.scheduleJob(detail, trigger); // add the job if it's not in yet...
                   addJobWithFirstSchedule = false;
                 } else {
-                  logger.debug("here2");
-
                   sched.scheduleJob(trigger);
                 }
               } catch (ObjectAlreadyExistsException e) {
