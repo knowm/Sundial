@@ -30,6 +30,7 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
+import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -328,7 +329,7 @@ public class SundialJobScheduler {
 
     try {
 
-      ScheduleBuilder sched = cronSchedule(cronExpression).inTimeZone(null);
+      ScheduleBuilder<CronTrigger> sched = cronSchedule(cronExpression).inTimeZone(null);
 
       Trigger trigger = newTrigger().withIdentity(triggerName, Key.DEFAULT_GROUP).forJob(jobName, Key.DEFAULT_GROUP)
           .withPriority(Trigger.DEFAULT_PRIORITY).withSchedule(sched).build();

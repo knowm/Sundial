@@ -1,18 +1,18 @@
 /**
  * All content copyright Terracotta, Inc., unless otherwise indicated. All rights reserved.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 package org.quartz;
 
@@ -24,29 +24,30 @@ import org.quartz.utils.Key;
 /**
  * <code>TriggerBuilder</code> is used to instantiate {@link Trigger}s.
  * <p>
- * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized through the usage of static imports of the
- * methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>, <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code>
- * implementations.
+ * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized
+ * through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>,
+ * <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:
  * </p>
- * 
+ *
  * <pre>
- * 
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
+ *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
- * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;)).withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
- * 
+ * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
+ *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
+ *
  * scheduler.scheduleJob(job, trigger);
- * 
+ *
  * <pre>
- * 
+ *
  * @see JobBuilder
  * @see ScheduleBuilder
  * @see DateBuilder
@@ -71,7 +72,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Create a new TriggerBuilder with which to define a specification for a Trigger.
-   * 
+   *
    * @return the new TriggerBuilder
    */
   public static TriggerBuilder<Trigger> newTrigger() {
@@ -81,7 +82,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Produce the <code>Trigger</code>.
-   * 
+   *
    * @return a Trigger that meets the specifications of the builder.
    */
   public T build() {
@@ -116,7 +117,7 @@ public class TriggerBuilder<T extends Trigger> {
    * <p>
    * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
    * </p>
-   * 
+   *
    * @param name the name element for the Trigger's TriggerKey
    * @param group the group element for the Trigger's TriggerKey
    * @return the updated TriggerBuilder
@@ -134,7 +135,7 @@ public class TriggerBuilder<T extends Trigger> {
    * <p>
    * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
    * </p>
-   * 
+   *
    * @param key the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
    * @see TriggerKey
@@ -148,7 +149,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the given (human-meaningful) description of the Trigger.
-   * 
+   *
    * @param description the description for the Trigger
    * @return the updated TriggerBuilder
    * @see Trigger#getDescription()
@@ -161,7 +162,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the Trigger's priority. When more than one Trigger have the same fire time, the scheduler will fire the one with the highest priority first.
-   * 
+   *
    * @param priority the priority for the Trigger
    * @return the updated TriggerBuilder
    * @see Trigger#DEFAULT_PRIORITY
@@ -175,7 +176,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the name of the {@link Calendar} that should be applied to this Trigger's schedule.
-   * 
+   *
    * @param calendarName the name of the Calendar to reference.
    * @return the updated TriggerBuilder
    * @see Calendar
@@ -188,9 +189,22 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Set the time the Trigger should start at - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger. However the Trigger will NOT fire before this
-   * time, regardless of the Trigger's schedule.
-   * 
+   * Set the time the Trigger should start at to the current moment - the trigger may or may not fire at this time - depending upon the schedule
+   * configured for the Trigger.
+   *
+   * @return the updated TriggerBuilder
+   * @see Trigger#getStartTime()
+   */
+  public TriggerBuilder<T> startNow() {
+
+    this.startTime = new Date();
+    return this;
+  }
+
+  /**
+   * Set the time the Trigger should start at - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger.
+   * However the Trigger will NOT fire before this time, regardless of the Trigger's schedule.
+   *
    * @param startTime the start time for the Trigger.
    * @return the updated TriggerBuilder
    * @see Trigger#getStartTime()
@@ -204,7 +218,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the time at which the Trigger will no longer fire - even if it's schedule has remaining repeats.
-   * 
+   *
    * @param endTime the end time for the Trigger. If null, the end time is indefinite.
    * @return the updated TriggerBuilder
    * @see Trigger#getEndTime()
@@ -221,7 +235,7 @@ public class TriggerBuilder<T extends Trigger> {
    * <p>
    * The particular <code>SchedulerBuilder</code> used will dictate the concrete type of Trigger that is produced by the TriggerBuilder.
    * </p>
-   * 
+   *
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
    * @see ScheduleBuilder
@@ -237,7 +251,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the identity of the Job which should be fired by the produced Trigger.
-   * 
+   *
    * @param jobKey the identity of the Job to fire.
    * @return the updated TriggerBuilder
    * @see Trigger#getJobKey()
@@ -250,7 +264,7 @@ public class TriggerBuilder<T extends Trigger> {
 
   /**
    * Set the identity of the Job which should be fired by the produced Trigger - a <code>JobKey</code> will be produced with the given name and group.
-   * 
+   *
    * @param jobName the name of the job to fire.
    * @param jobGroup the group of the job to fire.
    * @return the updated TriggerBuilder
@@ -263,8 +277,9 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Set the Trigger's {@link JobDataMap}, adding any values to it that were already set on this TriggerBuilder using any of the other 'usingJobData' methods.
-   * 
+   * Set the Trigger's {@link JobDataMap}, adding any values to it that were already set on this TriggerBuilder using any of the other 'usingJobData'
+   * methods.
+   *
    * @return the updated TriggerBuilder
    * @see Trigger#getJobDataMap()
    */
