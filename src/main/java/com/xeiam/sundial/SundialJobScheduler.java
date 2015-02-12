@@ -65,7 +65,7 @@ public class SundialJobScheduler {
   private static ServletContext servletContext = null;
 
   /**
-   * Gets the underlying Sundial scheduler
+   * Gets the underlying Quartz scheduler
    *
    * @return
    */
@@ -85,12 +85,24 @@ public class SundialJobScheduler {
    */
   public static Scheduler createScheduler(int threadPoolSize) {
 
+    return createScheduler(threadPoolSize, null);
+  }
+
+  /**
+   * Creates the Sundial Scheduler
+   *
+   * @param threadPoolSize
+   * @param jobsPackageName
+   * @return
+   */
+  public static Scheduler createScheduler(int threadPoolSize, String jobsPackageName) {
+
     if (scheduler == null) {
       try {
-        scheduler = new SchedulerFactory().getScheduler(threadPoolSize);
+        scheduler = new SchedulerFactory().getScheduler(threadPoolSize, jobsPackageName);
 
       } catch (SchedulerException e) {
-        logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!" + e);
+        logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
       }
     }
     return scheduler;
@@ -104,7 +116,7 @@ public class SundialJobScheduler {
     try {
       getScheduler().start();
     } catch (SchedulerException e) {
-      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!" + e);
+      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!", e);
 
     }
   }
@@ -175,13 +187,16 @@ public class SundialJobScheduler {
       Class<? extends Job> jobClass = classLoadHelper.loadClass(jobClassName);
 
       JobDataMap jobDataMap = new JobDataMap();
-      for (Entry<String, Object> entry : params.entrySet()) {
-        jobDataMap.put(entry.getKey(), entry.getValue());
+      if (params != null) {
+        for (Entry<String, Object> entry : params.entrySet()) {
+          jobDataMap.put(entry.getKey(), entry.getValue());
+        }
       }
 
       JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, Key.DEFAULT_GROUP).usingJobData(jobDataMap).build();
 
       getScheduler().addJob(jobDetail);
+
     } catch (SchedulerException e) {
       logger.error("ERROR ADDING JOB!!!", e);
     } catch (ClassNotFoundException e) {
@@ -266,7 +281,7 @@ public class SundialJobScheduler {
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR STOPPING JOB!!!" + e);
+      logger.error("ERROR STOPPING JOB!!!", e);
     }
   }
 
@@ -298,7 +313,7 @@ public class SundialJobScheduler {
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR DURING STOP Job!!!" + e);
+      logger.error("ERROR DURING STOP Job!!!", e);
     }
   }
 
@@ -356,7 +371,7 @@ public class SundialJobScheduler {
         allJobNames.add(jobKey.getName());
       }
     } catch (SchedulerException e) {
-      logger.error("COULD NOT GET JOB NAMES!!!" + e);
+      logger.error("COULD NOT GET JOB NAMES!!!", e);
     }
     Collections.sort(allJobNames);
 
@@ -379,7 +394,7 @@ public class SundialJobScheduler {
       }
 
     } catch (SchedulerException e) {
-      logger.error("COULD NOT GET JOB NAMES!!!" + e);
+      logger.error("COULD NOT GET JOB NAMES!!!", e);
     }
     return allJobsMap;
   }
@@ -396,7 +411,7 @@ public class SundialJobScheduler {
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR CHECKING RUNNING JOB!!!" + e);
+      logger.error("ERROR CHECKING RUNNING JOB!!!", e);
     }
     logger.debug("Matching running NOT Job found!");
 

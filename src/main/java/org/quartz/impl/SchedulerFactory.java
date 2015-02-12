@@ -33,12 +33,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.DefaultTriggerListener;
+import com.xeiam.sundial.plugins.AnnotationJobTriggerPlugin;
 
 /**
  * <p>
- * An implementation of <code>{@link org.quartz.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code> instance.
+ * An implementation of <code>{@link org.quartz.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code>
+ * instance.
  * </p>
- * 
+ *
  * @author James House
  * @author Anthony Eden
  * @author Mohammad Rezaei
@@ -51,10 +53,26 @@ public class SchedulerFactory {
   private QuartzScheduler quartzScheduler = null;
 
   private int threadPoolSize = 10; // default size is 10
+  private String packageName = null;
 
   /**
    * @param threadPoolSize
-   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given pThreadPoolSize
+   * @param String packageName
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize and packageName where it looks for
+   *         annotated Job classes
+   * @throws SchedulerException
+   */
+  public Scheduler getScheduler(int threadPoolSize, String packageName) throws SchedulerException {
+
+    this.threadPoolSize = threadPoolSize;
+    this.packageName = packageName;
+
+    return getScheduler();
+  }
+
+  /**
+   * @param threadPoolSize
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize
    * @throws SchedulerException
    */
   public Scheduler getScheduler(int threadPoolSize) throws SchedulerException {
@@ -69,7 +87,8 @@ public class SchedulerFactory {
    * Returns a handle to the Scheduler produced by this factory.
    * </p>
    * <p>
-   * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be called by this method.
+   * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be
+   * called by this method.
    * </p>
    */
   public Scheduler getScheduler() throws SchedulerException {
@@ -101,6 +120,8 @@ public class SchedulerFactory {
     xmlSchedulingDataProcessorPlugin.setScanInterval(0);
 
     ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
+
+    AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
 
     // Set up any TriggerListeners
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -135,6 +156,7 @@ public class SchedulerFactory {
       // add plugins
       quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
       quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
+      quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
 
       quartzScheduler = new QuartzScheduler(quartzSchedulerResources);
       qsInited = true;
@@ -149,6 +171,7 @@ public class SchedulerFactory {
       // Initialize plugins now that we have a Scheduler instance.
       xmlSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", quartzScheduler);
       shutdownHookPlugin.initialize("ShutdownHookPlugin", quartzScheduler);
+      annotationJobTriggerPlugin.initialize("AnnotationJobTriggerPlugin", quartzScheduler);
 
       jrsf.initialize(quartzScheduler);
 
@@ -159,24 +182,21 @@ public class SchedulerFactory {
     } catch (SchedulerException e) {
       if (qsInited) {
         quartzScheduler.shutdown(false);
-      }
-      else if (tpInited) {
+      } else if (tpInited) {
         threadPool.shutdown(false);
       }
       throw e;
     } catch (RuntimeException re) {
       if (qsInited) {
         quartzScheduler.shutdown(false);
-      }
-      else if (tpInited) {
+      } else if (tpInited) {
         threadPool.shutdown(false);
       }
       throw re;
     } catch (Error re) {
       if (qsInited) {
         quartzScheduler.shutdown(false);
-      }
-      else if (tpInited) {
+      } else if (tpInited) {
         threadPool.shutdown(false);
       }
       throw re;

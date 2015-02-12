@@ -25,10 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the file for changes.
- * <p>
- * The XML schema definition can be found here: http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd
- * </p>
+ * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the
+ * file for changes.
  *
  * @see org.quartz.xml.XMLSchedulingDataProcessor
  * @author James House
@@ -41,9 +39,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private Scheduler scheduler;
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
   private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
 
   private boolean failOnFileNotFound = true;
@@ -52,17 +47,9 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private long scanInterval = 0;
 
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
-
   public XMLSchedulingDataProcessorPlugin() {
 
   }
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
 
   /**
    * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
@@ -81,7 +68,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value
+   * for the interval is 0, which disables scanning.
    *
    * @return Returns the scanInterval.
    */
@@ -91,7 +79,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value for the interval is 0, which disables scanning.
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value
+   * for the interval is 0, which disables scanning.
    *
    * @param scanInterval The scanInterval to set.
    */
@@ -117,7 +106,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
