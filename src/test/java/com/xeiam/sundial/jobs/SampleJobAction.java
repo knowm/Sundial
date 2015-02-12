@@ -13,23 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xeiam.sundial;
+package com.xeiam.sundial.jobs;
 
-import com.xeiam.sundial.exceptions.JobInterruptException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.xeiam.sundial.JobAction;
 
 /**
+ * A sample Job Action that simply logs a message every time it's called.
+ * 
  * @author timmolter
  */
-public class SampleJob3 extends Job {
+public class SampleJobAction extends JobAction {
+
+  private final Logger logger = LoggerFactory.getLogger(SampleJobAction.class);
 
   @Override
-  public void doRun() throws JobInterruptException {
+  public void doRun() {
 
-    JobContext context = getJobContext();
-
-    context.put("MyValue", new Integer(123));
-
-    new SampleJobAction().run();
+    Integer myValue = getJobContext().get("MyValue");
+    logger.info("myValue: " + myValue);
 
   }
+
 }

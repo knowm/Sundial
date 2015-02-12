@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xeiam.sundial;
+package com.xeiam.sundial.jobs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.xeiam.sundial.Job;
+import com.xeiam.sundial.JobContext;
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
-/**
- * @author timmolter
- */
-public class SampleJob1 extends Job {
+public class SampleJob2 extends Job {
 
-  private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
+  private final Logger logger = LoggerFactory.getLogger(SampleJob2.class);
 
   @Override
   public void doRun() throws JobInterruptException {
 
-    logger.info("RUNNING!");
+    logger.info("Running SampleJob2.");
 
-    // Do something interesting...
+    JobContext context = getJobContext();
 
-    logger.info("DONE!");
+    String valueAsString = context.get("MyParam");
+    logger.info("valueAsString = " + valueAsString);
+
+    Integer valueAsInt = Integer.valueOf(valueAsString);
+    logger.info("valueAsInt = " + valueAsInt);
+
+    logger.info("Finished SampleJob2.");
+
   }
 }

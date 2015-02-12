@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xeiam.sundial;
+package com.xeiam.sundial.jobs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A sample Job Action that simply logs a message every time it's called.
- * 
- * @author timmolter
- */
-public class SampleJobAction extends JobAction {
+import com.xeiam.sundial.Job;
+import com.xeiam.sundial.Triggered;
+import com.xeiam.sundial.exceptions.JobInterruptException;
 
-  private final Logger logger = LoggerFactory.getLogger(SampleJobAction.class);
+@Triggered(cron = "0/5 * * * * ?")
+public class SampleJob1 extends Job {
+
+  private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
 
   @Override
-  public void doRun() {
+  public void doRun() throws JobInterruptException {
 
-    Integer myValue = getJobContext().get("MyValue");
-    logger.info("myValue: " + myValue);
+    logger.info("Running SampleJob1.");
 
+    // Do something interesting...
+
+    logger.info("Finished SampleJob1.");
   }
-
 }

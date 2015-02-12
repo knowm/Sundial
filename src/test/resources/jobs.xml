@@ -4,7 +4,7 @@
 	<schedule>
 		<job>
 			<name>SampleJob3</name>
-			<job-class>com.xeiam.sundial.SampleJob3</job-class>
+			<job-class>com.xeiam.sundial.jobs.SampleJob3</job-class>
 		</job>
 		<trigger>
 			<cron>
@@ -16,7 +16,7 @@
 
 		<job>
 			<name>SampleJob2</name>
-			<job-class>com.xeiam.sundial.SampleJob2</job-class>
+			<job-class>com.xeiam.sundial.jobs.SampleJob2</job-class>
 			<job-data-map>
 				<entry>
 					<key>MyParam</key>
@@ -25,11 +25,12 @@
 			</job-data-map>
 		</job>
 		<trigger>
-			<cron>
+			<simple>
 				<name>SampleJob2-Trigger</name>
 				<job-name>SampleJob2</job-name>
-				<cron-expression>0/25 * * * * ?</cron-expression>
-			</cron>
+                <repeat-count>5</repeat-count>
+                <repeat-interval>5000</repeat-interval>
+			</simple>
 		</trigger>
 
 	</schedule>

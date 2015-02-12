@@ -40,7 +40,7 @@ import org.quartz.spi.MutableTrigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -115,6 +115,20 @@ public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
   public SimpleScheduleBuilder withRepeatCount(int repeatCount) {
 
     this.repeatCount = repeatCount;
+    return this;
+  }
+
+  /**
+   * Specify that the trigger will repeat indefinitely.
+   *
+   * @return the updated SimpleScheduleBuilder
+   * @see SimpleTrigger#getRepeatCount()
+   * @see SimpleTrigger#REPEAT_INDEFINITELY
+   * @see #withIntervalInMilliseconds(long)
+   */
+  public SimpleScheduleBuilder repeatForever() {
+
+    this.repeatCount = SimpleTrigger.REPEAT_INDEFINITELY;
     return this;
   }
 

@@ -15,7 +15,6 @@
  */
 package com.xeiam.sundial;
 
-
 /**
  * @author timmolter
  */
@@ -26,16 +25,8 @@ public class SampleRun {
    */
   public static void main(String[] args) {
 
+    SundialJobScheduler.createScheduler(10, "com.xeiam.sundial.jobs");
     SundialJobScheduler.startScheduler();
 
-    SundialJobScheduler.startJob("SampleJob3");
-    SundialJobScheduler.removeJob("SampleJob3");
-
-    //    SundialJobScheduler.getScheduler().
-
-    //    JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
-
-    //    Trigger trigger = TriggerBuilder.newTrigger().withIdentity(new TriggerKey("myTrigger", "myTriggerGroup"))
-    //        .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
   }
 }
