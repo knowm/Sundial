@@ -101,6 +101,7 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial-example-cod
  * [x] ~175 KB Jar
  * [x] Apache 2.0 license
  * [x] Easy to use
+ * [x] Java 6 and up
 
 ## Getting Started
 ### Non-Maven
