@@ -134,7 +134,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   public void start() {
 
     try {
-      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(scheduler.getClassLoadHelper());
+      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(scheduler.getCascadingClassLoadHelper());
       processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);

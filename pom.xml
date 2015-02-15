@@ -55,12 +55,6 @@
 			<version>1.7.10</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>0.9.9</version>
-		</dependency>
-
 		<!-- provided -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

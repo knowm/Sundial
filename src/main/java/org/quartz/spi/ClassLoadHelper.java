@@ -65,4 +65,5 @@ public interface ClassLoadHelper {
    * @return the class-loader user be the helper.
    */
   ClassLoader getClassLoader();
+
 }

@@ -52,7 +52,6 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.simpl.SimpleJobFactory;
-import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.JobFactory;
 import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.SchedulerPlugin;
@@ -114,7 +113,7 @@ public class QuartzScheduler implements Scheduler {
 
   private Date initialStart = null;
 
-  ClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
+  CascadingClassLoadHelper cascadingClassLoadHelper = new CascadingClassLoadHelper();
 
   private final Logger logger = LoggerFactory.getLogger(QuartzScheduler.class);
 
@@ -146,7 +145,7 @@ public class QuartzScheduler implements Scheduler {
 
     signaler = new SchedulerSignalerImpl(this, this.quartzSchedulerThread);
 
-    classLoadHelper.initialize();
+    cascadingClassLoadHelper.initialize();
   }
 
   public void initialize() throws SchedulerException {
@@ -1171,8 +1170,8 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public ClassLoadHelper getClassLoadHelper() {
-    return this.classLoadHelper;
+  public CascadingClassLoadHelper getCascadingClassLoadHelper() {
+    return this.cascadingClassLoadHelper;
   }
 
 }

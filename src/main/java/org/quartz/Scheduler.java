@@ -23,7 +23,7 @@ import java.util.Set;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.SchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.spi.ClassLoadHelper;
+import org.quartz.simpl.CascadingClassLoadHelper;
 
 /**
  * This is the main interface of a Quartz Scheduler.
@@ -273,6 +273,6 @@ public interface Scheduler {
    */
   void unscheduleJob(TriggerKey triggerKey) throws SchedulerException;
 
-  ClassLoadHelper getClassLoadHelper();
+  CascadingClassLoadHelper getCascadingClassLoadHelper();
 
 }

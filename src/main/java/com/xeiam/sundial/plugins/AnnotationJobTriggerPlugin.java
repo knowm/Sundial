@@ -15,8 +15,6 @@ import org.quartz.TriggerBuilder;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerPlugin;
 import org.quartz.utils.Key;
-import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +68,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
     if (packageName != null) {
 
-      Reflections reflections = new Reflections(packageName, new SubTypesScanner());
-      Set<Class<? extends Job>> scheduledClasses = reflections.getSubTypesOf(Job.class);
+      Set<Class<? extends Job>> scheduledClasses = scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
 
       for (Class<? extends Job> scheduledClass : scheduledClasses) {
         CronTrigger cronTrigger = scheduledClass.getAnnotation(CronTrigger.class);
@@ -107,7 +104,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
       trigger.forJob(jobName, Key.DEFAULT_GROUP).withIdentity(jobName + "-Trigger", Key.DEFAULT_GROUP)
-          .withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
+      .withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
     } else {
       throw new IllegalArgumentException("One of 'cron', 'interval' is required for the @Scheduled annotation");
     }

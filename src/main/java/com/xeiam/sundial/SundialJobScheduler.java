@@ -203,7 +203,7 @@ public class SundialJobScheduler {
 
     try {
 
-      Class<? extends Job> jobClass = getScheduler().getClassLoadHelper().loadClass(jobClassName);
+      Class<? extends Job> jobClass = getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName);
 
       JobDataMap jobDataMap = new JobDataMap();
       if (params != null) {
