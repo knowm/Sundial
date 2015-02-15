@@ -37,7 +37,6 @@ import org.quartz.JobListener;
 import org.quartz.ListenerManager;
 import org.quartz.Matcher;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerContext;
 import org.quartz.SchedulerListener;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
@@ -84,8 +83,6 @@ public class QuartzScheduler implements Scheduler {
   private final QuartzSchedulerThread quartzSchedulerThread;
 
   private ThreadGroup threadGroup;
-
-  private final SchedulerContext context = new SchedulerContext();
 
   private final ListenerManager listenerManager = new ListenerManagerImpl();
 
@@ -177,16 +174,6 @@ public class QuartzScheduler implements Scheduler {
     }
 
     return threadGroup;
-  }
-
-  /**
-   * <p>
-   * Returns the <code>SchedulerContext</code> of the <code>Scheduler</code>.
-   * </p>
-   */
-  public SchedulerContext getSchedulerContext() throws SchedulerException {
-
-    return context;
   }
 
   public boolean isSignalOnSchedulingChange() {
