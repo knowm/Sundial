@@ -171,6 +171,7 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial-example-cod
 Download Jar: http://xeiam.com/sundial-change-log
 #### Dependencies
 * org.slf4j.slf4j-api-1.7.10
+* org.reflections.reflections-0.9.9 (only for trigger annotations)
 
 ### Maven
 
