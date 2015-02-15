@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.xeiam.sundial.exceptions;
+package com.xeiam.sundial.jobs;
 
-public class RequiredParameterException extends RuntimeException {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-  /**
-   * Constructor
-   *
-   * @param message
-   */
-  private RequiredParameterException(String message) {
+import com.xeiam.sundial.Job;
+import com.xeiam.sundial.annotations.CronTrigger;
+import com.xeiam.sundial.exceptions.JobInterruptException;
 
-    super(message);
+@CronTrigger(cron = "0/20 * * * * ?")
+public class SampleJob5 extends Job {
+
+  private final Logger logger = LoggerFactory.getLogger(SampleJob5.class);
+
+  @Override
+  public void doRun() throws JobInterruptException {
+
+    logger.info("Running SampleJob5.");
+
+    // Do something interesting...
+
+    logger.info("Finished SampleJob5.");
   }
-
-  /**
-   * Constructor
-   */
-  public RequiredParameterException() {
-
-    this("Required Value not found in Context! Job aborted!!!");
-  }
-
 }

@@ -15,22 +15,27 @@
  */
 package com.xeiam.sundial.exceptions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * This Exception is only used by the Job class to abort a running Job. Do not use this elsewhere.
- * 
- * @author timothy.molter
  */
 public class JobInterruptException extends RuntimeException {
 
-  /** slf4J logger wrapper */
-  private Logger logger = LoggerFactory.getLogger(JobInterruptException.class);
+  /**
+   * Constructor
+   *
+   * @param message
+   */
+  private JobInterruptException(String message) {
 
+    super(message);
+  }
+
+  /**
+   * Constructor
+   */
   public JobInterruptException() {
 
-    logger.info("Job Interrupted!!!");
+    this("Job Interrupted!!!");
   }
 
 }

@@ -19,19 +19,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.Job;
+import com.xeiam.sundial.annotations.CronTrigger;
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
-public class SampleJob1 extends Job {
+@CronTrigger(cron = "0/5 * * * * ?", jobDataMap = { "KEY_1:VALUE_1", "KEY_2:1000" })
+public class SampleJob4 extends Job {
 
-  private final Logger logger = LoggerFactory.getLogger(SampleJob1.class);
+  private final Logger logger = LoggerFactory.getLogger(SampleJob4.class);
 
   @Override
   public void doRun() throws JobInterruptException {
 
-    logger.info("Running SampleJob1.");
+    logger.info("Running SampleJob4.");
 
     // Do something interesting...
 
-    logger.info("Finished SampleJob1.");
+    String value1 = getJobContext().get("KEY_1");
+    logger.info("value1 = " + value1);
+
+    String value2AsString = getJobContext().get("KEY_2");
+    Integer valueAsInt = Integer.valueOf(value2AsString);
+    logger.info("value2 = " + valueAsInt);
+
+    logger.info("Finished SampleJob4.");
   }
 }

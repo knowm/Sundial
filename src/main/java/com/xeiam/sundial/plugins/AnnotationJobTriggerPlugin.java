@@ -7,19 +7,21 @@ import java.text.ParseException;
 import java.util.Set;
 
 import org.quartz.CronScheduleBuilder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerPlugin;
+import org.quartz.utils.Key;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.Job;
-import com.xeiam.sundial.Triggered;
+import com.xeiam.sundial.annotations.CronTrigger;
 
 /**
  * This plugin adds jobs and schedules them with triggers from annotated Job classes as the scheduler is initialized.
@@ -32,9 +34,9 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
   private Scheduler scheduler;
 
-  private static final String JOB_INITIALIZATION_PLUGIN_NAME = "AnnotationJobTriggerPlugin";
-
   private final String packageName;
+
+  private static final String SEPARATOR = ":";
 
   /**
    * Constructor
@@ -44,21 +46,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
   public AnnotationJobTriggerPlugin(String packageName) {
 
     this.packageName = packageName;
-
   }
-
-  /**
-   * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
-   */
-  private Scheduler getScheduler() {
-
-    return scheduler;
-  }
-
-  /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface.
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   */
 
   /**
    * <p>
@@ -86,12 +74,19 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
       Set<Class<? extends Job>> scheduledClasses = reflections.getSubTypesOf(Job.class);
 
       for (Class<? extends Job> scheduledClass : scheduledClasses) {
-        Triggered scheduleAnn = scheduledClass.getAnnotation(Triggered.class);
-        if (scheduleAnn != null) {
-          JobDetail job = newJob(scheduledClass).build();
+        CronTrigger cronTrigger = scheduledClass.getAnnotation(CronTrigger.class);
+        if (cronTrigger != null) {
+
+          JobDataMap jobDataMap = new JobDataMap();
+
+          if (cronTrigger.jobDataMap() != null && cronTrigger.jobDataMap().length > 0) {
+            addToJobDataMap(jobDataMap, cronTrigger.jobDataMap());
+          }
+
+          JobDetail job = newJob(scheduledClass).withIdentity(scheduledClass.getSimpleName(), Key.DEFAULT_GROUP).usingJobData(jobDataMap).build();
           Trigger trigger;
           try {
-            trigger = buildTrigger(scheduleAnn);
+            trigger = buildTrigger(cronTrigger, scheduledClass.getSimpleName());
             scheduler.scheduleJob(job, trigger);
             logger.info("Scheduled job {} with trigger {}", job, trigger);
           } catch (Exception e) {
@@ -104,28 +99,35 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
       logger.info("Not loading any annotated Jobs. No package name provided. Use SundialJobScheduler.createScheduler() to set the package name.");
     }
 
-    //    try {
-    //      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor();
-    //      processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
-    //      processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
-    //      processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);
-    //      processor.scheduleJobs(getScheduler());
-    //
-    //    } catch (Exception e) {
-    //      logger.error("Error scheduling jobs: " + e.getMessage(), e);
-    //    }
   }
 
-  public static Trigger buildTrigger(Triggered ann) throws ParseException {
+  public Trigger buildTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
+
     TriggerBuilder<Trigger> trigger = newTrigger();
 
-    if (ann.cron() != null && ann.cron().trim().length() > 0) {
-      trigger.withSchedule(CronScheduleBuilder.cronSchedule(ann.cron()));
+    if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
+      trigger.forJob(jobName, Key.DEFAULT_GROUP).withIdentity(jobName + "-Trigger", Key.DEFAULT_GROUP)
+          .withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
     } else {
       throw new IllegalArgumentException("One of 'cron', 'interval' is required for the @Scheduled annotation");
     }
 
     return trigger.build();
+  }
+
+  private void addToJobDataMap(JobDataMap jobDataMap, String[] stringEncodedMap) {
+
+    for (int i = 0; i < stringEncodedMap.length; i++) {
+
+      String[] keyValue = stringEncodedMap[i].split(SEPARATOR);
+      if (keyValue == null || keyValue.length != 2) {
+        logger.warn(stringEncodedMap[i] + " was not parsable!!! Skipping.");
+        continue;
+      }
+
+      jobDataMap.put(keyValue[0].trim(), keyValue[1].trim());
+    }
+
   }
 
   /**

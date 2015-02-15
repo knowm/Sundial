@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 - 2013 Xeiam LLC.
+ * Copyright 2011 - 2015 Xeiam LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,13 @@
  */
 package com.xeiam.sundial.exceptions;
 
-public class RequiredParameterException extends RuntimeException {
-
-  /**
-   * Constructor
-   *
-   * @param message
-   */
-  private RequiredParameterException(String message) {
-
-    super(message);
-  }
+public class SchedulerStartupException extends RuntimeException {
 
   /**
    * Constructor
    */
-  public RequiredParameterException() {
+  public SchedulerStartupException(Throwable e) {
 
-    this("Required Value not found in Context! Job aborted!!!");
+    super("Error starting scheduler!!!", e);
   }
-
 }

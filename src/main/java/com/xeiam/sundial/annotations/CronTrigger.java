@@ -1,4 +1,4 @@
-package com.xeiam.sundial;
+package com.xeiam.sundial.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,8 +7,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Triggered {
+public @interface CronTrigger {
 
   String cron() default "";
+
+  String[] jobDataMap() default {};
 
 }

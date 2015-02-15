@@ -47,6 +47,8 @@ import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.xeiam.sundial.exceptions.SchedulerStartupException;
+
 /**
  * Main entry-point to the Sundial scheduler
  *
@@ -66,41 +68,62 @@ public class SundialJobScheduler {
   private static ServletContext servletContext = null;
 
   /**
-   * Gets the underlying Quartz scheduler
-   *
-   * @return
+   * Starts the Sundial Scheduler
    */
-  public static Scheduler getScheduler() {
+  public static void startScheduler() {
 
-    if (scheduler == null) {
-      scheduler = createScheduler(10);
+    startScheduler(10, null);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param threadPoolSize
+   */
+  public static void startScheduler(int threadPoolSize) {
+
+    startScheduler(threadPoolSize, null);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param annotatedJobsPackageName
+   */
+  public static void startScheduler(String annotatedJobsPackageName) {
+
+    startScheduler(10, annotatedJobsPackageName);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param threadPoolSize
+   * @param annotatedJobsPackageName
+   */
+  public static void startScheduler(int threadPoolSize, String annotatedJobsPackageName) {
+
+    try {
+      createScheduler(threadPoolSize, annotatedJobsPackageName);
+      getScheduler().start();
+    } catch (SchedulerException e) {
+      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!", e);
+      throw new SchedulerStartupException(e);
     }
-    return scheduler;
   }
 
   /**
    * Creates the Sundial Scheduler
    *
-   * @param threadPoolSize
+   * @param threadPoolSize the thread pool size used by the scheduler
+   * @param annotatedJobsPackageName the package where trigger annotated Job calsses can be found
    * @return
    */
-  public static Scheduler createScheduler(int threadPoolSize) {
-
-    return createScheduler(threadPoolSize, null);
-  }
-
-  /**
-   * Creates the Sundial Scheduler
-   *
-   * @param threadPoolSize
-   * @param jobsPackageName
-   * @return
-   */
-  public static Scheduler createScheduler(int threadPoolSize, String jobsPackageName) {
+  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) {
 
     if (scheduler == null) {
       try {
-        scheduler = new SchedulerFactory().getScheduler(threadPoolSize, jobsPackageName);
+        scheduler = new SchedulerFactory().getScheduler(threadPoolSize, annotatedJobsPackageName);
 
       } catch (SchedulerException e) {
         logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
@@ -110,16 +133,16 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Starts the Sundial Scheduler
+   * Gets the underlying Quartz scheduler
+   *
+   * @return
    */
-  public static void startScheduler() {
+  public static Scheduler getScheduler() {
 
-    try {
-      getScheduler().start();
-    } catch (SchedulerException e) {
-      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!", e);
-
+    if (scheduler == null) {
+      logger.warn("Scheduler has not yet been created!!! Call \"createScheduler\" first.");
     }
+    return scheduler;
   }
 
   public static void toggleGlobalLock() {
@@ -159,7 +182,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Adds a Job matching to the scheduler. Replaces a matching existing Job.
+   * Adds a Job to the scheduler. Replaces a matching existing Job.
    *
    * @param jobName
    * @param jobClassName
