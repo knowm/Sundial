@@ -40,7 +40,7 @@ import org.quartz.utils.Key;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -277,19 +277,14 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Set the Trigger's {@link JobDataMap}, adding any values to it that were already set on this TriggerBuilder using any of the other 'usingJobData'
-   * methods.
+   * Set the Trigger's {@link JobDataMap}.
    *
    * @return the updated TriggerBuilder
    * @see Trigger#getJobDataMap()
    */
   public TriggerBuilder<T> usingJobData(JobDataMap newJobDataMap) {
 
-    // add any existing data to this new map
-    for (Object key : jobDataMap.keySet()) {
-      newJobDataMap.put(key, jobDataMap.get(key));
-    }
-    jobDataMap = newJobDataMap; // set new map as the map to use
+    this.jobDataMap = newJobDataMap; // set new map as the map to use
     return this;
   }
 

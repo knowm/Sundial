@@ -1,24 +1,23 @@
-/* 
- * Copyright 2001-2009 Terracotta, Inc. 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/*
+ * Copyright 2001-2009 Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 
 package org.quartz.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import org.quartz.Calendar;
 import org.quartz.Job;
@@ -32,7 +31,8 @@ import org.quartz.spi.TriggerFiredBundle;
 public class JobExecutionContextImpl implements java.io.Serializable, JobExecutionContext {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private transient Scheduler scheduler;
@@ -63,10 +63,9 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
 
   private Object result;
 
-  private HashMap data = new HashMap();
-
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -93,7 +92,8 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   @Override
@@ -176,8 +176,9 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
   @Override
   public String toString() {
 
-    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getKey() + " fireTime: '" + getFireTime() + " scheduledFireTime: " + getScheduledFireTime()
-        + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime() + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
+    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getKey() + " fireTime: '" + getFireTime()
+        + " scheduledFireTime: " + getScheduledFireTime() + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime()
+        + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
   }
 
   @Override
