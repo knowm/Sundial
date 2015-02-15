@@ -113,16 +113,6 @@ public class SchedulerFactory {
     //
     JobStore jobstore = new RAMJobStore();
 
-    // Set up any SchedulerPlugins
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
-    xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
-    xmlSchedulingDataProcessorPlugin.setScanInterval(0);
-
-    ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
-
-    AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
-
     // Set up any TriggerListeners
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -153,13 +143,21 @@ public class SchedulerFactory {
 
       quartzSchedulerResources.setJobStore(jobstore);
 
-      // add plugins
-      quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
-      quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
-      quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
-
       quartzScheduler = new QuartzScheduler(quartzSchedulerResources);
       qsInited = true;
+
+      // Set up any SchedulerPlugins
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
+      xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
+      xmlSchedulingDataProcessorPlugin.setScanInterval(0);
+      quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
+
+      ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
+      quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
+
+      AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
+      quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
 
       // add listeners
       quartzScheduler.getListenerManager().addTriggerListener(defaultTriggerListener, EverythingMatcher.allTriggers());

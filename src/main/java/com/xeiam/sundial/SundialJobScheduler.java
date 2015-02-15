@@ -41,8 +41,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.SchedulerFactory;
-import org.quartz.simpl.CascadingClassLoadHelper;
-import org.quartz.spi.ClassLoadHelper;
 import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,10 +203,7 @@ public class SundialJobScheduler {
 
     try {
 
-      ClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
-      classLoadHelper.initialize();
-
-      Class<? extends Job> jobClass = classLoadHelper.loadClass(jobClassName);
+      Class<? extends Job> jobClass = getScheduler().getClassLoadHelper().loadClass(jobClassName);
 
       JobDataMap jobDataMap = new JobDataMap();
       if (params != null) {

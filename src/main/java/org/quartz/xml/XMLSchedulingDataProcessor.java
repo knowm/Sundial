@@ -66,7 +66,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.MutableTrigger;
 import org.quartz.utils.Key;
@@ -137,13 +136,13 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   /**
    * Constructor for JobSchedulingDataLoader.
    *
+   * @param classLoadHelper
    * @param clh class-loader helper to share with digester.
    * @throws ParserConfigurationException if the XML parser cannot be configured as needed.
    */
-  public XMLSchedulingDataProcessor() throws ParserConfigurationException {
+  public XMLSchedulingDataProcessor(ClassLoadHelper classLoadHelper) throws ParserConfigurationException {
 
-    classLoadHelper = new CascadingClassLoadHelper();
-    classLoadHelper.initialize();
+    this.classLoadHelper = classLoadHelper;
 
     initDocumentParser();
   }
@@ -284,7 +283,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-  ClassNotFoundException, ParseException, XPathException {
+      ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 

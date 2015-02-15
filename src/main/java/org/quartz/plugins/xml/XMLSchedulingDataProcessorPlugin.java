@@ -47,6 +47,11 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private long scanInterval = 0;
 
+  /**
+   * Constructor
+   *
+   * @param classLoadHelper
+   */
   public XMLSchedulingDataProcessorPlugin() {
 
   }
@@ -129,7 +134,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   public void start() {
 
     try {
-      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor();
+      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(scheduler.getClassLoadHelper());
       processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);

@@ -16,6 +16,8 @@
 package com.xeiam.sundial.xml;
 
 import org.junit.Test;
+import org.quartz.simpl.CascadingClassLoadHelper;
+import org.quartz.spi.ClassLoadHelper;
 import org.quartz.xml.XMLSchedulingDataProcessor;
 
 /**
@@ -26,7 +28,10 @@ public class TextXMLParser {
   @Test
   public void test0() throws Exception {
 
-    XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor();
+    ClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
+    classLoadHelper.initialize();
+
+    XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(classLoadHelper);
     // processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
     // processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
     processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, false);
