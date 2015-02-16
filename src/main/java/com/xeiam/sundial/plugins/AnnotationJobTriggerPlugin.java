@@ -102,7 +102,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
     TriggerBuilder<Trigger> trigger = newTrigger();
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
-      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
+      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withScheduleBuilder(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
     } else {
       throw new IllegalArgumentException("One of 'cron', 'interval' is required for the @Scheduled annotation");
     }

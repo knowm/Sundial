@@ -204,7 +204,7 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
 
     TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
         .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
-        .withSchedule(getScheduleBuilder());
+        .withScheduleBuilder(getScheduleBuilder());
     return b;
   }
 

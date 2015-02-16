@@ -341,9 +341,10 @@ public class SundialJobScheduler {
 
     try {
 
-      ScheduleBuilder<CronTrigger> sched = cronSchedule(cronExpression).inTimeZone(null);
+      ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedule(cronExpression);
 
-      Trigger trigger = newTrigger().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY).withSchedule(sched).build();
+      Trigger trigger = newTrigger().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+          .withScheduleBuilder(scheduleBuilder).build();
 
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {

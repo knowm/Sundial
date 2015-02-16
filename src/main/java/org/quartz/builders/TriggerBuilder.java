@@ -40,7 +40,7 @@ import org.quartz.triggers.Trigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -123,8 +123,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param name the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
-   * @see TriggerKey
-   * @see Trigger#getName()
    */
   public TriggerBuilder<T> withIdentity(String name) {
 
@@ -137,7 +135,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param description the description for the Trigger
    * @return the updated TriggerBuilder
-   * @see Trigger#getDescription()
    */
   public TriggerBuilder<T> withDescription(String description) {
 
@@ -150,8 +147,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param priority the priority for the Trigger
    * @return the updated TriggerBuilder
-   * @see Trigger#DEFAULT_PRIORITY
-   * @see Trigger#getPriority()
    */
   public TriggerBuilder<T> withPriority(int priority) {
 
@@ -164,8 +159,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param calendarName the name of the Calendar to reference.
    * @return the updated TriggerBuilder
-   * @see Calendar
-   * @see Trigger#getCalendarName()
    */
   public TriggerBuilder<T> modifiedByCalendar(String calendarName) {
 
@@ -178,7 +171,6 @@ public class TriggerBuilder<T extends Trigger> {
    * configured for the Trigger.
    *
    * @return the updated TriggerBuilder
-   * @see Trigger#getStartTime()
    */
   public TriggerBuilder<T> startNow() {
 
@@ -192,8 +184,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param startTime the start time for the Trigger.
    * @return the updated TriggerBuilder
-   * @see Trigger#getStartTime()
-   * @see DateBuilder
    */
   public TriggerBuilder<T> startAt(Date startTime) {
 
@@ -206,8 +196,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param endTime the end time for the Trigger. If null, the end time is indefinite.
    * @return the updated TriggerBuilder
-   * @see Trigger#getEndTime()
-   * @see DateBuilder
    */
   public TriggerBuilder<T> endAt(Date endTime) {
 
@@ -223,12 +211,8 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
-   * @see ScheduleBuilder
-   * @see SimpleScheduleBuilder
-   * @see CronScheduleBuilder
-   * @see CalendarIntervalScheduleBuilder
    */
-  public <SBT extends T> TriggerBuilder<SBT> withSchedule(ScheduleBuilder<SBT> scheduleBuilder) {
+  public <SBT extends T> TriggerBuilder<SBT> withScheduleBuilder(ScheduleBuilder<SBT> scheduleBuilder) {
 
     this.scheduleBuilder = scheduleBuilder;
     return (TriggerBuilder<SBT>) this;
@@ -239,7 +223,6 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param jobName the identity of the Job to fire.
    * @return the updated TriggerBuilder
-   * @see Trigger#getJobName()
    */
   public TriggerBuilder<T> forJob(String jobName) {
 
@@ -251,7 +234,6 @@ public class TriggerBuilder<T extends Trigger> {
    * Set the Trigger's {@link JobDataMap}.
    *
    * @return the updated TriggerBuilder
-   * @see Trigger#getJobDataMap()
    */
   public TriggerBuilder<T> usingJobData(JobDataMap newJobDataMap) {
 

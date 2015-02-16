@@ -624,7 +624,7 @@ public class QuartzScheduler implements Scheduler {
     validateState();
 
     OperableTrigger trig = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
-        .withSchedule(SimpleScheduleBuilder.simpleSchedule()).startAt(new Date()).build();
+        .withScheduleBuilder(SimpleScheduleBuilder.simpleSchedule()).startAt(new Date()).build();
     // OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
     trig.computeFirstFireTime(null);
     if (data != null) {

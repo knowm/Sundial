@@ -455,7 +455,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
 
       Trigger trigger = newTrigger().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime)
-          .endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+          .endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withScheduleBuilder(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 

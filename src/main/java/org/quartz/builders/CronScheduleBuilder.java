@@ -45,19 +45,12 @@ import org.quartz.triggers.MutableTrigger;
  *
  * scheduler.scheduleJob(job, trigger);
  *
- * <pre>
- *
- * @see CronExpression
- * @see CronTrigger
- * @see ScheduleBuilder
- * @see SimpleScheduleBuilder
- * @see CalendarIntervalScheduleBuilder
- * @see TriggerBuilder
+ * </pre>
  */
 public class CronScheduleBuilder extends ScheduleBuilder<CronTrigger> {
 
   private String cronExpression;
-  private TimeZone tz;
+  private TimeZone tz = null;
   private int misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
   private CronScheduleBuilder(String cronExpression) {
