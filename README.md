@@ -46,25 +46,25 @@ public static void main(String[] args) {
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
 ```xml
-    <?xml version='1.0' encoding='utf-8'?>
-    <job-scheduling-data>
+<?xml version='1.0' encoding='utf-8'?>
+<job-scheduling-data>
 
-        <schedule>
-            <job>
-                <name>SampleJob1</name>
-                <job-class>com.xeiam.sundial.SampleJob1</job-class>
-            </job>
-            <trigger>
-                <cron>
-                    <name>SampleJob1-Trigger</name>
-                    <job-name>SampleJob1</job-name>
-                    <cron-expression>0/45 * * * * ?</cron-expression>
-                </cron>
-            </trigger>
+    <schedule>
+        <job>
+            <name>SampleJob1</name>
+            <job-class>com.xeiam.sundial.SampleJob1</job-class>
+        </job>
+        <trigger>
+            <cron>
+                <name>SampleJob1-Trigger</name>
+                <job-name>SampleJob1</job-name>
+                <cron-expression>0/45 * * * * ?</cron-expression>
+            </cron>
+        </trigger>
 
-        </schedule>
+    </schedule>
 
-    </job-scheduling-data>
+</job-scheduling-data>
 ```
 
 ## Or, Define Jobs and Triggers Manually
@@ -179,27 +179,27 @@ The Sundial release artifacts are hosted on Maven Central.
 Add the Sundial library as a dependency to your pom.xml file:
 
 ```xml
-    <dependency>
-        <groupId>com.xeiam</groupId>
-        <artifactId>sundial</artifactId>
-        <version>1.1.3</version>
-    </dependency>
+<dependency>
+    <groupId>com.xeiam</groupId>
+    <artifactId>sundial</artifactId>
+    <version>1.1.3</version>
+</dependency>
 ```
 
 For snapshots, add the following to your pom.xml file:
 
 ```xml
-    <repository>
-      <id>sonatype-oss-snapshot</id>
-      <snapshots/>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
+<repository>
+  <id>sonatype-oss-snapshot</id>
+  <snapshots/>
+  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+</repository>
 
-    <dependency>
-        <groupId>com.xeiam</groupId>
-        <artifactId>sundial</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
-    </dependency>
+<dependency>
+    <groupId>com.xeiam</groupId>
+    <artifactId>sundial</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+</dependency>
 ```
 
 ## Building
