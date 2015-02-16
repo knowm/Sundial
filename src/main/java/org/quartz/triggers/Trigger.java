@@ -26,7 +26,6 @@ import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.jobs.JobDataMap;
-import org.quartz.jobs.JobDetail;
 
 /**
  * The base interface with properties common to all <code>Trigger</code>s - use {@link TriggerBuilder} to instantiate an actual Trigger.
@@ -62,8 +61,8 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * </p>
    * <p>
    * <code>RE_EXECUTE_JOB</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> wants the
-   * <code>{@link org.quartz.jobs.JobDetail}</code> to re-execute immediately. If not in a 'RECOVERING' or 'FAILED_OVER' situation, the execution context
-   * will be re-used (giving the <code>Job</code> the ability to 'see' anything placed in the context by its last execution).
+   * <code>{@link org.quartz.jobs.JobDetail}</code> to re-execute immediately. If not in a 'RECOVERING' or 'FAILED_OVER' situation, the execution
+   * context will be re-used (giving the <code>Job</code> the ability to 'see' anything placed in the context by its last execution).
    * </p>
    * <p>
    * <code>SET_TRIGGER_COMPLETE</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}</code> should be put in the
@@ -112,9 +111,19 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    */
   public static final int DEFAULT_PRIORITY = 5;
 
-  public String getKey();
+  /**
+   * <p>
+   * Get the name of this <code>Trigger</code>.
+   * </p>
+   */
+  public String getName();
 
-  public String getJobKey();
+  /**
+   * <p>
+   * Get the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
+   * </p>
+   */
+  public String getJobName();
 
   /**
    * Return the description given to the <code>Trigger</code> instance by its creator (if any).
@@ -274,7 +283,7 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
         return comp;
       }
 
-      return trig1.getKey().compareTo(trig2.getKey());
+      return trig1.getName().compareTo(trig2.getName());
     }
   }
 }

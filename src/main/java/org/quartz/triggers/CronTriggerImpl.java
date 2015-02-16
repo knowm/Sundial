@@ -1,18 +1,18 @@
-/* 
- * Copyright 2001-2009 Terracotta, Inc. 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/*
+ * Copyright 2001-2009 Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 
 package org.quartz.triggers;
@@ -30,21 +30,24 @@ import org.quartz.exceptions.JobExecutionException;
 
 /**
  * <p>
- * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.jobs.JobDetail}</code> at given moments in time, defined with Unix 'cron-like' definitions.
+ * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.jobs.JobDetail}</code> at given moments in time, defined
+ * with Unix 'cron-like' definitions.
  * </p>
- * 
+ *
  * @author Sharada Jambula, James House
  * @author Contributions from Mads Henderson
  */
 public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements CronTrigger {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
-   * Required for serialization support. Introduced in Quartz 1.6.1 to maintain compatibility after the introduction of hasAdditionalProperties method.
-   * 
+   * Required for serialization support. Introduced in Quartz 1.6.1 to maintain compatibility after the introduction of hasAdditionalProperties
+   * method.
+   *
    * @see java.io.Serializable
    */
   private static final long serialVersionUID = -8644953146451592766L;
@@ -52,9 +55,11 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
   private static final int YEAR_TO_GIVEUP_SCHEDULING_AT = CronExpression.MAX_YEAR;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
+  // TODO move some of these to AbstractTrigger
   private CronExpression cronEx = null;
   private Date startTime = null;
   private Date endTime = null;
@@ -63,7 +68,8 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
   private transient TimeZone timeZone = null;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -82,7 +88,8 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   @Override
@@ -110,7 +117,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * Set the CronExpression to the given one. The TimeZone on the passed-in CronExpression over-rides any that was already set on the Trigger.
-   * 
+   *
    * @param cronExpression
    */
   public void setCronExpression(CronExpression cronExpression) {
@@ -157,7 +164,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
    * <p>
    * Get the time at which the <code>CronTrigger</code> should quit repeating - even if repeastCount isn't yet satisfied.
    * </p>
-   * 
+   *
    * @see #getFinalFireTime()
    */
   @Override
@@ -179,14 +186,14 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * <p>
-   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be returned. Note that the time returned can possibly be
-   * in the past, if the time that was computed for the trigger to next fire has already arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of
-   * resources e.g. threads).
+   * Returns the next time at which the <code>Trigger</code> is scheduled to fire. If the trigger will not fire again, <code>null</code> will be
+   * returned. Note that the time returned can possibly be in the past, if the time that was computed for the trigger to next fire has already
+   * arrived, but the scheduler has not yet been able to fire the trigger (which would likely be due to lack of resources e.g. threads).
    * </p>
    * <p>
    * The value returned is not guaranteed to be valid until after the <code>Trigger</code> has been added to the scheduler.
    * </p>
-   * 
+   *
    * @see TriggerUtils#computeFireTimesBetween(Trigger, org.quartz.core.Calendar , Date, Date)
    */
   @Override
@@ -248,8 +255,9 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
    * Sets the time zone for which the <code>cronExpression</code> of this <code>CronTrigger</code> will be resolved.
    * </p>
    * <p>
-   * If {@link #setCronExpression(CronExpression)} is called after this method, the TimeZon setting on the CronExpression will "win". However if {@link #setCronExpression(String)} is called after this
-   * method, the time zone applied by this method will remain in effect, since the String cron expression does not carry a time zone!
+   * If {@link #setCronExpression(CronExpression)} is called after this method, the TimeZon setting on the CronExpression will "win". However if
+   * {@link #setCronExpression(String)} is called after this method, the time zone applied by this method will remain in effect, since the String cron
+   * expression does not carry a time zone!
    */
   public void setTimeZone(TimeZone timeZone) {
 
@@ -261,7 +269,8 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * <p>
-   * Returns the next time at which the <code>CronTrigger</code> will fire, after the given time. If the trigger will not fire after the given time, <code>null</code> will be returned.
+   * Returns the next time at which the <code>CronTrigger</code> will fire, after the given time. If the trigger will not fire after the given time,
+   * <code>null</code> will be returned.
    * </p>
    * <p>
    * Note that the date returned is NOT validated against the related org.quartz.Calendar (if any)
@@ -304,8 +313,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     Date resultTime;
     if (getEndTime() != null) {
       resultTime = getTimeBefore(new Date(getEndTime().getTime() + 1000l));
-    }
-    else {
+    } else {
       resultTime = (cronEx == null) ? null : cronEx.getFinalFireTime();
     }
 
@@ -343,7 +351,8 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * <p>
-   * Updates the <code>CronTrigger</code>'s state based on the MISFIRE_INSTRUCTION_XXX that was selected when the <code>CronTrigger</code> was created.
+   * Updates the <code>CronTrigger</code>'s state based on the MISFIRE_INSTRUCTION_XXX that was selected when the <code>CronTrigger</code> was
+   * created.
    * </p>
    * <p>
    * If the misfire instruction is set to MISFIRE_INSTRUCTION_SMART_POLICY, then the following scheme will be used: <br>
@@ -371,18 +380,17 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
         newFireTime = getFireTimeAfter(newFireTime);
       }
       setNextFireTime(newFireTime);
-    }
-    else if (instr == MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
+    } else if (instr == MISFIRE_INSTRUCTION_FIRE_ONCE_NOW) {
       setNextFireTime(new Date());
     }
   }
 
   /**
    * <p>
-   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the <code>Trigger</code> a chance to update itself for
-   * its next triggering (if any).
+   * Called when the <code>{@link Scheduler}</code> has decided to 'fire' the trigger (execute the associated <code>Job</code>), in order to give the
+   * <code>Trigger</code> a chance to update itself for its next triggering (if any).
    * </p>
-   * 
+   *
    * @see #executionComplete(JobExecutionContext, JobExecutionException)
    */
   @Override
@@ -398,15 +406,15 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * <p>
-   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its first fire time, based on any associated
-   * calendar.
+   * Called by the scheduler at the time a <code>Trigger</code> is first added to the scheduler, in order to have the <code>Trigger</code> compute its
+   * first fire time, based on any associated calendar.
    * </p>
    * <p>
    * After this method has been called, <code>getNextFireTime()</code> should return a valid answer.
    * </p>
-   * 
-   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value <code>getNextFireTime()</code> will return (until after the first firing of
-   *         the <code>Trigger</code>). </p>
+   *
+   * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value
+   *         <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>). </p>
    */
   @Override
   public Date computeFirstFireTime(org.quartz.core.Calendar calendar) {
@@ -428,7 +436,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
   /**
    * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
-   * 
+   *
    * @see #getTriggerBuilder()
    */
   @Override

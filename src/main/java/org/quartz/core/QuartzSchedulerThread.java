@@ -326,7 +326,7 @@ public class QuartzSchedulerThread extends Thread {
                 try {
                   quartzSchedulerResources.getJobStore().releaseAcquiredTrigger(triggers.get(i));
                 } catch (SchedulerException se) {
-                  quartzScheduler.notifySchedulerListenersError("An error occurred while releasing triggers '" + triggers.get(i).getKey() + "'", se);
+                  quartzScheduler.notifySchedulerListenersError("An error occurred while releasing triggers '" + triggers.get(i).getName() + "'", se);
 
                 }
                 continue;
@@ -349,7 +349,7 @@ public class QuartzSchedulerThread extends Thread {
                       CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
                   quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
-                      + triggers.get(i).getKey() + "'", se2);
+                      + triggers.get(i).getName() + "'", se2);
 
                 }
                 continue;
@@ -366,7 +366,7 @@ public class QuartzSchedulerThread extends Thread {
                       CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
                   quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
-                      + triggers.get(i).getKey() + "'", se2);
+                      + triggers.get(i).getName() + "'", se2);
 
                 }
               }
@@ -409,7 +409,7 @@ public class QuartzSchedulerThread extends Thread {
           // above call does a clearSignaledSchedulingChange()
           quartzSchedulerResources.getJobStore().releaseAcquiredTrigger(trigger);
         } catch (JobPersistenceException jpe) {
-          quartzScheduler.notifySchedulerListenersError("An error occurred while releasing trigger '" + trigger.getKey() + "'", jpe);
+          quartzScheduler.notifySchedulerListenersError("An error occurred while releasing trigger '" + trigger.getName() + "'", jpe);
 
         } catch (RuntimeException e) {
           logger.error("releaseTriggerRetryLoop: RuntimeException " + e.getMessage(), e);

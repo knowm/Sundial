@@ -263,7 +263,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
       vetoed = qs.notifyTriggerListenersFired(jec);
     } catch (SchedulerException se) {
       qs.notifySchedulerListenersError("Unable to notify TriggerListener(s) while firing trigger "
-          + "(Trigger and Job will NOT be fired!). trigger= " + jec.getTrigger().getKey() + " job= " + jec.getJobDetail().getName(), se);
+          + "(Trigger and Job will NOT be fired!). trigger= " + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       return false;
     }
@@ -273,7 +273,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
         qs.notifyJobListenersWasVetoed(jec);
       } catch (SchedulerException se) {
         qs.notifySchedulerListenersError("Unable to notify JobListener(s) of vetoed execution "
-            + "while firing trigger (Trigger and Job will NOT be " + "fired!). trigger= " + jec.getTrigger().getKey() + " job= "
+            + "while firing trigger (Trigger and Job will NOT be " + "fired!). trigger= " + jec.getTrigger().getName() + " job= "
             + jec.getJobDetail().getName(), se);
 
       }
@@ -285,7 +285,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
       qs.notifyJobListenersToBeExecuted(jec);
     } catch (SchedulerException se) {
       qs.notifySchedulerListenersError("Unable to notify JobListener(s) of Job to be executed: " + "(Job will NOT be executed!). trigger= "
-          + jec.getTrigger().getKey() + " job= " + jec.getJobDetail().getName(), se);
+          + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       return false;
     }
@@ -299,7 +299,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
       qs.notifyJobListenersWasExecuted(jec, jobExEx);
     } catch (SchedulerException se) {
       qs.notifySchedulerListenersError("Unable to notify JobListener(s) of Job that was executed: " + "(error will be ignored). trigger= "
-          + jec.getTrigger().getKey() + " job= " + jec.getJobDetail().getName(), se);
+          + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       return false;
     }
@@ -314,7 +314,7 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
     } catch (SchedulerException se) {
       qs.notifySchedulerListenersError("Unable to notify TriggerListener(s) of Job that was executed: " + "(error will be ignored). trigger= "
-          + jec.getTrigger().getKey() + " job= " + jec.getJobDetail().getName(), se);
+          + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       return false;
     }

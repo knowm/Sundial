@@ -535,10 +535,10 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     Map<String, List<MutableTrigger>> triggersByFQJobName = new HashMap<String, List<MutableTrigger>>();
 
     for (MutableTrigger trigger : triggers) {
-      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(trigger.getJobKey());
+      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(trigger.getJobName());
       if (triggersOfJob == null) {
         triggersOfJob = new LinkedList<MutableTrigger>();
-        triggersByFQJobName.put(trigger.getJobKey(), triggersOfJob);
+        triggersByFQJobName.put(trigger.getJobName(), triggersOfJob);
       }
       triggersOfJob.add(trigger);
     }
@@ -606,16 +606,16 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
           boolean addedTrigger = false;
           while (addedTrigger == false) {
-            Trigger dupeT = sched.getTrigger(trigger.getKey());
+            Trigger dupeT = sched.getTrigger(trigger.getName());
             if (dupeT != null) {
 
-              if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-                logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+              if (!dupeT.getJobName().equals(trigger.getJobName())) {
+                logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getName());
               }
 
-              sched.rescheduleJob(trigger.getKey(), trigger);
+              sched.rescheduleJob(trigger.getName(), trigger);
             } else {
-              logger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
+              logger.debug("Scheduling job: " + trigger.getJobName() + " with trigger: " + trigger.getName());
 
               try {
                 if (addJobWithFirstSchedule) {
@@ -626,7 +626,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                   sched.scheduleJob(trigger);
                 }
               } catch (ObjectAlreadyExistsException e) {
-                logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getName()
+                logger.debug("Adding trigger: " + trigger.getName() + " for job: " + detail.getName()
                     + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
                     + "in the cluster.  Will try to reschedule instead.");
                 continue;
@@ -647,21 +647,21 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       boolean addedTrigger = false;
       while (addedTrigger == false) {
-        Trigger dupeT = sched.getTrigger(trigger.getKey());
+        Trigger dupeT = sched.getTrigger(trigger.getName());
         if (dupeT != null) {
 
-          if (!dupeT.getJobKey().equals(trigger.getJobKey())) {
-            logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getKey());
+          if (!dupeT.getJobName().equals(trigger.getJobName())) {
+            logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getName());
           }
 
-          sched.rescheduleJob(trigger.getKey(), trigger);
+          sched.rescheduleJob(trigger.getName(), trigger);
         } else {
-          logger.debug("Scheduling job: " + trigger.getJobKey() + " with trigger: " + trigger.getKey());
+          logger.debug("Scheduling job: " + trigger.getJobName() + " with trigger: " + trigger.getName());
 
           try {
             sched.scheduleJob(trigger);
           } catch (ObjectAlreadyExistsException e) {
-            logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + trigger.getJobKey()
+            logger.debug("Adding trigger: " + trigger.getName() + " for job: " + trigger.getJobName()
                 + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
                 + "in the cluster.  Will try to reschedule instead.");
             continue;

@@ -1,18 +1,18 @@
 /*
  * All content copyright Terracotta, Inc., unless otherwise indicated. All rights reserved.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 
 package org.quartz.triggers;
@@ -20,16 +20,14 @@ package org.quartz.triggers;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.quartz.builders.CronScheduleBuilder;
-import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Scheduler;
-import org.quartz.jobs.Job;
 
 /**
- * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.jobs.Job}</code> at given moments in time, defined with Unix 'cron-like'
- * schedule definitions.
+ * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.jobs.Job}</code> at given
+ * moments in time, defined with Unix 'cron-like' schedule definitions.
  * <p>
- * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or "At 1:30am every last Friday of the month".
+ * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or
+ * "At 1:30am every last Friday of the month".
  * </p>
  * <p>
  * The format of a "Cron-Expression" string is documented on the {@link org.quartz.triggers.CronExpression} class.
@@ -80,7 +78,8 @@ import org.quartz.jobs.Job;
  * <tr>
  * <td align="left"><code>"0 0/5 14,18 * * ?"</code></td>
  * <td align="left">&nbsp;</th>
- * <td align="left"><code>Fire every 5 minutes starting at 2pm and ending at 2:55pm, AND fire every 5 minutes starting at 6pm and ending at 6:55pm, every day</code></td>
+ * <td align="left">
+ * <code>Fire every 5 minutes starting at 2pm and ending at 2:55pm, AND fire every 5 minutes starting at 6pm and ending at 6:55pm, every day</code></td>
  * </tr>
  * <tr>
  * <td align="left"><code>"0 0-5 14 * * ?"</code></td>
@@ -135,13 +134,13 @@ import org.quartz.jobs.Job;
  * <p>
  * <b>NOTES:</b>
  * <ul>
- * <li>Support for specifying both a day-of-week and a day-of-month value is not complete (you'll need to use the '?' character in on of these fields).</li>
- * <li>Be careful when setting fire times between mid-night and 1:00 AM - "daylight savings" can cause a skip or a repeat depending on whether the time moves back or jumps forward.</li>
+ * <li>Support for specifying both a day-of-week and a day-of-month value is not complete (you'll need to use the '?' character in on of these
+ * fields).</li>
+ * <li>Be careful when setting fire times between mid-night and 1:00 AM - "daylight savings" can cause a skip or a repeat depending on whether the
+ * time moves back or jumps forward.</li>
  * </ul>
  * </p>
- * 
- * @see CronScheduleBuilder
- * @see TriggerBuilder
+ *
  * @author jhouse
  * @author Contributions from Mads Henderson
  */
@@ -151,15 +150,17 @@ public interface CronTrigger extends Trigger {
 
   /**
    * <p>
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to be fired now by <code>Scheduler</code>.
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to be fired now by
+   * <code>Scheduler</code>.
    * </p>
    */
   public static final int MISFIRE_INSTRUCTION_FIRE_ONCE_NOW = 1;
 
   /**
    * <p>
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to have it's next-fire-time updated to the next time in the schedule after
-   * the current time (taking into account any associated <code>{@link Calendar}</code>, but it does not want to be fired now.
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to have it's
+   * next-fire-time updated to the next time in the schedule after the current time (taking into account any associated <code>{@link Calendar}</code>,
+   * but it does not want to be fired now.
    * </p>
    */
   public static final int MISFIRE_INSTRUCTION_DO_NOTHING = 2;

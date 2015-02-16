@@ -101,9 +101,9 @@ public class TriggerBuilder<T extends Trigger> {
     if (key == null) {
       key = UUID.randomUUID().toString();
     }
-    trig.setKey(key);
+    trig.setName(key);
     if (jobKey != null) {
-      trig.setJobKey(jobKey);
+      trig.setJobName(jobKey);
     }
     trig.setPriority(priority);
     trig.setStartTime(startTime);
@@ -124,7 +124,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param key the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
    * @see TriggerKey
-   * @see Trigger#getKey()
+   * @see Trigger#getName()
    */
   public TriggerBuilder<T> withIdentity(String key) {
 
@@ -239,7 +239,7 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @param jobKey the identity of the Job to fire.
    * @return the updated TriggerBuilder
-   * @see Trigger#getJobKey()
+   * @see Trigger#getJobName()
    */
   public TriggerBuilder<T> forJob(String jobKey) {
 

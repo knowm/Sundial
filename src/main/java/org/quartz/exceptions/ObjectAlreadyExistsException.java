@@ -61,7 +61,7 @@ public class ObjectAlreadyExistsException extends JobPersistenceException {
    */
   public ObjectAlreadyExistsException(Trigger offendingTrigger) {
 
-    super("Unable to store Trigger with name: '" + offendingTrigger.getKey() + "', because one already exists with this identification.");
+    super("Unable to store Trigger with name: '" + offendingTrigger.getName() + "', because one already exists with this identification.");
   }
 
 }

@@ -54,7 +54,7 @@ public class JobContext {
       map.put((String) mapKey, jobExecutionContext.getMergedJobDataMap().get(mapKey));
     }
     map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getName());
-    map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getKey()));
+    map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getName()));
     if (jobExecutionContext.getTrigger() instanceof CronTrigger) {
       map.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
     }

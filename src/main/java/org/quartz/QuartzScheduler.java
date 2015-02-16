@@ -450,9 +450,9 @@ public class QuartzScheduler implements Scheduler {
 
     OperableTrigger trig = (OperableTrigger) trigger;
 
-    if (trigger.getJobKey() == null) {
-      trig.setJobKey(jobDetail.getName());
-    } else if (!trigger.getJobKey().equals(jobDetail.getName())) {
+    if (trigger.getJobName() == null) {
+      trig.setJobName(jobDetail.getName());
+    } else if (!trigger.getJobName().equals(jobDetail.getName())) {
       throw new SchedulerException("Trigger does not reference given job!");
     }
 
@@ -541,7 +541,7 @@ public class QuartzScheduler implements Scheduler {
 
     List<? extends Trigger> triggers = getTriggersOfJob(jobKey);
     for (Trigger trigger : triggers) {
-      unscheduleJob(trigger.getKey());
+      unscheduleJob(trigger.getName());
     }
     boolean result = quartzSchedulerResources.getJobStore().removeJob(jobKey);
     if (result) {
@@ -578,7 +578,7 @@ public class QuartzScheduler implements Scheduler {
     if (oldTrigger == null) {
       return null;
     } else {
-      trig.setJobKey(oldTrigger.getJobKey());
+      trig.setJobName(oldTrigger.getJobName());
     }
     trig.validate();
 
@@ -637,7 +637,7 @@ public class QuartzScheduler implements Scheduler {
         quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
         collision = false;
       } catch (ObjectAlreadyExistsException oaee) {
-        trig.setKey(newTriggerId());
+        trig.setName(newTriggerId());
       }
     }
 
@@ -952,7 +952,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobScheduled(trigger);
       } catch (Exception e) {
-        logger.error("Error while notifying SchedulerListener of scheduled job." + "  Triger=" + trigger.getKey(), e);
+        logger.error("Error while notifying SchedulerListener of scheduled job." + "  Triger=" + trigger.getName(), e);
       }
     }
   }
@@ -986,7 +986,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.triggerFinalized(trigger);
       } catch (Exception e) {
-        logger.error("Error while notifying SchedulerListener of finalized trigger." + "  Triger=" + trigger.getKey(), e);
+        logger.error("Error while notifying SchedulerListener of finalized trigger." + "  Triger=" + trigger.getName(), e);
       }
     }
   }

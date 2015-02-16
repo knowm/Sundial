@@ -26,9 +26,23 @@ import org.quartz.jobs.JobDataMap;
  */
 public interface MutableTrigger extends Trigger {
 
-  public void setKey(String key);
+  /**
+   * <p>
+   * Set the name of this <code>Trigger</code>.
+   * </p>
+   *
+   * @exception IllegalArgumentException if name is null or empty.
+   */
+  public void setName(String key);
 
-  public void setJobKey(String key);
+  /**
+   * <p>
+   * Set the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
+   * </p>
+   *
+   * @exception IllegalArgumentException if jobName is null or empty.
+   */
+  public void setJobName(String key);
 
   /**
    * <p>

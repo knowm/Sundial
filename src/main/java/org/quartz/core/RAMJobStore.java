@@ -206,7 +206,7 @@ public class RAMJobStore implements JobStore {
     synchronized (lock) {
       List<OperableTrigger> triggers = getTriggersForJob(jobKey);
       for (OperableTrigger trig : triggers) {
-        this.removeTrigger(trig.getKey());
+        this.removeTrigger(trig.getName());
         found = true;
       }
 
@@ -241,11 +241,11 @@ public class RAMJobStore implements JobStore {
           throw new ObjectAlreadyExistsException(newTrigger);
         }
 
-        removeTrigger(newTrigger.getKey(), false);
+        removeTrigger(newTrigger.getName(), false);
       }
 
-      if (retrieveJob(newTrigger.getJobKey()) == null) {
-        throw new JobPersistenceException("The job (" + newTrigger.getJobKey() + ") referenced by the trigger does not exist.");
+      if (retrieveJob(newTrigger.getJobName()) == null) {
+        throw new JobPersistenceException("The job (" + newTrigger.getJobName() + ") referenced by the trigger does not exist.");
       }
 
       // add to triggers array
@@ -325,7 +325,7 @@ public class RAMJobStore implements JobStore {
 
       if (found) {
 
-        if (!tw.getTrigger().getJobKey().equals(newTrigger.getJobKey())) {
+        if (!tw.getTrigger().getJobName().equals(newTrigger.getJobName())) {
           throw new JobPersistenceException("New trigger is not related to the same job as the old trigger.");
         }
 
@@ -553,7 +553,7 @@ public class RAMJobStore implements JobStore {
   public void releaseAcquiredTrigger(OperableTrigger trigger) {
 
     synchronized (lock) {
-      TriggerWrapper tw = triggersByKey.get(trigger.getKey());
+      TriggerWrapper tw = triggersByKey.get(trigger.getName());
       if (tw != null && tw.state == TriggerWrapper.STATE_ACQUIRED) {
         tw.state = TriggerWrapper.STATE_WAITING;
         timeTriggers.add(tw);
@@ -574,7 +574,7 @@ public class RAMJobStore implements JobStore {
       List<TriggerFiredResult> results = new ArrayList<TriggerFiredResult>();
 
       for (OperableTrigger trigger : triggers) {
-        TriggerWrapper tw = triggersByKey.get(trigger.getKey());
+        TriggerWrapper tw = triggersByKey.get(trigger.getName());
         // was the trigger deleted since being acquired?
         if (tw == null || tw.trigger == null) {
           continue;
@@ -644,7 +644,7 @@ public class RAMJobStore implements JobStore {
     synchronized (lock) {
 
       JobWrapper jw = jobsByKey.get(jobDetail.getName());
-      TriggerWrapper tw = triggersByKey.get(trigger.getKey());
+      TriggerWrapper tw = triggersByKey.get(trigger.getName());
 
       // It's possible that the job is null if:
       // 1- it was deleted during execution
@@ -679,10 +679,10 @@ public class RAMJobStore implements JobStore {
             // double check for possible reschedule within job
             // execution, which would cancel the need to delete...
             if (tw.getTrigger().getNextFireTime() == null) {
-              removeTrigger(trigger.getKey());
+              removeTrigger(trigger.getName());
             }
           } else {
-            removeTrigger(trigger.getKey());
+            removeTrigger(trigger.getName());
             mSignaler.signalSchedulingChange(0L);
           }
         } else if (triggerInstCode == CompletedExecutionInstruction.SET_TRIGGER_COMPLETE) {
@@ -690,15 +690,15 @@ public class RAMJobStore implements JobStore {
           timeTriggers.remove(tw);
           mSignaler.signalSchedulingChange(0L);
         } else if (triggerInstCode == CompletedExecutionInstruction.SET_TRIGGER_ERROR) {
-          logger.info("Trigger " + trigger.getKey() + " set to ERROR state.");
+          logger.info("Trigger " + trigger.getName() + " set to ERROR state.");
           tw.state = TriggerWrapper.STATE_ERROR;
           mSignaler.signalSchedulingChange(0L);
         } else if (triggerInstCode == CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR) {
-          logger.info("All triggers of Job " + trigger.getJobKey() + " set to ERROR state.");
-          setAllTriggersOfJobToState(trigger.getJobKey(), TriggerWrapper.STATE_ERROR);
+          logger.info("All triggers of Job " + trigger.getJobName() + " set to ERROR state.");
+          setAllTriggersOfJobToState(trigger.getJobName(), TriggerWrapper.STATE_ERROR);
           mSignaler.signalSchedulingChange(0L);
         } else if (triggerInstCode == CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_COMPLETE) {
-          setAllTriggersOfJobToState(trigger.getJobKey(), TriggerWrapper.STATE_COMPLETE);
+          setAllTriggersOfJobToState(trigger.getJobName(), TriggerWrapper.STATE_COMPLETE);
           mSignaler.signalSchedulingChange(0L);
         }
       }
@@ -834,8 +834,8 @@ class TriggerWrapper {
   TriggerWrapper(OperableTrigger trigger) {
 
     this.trigger = trigger;
-    key = trigger.getKey();
-    this.jobKey = trigger.getJobKey();
+    key = trigger.getName();
+    this.jobKey = trigger.getJobName();
   }
 
   @Override

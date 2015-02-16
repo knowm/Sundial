@@ -172,7 +172,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
   @Override
   public String toString() {
 
-    return "JobExecutionContext:" + " trigger: '" + getTrigger().getKey() + " job: " + getJobDetail().getName() + " fireTime: '" + getFireTime()
+    return "JobExecutionContext:" + " trigger: '" + getTrigger().getName() + " job: " + getJobDetail().getName() + " fireTime: '" + getFireTime()
         + " scheduledFireTime: " + getScheduledFireTime() + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime()
         + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
   }

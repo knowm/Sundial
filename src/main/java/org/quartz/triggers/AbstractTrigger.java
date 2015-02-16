@@ -98,58 +98,6 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
 
   /**
    * <p>
-   * Get the name of this <code>Trigger</code>.
-   * </p>
-   */
-  public String getName() {
-
-    return name;
-  }
-
-  /**
-   * <p>
-   * Set the name of this <code>Trigger</code>.
-   * </p>
-   *
-   * @exception IllegalArgumentException if name is null or empty.
-   */
-  public void setName(String name) {
-
-    if (name == null || name.trim().length() == 0) {
-      throw new IllegalArgumentException("Trigger name cannot be null or empty.");
-    }
-
-    this.name = name;
-  }
-
-  /**
-   * <p>
-   * Get the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
-   * </p>
-   */
-  public String getJobName() {
-
-    return jobName;
-  }
-
-  /**
-   * <p>
-   * Set the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
-   * </p>
-   *
-   * @exception IllegalArgumentException if jobName is null or empty.
-   */
-  public void setJobName(String jobName) {
-
-    if (jobName == null || jobName.trim().length() == 0) {
-      throw new IllegalArgumentException("Job name cannot be null or empty.");
-    }
-
-    this.jobName = jobName;
-  }
-
-  /**
-   * <p>
    * Return the description given to the <code>Trigger</code> instance by its creator (if any).
    * </p>
    *
@@ -551,17 +499,17 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   @Override
   public int compareTo(Trigger other) {
 
-    if (other.getKey() == null && getKey() == null) {
+    if (other.getName() == null && getName() == null) {
       return 0;
     }
-    if (other.getKey() == null) {
+    if (other.getName() == null) {
       return -1;
     }
-    if (getKey() == null) {
+    if (getName() == null) {
       return 1;
     }
 
-    return getKey().compareTo(other.getKey());
+    return getName().compareTo(other.getName());
   }
 
   /**
@@ -578,21 +526,21 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
 
     Trigger other = (Trigger) o;
 
-    if (other.getKey() == null || getKey() == null) {
+    if (other.getName() == null || getName() == null) {
       return false;
     }
 
-    return getKey().equals(other.getKey());
+    return getName().equals(other.getName());
   }
 
   @Override
   public int hashCode() {
 
-    if (getKey() == null) {
+    if (getName() == null) {
       return super.hashCode();
     }
 
-    return getKey().hashCode();
+    return getName().hashCode();
   }
 
   @Override
@@ -619,7 +567,7 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   public TriggerBuilder<T> getTriggerBuilder() {
 
     TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
-        .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getKey()).withPriority(getPriority()).startAt(getStartTime())
+        .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
         .withSchedule(getScheduleBuilder());
     return b;
   }
@@ -627,23 +575,57 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   @Override
   public abstract ScheduleBuilder<T> getScheduleBuilder();
 
+  /**
+   * <p>
+   * Get the name of this <code>Trigger</code>.
+   * </p>
+   */
   @Override
-  public String getKey() {
+  public String getName() {
     return this.name;
   }
 
+  /**
+   * <p>
+   * Get the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
+   * </p>
+   */
   @Override
-  public String getJobKey() {
+  public String getJobName() {
     return this.jobName;
   }
 
+  /**
+   * <p>
+   * Set the name of this <code>Trigger</code>.
+   * </p>
+   *
+   * @exception IllegalArgumentException if name is null or empty.
+   */
   @Override
-  public void setKey(String key) {
-    this.name = key;
+  public void setName(String name) {
+    if (name == null || name.trim().length() == 0) {
+      throw new IllegalArgumentException("Trigger name cannot be null or empty.");
+    }
+
+    this.name = name;
   }
 
+  /**
+   * <p>
+   * Set the name of the associated <code>{@link org.quartz.jobs.JobDetail}</code>.
+   * </p>
+   *
+   * @exception IllegalArgumentException if jobName is null or empty.
+   */
   @Override
-  public void setJobKey(String key) {
-    this.jobName = key;
+  public void setJobName(String jobName) {
+
+    if (jobName == null || jobName.trim().length() == 0) {
+      throw new IllegalArgumentException("Job name cannot be null or empty.");
+    }
+
+    this.jobName = jobName;
   }
+
 }
