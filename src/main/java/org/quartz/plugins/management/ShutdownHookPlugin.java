@@ -17,17 +17,17 @@
 
 package org.quartz.plugins.management;
 
-import org.quartz.Scheduler;
+import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerPlugin;
+import org.quartz.plugins.SchedulerPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This plugin catches the event of the JVM terminating (such as upon a CRTL-C) and tells the scheduler to shutdown.
  * 
- * @see org.quartz.Scheduler#shutdown(boolean)
+ * @see org.quartz.core.Scheduler#shutdown(boolean)
  * @author James House
  */
 public class ShutdownHookPlugin implements SchedulerPlugin {
@@ -58,7 +58,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * The default value is <code>true</code>.
    * </p>
    * 
-   * @see org.quartz.Scheduler#shutdown(boolean)
+   * @see org.quartz.core.Scheduler#shutdown(boolean)
    */
   public boolean isCleanShutdown() {
 
@@ -71,7 +71,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * The default value is <code>true</code>.
    * </p>
    * 
-   * @see org.quartz.Scheduler#shutdown(boolean)
+   * @see org.quartz.core.Scheduler#shutdown(boolean)
    */
   public void setCleanShutdown(boolean b) {
 

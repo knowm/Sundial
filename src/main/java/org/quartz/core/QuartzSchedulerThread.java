@@ -22,30 +22,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.quartz.Trigger;
-import org.quartz.Trigger.CompletedExecutionInstruction;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.OperableTrigger;
-import org.quartz.spi.TriggerFiredBundle;
-import org.quartz.spi.TriggerFiredResult;
+import org.quartz.trigger.OperableTrigger;
+import org.quartz.trigger.Trigger;
+import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * The thread responsible for performing the work of firing <code>{@link Trigger}</code> s that are registered with the <code>{@link QuartzScheduler}</code>.
+ * The thread responsible for performing the work of firing <code>{@link Trigger}</code> s that are registered with the
+ * <code>{@link QuartzScheduler}</code>.
  * </p>
  *
  * @see QuartzScheduler
- * @see org.quartz.Job
+ * @see org.quartz.jobs.Job
  * @see Trigger
  * @author James House
  */
-class QuartzSchedulerThread extends Thread {
+public class QuartzSchedulerThread extends Thread {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
   private QuartzScheduler quartzScheduler;
 
@@ -75,10 +76,11 @@ class QuartzSchedulerThread extends Thread {
 
   /**
    * <p>
-   * Construct a new <code>QuartzSchedulerThread</code> for the given <code>QuartzScheduler</code> as a non-daemon <code>Thread</code> with normal priority.
+   * Construct a new <code>QuartzSchedulerThread</code> for the given <code>QuartzScheduler</code> as a non-daemon <code>Thread</code> with normal
+   * priority.
    * </p>
    */
-  QuartzSchedulerThread(QuartzScheduler qs, QuartzSchedulerResources qsRsrcs) {
+  public QuartzSchedulerThread(QuartzScheduler qs, QuartzSchedulerResources qsRsrcs) {
 
     this(qs, qsRsrcs, qsRsrcs.getMakeSchedulerThreadDaemon(), Thread.NORM_PRIORITY);
   }
@@ -109,7 +111,8 @@ class QuartzSchedulerThread extends Thread {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private long getRandomizedIdleWaitTime() {
@@ -122,15 +125,14 @@ class QuartzSchedulerThread extends Thread {
    * Signals the main processing loop to pause at the next possible point.
    * </p>
    */
-  void togglePause(boolean pause) {
+  public void togglePause(boolean pause) {
 
     synchronized (sigLock) {
       paused = pause;
 
       if (paused) {
         signalSchedulingChange(0);
-      }
-      else {
+      } else {
         sigLock.notifyAll();
       }
     }
@@ -141,32 +143,32 @@ class QuartzSchedulerThread extends Thread {
    * Signals the main processing loop to pause at the next possible point.
    * </p>
    */
-  void halt() {
+  public void halt() {
 
     synchronized (sigLock) {
       halted.set(true);
 
       if (paused) {
         sigLock.notifyAll();
-      }
-      else {
+      } else {
         signalSchedulingChange(0);
       }
     }
   }
 
-  boolean isPaused() {
+  public boolean isPaused() {
 
     return paused;
   }
 
   /**
    * <p>
-   * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occuring while waiting for the fire time to arrive.
+   * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occuring while
+   * waiting for the fire time to arrive.
    * </p>
    *
-   * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other even (rather than scheduling a trigger), the
-   *          caller should pass zero (0).
+   * @param candidateNewNextFireTime the time (in millis) when the newly scheduled trigger will fire. If this method is being called do to some other
+   *        even (rather than scheduling a trigger), the caller should pass zero (0).
    */
   void signalSchedulingChange(long candidateNewNextFireTime) {
 
@@ -235,9 +237,8 @@ class QuartzSchedulerThread extends Thread {
 
           clearSignaledSchedulingChange();
           try {
-            triggers =
-                quartzSchedulerResources.getJobStore().acquireNextTriggers(now + idleWaitTime, Math.min(availThreadCount, quartzSchedulerResources.getMaxBatchSize()),
-                    quartzSchedulerResources.getBatchTimeWindow());
+            triggers = quartzSchedulerResources.getJobStore().acquireNextTriggers(now + idleWaitTime,
+                Math.min(availThreadCount, quartzSchedulerResources.getMaxBatchSize()), quartzSchedulerResources.getBatchTimeWindow());
             lastAcquireFailed = false;
             if (logger.isDebugEnabled()) {
               logger.debug("batch acquisition of " + (triggers == null ? 0 : triggers.size()) + " triggers");
@@ -344,9 +345,11 @@ class QuartzSchedulerThread extends Thread {
                 shell.initialize(quartzScheduler);
               } catch (SchedulerException se) {
                 try {
-                  quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(), CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
+                  quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(),
+                      CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
-                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '" + triggers.get(i).getKey() + "'", se2);
+                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
+                      + triggers.get(i).getKey() + "'", se2);
 
                 }
                 continue;
@@ -359,9 +362,11 @@ class QuartzSchedulerThread extends Thread {
                   // a thread pool being used concurrently - which the docs
                   // say not to do...
                   logger.error("ThreadPool.runInThread() return false!");
-                  quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(), CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
+                  quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(),
+                      CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
-                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '" + triggers.get(i).getKey() + "'", se2);
+                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
+                      + triggers.get(i).getKey() + "'", se2);
 
                 }
               }
@@ -370,8 +375,7 @@ class QuartzSchedulerThread extends Thread {
 
             continue; // while (!halted)
           }
-        }
-        else { // if(availThreadCount > 0)
+        } else { // if(availThreadCount > 0)
           // should never happen, if threadPool.blockForAvailableThreads() follows contract
           continue; // while (!halted)
         }
@@ -448,8 +452,7 @@ class QuartzSchedulerThread extends Thread {
 
       if (getSignaledNextFireTime() == 0) {
         earlier = true;
-      }
-      else if (getSignaledNextFireTime() < oldTime) {
+      } else if (getSignaledNextFireTime() < oldTime) {
         earlier = true;
       }
 

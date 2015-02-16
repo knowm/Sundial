@@ -15,7 +15,7 @@
  */
 package com.xeiam.sundial;
 
-import org.quartz.JobExecutionContext;
+import org.quartz.core.JobExecutionContext;
 
 import com.xeiam.sundial.exceptions.JobInterruptException;
 

@@ -16,9 +16,9 @@
 package com.xeiam.sundial.xml;
 
 import org.junit.Test;
-import org.quartz.simpl.CascadingClassLoadHelper;
-import org.quartz.spi.ClassLoadHelper;
-import org.quartz.xml.XMLSchedulingDataProcessor;
+import org.quartz.classloading.CascadingClassLoadHelper;
+import org.quartz.classloading.ClassLoadHelper;
+import org.quartz.plugins.xml.XMLSchedulingDataProcessor;
 
 /**
  * @author timmolter

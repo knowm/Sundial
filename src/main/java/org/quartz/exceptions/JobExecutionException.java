@@ -17,12 +17,12 @@
 
 package org.quartz.exceptions;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.Scheduler;
+import org.quartz.core.JobExecutionContext;
+import org.quartz.core.Scheduler;
+import org.quartz.jobs.Job;
 
 /**
- * An exception that can be thrown by a <code>{@link org.quartz.Job}</code> to indicate to the Quartz <code>{@link Scheduler}</code> that an error occurred while executing, and whether or not the
+ * An exception that can be thrown by a <code>{@link org.quartz.jobs.Job}</code> to indicate to the Quartz <code>{@link Scheduler}</code> that an error occurred while executing, and whether or not the
  * <code>Job</code> requests to be re-fired immediately
  * (using the same <code>{@link JobExecutionContext}</code>, or whether it wants to be unscheduled.
  * <p>

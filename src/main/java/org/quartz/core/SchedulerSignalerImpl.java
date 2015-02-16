@@ -16,9 +16,9 @@
  */
 package org.quartz.core;
 
-import org.quartz.Trigger;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerSignaler;
+import org.quartz.trigger.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author jhouse
  */
-class SchedulerSignalerImpl implements SchedulerSignaler {
+public class SchedulerSignalerImpl implements SchedulerSignaler {
 
   private Logger logger = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
@@ -40,7 +40,7 @@ class SchedulerSignalerImpl implements SchedulerSignaler {
    * @param quartzScheduler
    * @param quartzSchedulerThread
    */
-  SchedulerSignalerImpl(QuartzScheduler quartzScheduler, QuartzSchedulerThread quartzSchedulerThread) {
+  public SchedulerSignalerImpl(QuartzScheduler quartzScheduler, QuartzSchedulerThread quartzSchedulerThread) {
 
     this.quartzScheduler = quartzScheduler;
     this.quartzSchedulerThread = quartzSchedulerThread;

@@ -17,10 +17,9 @@
 
 package org.quartz.core;
 
-import org.quartz.Scheduler;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.TriggerFiredBundle;
 
 /**
  * <p>

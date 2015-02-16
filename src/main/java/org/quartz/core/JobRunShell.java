@@ -16,18 +16,15 @@
  */
 package org.quartz.core;
 
-import org.quartz.Job;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.Scheduler;
-import org.quartz.Trigger.CompletedExecutionInstruction;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.JobExecutionContextImpl;
+import org.quartz.jobs.Job;
+import org.quartz.jobs.JobDetail;
 import org.quartz.listeners.SchedulerListenerSupport;
-import org.quartz.spi.OperableTrigger;
-import org.quartz.spi.TriggerFiredBundle;
+import org.quartz.trigger.OperableTrigger;
+import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +40,11 @@ import org.slf4j.LoggerFactory;
  *
  * @see JobRunShellFactory
  * @see org.quartz.core.QuartzSchedulerThread
- * @see org.quartz.Job
- * @see org.quartz.Trigger
+ * @see org.quartz.jobs.Job
+ * @see org.quartz.trigger.Trigger
  * @author James House
  */
-class JobRunShell extends SchedulerListenerSupport implements Runnable {
+public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.

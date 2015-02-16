@@ -15,21 +15,20 @@
  */
 package org.quartz.listeners;
 
-import org.quartz.JobDetail;
-import org.quartz.SchedulerListener;
-import org.quartz.Trigger;
 import org.quartz.exceptions.SchedulerException;
+import org.quartz.jobs.JobDetail;
+import org.quartz.trigger.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A helpful abstract base class for implementors of <code>{@link org.quartz.SchedulerListener}</code>.
+ * A helpful abstract base class for implementors of <code>{@link org.quartz.listeners.SchedulerListener}</code>.
  * <p>
- * The methods in this class are empty so you only need to override the subset for the <code>{@link org.quartz.SchedulerListener}</code> events you
+ * The methods in this class are empty so you only need to override the subset for the <code>{@link org.quartz.listeners.SchedulerListener}</code> events you
  * care about.
  * </p>
  *
- * @see org.quartz.SchedulerListener
+ * @see org.quartz.listeners.SchedulerListener
  */
 public abstract class SchedulerListenerSupport implements SchedulerListener {
 

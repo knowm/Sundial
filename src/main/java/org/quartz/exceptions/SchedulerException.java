@@ -17,7 +17,7 @@
 
 package org.quartz.exceptions;
 
-import org.quartz.Scheduler;
+import org.quartz.core.Scheduler;
 
 /**
  * Base class for exceptions thrown by the Quartz <code>{@link Scheduler}</code>.

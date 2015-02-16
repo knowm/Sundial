@@ -15,9 +15,9 @@
  */
 package com.xeiam.sundial;
 
-import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
+import static org.quartz.builder.CronScheduleBuilder.cronSchedule;
+import static org.quartz.builder.JobBuilder.newJob;
+import static org.quartz.builder.TriggerBuilder.newTrigger;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,15 +30,15 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
-import org.quartz.CronTrigger;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.ScheduleBuilder;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.quartz.builder.ScheduleBuilder;
+import org.quartz.core.JobExecutionContext;
+import org.quartz.core.Scheduler;
+import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.SchedulerFactory;
+import org.quartz.jobs.JobDataMap;
+import org.quartz.jobs.JobDetail;
+import org.quartz.trigger.CronTrigger;
+import org.quartz.trigger.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

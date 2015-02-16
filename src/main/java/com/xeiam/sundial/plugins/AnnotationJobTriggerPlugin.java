@@ -1,19 +1,19 @@
 package com.xeiam.sundial.plugins;
 
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.TriggerBuilder.newTrigger;
+import static org.quartz.builder.JobBuilder.newJob;
+import static org.quartz.builder.TriggerBuilder.newTrigger;
 
 import java.text.ParseException;
 import java.util.Set;
 
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.builder.CronScheduleBuilder;
+import org.quartz.builder.TriggerBuilder;
+import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerPlugin;
+import org.quartz.jobs.JobDataMap;
+import org.quartz.jobs.JobDetail;
+import org.quartz.plugins.SchedulerPlugin;
+import org.quartz.trigger.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

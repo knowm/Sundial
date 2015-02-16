@@ -17,10 +17,9 @@
 
 package org.quartz.plugins.xml;
 
-import org.quartz.Scheduler;
+import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerPlugin;
-import org.quartz.xml.XMLSchedulingDataProcessor;
+import org.quartz.plugins.SchedulerPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the
  * file for changes.
  *
- * @see org.quartz.xml.XMLSchedulingDataProcessor
+ * @see org.quartz.plugins.xml.XMLSchedulingDataProcessor
  * @author James House
  * @author Pierre Awaragi
  * @author pl47ypus

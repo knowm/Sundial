@@ -17,13 +17,13 @@
 
 package org.quartz.exceptions;
 
-import org.quartz.Calendar;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.quartz.core.Calendar;
+import org.quartz.core.Scheduler;
+import org.quartz.jobs.JobDetail;
+import org.quartz.trigger.Trigger;
 
 /**
- * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>{@link org.quartz.JobDetail}</code>,
+ * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>{@link org.quartz.jobs.JobDetail}</code>,
  * <code>{@link Trigger}</code> or <code>{@link Calendar}</code>) in a <code>{@link Scheduler}</code> failed, because one with the same name & group
  * already exists.
  *

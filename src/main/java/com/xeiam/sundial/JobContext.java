@@ -18,8 +18,8 @@ package com.xeiam.sundial;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.quartz.CronTrigger;
-import org.quartz.JobExecutionContext;
+import org.quartz.core.JobExecutionContext;
+import org.quartz.trigger.CronTrigger;
 
 import com.xeiam.sundial.exceptions.RequiredParameterException;
 

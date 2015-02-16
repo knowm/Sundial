@@ -17,14 +17,12 @@
 
 package org.quartz.core;
 
-import org.quartz.Scheduler;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.TriggerFiredBundle;
 
 /**
  * <p>
- * Responsible for creating the instances of a {@link JobRunShell} to be used within the <class>{@link org.quartz.core.QuartzScheduler} </code> instance. It will create a standard {@link JobRunShell} unless the job class has the
+ * Responsible for creating the instances of a {@link JobRunShell} to be used within the <class>{@link org.quartz.QuartzScheduler} </code> instance. It will create a standard {@link JobRunShell} unless the job class has the
  * {@link ExecuteInJTATransaction} annotation in which case it will create a {@link JTAJobRunShell}.
  * </p>
  * <p>

@@ -18,7 +18,7 @@ package com.xeiam.sundial;
 import java.util.Set;
 
 import org.junit.Test;
-import org.quartz.simpl.CascadingClassLoadHelper;
+import org.quartz.classloading.CascadingClassLoadHelper;
 
 /**
  * @author timmolter
