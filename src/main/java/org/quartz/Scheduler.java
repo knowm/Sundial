@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.SchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.simpl.CascadingClassLoadHelper;
 
 /**
@@ -160,6 +159,15 @@ public interface Scheduler {
   List<JobExecutionContext> getCurrentlyExecutingJobs() throws SchedulerException;
 
   /**
+   * Get the keys of all the <code>{@link org.quartz.JobDetail}s</code> in the matching groups.
+   *
+   * @param matcher Matcher to evaluate against known groups
+   * @return Set of all keys matching
+   * @throws SchedulerException On error
+   */
+  Set<String> getJobKeys() throws SchedulerException;
+
+  /**
    * Get a reference to the scheduler's <code>ListenerManager</code>, through which listeners may be registered.
    *
    * @return the scheduler's <code>ListenerManager</code>
@@ -200,7 +208,7 @@ public interface Scheduler {
    * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first
    *         fire time of the newly scheduled trigger.
    */
-  Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException;
+  Date rescheduleJob(String triggerKey, Trigger newTrigger) throws SchedulerException;
 
   /**
    * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is
@@ -219,16 +227,7 @@ public interface Scheduler {
    *
    * @param data the (possibly <code>null</code>) JobDataMap to be associated with the trigger that fires the job immediately.
    */
-  void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException;
-
-  /**
-   * Get the keys of all the <code>{@link org.quartz.JobDetail}s</code> in the matching groups.
-   *
-   * @param matcher Matcher to evaluate against known groups
-   * @return Set of all keys matching
-   * @throws SchedulerException On error
-   */
-  Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException;
+  void triggerJob(String jobKey, JobDataMap data) throws SchedulerException;
 
   /**
    * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
@@ -237,7 +236,7 @@ public interface Scheduler {
    * afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
    * </p>
    */
-  List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException;
+  List<? extends Trigger> getTriggersOfJob(String jobKey) throws SchedulerException;
 
   /**
    * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.
@@ -246,7 +245,7 @@ public interface Scheduler {
    * JobDetail afterward (e.g. see {@link #addJob(JobDetail, boolean)}).
    * </p>
    */
-  JobDetail getJobDetail(JobKey jobKey) throws SchedulerException;
+  JobDetail getJobDetail(String jobKey) throws SchedulerException;
 
   /**
    * Get the <code>{@link Trigger}</code> instance with the given key.
@@ -255,7 +254,7 @@ public interface Scheduler {
    * afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
    * </p>
    */
-  Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException;
+  Trigger getTrigger(String triggerKey) throws SchedulerException;
 
   /**
    * Delete the identified <code>Job</code> from the Scheduler - and any associated <code>Trigger</code>s.
@@ -263,7 +262,7 @@ public interface Scheduler {
    * @return true if the Job was found and deleted.
    * @throws SchedulerException if there is an internal Scheduler error.
    */
-  void deleteJob(JobKey jobKey) throws SchedulerException;
+  void deleteJob(String jobKey) throws SchedulerException;
 
   /**
    * Remove the indicated <code>{@link Trigger}</code> from the scheduler.
@@ -271,7 +270,7 @@ public interface Scheduler {
    * If the related job does not have any other triggers, and the job is not durable, then the job will also be deleted.
    * </p>
    */
-  void unscheduleJob(TriggerKey triggerKey) throws SchedulerException;
+  void unscheduleJob(String triggerKey) throws SchedulerException;
 
   CascadingClassLoadHelper getCascadingClassLoadHelper();
 

@@ -18,9 +18,10 @@
 
 package org.quartz;
 
+import java.util.UUID;
+
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.jobs.NoOpJob;
-import org.quartz.utils.Key;
 
 /**
  * <code>JobBuilder</code> is used to instantiate {@link JobDetail}s.
@@ -46,14 +47,11 @@ import org.quartz.utils.Key;
  *
  * <pre>
  *
- * @see TriggerBuilder
- * @see DateBuilder
- * @see JobDetail
  * @author timmolter
  */
 public class JobBuilder {
 
-  private JobKey key;
+  private String key;
   private String description;
   private Class<? extends Job> jobClass = NoOpJob.class;
   private boolean durability = true;
@@ -99,9 +97,9 @@ public class JobBuilder {
     job.setJobClass(jobClass);
     job.setDescription(description);
     if (key == null) {
-      key = new JobKey(Key.createUniqueName(null), null);
+      key = UUID.randomUUID().toString();
     }
-    job.setKey(key);
+    job.setName(key);
     job.setDurability(durability);
     job.setRequestsRecovery(shouldRecover);
 
@@ -113,35 +111,15 @@ public class JobBuilder {
   }
 
   /**
-   * Use a <code>JobKey</code> with the given name and group to identify the JobDetail.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-   * </p>
-   *
-   * @param name the name element for the Job's JobKey
-   * @param group the group element for the Job's JobKey
-   * @return the updated JobBuilder
-   * @see JobKey
-   * @see JobDetail#getKey()
-   */
-  public JobBuilder withIdentity(String name, String group) {
-
-    key = new JobKey(name, group);
-    return this;
-  }
-
-  /**
-   * Use a <code>JobKey</code> to identify the JobDetail.
+   * Use a <code>String</code> to identify the JobDetail.
    * <p>
    * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
    * </p>
    *
    * @param key the Job's JobKey
    * @return the updated JobBuilder
-   * @see JobKey
-   * @see JobDetail#getKey()
    */
-  public JobBuilder withIdentity(JobKey key) {
+  public JobBuilder withIdentity(String key) {
 
     this.key = key;
     return this;

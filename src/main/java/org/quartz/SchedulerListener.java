@@ -1,18 +1,18 @@
 /**
- * Copyright 2001-2009 Terracotta, Inc. 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+ * Copyright 2001-2009 Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
- * 
+ *
  */
 package org.quartz;
 
@@ -20,7 +20,7 @@ import org.quartz.exceptions.SchedulerException;
 
 /**
  * The interface to be implemented by classes that want to be informed of major <code>{@link Scheduler}</code> events.
- * 
+ *
  * @see Scheduler
  * @see JobListener
  * @see TriggerListener
@@ -29,7 +29,8 @@ import org.quartz.exceptions.SchedulerException;
 public interface SchedulerListener {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -43,10 +44,10 @@ public interface SchedulerListener {
    * <p>
    * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.JobDetail}</code> is unscheduled.
    * </p>
-   * 
+   *
    * @see SchedulerListener#schedulingDataCleared()
    */
-  void jobUnscheduled(TriggerKey triggerKey);
+  void jobUnscheduled(String triggerKey);
 
   /**
    * <p>
@@ -67,15 +68,16 @@ public interface SchedulerListener {
    * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.JobDetail}</code> has been deleted.
    * </p>
    */
-  void jobDeleted(JobKey jobKey);
+  void jobDeleted(String jobKey);
 
   /**
    * <p>
-   * Called by the <code>{@link Scheduler}</code> when a serious error has occurred within the scheduler - such as repeated failures in the <code>JobStore</code>, or the inability to instantiate a
-   * <code>Job</code> instance when its <code>Trigger</code> has fired.
+   * Called by the <code>{@link Scheduler}</code> when a serious error has occurred within the scheduler - such as repeated failures in the
+   * <code>JobStore</code>, or the inability to instantiate a <code>Job</code> instance when its <code>Trigger</code> has fired.
    * </p>
    * <p>
-   * The <code>getErrorCode()</code> method of the given SchedulerException can be used to determine more specific information about the type of error that was encountered.
+   * The <code>getErrorCode()</code> method of the given SchedulerException can be used to determine more specific information about the type of error
+   * that was encountered.
    * </p>
    */
   void schedulerError(String msg, SchedulerException cause);

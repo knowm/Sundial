@@ -32,23 +32,19 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobKey;
 import org.quartz.JobListener;
 import org.quartz.ListenerManager;
-import org.quartz.Matcher;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerListener;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
 import org.quartz.TriggerListener;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.simpl.CascadingClassLoadHelper;
 import org.quartz.simpl.SimpleJobFactory;
@@ -56,7 +52,6 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.SchedulerPlugin;
 import org.quartz.spi.SchedulerSignaler;
-import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -326,7 +321,7 @@ public class QuartzScheduler implements Scheduler {
             ((InterruptableJob) job.getJobInstance()).interrupt();
           } catch (Throwable e) {
             // do nothing, this was just a courtesy effort
-            logger.warn("Encountered error when interrupting job {} during shutdown: {}", job.getJobDetail().getKey(), e);
+            logger.warn("Encountered error when interrupting job {} during shutdown: {}", job.getJobDetail().getName(), e);
           }
         }
       }
@@ -441,7 +436,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Trigger cannot be null");
     }
 
-    if (jobDetail.getKey() == null) {
+    if (jobDetail.getName() == null) {
       throw new SchedulerException("Job's key cannot be null");
     }
 
@@ -452,8 +447,8 @@ public class QuartzScheduler implements Scheduler {
     OperableTrigger trig = (OperableTrigger) trigger;
 
     if (trigger.getJobKey() == null) {
-      trig.setJobKey(jobDetail.getKey());
-    } else if (!trigger.getJobKey().equals(jobDetail.getKey())) {
+      trig.setJobKey(jobDetail.getName());
+    } else if (!trigger.getJobKey().equals(jobDetail.getName())) {
       throw new SchedulerException("Trigger does not reference given job!");
     }
 
@@ -536,7 +531,7 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public void deleteJob(JobKey jobKey) throws SchedulerException {
+  public void deleteJob(String jobKey) throws SchedulerException {
 
     validateState();
 
@@ -552,7 +547,7 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public void unscheduleJob(TriggerKey triggerKey) throws SchedulerException {
+  public void unscheduleJob(String triggerKey) throws SchedulerException {
 
     validateState();
 
@@ -563,7 +558,7 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public Date rescheduleJob(TriggerKey triggerKey, Trigger newTrigger) throws SchedulerException {
+  public Date rescheduleJob(String triggerKey, Trigger newTrigger) throws SchedulerException {
 
     validateState();
 
@@ -620,12 +615,12 @@ public class QuartzScheduler implements Scheduler {
    * </p>
    */
   @Override
-  public void triggerJob(JobKey jobKey, JobDataMap data) throws SchedulerException {
+  public void triggerJob(String jobKey, JobDataMap data) throws SchedulerException {
 
     validateState();
 
-    OperableTrigger trig = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey.getName() + "-trigger", Key.DEFAULT_GROUP)
-        .forJob(jobKey).withSchedule(SimpleScheduleBuilder.simpleSchedule()).startAt(new Date()).build();
+    OperableTrigger trig = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
+        .withSchedule(SimpleScheduleBuilder.simpleSchedule()).startAt(new Date()).build();
     // OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
     trig.computeFirstFireTime(null);
     if (data != null) {
@@ -638,7 +633,7 @@ public class QuartzScheduler implements Scheduler {
         quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
         collision = false;
       } catch (ObjectAlreadyExistsException oaee) {
-        trig.setKey(new TriggerKey(newTriggerId(), Key.DEFAULT_GROUP));
+        trig.setKey(newTriggerId());
       }
     }
 
@@ -648,30 +643,12 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * <p>
-   * Get the names of all the <code>{@link org.quartz.Job}s</code> in the matching groups.
-   * </p>
-   */
-
-  @Override
-  public Set<JobKey> getJobKeys(GroupMatcher<JobKey> matcher) throws SchedulerException {
-
-    validateState();
-
-    if (matcher == null) {
-      matcher = GroupMatcher.groupEquals(Key.DEFAULT_GROUP);
-    }
-
-    return quartzSchedulerResources.getJobStore().getJobKeys(matcher);
-  }
-
-  /**
-   * <p>
    * Get all <code>{@link Trigger}</code> s that are associated with the identified <code>{@link org.quartz.JobDetail}</code>.
    * </p>
    */
 
   @Override
-  public List<? extends Trigger> getTriggersOfJob(JobKey jobKey) throws SchedulerException {
+  public List<? extends Trigger> getTriggersOfJob(String jobKey) throws SchedulerException {
 
     validateState();
 
@@ -684,7 +661,7 @@ public class QuartzScheduler implements Scheduler {
    * </p>
    */
   @Override
-  public JobDetail getJobDetail(JobKey jobKey) throws SchedulerException {
+  public JobDetail getJobDetail(String jobKey) throws SchedulerException {
 
     validateState();
 
@@ -698,7 +675,7 @@ public class QuartzScheduler implements Scheduler {
    */
 
   @Override
-  public Trigger getTrigger(TriggerKey triggerKey) throws SchedulerException {
+  public Trigger getTrigger(String triggerKey) throws SchedulerException {
 
     validateState();
 
@@ -841,34 +818,6 @@ public class QuartzScheduler implements Scheduler {
     return allListeners;
   }
 
-  private boolean matchJobListener(JobListener listener, JobKey key) {
-
-    List<Matcher<JobKey>> matchers = getListenerManager().getJobListenerMatchers(listener.getName());
-    if (matchers == null) {
-      return true;
-    }
-    for (Matcher<JobKey> matcher : matchers) {
-      if (matcher.isMatch(key)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean matchTriggerListener(TriggerListener listener, TriggerKey key) {
-
-    List<Matcher<TriggerKey>> matchers = getListenerManager().getTriggerListenerMatchers(listener.getName());
-    if (matchers == null) {
-      return true;
-    }
-    for (Matcher<TriggerKey> matcher : matchers) {
-      if (matcher.isMatch(key)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   boolean notifyTriggerListenersFired(JobExecutionContext jec) throws SchedulerException {
 
     boolean vetoedExecution = false;
@@ -879,9 +828,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all trigger listeners in the list
     for (TriggerListener tl : triggerListeners) {
       try {
-        if (!matchTriggerListener(tl, jec.getTrigger().getKey())) {
-          continue;
-        }
         tl.triggerFired(jec.getTrigger(), jec);
 
         if (tl.vetoJobExecution(jec.getTrigger(), jec)) {
@@ -904,9 +850,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all trigger listeners in the list
     for (TriggerListener tl : triggerListeners) {
       try {
-        if (!matchTriggerListener(tl, trigger.getKey())) {
-          continue;
-        }
         tl.triggerMisfired(trigger);
       } catch (Exception e) {
         SchedulerException se = new SchedulerException("TriggerListener '" + tl.getName() + "' threw exception: " + e.getMessage(), e);
@@ -923,9 +866,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all trigger listeners in the list
     for (TriggerListener tl : triggerListeners) {
       try {
-        if (!matchTriggerListener(tl, jec.getTrigger().getKey())) {
-          continue;
-        }
         tl.triggerComplete(jec.getTrigger(), jec, instCode);
       } catch (Exception e) {
         SchedulerException se = new SchedulerException("TriggerListener '" + tl.getName() + "' threw exception: " + e.getMessage(), e);
@@ -942,9 +882,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all job listeners
     for (JobListener jl : jobListeners) {
       try {
-        if (!matchJobListener(jl, jec.getJobDetail().getKey())) {
-          continue;
-        }
         jl.jobToBeExecuted(jec);
       } catch (Exception e) {
         SchedulerException se = new SchedulerException("JobListener '" + jl.getName() + "' threw exception: " + e.getMessage(), e);
@@ -961,9 +898,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all job listeners
     for (JobListener jl : jobListeners) {
       try {
-        if (!matchJobListener(jl, jec.getJobDetail().getKey())) {
-          continue;
-        }
         jl.jobExecutionVetoed(jec);
       } catch (Exception e) {
         SchedulerException se = new SchedulerException("JobListener '" + jl.getName() + "' threw exception: " + e.getMessage(), e);
@@ -980,9 +914,6 @@ public class QuartzScheduler implements Scheduler {
     // notify all job listeners
     for (JobListener jl : jobListeners) {
       try {
-        if (!matchJobListener(jl, jec.getJobDetail().getKey())) {
-          continue;
-        }
         jl.jobWasExecuted(jec, je);
       } catch (Exception e) {
         SchedulerException se = new SchedulerException("JobListener '" + jl.getName() + "' threw exception: " + e.getMessage(), e);
@@ -1022,7 +953,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  private void notifySchedulerListenersUnscheduled(TriggerKey triggerKey) {
+  private void notifySchedulerListenersUnscheduled(String triggerKey) {
 
     // build a list of all scheduler listeners that are to be notified...
     List<SchedulerListener> schedListeners = buildSchedulerListenerList();
@@ -1131,7 +1062,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  void notifySchedulerListenersJobDeleted(JobKey jobKey) {
+  void notifySchedulerListenersJobDeleted(String jobKey) {
 
     // build a list of all scheduler listeners that are to be notified...
     List<SchedulerListener> schedListeners = buildSchedulerListenerList();
@@ -1172,6 +1103,20 @@ public class QuartzScheduler implements Scheduler {
   @Override
   public CascadingClassLoadHelper getCascadingClassLoadHelper() {
     return this.cascadingClassLoadHelper;
+  }
+
+  /**
+   * <p>
+   * Get the names of all the <code>{@link org.quartz.Job}s</code> in the matching groups.
+   * </p>
+   */
+
+  @Override
+  public Set<String> getJobKeys() throws SchedulerException {
+
+    validateState();
+
+    return quartzSchedulerResources.getJobStore().getJobKeys();
   }
 
 }

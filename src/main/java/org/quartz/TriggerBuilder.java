@@ -17,9 +17,9 @@
 package org.quartz;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.quartz.spi.MutableTrigger;
-import org.quartz.utils.Key;
 
 /**
  * <code>TriggerBuilder</code> is used to instantiate {@link Trigger}s.
@@ -36,11 +36,8 @@ import org.quartz.utils.Key;
  *
  *
  *
- *
- *
- *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -55,17 +52,20 @@ import org.quartz.utils.Key;
  */
 public class TriggerBuilder<T extends Trigger> {
 
-  private TriggerKey key;
+  private String key;
   private String description;
   private Date startTime = new Date();
   private Date endTime;
   private int priority = Trigger.DEFAULT_PRIORITY;
   private String calendarName;
-  private JobKey jobKey;
+  private String jobKey;
   private JobDataMap jobDataMap = new JobDataMap();
 
   private ScheduleBuilder scheduleBuilder = null;
 
+  /**
+   * Constructor
+   */
   private TriggerBuilder() {
 
   }
@@ -96,7 +96,7 @@ public class TriggerBuilder<T extends Trigger> {
     trig.setDescription(description);
     trig.setEndTime(endTime);
     if (key == null) {
-      key = new TriggerKey(Key.createUniqueName(null), null);
+      key = UUID.randomUUID().toString();
     }
     trig.setKey(key);
     if (jobKey != null) {
@@ -113,24 +113,6 @@ public class TriggerBuilder<T extends Trigger> {
   }
 
   /**
-   * Use a TriggerKey with the given name and group to identify the Trigger.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
-   * </p>
-   *
-   * @param name the name element for the Trigger's TriggerKey
-   * @param group the group element for the Trigger's TriggerKey
-   * @return the updated TriggerBuilder
-   * @see TriggerKey
-   * @see Trigger#getKey()
-   */
-  public TriggerBuilder<T> withIdentity(String name, String group) {
-
-    key = new TriggerKey(name, group);
-    return this;
-  }
-
-  /**
    * Use the given TriggerKey to identify the Trigger.
    * <p>
    * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
@@ -141,7 +123,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @see TriggerKey
    * @see Trigger#getKey()
    */
-  public TriggerBuilder<T> withIdentity(TriggerKey key) {
+  public TriggerBuilder<T> withIdentity(String key) {
 
     this.key = key;
     return this;
@@ -256,23 +238,9 @@ public class TriggerBuilder<T extends Trigger> {
    * @return the updated TriggerBuilder
    * @see Trigger#getJobKey()
    */
-  public TriggerBuilder<T> forJob(JobKey jobKey) {
+  public TriggerBuilder<T> forJob(String jobKey) {
 
     this.jobKey = jobKey;
-    return this;
-  }
-
-  /**
-   * Set the identity of the Job which should be fired by the produced Trigger - a <code>JobKey</code> will be produced with the given name and group.
-   *
-   * @param jobName the name of the job to fire.
-   * @param jobGroup the group of the job to fire.
-   * @return the updated TriggerBuilder
-   * @see Trigger#getJobKey()
-   */
-  public TriggerBuilder<T> forJob(String jobName, String jobGroup) {
-
-    this.jobKey = new JobKey(jobName, jobGroup);
     return this;
   }
 

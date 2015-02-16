@@ -57,18 +57,15 @@ import org.quartz.CalendarIntervalScheduleBuilder;
 import org.quartz.CalendarIntervalTrigger.IntervalUnit;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobDetail;
-import org.quartz.JobKey;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-import org.quartz.TriggerKey;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.ClassLoadHelper;
 import org.quartz.spi.MutableTrigger;
-import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -331,7 +328,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       String jobClassName = getTrimmedToNullString(xpath, "job-class", jobDetailNode);
       Class jobClass = classLoadHelper.loadClass(jobClassName);
 
-      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, Key.DEFAULT_GROUP).withDescription(jobDescription).build();
+      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName).withDescription(jobDescription).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", jobDetailNode, XPathConstants.NODESET);
 
@@ -382,8 +379,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
       Date triggerEndTime = endTimeString == null || endTimeString.length() == 0 ? null : dateFormat.parse(endTimeString);
 
-      TriggerKey triggerKey = new TriggerKey(triggerName, Key.DEFAULT_GROUP);
-
       ScheduleBuilder sched = null;
 
       if (triggerNode.getNodeName().equals("simple")) {
@@ -410,7 +405,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             // do nothing.... (smart policy is default)
           } else {
             throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerKey, -1);
+                + triggerName, -1);
           }
         }
       } else if (triggerNode.getNodeName().equals("cron")) {
@@ -430,7 +425,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             // do nothing.... (smart policy is default)
           } else {
             throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerKey, -1);
+                + triggerName, -1);
           }
         }
       } else if (triggerNode.getNodeName().equals("calendar-interval")) {
@@ -452,16 +447,15 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
             // do nothing.... (smart policy is default)
           } else {
             throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerKey, -1);
+                + triggerName, -1);
           }
         }
       } else {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
-      Trigger trigger = newTrigger().withIdentity(triggerName, Key.DEFAULT_GROUP).withDescription(triggerDescription)
-          .forJob(triggerJobName, Key.DEFAULT_GROUP).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
-          .modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
+      Trigger trigger = newTrigger().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime)
+          .endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withSchedule(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 
@@ -536,9 +530,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     loadedTriggers.add(trigger);
   }
 
-  private Map<JobKey, List<MutableTrigger>> buildTriggersByFQJobNameMap(List<MutableTrigger> triggers) {
+  private Map<String, List<MutableTrigger>> buildTriggersByFQJobNameMap(List<MutableTrigger> triggers) {
 
-    Map<JobKey, List<MutableTrigger>> triggersByFQJobName = new HashMap<JobKey, List<MutableTrigger>>();
+    Map<String, List<MutableTrigger>> triggersByFQJobName = new HashMap<String, List<MutableTrigger>>();
 
     for (MutableTrigger trigger : triggers) {
       List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(trigger.getJobKey());
@@ -565,7 +559,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     logger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
-    Map<JobKey, List<MutableTrigger>> triggersByFQJobName = buildTriggersByFQJobNameMap(triggers);
+    Map<String, List<MutableTrigger>> triggersByFQJobName = buildTriggersByFQJobNameMap(triggers);
 
     // add each job, and it's associated triggers
     Iterator<JobDetail> itr = jobs.iterator();
@@ -574,24 +568,24 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       itr.remove(); // remove jobs as we handle them...
 
-      JobDetail dupeJ = sched.getJobDetail(detail.getKey());
+      JobDetail dupeJ = sched.getJobDetail(detail.getName());
 
       if (dupeJ != null) {
-        logger.info("Replacing job: " + detail.getKey());
+        logger.info("Replacing job: " + detail.getName());
       } else {
-        logger.info("Adding job: " + detail.getKey());
+        logger.info("Adding job: " + detail.getName());
       }
 
-      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(detail.getKey());
+      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(detail.getName());
 
       // log.debug("detail.isDurable()" + detail.isDurable());
       if (!detail.isDurable() && (triggersOfJob == null || triggersOfJob.size() == 0)) {
         if (dupeJ == null) {
-          throw new SchedulerException("A new job defined without any triggers must be durable: " + detail.getKey());
+          throw new SchedulerException("A new job defined without any triggers must be durable: " + detail.getName());
         }
 
-        if ((dupeJ.isDurable() && (sched.getTriggersOfJob(detail.getKey()).size() == 0))) {
-          throw new SchedulerException("Can't change existing durable job without triggers to non-durable: " + detail.getKey());
+        if ((dupeJ.isDurable() && (sched.getTriggersOfJob(detail.getName()).size() == 0))) {
+          throw new SchedulerException("Can't change existing durable job without triggers to non-durable: " + detail.getName());
         }
       }
 
@@ -632,7 +626,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                   sched.scheduleJob(trigger);
                 }
               } catch (ObjectAlreadyExistsException e) {
-                logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getKey()
+                logger.debug("Adding trigger: " + trigger.getKey() + " for job: " + detail.getName()
                     + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
                     + "in the cluster.  Will try to reschedule instead.");
                 continue;

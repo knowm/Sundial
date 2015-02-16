@@ -34,14 +34,11 @@ import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobKey;
 import org.quartz.ScheduleBuilder;
 import org.quartz.Scheduler;
 import org.quartz.Trigger;
-import org.quartz.TriggerKey;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.impl.SchedulerFactory;
-import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -212,7 +209,7 @@ public class SundialJobScheduler {
         }
       }
 
-      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName, Key.DEFAULT_GROUP).usingJobData(jobDataMap).build();
+      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName).usingJobData(jobDataMap).build();
 
       getScheduler().addJob(jobDetail);
 
@@ -231,8 +228,7 @@ public class SundialJobScheduler {
   public static void startJob(String jobName) {
 
     try {
-      JobKey jobKey = new JobKey(jobName);
-      getScheduler().triggerJob(jobKey, null);
+      getScheduler().triggerJob(jobName, null);
     } catch (SchedulerException e) {
       logger.error("ERROR STARTING JOB!!!", e);
     }
@@ -246,8 +242,7 @@ public class SundialJobScheduler {
   public static void removeJob(String jobName) {
 
     try {
-      JobKey jobKey = new JobKey(jobName);
-      getScheduler().deleteJob(jobKey);
+      getScheduler().deleteJob(jobName);
     } catch (SchedulerException e) {
       logger.error("ERROR REMOVING JOB!!!", e);
     }
@@ -269,8 +264,7 @@ public class SundialJobScheduler {
         // logger.debug("value= " + pParams.get(key));
         jobDataMap.put(key, params.get(key));
       }
-      JobKey jobKey = new JobKey(jobName);
-      getScheduler().triggerJob(jobKey, jobDataMap);
+      getScheduler().triggerJob(jobName, jobDataMap);
     } catch (SchedulerException e) {
       logger.error("ERROR STARTING JOB!!!", e);
     }
@@ -287,7 +281,7 @@ public class SundialJobScheduler {
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching Job found. Now Stopping!");
           if (jobExecutionContext.getJobInstance() instanceof Job) {
@@ -316,7 +310,7 @@ public class SundialJobScheduler {
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           if (jobExecutionContext.getJobInstance() instanceof Job) {
             JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
@@ -349,8 +343,7 @@ public class SundialJobScheduler {
 
       ScheduleBuilder<CronTrigger> sched = cronSchedule(cronExpression).inTimeZone(null);
 
-      Trigger trigger = newTrigger().withIdentity(triggerName, Key.DEFAULT_GROUP).forJob(jobName, Key.DEFAULT_GROUP)
-          .withPriority(Trigger.DEFAULT_PRIORITY).withSchedule(sched).build();
+      Trigger trigger = newTrigger().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY).withSchedule(sched).build();
 
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {
@@ -369,8 +362,7 @@ public class SundialJobScheduler {
   public static void removeTrigger(String triggerName) {
 
     try {
-      TriggerKey triggerKey = new TriggerKey(triggerName, Key.DEFAULT_GROUP);
-      getScheduler().unscheduleJob(triggerKey);
+      getScheduler().unscheduleJob(triggerName);
     } catch (SchedulerException e) {
       logger.error("ERROR REMOVING TRIGGER!!!", e);
     }
@@ -385,9 +377,9 @@ public class SundialJobScheduler {
 
     List<String> allJobNames = new ArrayList<String>();
     try {
-      Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
-      for (JobKey jobKey : allJobKeys) {
-        allJobNames.add(jobKey.getName());
+      Set<String> allJobKeys = getScheduler().getJobKeys();
+      for (String jobKey : allJobKeys) {
+        allJobNames.add(jobKey);
       }
     } catch (SchedulerException e) {
       logger.error("COULD NOT GET JOB NAMES!!!", e);
@@ -406,10 +398,10 @@ public class SundialJobScheduler {
 
     Map<String, List<Trigger>> allJobsMap = new TreeMap<String, List<Trigger>>();
     try {
-      Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
-      for (JobKey jobKey : allJobKeys) {
+      Set<String> allJobKeys = getScheduler().getJobKeys();
+      for (String jobKey : allJobKeys) {
         List<Trigger> triggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
-        allJobsMap.put(jobKey.getName(), triggers);
+        allJobsMap.put(jobKey, triggers);
       }
 
     } catch (SchedulerException e) {
@@ -423,7 +415,7 @@ public class SundialJobScheduler {
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching running Job found!");
           return true;

@@ -25,7 +25,7 @@ import com.xeiam.sundial.exceptions.RequiredParameterException;
 
 /**
  * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and any key/value pairs the user wishes to add.
- * 
+ *
  * @author timothy.molter
  */
 public class JobContext {
@@ -43,7 +43,7 @@ public class JobContext {
 
   /**
    * Add all the mappings from the JobExecutionContext to the JobContext
-   * 
+   *
    * @param jobExecutionContext
    */
   public void addQuartzContext(JobExecutionContext jobExecutionContext) {
@@ -53,8 +53,8 @@ public class JobContext {
       // logger.debug("added value: " + (String) jobExecutionContext.getMergedJobDataMap().get(mapKey));
       map.put((String) mapKey, jobExecutionContext.getMergedJobDataMap().get(mapKey));
     }
-    map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getKey().getName());
-    map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getKey().getName()));
+    map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getName());
+    map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getKey()));
     if (jobExecutionContext.getTrigger() instanceof CronTrigger) {
       map.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
     }
@@ -63,7 +63,7 @@ public class JobContext {
 
   /**
    * Add a key/value pair to the JobContext
-   * 
+   *
    * @param key
    * @param value
    */
@@ -74,7 +74,7 @@ public class JobContext {
 
   /**
    * Get a value from a key out of the JobContext
-   * 
+   *
    * @param key
    * @return
    */
@@ -87,7 +87,7 @@ public class JobContext {
 
   /**
    * Get a required value from a key out of the Job Context
-   * 
+   *
    * @param key
    * @return
    */
@@ -103,7 +103,7 @@ public class JobContext {
 
   /**
    * Convenience method to get the Job Name
-   * 
+   *
    * @return
    */
   public String getJobName() {
@@ -113,7 +113,7 @@ public class JobContext {
 
   /**
    * Convenience method to get the Trigger Name
-   * 
+   *
    * @return
    */
   public String getTriggerName() {
@@ -123,7 +123,7 @@ public class JobContext {
 
   /**
    * Convenience method to get the Cron Expression
-   * 
+   *
    * @return
    */
   public String getCronExpressionName() {

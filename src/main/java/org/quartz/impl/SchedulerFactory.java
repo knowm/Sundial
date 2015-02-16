@@ -23,7 +23,6 @@ import org.quartz.core.QuartzScheduler;
 import org.quartz.core.QuartzSchedulerResources;
 import org.quartz.core.StandardJobRunShellFactory;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.matchers.EverythingMatcher;
 import org.quartz.plugins.management.ShutdownHookPlugin;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.quartz.simpl.RAMJobStore;
@@ -160,7 +159,7 @@ public class SchedulerFactory {
       quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
 
       // add listeners
-      quartzScheduler.getListenerManager().addTriggerListener(defaultTriggerListener, EverythingMatcher.allTriggers());
+      quartzScheduler.getListenerManager().addTriggerListener(defaultTriggerListener);
 
       // fire up job store, and runshell factory
       jobstore.initialize(quartzScheduler.getSchedulerSignaler());

@@ -34,7 +34,8 @@ public class DefaultTriggerListener implements TriggerListener {
   Logger logger = LoggerFactory.getLogger(DefaultTriggerListener.class);
 
   /**
-   * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in jobdatamap set to 'Y'.
+   * The default behavior is to veto any job is currently running. However, concurrent jobs can be created by setting the 'Concurrency' key in
+   * jobdatamap set to 'Y'.
    */
   @Override
   public boolean vetoJobExecution(Trigger trigger, JobExecutionContext jobExecutionContext) {
@@ -45,7 +46,7 @@ public class DefaultTriggerListener implements TriggerListener {
       return false;
     }
 
-    String newJobName = jobExecutionContext.getJobDetail().getKey().getName();
+    String newJobName = jobExecutionContext.getJobDetail().getName();
     // logger.debug(JobClass);
 
     try {
@@ -55,14 +56,13 @@ public class DefaultTriggerListener implements TriggerListener {
 
       for (JobExecutionContext lJobExecutionContext : currentlyExecutingJobs) {
 
-        String alreadyRunningJobName = lJobExecutionContext.getJobDetail().getKey().getName();
+        String alreadyRunningJobName = lJobExecutionContext.getJobDetail().getName();
         logger.debug("alreadyRunningJobName: " + alreadyRunningJobName);
 
         if (newJobName.equals(alreadyRunningJobName)) {
           logger.debug("Already Running. Vetoing!");
           return true;
-        }
-        else {
+        } else {
           logger.debug("Non-matching Job found. Not Vetoing!");
         }
       }
@@ -77,7 +77,7 @@ public class DefaultTriggerListener implements TriggerListener {
 
   /**
    * For whatever reason, Quartz needs this here.
-   * 
+   *
    * @param s
    * @return
    */

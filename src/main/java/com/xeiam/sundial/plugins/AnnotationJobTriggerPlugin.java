@@ -14,7 +14,6 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.spi.SchedulerPlugin;
-import org.quartz.utils.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,8 +69,8 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
       Set<Class<? extends Job>> scheduledClasses = scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
 
-      for (Class<? extends Job> scheduledClass : scheduledClasses) {
-        CronTrigger cronTrigger = scheduledClass.getAnnotation(CronTrigger.class);
+      for (Class<? extends Job> jobClass : scheduledClasses) {
+        CronTrigger cronTrigger = jobClass.getAnnotation(CronTrigger.class);
         if (cronTrigger != null) {
 
           JobDataMap jobDataMap = new JobDataMap();
@@ -80,10 +79,10 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, cronTrigger.jobDataMap());
           }
 
-          JobDetail job = newJob(scheduledClass).withIdentity(scheduledClass.getSimpleName(), Key.DEFAULT_GROUP).usingJobData(jobDataMap).build();
+          JobDetail job = newJob(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
           Trigger trigger;
           try {
-            trigger = buildTrigger(cronTrigger, scheduledClass.getSimpleName());
+            trigger = buildTrigger(cronTrigger, jobClass.getSimpleName());
             scheduler.scheduleJob(job, trigger);
             logger.info("Scheduled job {} with trigger {}", job, trigger);
           } catch (Exception e) {
@@ -103,8 +102,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
     TriggerBuilder<Trigger> trigger = newTrigger();
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
-      trigger.forJob(jobName, Key.DEFAULT_GROUP).withIdentity(jobName + "-Trigger", Key.DEFAULT_GROUP)
-      .withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
+      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withSchedule(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
     } else {
       throw new IllegalArgumentException("One of 'cron', 'interval' is required for the @Scheduled annotation");
     }
