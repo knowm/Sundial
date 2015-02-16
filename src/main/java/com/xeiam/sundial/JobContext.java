@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.quartz.core.JobExecutionContext;
-import org.quartz.trigger.CronTrigger;
+import org.quartz.triggers.CronTrigger;
 
 import com.xeiam.sundial.exceptions.RequiredParameterException;
 

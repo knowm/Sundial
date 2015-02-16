@@ -15,15 +15,15 @@
  *
  */
 
-package org.quartz.builder;
+package org.quartz.builders;
 
 import java.text.ParseException;
 import java.util.TimeZone;
 
-import org.quartz.trigger.CronExpression;
-import org.quartz.trigger.CronTrigger;
-import org.quartz.trigger.CronTriggerImpl;
-import org.quartz.trigger.MutableTrigger;
+import org.quartz.triggers.CronExpression;
+import org.quartz.triggers.CronTrigger;
+import org.quartz.triggers.CronTriggerImpl;
+import org.quartz.triggers.MutableTrigger;
 
 /**
  * <code>CronScheduleBuilder</code> is a {@link ScheduleBuilder} that defines {@link CronExpression}-based schedules for <code>Trigger</code>s.

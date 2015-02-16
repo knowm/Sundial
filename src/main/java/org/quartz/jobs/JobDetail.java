@@ -20,10 +20,10 @@ package org.quartz.jobs;
 import java.io.Serializable;
 
 import org.quartz.annotations.DisallowConcurrentExecution;
-import org.quartz.builder.JobBuilder;
+import org.quartz.builders.JobBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * Conveys the detail properties of a given <code>Job</code> instance. JobDetails are to be created/defined with {@link JobBuilder}.

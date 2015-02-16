@@ -23,8 +23,8 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.Job;
 import org.quartz.jobs.JobDetail;
 import org.quartz.listeners.SchedulerListenerSupport;
-import org.quartz.trigger.OperableTrigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @see JobRunShellFactory
  * @see org.quartz.core.QuartzSchedulerThread
  * @see org.quartz.jobs.Job
- * @see org.quartz.trigger.Trigger
+ * @see org.quartz.triggers.Trigger
  * @author James House
  */
 public class JobRunShell extends SchedulerListenerSupport implements Runnable {

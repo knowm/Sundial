@@ -20,7 +20,7 @@ package org.quartz.core;
 import java.util.Date;
 
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.OperableTrigger;
+import org.quartz.triggers.OperableTrigger;
 
 /**
  * <p>

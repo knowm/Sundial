@@ -17,7 +17,7 @@
 
 package org.quartz.core;
 
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * An interface to be implemented by objects that define spaces of time during which an associated <code>{@link Trigger}</code> may (not) fire. Calendars do not define actual fire times, but rather

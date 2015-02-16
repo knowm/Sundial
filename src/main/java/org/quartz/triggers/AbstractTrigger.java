@@ -15,12 +15,12 @@
  * under the License.
  *
  */
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.util.Date;
 
-import org.quartz.builder.ScheduleBuilder;
-import org.quartz.builder.TriggerBuilder;
+import org.quartz.builders.ScheduleBuilder;
+import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;

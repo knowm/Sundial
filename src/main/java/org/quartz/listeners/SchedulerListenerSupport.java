@@ -17,7 +17,7 @@ package org.quartz.listeners;
 
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

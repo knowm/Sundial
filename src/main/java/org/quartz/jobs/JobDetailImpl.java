@@ -20,10 +20,10 @@ package org.quartz.jobs;
 
 import org.quartz.annotations.AnnotationUtils;
 import org.quartz.annotations.DisallowConcurrentExecution;
-import org.quartz.builder.JobBuilder;
+import org.quartz.builders.JobBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * <p>

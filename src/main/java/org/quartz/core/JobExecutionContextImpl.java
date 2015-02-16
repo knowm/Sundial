@@ -22,7 +22,7 @@ import java.util.Date;
 import org.quartz.jobs.Job;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 public class JobExecutionContextImpl implements java.io.Serializable, JobExecutionContext {
 

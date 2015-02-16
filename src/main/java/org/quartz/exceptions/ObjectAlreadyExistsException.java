@@ -20,7 +20,7 @@ package org.quartz.exceptions;
 import org.quartz.core.Calendar;
 import org.quartz.core.Scheduler;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>{@link org.quartz.jobs.JobDetail}</code>,

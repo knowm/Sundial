@@ -19,7 +19,7 @@ package org.quartz.listeners;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * The interface to be implemented by classes that want to be informed of major <code>{@link Scheduler}</code> events.

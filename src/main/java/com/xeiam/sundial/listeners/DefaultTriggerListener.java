@@ -20,8 +20,8 @@ import java.util.List;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.listeners.TriggerListener;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

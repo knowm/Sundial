@@ -18,11 +18,11 @@
 
 package org.quartz.plugins.xml;
 
-import static org.quartz.builder.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
-import static org.quartz.builder.CronScheduleBuilder.cronSchedule;
-import static org.quartz.builder.JobBuilder.newJob;
-import static org.quartz.builder.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.builder.TriggerBuilder.newTrigger;
+import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
+import static org.quartz.builders.CronScheduleBuilder.cronSchedule;
+import static org.quartz.builders.JobBuilder.newJob;
+import static org.quartz.builders.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.builders.TriggerBuilder.newTrigger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,19 +53,19 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.quartz.builder.CalendarIntervalScheduleBuilder;
-import org.quartz.builder.CronScheduleBuilder;
-import org.quartz.builder.ScheduleBuilder;
-import org.quartz.builder.SimpleScheduleBuilder;
+import org.quartz.builders.CalendarIntervalScheduleBuilder;
+import org.quartz.builders.CronScheduleBuilder;
+import org.quartz.builders.ScheduleBuilder;
+import org.quartz.builders.SimpleScheduleBuilder;
 import org.quartz.classloading.ClassLoadHelper;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.MutableTrigger;
-import org.quartz.trigger.SimpleTrigger;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.CalendarIntervalTrigger.IntervalUnit;
+import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.SimpleTrigger;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;

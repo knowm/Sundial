@@ -15,16 +15,16 @@
  * 
  */
 
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.util.Calendar;
 
-import org.quartz.builder.CalendarIntervalScheduleBuilder;
-import org.quartz.builder.CronScheduleBuilder;
-import org.quartz.builder.SimpleScheduleBuilder;
-import org.quartz.builder.TriggerBuilder;
+import org.quartz.builders.CalendarIntervalScheduleBuilder;
+import org.quartz.builders.CronScheduleBuilder;
+import org.quartz.builders.SimpleScheduleBuilder;
+import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Scheduler;
-import org.quartz.trigger.CalendarIntervalTrigger.IntervalUnit;
+import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 
 /**
  * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.jobs.JobDetail}</code> based upon repeating calendar time intervals.

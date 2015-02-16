@@ -25,9 +25,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.trigger.OperableTrigger;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

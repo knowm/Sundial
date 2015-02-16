@@ -16,7 +16,7 @@
  *
  */
 
-package org.quartz.builder;
+package org.quartz.builders;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
 import org.quartz.jobs.JobDetailImpl;
 import org.quartz.jobs.NoOpJob;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * <code>JobBuilder</code> is used to instantiate {@link JobDetail}s.

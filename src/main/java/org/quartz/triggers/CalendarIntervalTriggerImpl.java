@@ -15,13 +15,13 @@
  *
  */
 
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.quartz.builder.CalendarIntervalScheduleBuilder;
-import org.quartz.builder.ScheduleBuilder;
+import org.quartz.builders.CalendarIntervalScheduleBuilder;
+import org.quartz.builders.ScheduleBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;

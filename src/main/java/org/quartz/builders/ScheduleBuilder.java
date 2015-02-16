@@ -14,10 +14,10 @@
  * under the License.
  *
  */
-package org.quartz.builder;
+package org.quartz.builders;
 
-import org.quartz.trigger.MutableTrigger;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.Trigger;
 
 public abstract class ScheduleBuilder<T extends Trigger> {
 

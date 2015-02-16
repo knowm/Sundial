@@ -32,10 +32,10 @@ import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.OperableTrigger;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
-import org.quartz.trigger.Trigger.TriggerTimeComparator;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.Trigger.TriggerTimeComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,7 +139,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>{@link org.quartz.triggers.Trigger}</code>.
    * </p>
    *
    * @param newJob The <code>JobDetail</code> to be stored.
@@ -193,7 +193,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given name, and any <code>{@link org.quartz.trigger.Trigger}</code> s that reference it.
+   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given name, and any <code>{@link org.quartz.triggers.Trigger}</code> s that reference it.
    * </p>
    *
    * @return <code>true</code> if a <code>Job</code> with the given name & group was found and removed from the store.
@@ -221,7 +221,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Store the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Store the given <code>{@link org.quartz.triggers.Trigger}</code>.
    * </p>
    *
    * @param newTrigger The <code>Trigger</code> to be stored.
@@ -264,7 +264,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Remove (delete) the <code>{@link org.quartz.trigger.Trigger}</code> with the given name.
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given name.
    * </p>
    *
    * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
@@ -311,7 +311,7 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * @see org.quartz.core.JobStore#replaceTrigger(org.quartz.core.SchedulingContext, java.lang.String, java.lang.String, org.quartz.trigger.Trigger)
+   * @see org.quartz.core.JobStore#replaceTrigger(org.quartz.core.SchedulingContext, java.lang.String, java.lang.String, org.quartz.triggers.Trigger)
    */
   @Override
   public boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger) throws JobPersistenceException {
@@ -371,7 +371,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Retrieve the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
    * </p>
    *
    * @return The desired <code>Trigger</code>, or null if there is no match.
@@ -388,7 +388,7 @@ public class RAMJobStore implements JobStore {
 
   /**
    * <p>
-   * Retrieve the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
    * </p>
    *
    * @param calName The name of the <code>Calendar</code> to be retrieved.

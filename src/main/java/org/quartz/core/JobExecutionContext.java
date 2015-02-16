@@ -24,7 +24,7 @@ import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
 import org.quartz.listeners.JobListener;
 import org.quartz.listeners.TriggerListener;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * A context bundle containing handles to various environment information, that is given to a <code>{@link org.quartz.jobs.JobDetail}</code> instance as it is executed, and to a

@@ -14,12 +14,12 @@
  * under the License.
  *
  */
-package org.quartz.builder;
+package org.quartz.builders;
 
-import org.quartz.trigger.CalendarIntervalTrigger;
-import org.quartz.trigger.CalendarIntervalTrigger.IntervalUnit;
-import org.quartz.trigger.CalendarIntervalTriggerImpl;
-import org.quartz.trigger.MutableTrigger;
+import org.quartz.triggers.CalendarIntervalTrigger;
+import org.quartz.triggers.CalendarIntervalTriggerImpl;
+import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 
 /**
  * <code>CalendarIntervalScheduleBuilder</code> is a {@link ScheduleBuilder} that defines calendar time (day, week, month, year) interval-based

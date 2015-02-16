@@ -15,7 +15,7 @@
  *
  */
 
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.io.Serializable;
 import java.text.ParseException;

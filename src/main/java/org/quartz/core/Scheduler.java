@@ -28,7 +28,7 @@ import org.quartz.listeners.JobListener;
 import org.quartz.listeners.ListenerManager;
 import org.quartz.listeners.SchedulerListener;
 import org.quartz.listeners.TriggerListener;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * This is the main interface of a Quartz Scheduler.
@@ -198,7 +198,7 @@ public interface Scheduler {
   Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException;
 
   /**
-   * Schedule the given <code>{@link org.quartz.trigger.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
+   * Schedule the given <code>{@link org.quartz.triggers.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
    *
    * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal
    *         Scheduler error.
@@ -206,7 +206,7 @@ public interface Scheduler {
   Date scheduleJob(Trigger trigger) throws SchedulerException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.trigger.Trigger}</code> with the given key, and store the new given one - which must be associated with the
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated with the
    * same job (the new trigger must have the job name & group specified) - however, the new trigger need not have the same name as the old trigger.
    *
    * @param triggerKey identity of the trigger to replace

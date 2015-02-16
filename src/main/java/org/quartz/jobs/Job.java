@@ -22,7 +22,7 @@ import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.listeners.JobListener;
 import org.quartz.listeners.TriggerListener;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * <p>

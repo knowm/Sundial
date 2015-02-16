@@ -20,7 +20,7 @@ import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * The interface to be implemented by classes that want to be informed when a <code>{@link org.quartz.jobs.JobDetail}</code> executes. In general,

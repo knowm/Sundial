@@ -19,8 +19,8 @@ package org.quartz.listeners;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 
 /**
  * The interface to be implemented by classes that want to be informed when a <code>{@link Trigger}</code> fires. In general, applications that use a

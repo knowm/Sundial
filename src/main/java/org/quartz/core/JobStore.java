@@ -25,13 +25,13 @@ import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.trigger.OperableTrigger;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 
 /**
  * <p>
- * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.jobs.Job}</code> and <code>{@link org.quartz.trigger.Trigger}</code>
+ * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.jobs.Job}</code> and <code>{@link org.quartz.triggers.Trigger}</code>
  * storage mechanism for the <code>{@link org.quartz.QuartzScheduler}</code>'s use.
  * </p>
  * <p>
@@ -39,7 +39,7 @@ import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
  * </p>
  *
  * @see org.quartz.QuartzScheduler
- * @see org.quartz.trigger.Trigger
+ * @see org.quartz.triggers.Trigger
  * @see org.quartz.jobs.Job
  * @see org.quartz.jobs.JobDetail
  * @see org.quartz.jobs.JobDataMap
@@ -71,7 +71,7 @@ public interface JobStore {
   // ///////////////////////////////////////////////////////////////////////////
 
   /**
-   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>{@link org.quartz.triggers.Trigger}</code>.
    *
    * @param newJob The <code>JobDetail</code> to be stored.
    * @param newTrigger The <code>Trigger</code> to be stored.
@@ -90,7 +90,7 @@ public interface JobStore {
   void storeJob(JobDetail newJob, boolean replaceExisting) throws ObjectAlreadyExistsException, JobPersistenceException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given key, and any <code>{@link org.quartz.trigger.Trigger}</code> s that reference it.
+   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given key, and any <code>{@link org.quartz.triggers.Trigger}</code> s that reference it.
    * <p>
    * If removal of the <code>Job</code> results in an empty group, the group should be removed from the <code>JobStore</code>'s list of known group
    * names.
@@ -108,7 +108,7 @@ public interface JobStore {
   JobDetail retrieveJob(String jobKey) throws JobPersistenceException;
 
   /**
-   * Store the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Store the given <code>{@link org.quartz.triggers.Trigger}</code>.
    *
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>JobStore</code> with the same name & group should be
@@ -119,7 +119,7 @@ public interface JobStore {
   void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting) throws ObjectAlreadyExistsException, JobPersistenceException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.trigger.Trigger}</code> with the given key.
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key.
    * <p>
    * If removal of the <code>Trigger</code> results in an empty group, the group should be removed from the <code>JobStore</code>'s list of known
    * group names.
@@ -134,7 +134,7 @@ public interface JobStore {
   boolean removeTrigger(String triggerKey) throws JobPersistenceException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.trigger.Trigger}</code> with the given key, and store the new given one - which must be associated with the
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated with the
    * same job.
    *
    * @param newTrigger The new <code>Trigger</code> to be stored.
@@ -143,14 +143,14 @@ public interface JobStore {
   boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger) throws JobPersistenceException;
 
   /**
-   * Retrieve the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
    *
    * @return The desired <code>Trigger</code>, or null if there is no match.
    */
   OperableTrigger retrieveTrigger(String triggerKey) throws JobPersistenceException;
 
   /**
-   * Retrieve the given <code>{@link org.quartz.trigger.Trigger}</code>.
+   * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
    *
    * @param calName The name of the <code>Calendar</code> to be retrieved.
    * @return The desired <code>Calendar</code>, or null if there is no match.

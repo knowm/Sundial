@@ -15,13 +15,13 @@
  * 
  */
 
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.quartz.builder.CronScheduleBuilder;
-import org.quartz.builder.TriggerBuilder;
+import org.quartz.builders.CronScheduleBuilder;
+import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Scheduler;
 import org.quartz.jobs.Job;
 
@@ -32,7 +32,7 @@ import org.quartz.jobs.Job;
  * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or "At 1:30am every last Friday of the month".
  * </p>
  * <p>
- * The format of a "Cron-Expression" string is documented on the {@link org.quartz.trigger.CronExpression} class.
+ * The format of a "Cron-Expression" string is documented on the {@link org.quartz.triggers.CronExpression} class.
  * </p>
  * <p>
  * Here are some full examples: <br>

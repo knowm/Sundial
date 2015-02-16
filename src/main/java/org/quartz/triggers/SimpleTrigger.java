@@ -14,10 +14,10 @@
  * under the License.
  * 
  */
-package org.quartz.trigger;
+package org.quartz.triggers;
 
-import org.quartz.builder.SimpleScheduleBuilder;
-import org.quartz.builder.TriggerBuilder;
+import org.quartz.builders.SimpleScheduleBuilder;
+import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Calendar;
 import org.quartz.core.Scheduler;
 

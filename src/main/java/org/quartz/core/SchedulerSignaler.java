@@ -17,7 +17,7 @@
 
 package org.quartz.core;
 
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * An interface to be used by <code>JobStore</code> instances in order to communicate signals back to the <code>QuartzScheduler</code>.

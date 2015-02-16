@@ -1,4 +1,4 @@
-package org.quartz.trigger;
+package org.quartz.triggers;
 
 import java.util.Date;
 

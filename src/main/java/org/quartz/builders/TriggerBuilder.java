@@ -14,15 +14,15 @@
  * under the License.
  *
  */
-package org.quartz.builder;
+package org.quartz.builders;
 
 import java.util.Date;
 import java.util.UUID;
 
 import org.quartz.core.Calendar;
 import org.quartz.jobs.JobDataMap;
-import org.quartz.trigger.MutableTrigger;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * <code>TriggerBuilder</code> is used to instantiate {@link Trigger}s.

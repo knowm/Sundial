@@ -14,11 +14,11 @@
  * under the License.
  *
  */
-package org.quartz.builder;
+package org.quartz.builders;
 
-import org.quartz.trigger.MutableTrigger;
-import org.quartz.trigger.SimpleTrigger;
-import org.quartz.trigger.SimpleTriggerImpl;
+import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.SimpleTrigger;
+import org.quartz.triggers.SimpleTriggerImpl;
 
 /**
  * <code>SimpleScheduleBuilder</code> is a {@link ScheduleBuilder} that defines strict/literal interval-based schedules for <code>Trigger</code>s.

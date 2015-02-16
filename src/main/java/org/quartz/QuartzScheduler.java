@@ -26,8 +26,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.quartz.builder.SimpleScheduleBuilder;
-import org.quartz.builder.TriggerBuilder;
+import org.quartz.builders.SimpleScheduleBuilder;
+import org.quartz.builders.TriggerBuilder;
 import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
@@ -53,9 +53,9 @@ import org.quartz.listeners.SchedulerListener;
 import org.quartz.listeners.SchedulerListenerSupport;
 import org.quartz.listeners.TriggerListener;
 import org.quartz.plugins.SchedulerPlugin;
-import org.quartz.trigger.OperableTrigger;
-import org.quartz.trigger.Trigger;
-import org.quartz.trigger.Trigger.CompletedExecutionInstruction;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
+import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,10 +197,10 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * <p>
-   * Starts the <code>QuartzScheduler</code>'s threads that fire <code>{@link org.quartz.trigger.Trigger}s</code>.
+   * Starts the <code>QuartzScheduler</code>'s threads that fire <code>{@link org.quartz.triggers.Trigger}s</code>.
    * </p>
    * <p>
-   * All <code>{@link org.quartz.trigger.Trigger}s</code> that have misfired will be passed to the appropriate TriggerListener(s).
+   * All <code>{@link org.quartz.triggers.Trigger}s</code> that have misfired will be passed to the appropriate TriggerListener(s).
    * </p>
    */
   @Override
@@ -247,7 +247,7 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * <p>
-   * Temporarily halts the <code>QuartzScheduler</code>'s firing of <code>{@link org.quartz.trigger.Trigger}s</code>.
+   * Temporarily halts the <code>QuartzScheduler</code>'s firing of <code>{@link org.quartz.triggers.Trigger}s</code>.
    * </p>
    * <p>
    * The scheduler is not destroyed, and can be re-started at any time.
@@ -289,7 +289,7 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * <p>
-   * Halts the <code>QuartzScheduler</code>'s firing of <code>{@link org.quartz.trigger.Trigger}s</code>, and cleans up all resources associated with
+   * Halts the <code>QuartzScheduler</code>'s firing of <code>{@link org.quartz.triggers.Trigger}s</code>, and cleans up all resources associated with
    * the QuartzScheduler.
    * </p>
    * <p>
@@ -419,7 +419,7 @@ public class QuartzScheduler implements Scheduler {
   /**
    * <p>
    * Add the <code>{@link org.quartz.jobs.Job}</code> identified by the given <code>{@link org.quartz.jobs.JobDetail}</code> to the Scheduler, and
-   * associate the given <code>{@link org.quartz.trigger.Trigger}</code> with it.
+   * associate the given <code>{@link org.quartz.triggers.Trigger}</code> with it.
    * </p>
    * <p>
    * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
@@ -478,7 +478,7 @@ public class QuartzScheduler implements Scheduler {
 
   /**
    * <p>
-   * Schedule the given <code>{@link org.quartz.trigger.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
+   * Schedule the given <code>{@link org.quartz.triggers.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
    * </p>
    *
    * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal

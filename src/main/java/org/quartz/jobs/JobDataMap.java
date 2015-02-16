@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import org.quartz.core.JobExecutionContext;
-import org.quartz.trigger.Trigger;
+import org.quartz.triggers.Trigger;
 
 /**
  * Holds state information for <code>Job</code> instances.
