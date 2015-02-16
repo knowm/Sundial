@@ -17,11 +17,8 @@
  */
 package org.quartz.triggers;
 
-import java.util.Date;
-
 import org.quartz.builders.ScheduleBuilder;
 import org.quartz.builders.TriggerBuilder;
-import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -99,7 +96,7 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Trigger / MutableTrigger.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
@@ -184,19 +181,37 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
     this.priority = priority;
   }
 
+  @Override
+  public int getMisfireInstruction() {
+
+    return misfireInstruction;
+  }
+
+  @Override
+  public void setMisfireInstruction(int misfireInstruction) {
+
+    if (!validateMisfireInstruction(misfireInstruction)) {
+      throw new IllegalArgumentException("The misfire instruction code is invalid for this type of trigger.");
+    }
+    this.misfireInstruction = misfireInstruction;
+  }
+
+  @Override
+  public abstract ScheduleBuilder<T> getScheduleBuilder();
+
+  @Override
+  public TriggerBuilder<T> getTriggerBuilder() {
+
+    TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
+        .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
+        .withSchedule(getScheduleBuilder());
+    return b;
+  }
+
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Operational Trigger methods.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-
-  @Override
-  public abstract void triggered(Calendar calendar);
-
-  @Override
-  public abstract Date computeFirstFireTime(Calendar calendar);
-
-  @Override
-  public abstract void updateAfterMisfire(Calendar cal);
 
   @Override
   public CompletedExecutionInstruction executionComplete(JobExecutionContext context, JobExecutionException result) {
@@ -245,62 +260,9 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Trigger methods.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ core Java method overrides.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-  @Override
-  public abstract ScheduleBuilder<T> getScheduleBuilder();
-
-  @Override
-  public abstract boolean mayFireAgain();
-
-  @Override
-  public abstract Date getStartTime();
-
-  @Override
-  public abstract void setStartTime(Date startTime);
-
-  @Override
-  public abstract Date getEndTime();
-
-  @Override
-  public abstract void setEndTime(Date endTime);
-
-  @Override
-  public abstract Date getNextFireTime();
-
-  @Override
-  public abstract Date getPreviousFireTime();
-
-  @Override
-  public abstract Date getFireTimeAfter(Date afterTime);
-
-  @Override
-  public abstract Date getFinalFireTime();
-
-  @Override
-  public void setMisfireInstruction(int misfireInstruction) {
-
-    if (!validateMisfireInstruction(misfireInstruction)) {
-      throw new IllegalArgumentException("The misfire instruction code is invalid for this type of trigger.");
-    }
-    this.misfireInstruction = misfireInstruction;
-  }
-
-  @Override
-  public int getMisfireInstruction() {
-
-    return misfireInstruction;
-  }
-
-  @Override
-  public TriggerBuilder<T> getTriggerBuilder() {
-
-    TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
-        .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
-        .withSchedule(getScheduleBuilder());
-    return b;
-  }
 
   /**
    * <p>

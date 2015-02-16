@@ -40,7 +40,7 @@ import org.quartz.triggers.Trigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -55,13 +55,13 @@ import org.quartz.triggers.Trigger;
  */
 public class TriggerBuilder<T extends Trigger> {
 
-  private String key;
+  private String name;
   private String description;
   private Date startTime = new Date();
   private Date endTime;
   private int priority = Trigger.DEFAULT_PRIORITY;
   private String calendarName;
-  private String jobKey;
+  private String jobName;
   private JobDataMap jobDataMap = new JobDataMap();
 
   private ScheduleBuilder scheduleBuilder = null;
@@ -98,12 +98,12 @@ public class TriggerBuilder<T extends Trigger> {
     trig.setCalendarName(calendarName);
     trig.setDescription(description);
     trig.setEndTime(endTime);
-    if (key == null) {
-      key = UUID.randomUUID().toString();
+    if (name == null) {
+      name = UUID.randomUUID().toString();
     }
-    trig.setName(key);
-    if (jobKey != null) {
-      trig.setJobName(jobKey);
+    trig.setName(name);
+    if (jobName != null) {
+      trig.setJobName(jobName);
     }
     trig.setPriority(priority);
     trig.setStartTime(startTime);
@@ -121,14 +121,14 @@ public class TriggerBuilder<T extends Trigger> {
    * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
    * </p>
    *
-   * @param key the TriggerKey for the Trigger to be built
+   * @param name the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
    * @see TriggerKey
    * @see Trigger#getName()
    */
-  public TriggerBuilder<T> withIdentity(String key) {
+  public TriggerBuilder<T> withIdentity(String name) {
 
-    this.key = key;
+    this.name = name;
     return this;
   }
 
@@ -237,13 +237,13 @@ public class TriggerBuilder<T extends Trigger> {
   /**
    * Set the identity of the Job which should be fired by the produced Trigger.
    *
-   * @param jobKey the identity of the Job to fire.
+   * @param jobName the identity of the Job to fire.
    * @return the updated TriggerBuilder
    * @see Trigger#getJobName()
    */
-  public TriggerBuilder<T> forJob(String jobKey) {
+  public TriggerBuilder<T> forJob(String jobName) {
 
-    this.jobKey = jobKey;
+    this.jobName = jobName;
     return this;
   }
 
