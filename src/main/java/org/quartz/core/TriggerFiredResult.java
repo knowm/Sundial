@@ -1,6 +1,5 @@
 package org.quartz.core;
 
-
 /**
  * @author lorban
  */

@@ -201,9 +201,9 @@ abstract class AbstractTrigger implements OperableTrigger {
   @Override
   public TriggerBuilder<Trigger> getTriggerBuilder() {
 
-    TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
-        .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
-        .withScheduleBuilder(getScheduleBuilder());
+    TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName())
+        .usingJobData(getJobDataMap()).withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority())
+        .startAt(getStartTime()).withScheduleBuilder(getScheduleBuilder());
     return triggerBuilder;
   }
 

@@ -22,8 +22,9 @@ import org.quartz.exceptions.SchedulerException;
 
 /**
  * <p>
- * Responsible for creating the instances of a {@link JobRunShell} to be used within the <class>{@link org.quartz.QuartzScheduler} </code> instance. It will create a standard {@link JobRunShell} unless the job class has the
- * {@link ExecuteInJTATransaction} annotation in which case it will create a {@link JTAJobRunShell}.
+ * Responsible for creating the instances of a {@link JobRunShell} to be used within the <class>{@link org.quartz.QuartzScheduler} </code> instance.
+ * It will create a standard {@link JobRunShell} unless the job class has the {@link ExecuteInJTATransaction} annotation in which case it will create
+ * a {@link JTAJobRunShell}.
  * </p>
  * <p>
  * This implementation does not re-use any objects, it simply makes a new JTAJobRunShell each time <code>borrowJobRunShell()</code> is called.
@@ -34,13 +35,15 @@ import org.quartz.exceptions.SchedulerException;
 public class StandardJobRunShellFactory implements JobRunShellFactory {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private Scheduler scheduler;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   public StandardJobRunShellFactory() {
@@ -48,13 +51,15 @@ public class StandardJobRunShellFactory implements JobRunShellFactory {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
    * <p>
-   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and the <code>JobExecutionContext</code> s within it, and a handle to the <code>SchedulingContext</code>
-   * that the shell will use in its own operations with the <code>JobStore</code>.
+   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and
+   * the <code>JobExecutionContext</code> s within it, and a handle to the <code>SchedulingContext</code> that the shell will use in its own
+   * operations with the <code>JobStore</code>.
    * </p>
    */
   @Override

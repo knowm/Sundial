@@ -24,7 +24,8 @@ import org.quartz.plugins.SchedulerPlugin;
 
 /**
  * <p>
- * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to create a <code>{@link QuartzScheduler}</code> instance.
+ * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to create a <code>{@link QuartzScheduler}</code>
+ * instance.
  * </p>
  * 
  * @see QuartzScheduler
@@ -170,8 +171,8 @@ public class QuartzSchedulerResources {
 
   /**
    * <p>
-   * Add the given <code>{@link org.quartz.plugins.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects the plugin's "initialize" method to be invoked
-   * externally (either before or after this method is called).
+   * Add the given <code>{@link org.quartz.plugins.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects
+   * the plugin's "initialize" method to be invoked externally (either before or after this method is called).
    * </p>
    */
   public void addSchedulerPlugin(SchedulerPlugin plugin) {

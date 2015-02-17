@@ -30,7 +30,8 @@ import org.slf4j.LoggerFactory;
  * This is class is a simple implementation of a thread pool, based on the <code>{@link org.quartz.core.ThreadPool}</code> interface.
  * </p>
  * <p>
- * <CODE>Runnable</CODE> objects are sent to the pool with the <code>{@link #runInThread(Runnable)}</code> method, which blocks until a <code>Thread</code> becomes available.
+ * <CODE>Runnable</CODE> objects are sent to the pool with the <code>{@link #runInThread(Runnable)}</code> method, which blocks until a
+ * <code>Thread</code> becomes available.
  * </p>
  * <p>
  * The pool has a fixed number of <code>Thread</code>s, and does not grow or shrink based on demand.
@@ -42,7 +43,8 @@ import org.slf4j.LoggerFactory;
 public class SimpleThreadPool implements ThreadPool {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private int count = -1;
@@ -73,7 +75,8 @@ public class SimpleThreadPool implements ThreadPool {
   private String schedulerInstanceName;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -89,7 +92,8 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   public Logger getLog() {
@@ -218,8 +222,7 @@ public class SimpleThreadPool implements ThreadPool {
 
     if (isThreadsInheritGroupOfInitializingThread()) {
       threadGroup = Thread.currentThread().getThreadGroup();
-    }
-    else {
+    } else {
       // follow the threadGroup tree to the root thread group.
       threadGroup = Thread.currentThread().getThreadGroup();
       ThreadGroup parent = threadGroup;
@@ -334,8 +337,8 @@ public class SimpleThreadPool implements ThreadPool {
 
   /**
    * <p>
-   * Run the given <code>Runnable</code> object in the next available <code>Thread</code>. If while waiting the thread pool is asked to shut down, the Runnable is executed immediately within a new
-   * additional thread.
+   * Run the given <code>Runnable</code> object in the next available <code>Thread</code>. If while waiting the thread pool is asked to shut down, the
+   * Runnable is executed immediately within a new additional thread.
    * </p>
    * 
    * @param runnable the <code>Runnable</code> to be added.
@@ -363,8 +366,7 @@ public class SimpleThreadPool implements ThreadPool {
         WorkerThread wt = availWorkers.removeFirst();
         busyWorkers.add(wt);
         wt.run(runnable);
-      }
-      else {
+      } else {
         // If the thread pool is going down, execute the Runnable
         // within a new additional worker thread (no thread from the pool).
         WorkerThread wt = new WorkerThread(this, threadGroup, "WorkerThread-LastJob", prio, isMakeThreadsDaemons(), runnable);
@@ -415,7 +417,8 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WorkerThread Class. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ WorkerThread Class.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -436,7 +439,8 @@ public class SimpleThreadPool implements ThreadPool {
 
     /**
      * <p>
-     * Create a worker thread and start it. Waiting for the next Runnable, executing it, and waiting for the next Runnable, until the shutdown flag is set.
+     * Create a worker thread and start it. Waiting for the next Runnable, executing it, and waiting for the next Runnable, until the shutdown flag is
+     * set.
      * </p>
      */
     private WorkerThread(SimpleThreadPool tp, ThreadGroup threadGroup, String name, int prio, boolean isDaemon) {
@@ -538,8 +542,7 @@ public class SimpleThreadPool implements ThreadPool {
               run = false;
             }
             clearFromBusyWorkersList(this);
-          }
-          else if (ran) {
+          } else if (ran) {
             ran = false;
             makeAvailable(this);
           }

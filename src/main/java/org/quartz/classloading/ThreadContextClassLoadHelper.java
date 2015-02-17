@@ -21,7 +21,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * A <code>ClassLoadHelper</code> that uses either the current thread's context class loader (<code>Thread.currentThread().getContextClassLoader().loadClass( .. )</code>).
+ * A <code>ClassLoadHelper</code> that uses either the current thread's context class loader (
+ * <code>Thread.currentThread().getContextClassLoader().loadClass( .. )</code>).
  * 
  * @see org.quartz.classloading.ClassLoadHelper
  * @see org.quartz.classloading.InitThreadContextClassLoadHelper
@@ -34,11 +35,13 @@ import java.net.URL;
 class ThreadContextClassLoadHelper implements ClassLoadHelper {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
-   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling thread, which is the thread that is initializing Quartz.
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling
+   * thread, which is the thread that is initializing Quartz.
    */
   @Override
   public void initialize() {

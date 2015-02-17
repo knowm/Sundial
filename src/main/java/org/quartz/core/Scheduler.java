@@ -33,9 +33,9 @@ import org.quartz.triggers.Trigger;
 /**
  * This is the main interface of a Quartz Scheduler.
  * <p>
- * A <code>Scheduler</code> maintains a registry of <code>{@link org.quartz.jobs.JobDetail}</code>s and <code>{@link Trigger}</code>s. Once registered, the
- * <code>Scheduler</code> is responsible for executing <code>Job</code> s when their associated <code>Trigger</code> s fire (when their scheduled time
- * arrives).
+ * A <code>Scheduler</code> maintains a registry of <code>{@link org.quartz.jobs.JobDetail}</code>s and <code>{@link Trigger}</code>s. Once
+ * registered, the <code>Scheduler</code> is responsible for executing <code>Job</code> s when their associated <code>Trigger</code> s fire (when
+ * their scheduled time arrives).
  * </p>
  * <p>
  * <code>Scheduler</code> instances are produced by a <code>{@link SchedulerFactory}</code>. A scheduler that has already been created/initialized can
@@ -206,8 +206,9 @@ public interface Scheduler {
   Date scheduleJob(Trigger trigger) throws SchedulerException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated with the
-   * same job (the new trigger must have the job name & group specified) - however, the new trigger need not have the same name as the old trigger.
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated
+   * with the same job (the new trigger must have the job name & group specified) - however, the new trigger need not have the same name as the old
+   * trigger.
    *
    * @param triggerKey identity of the trigger to replace
    * @param newTrigger The new <code>Trigger</code> to be stored.

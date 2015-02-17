@@ -27,19 +27,21 @@ import org.quartz.listeners.TriggerListener;
 import org.quartz.triggers.Trigger;
 
 /**
- * A context bundle containing handles to various environment information, that is given to a <code>{@link org.quartz.jobs.JobDetail}</code> instance as it is executed, and to a
- * <code>{@link Trigger}</code> instance after the execution completes.
+ * A context bundle containing handles to various environment information, that is given to a <code>{@link org.quartz.jobs.JobDetail}</code> instance
+ * as it is executed, and to a <code>{@link Trigger}</code> instance after the execution completes.
  * <p>
- * The <code>JobDataMap</code> found on this object (via the <code>getMergedJobDataMap()</code> method) serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the
- * <code>JobDetail</code> and the one found on the <code>Trigger</code>, with the value in the latter overriding any same-named values in the former. <i>It is thus considered a 'best practice' that
- * the execute code of a Job retrieve data from the JobDataMap found on this object</i> NOTE: Do not expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s
- * own JobDataMap.
+ * The <code>JobDataMap</code> found on this object (via the <code>getMergedJobDataMap()</code> method) serves as a convenience - it is a merge of the
+ * <code>JobDataMap</code> found on the <code>JobDetail</code> and the one found on the <code>Trigger</code>, with the value in the latter overriding
+ * any same-named values in the former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the JobDataMap
+ * found on this object</i> NOTE: Do not expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s own
+ * JobDataMap.
  * </p>
  * <p>
- * <code>JobExecutionContext</code> s are also returned from the <code>Scheduler.getCurrentlyExecutingJobs()</code> method. These are the same instances as those passed into the jobs that are
- * currently executing within the scheduler. The exception to this is when your application is using Quartz remotely (i.e. via RMI) - in which case you get a clone of the
- * <code>JobExecutionContext</code>s, and their references to the <code>Scheduler</code> and <code>Job</code> instances have been lost (a clone of the <code>JobDetail</code> is still available - just
- * not a handle to the job instance that is running).
+ * <code>JobExecutionContext</code> s are also returned from the <code>Scheduler.getCurrentlyExecutingJobs()</code> method. These are the same
+ * instances as those passed into the jobs that are currently executing within the scheduler. The exception to this is when your application is using
+ * Quartz remotely (i.e. via RMI) - in which case you get a clone of the <code>JobExecutionContext</code>s, and their references to the
+ * <code>Scheduler</code> and <code>Job</code> instances have been lost (a clone of the <code>JobDetail</code> is still available - just not a handle
+ * to the job instance that is running).
  * </p>
  * 
  * @see #getScheduler()
@@ -87,9 +89,9 @@ public interface JobExecutionContext {
    * Get the convenience <code>JobDataMap</code> of this execution context.
    * </p>
    * <p>
-   * The <code>JobDataMap</code> found on this object serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the <code>JobDetail</code> and the one found on the
-   * <code>Trigger</code>, with the value in the latter overriding any same-named values in the former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the
-   * JobDataMap found on this object.</i>
+   * The <code>JobDataMap</code> found on this object serves as a convenience - it is a merge of the <code>JobDataMap</code> found on the
+   * <code>JobDetail</code> and the one found on the <code>Trigger</code>, with the value in the latter overriding any same-named values in the
+   * former. <i>It is thus considered a 'best practice' that the execute code of a Job retrieve data from the JobDataMap found on this object.</i>
    * </p>
    * <p>
    * NOTE: Do not expect value 'set' into this JobDataMap to somehow be set back onto a <code>StatefulJob</code>'s own JobDataMap.
@@ -118,7 +120,8 @@ public interface JobExecutionContext {
   public Job getJobInstance();
 
   /**
-   * The actual time the trigger fired. For instance the scheduled time may have been 10:00:00 but the actual fire time may have been 10:00:03 if the scheduler was too busy.
+   * The actual time the trigger fired. For instance the scheduled time may have been 10:00:00 but the actual fire time may have been 10:00:03 if the
+   * scheduler was too busy.
    * 
    * @return Returns the fireTime.
    * @see #getScheduledFireTime()
@@ -126,7 +129,8 @@ public interface JobExecutionContext {
   public Date getFireTime();
 
   /**
-   * The scheduled time the trigger fired for. For instance the scheduled time may have been 10:00:00 but the actual fire time may have been 10:00:03 if the scheduler was too busy.
+   * The scheduled time the trigger fired for. For instance the scheduled time may have been 10:00:00 but the actual fire time may have been 10:00:03
+   * if the scheduler was too busy.
    * 
    * @return Returns the scheduledFireTime.
    * @see #getFireTime()
@@ -138,9 +142,11 @@ public interface JobExecutionContext {
   public Date getNextFireTime();
 
   /**
-   * Returns the result (if any) that the <code>Job</code> set before its execution completed (the type of object set as the result is entirely up to the particular job).
+   * Returns the result (if any) that the <code>Job</code> set before its execution completed (the type of object set as the result is entirely up to
+   * the particular job).
    * <p>
-   * The result itself is meaningless to Quartz, but may be informative to <code>{@link JobListener}s</code> or <code>{@link TriggerListener}s</code> that are watching the job's execution.
+   * The result itself is meaningless to Quartz, but may be informative to <code>{@link JobListener}s</code> or <code>{@link TriggerListener}s</code>
+   * that are watching the job's execution.
    * </p>
    * 
    * @return Returns the result.
@@ -150,14 +156,15 @@ public interface JobExecutionContext {
   /**
    * Set the result (if any) of the <code>Job</code>'s execution (the type of object set as the result is entirely up to the particular job).
    * <p>
-   * The result itself is meaningless to Quartz, but may be informative to <code>{@link JobListener}s</code> or <code>{@link TriggerListener}s</code> that are watching the job's execution.
+   * The result itself is meaningless to Quartz, but may be informative to <code>{@link JobListener}s</code> or <code>{@link TriggerListener}s</code>
+   * that are watching the job's execution.
    * </p>
    */
   public void setResult(Object result);
 
   /**
-   * The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed (or thrown an exception), and is therefore generally only useful to
-   * <code>JobListener</code>s and <code>TriggerListener</code>s.
+   * The amount of time the job ran for (in milliseconds). The returned value will be -1 until the job has actually completed (or thrown an
+   * exception), and is therefore generally only useful to <code>JobListener</code>s and <code>TriggerListener</code>s.
    * 
    * @return Returns the jobRunTime.
    */

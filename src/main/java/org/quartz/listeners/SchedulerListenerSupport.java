@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A helpful abstract base class for implementors of <code>{@link org.quartz.listeners.SchedulerListener}</code>.
  * <p>
- * The methods in this class are empty so you only need to override the subset for the <code>{@link org.quartz.listeners.SchedulerListener}</code> events you
- * care about.
+ * The methods in this class are empty so you only need to override the subset for the <code>{@link org.quartz.listeners.SchedulerListener}</code>
+ * events you care about.
  * </p>
  *
  * @see org.quartz.listeners.SchedulerListener

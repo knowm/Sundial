@@ -22,7 +22,8 @@ import org.quartz.core.Scheduler;
 /**
  * Base class for exceptions thrown by the Quartz <code>{@link Scheduler}</code>.
  * <p>
- * <code>SchedulerException</code>s may contain a reference to another <code>Exception</code>, which was the underlying cause of the <code>SchedulerException</code>.
+ * <code>SchedulerException</code>s may contain a reference to another <code>Exception</code>, which was the underlying cause of the
+ * <code>SchedulerException</code>.
  * </p>
  * 
  * @author James House
@@ -30,7 +31,8 @@ import org.quartz.core.Scheduler;
 public class SchedulerException extends Exception {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   public SchedulerException() {
@@ -54,7 +56,8 @@ public class SchedulerException extends Exception {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -78,8 +81,7 @@ public class SchedulerException extends Exception {
     Throwable cause = getUnderlyingException();
     if (cause == null || cause == this) {
       return super.toString();
-    }
-    else {
+    } else {
       return super.toString() + " [See nested exception: " + cause + "]";
     }
   }
