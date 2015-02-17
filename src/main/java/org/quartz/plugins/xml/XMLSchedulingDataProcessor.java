@@ -22,7 +22,6 @@ import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarInterv
 import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
 import static org.quartz.builders.JobBuilder.newJob;
 import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilderBuilder;
-import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +54,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.quartz.builders.CalendarIntervalScheduleBuilder;
 import org.quartz.builders.CronScheduleBuilder;
-import org.quartz.builders.ScheduleBuilder;
 import org.quartz.builders.SimpleScheduleBuilder;
 import org.quartz.classloading.ClassLoadHelper;
 import org.quartz.core.Scheduler;
@@ -252,7 +250,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-  ClassNotFoundException, ParseException, XPathException {
+      ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -351,28 +349,31 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       }
       Date triggerEndTime = endTimeString == null || endTimeString.length() == 0 ? null : dateFormat.parse(endTimeString);
 
-      ScheduleBuilder sched = null;
+      OperableTrigger trigger;
 
       if (triggerNode.getNodeName().equals("simple")) {
+
         String repeatCountString = getTrimmedToNullString(xpath, "repeat-count", triggerNode);
         String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
 
         int repeatCount = repeatCountString == null ? SimpleTrigger.REPEAT_INDEFINITELY : Integer.parseInt(repeatCountString);
         long repeatInterval = repeatIntervalString == null ? 0 : Long.parseLong(repeatIntervalString);
 
-        sched = simpleScheduleBuilderBuilder().withIntervalInMilliseconds(repeatInterval).withRepeatCount(repeatCount);
+        trigger = simpleScheduleBuilderBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName)
+            .withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
+            .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_NOW")) {
-            ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionFireNow();
+            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionFireNow();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT")) {
-            ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNextWithExistingCount();
+            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNextWithExistingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT")) {
-            ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNextWithRemainingCount();
+            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNextWithRemainingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT")) {
-            ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNowWithExistingCount();
+            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNowWithExistingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT")) {
-            ((SimpleScheduleBuilder) sched).withMisfireHandlingInstructionNowWithRemainingCount();
+            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNowWithRemainingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -381,18 +382,21 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           }
         }
       } else if (triggerNode.getNodeName().equals("cron")) {
+
         String cronExpression = getTrimmedToNullString(xpath, "cron-expression", triggerNode);
         String timezoneString = getTrimmedToNullString(xpath, "time-zone", triggerNode);
 
         TimeZone tz = timezoneString == null ? null : TimeZone.getTimeZone(timezoneString);
 
-        sched = cronScheduleBuilder(cronExpression).inTimeZone(tz);
+        trigger = cronScheduleBuilder(cronExpression).inTimeZone(tz).withIdentity(triggerName).withDescription(triggerDescription)
+            .forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
+            .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
-            ((CronScheduleBuilder) sched).withMisfireHandlingInstructionDoNothing();
+            ((CronScheduleBuilder) trigger).withMisfireHandlingInstructionDoNothing();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
-            ((CronScheduleBuilder) sched).withMisfireHandlingInstructionFireAndProceed();
+            ((CronScheduleBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -401,20 +405,22 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           }
         }
       } else if (triggerNode.getNodeName().equals("calendar-interval")) {
+
         String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
         String repeatUnitString = getTrimmedToNullString(xpath, "repeat-interval-unit", triggerNode);
 
         int repeatInterval = Integer.parseInt(repeatIntervalString);
-
         IntervalUnit repeatUnit = IntervalUnit.valueOf(repeatUnitString);
 
-        sched = calendarIntervalScheduleBuilder().withInterval(repeatInterval, repeatUnit);
+        trigger = calendarIntervalScheduleBuilder().withInterval(repeatInterval, repeatUnit).withIdentity(triggerName)
+            .withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
+            .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
-            ((CalendarIntervalScheduleBuilder) sched).withMisfireHandlingInstructionDoNothing();
+            ((CalendarIntervalScheduleBuilder) trigger).withMisfireHandlingInstructionDoNothing();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
-            ((CalendarIntervalScheduleBuilder) sched).withMisfireHandlingInstructionFireAndProceed();
+            ((CalendarIntervalScheduleBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -425,10 +431,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       } else {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
-
-      OperableTrigger trigger = newTriggerBuilder().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName)
-          .startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef)
-          .withTriggerImplementation(sched.build()).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 

@@ -1,19 +1,18 @@
 package com.xeiam.sundial.plugins;
 
+import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.Set;
 
-import org.quartz.builders.CronScheduleBuilder;
-import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
 import org.quartz.plugins.SchedulerPlugin;
 import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,16 +98,15 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
   public OperableTrigger buildCronTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
 
-    TriggerBuilder trigger = newTriggerBuilder();
-
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
-      trigger.forJob(jobName).withIdentity(jobName + "-Trigger")
-          .withTriggerImplementation(CronScheduleBuilder.cronScheduleBuilder(cronTrigger.cron()).build());
+
+      return cronScheduleBuilder(cronTrigger.cron()).withIdentity(jobName + "-Trigger").forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+          .build();
+
     } else {
       throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }
 
-    return trigger.build();
   }
 
   private void addToJobDataMap(JobDataMap jobDataMap, String[] stringEncodedMap) {

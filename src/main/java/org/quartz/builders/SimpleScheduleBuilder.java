@@ -35,7 +35,7 @@ import org.quartz.triggers.SimpleTriggerImpl;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -43,7 +43,7 @@ import org.quartz.triggers.SimpleTriggerImpl;
  *
  * <pre>
  */
-public class SimpleScheduleBuilder extends ScheduleBuilder {
+public class SimpleScheduleBuilder extends TriggerBuilder {
 
   private long interval = 0;
   private int repeatCount = 0;
@@ -68,7 +68,7 @@ public class SimpleScheduleBuilder extends ScheduleBuilder {
    * given to.
    */
   @Override
-  public OperableTrigger build() {
+  public OperableTrigger instantiate() {
 
     SimpleTriggerImpl st = new SimpleTriggerImpl();
     st.setRepeatInterval(interval);

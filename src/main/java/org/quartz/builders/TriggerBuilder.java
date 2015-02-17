@@ -46,7 +46,7 @@ import org.quartz.triggers.Trigger;
  *
  * <pre>
  */
-public class TriggerBuilder {
+public abstract class TriggerBuilder extends ScheduleBuilder {
 
   private String name;
   private String description;
@@ -58,23 +58,6 @@ public class TriggerBuilder {
   private JobDataMap jobDataMap = new JobDataMap();
 
   private OperableTrigger operableTrigger = null;
-
-  /**
-   * Constructor
-   */
-  private TriggerBuilder() {
-
-  }
-
-  /**
-   * Create a new TriggerBuilder with which to define a specification for a Trigger.
-   *
-   * @return the new TriggerBuilder
-   */
-  public static TriggerBuilder newTriggerBuilder() {
-
-    return new TriggerBuilder();
-  }
 
   /**
    * Produce the <code>OperableTrigger</code>.
@@ -89,6 +72,8 @@ public class TriggerBuilder {
 
     // get a trigger impl. but without the meta data filled in yet
     //    OperableTrigger operableTrigger = operableTrigger;
+
+    operableTrigger = instantiate();
 
     // fill in metadata
     operableTrigger.setCalendarName(calendarName);

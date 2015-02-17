@@ -17,7 +17,6 @@ package com.xeiam.sundial;
 
 import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
-import org.quartz.builders.ScheduleBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.core.SchedulerFactory;
@@ -343,10 +341,8 @@ public class SundialJobScheduler {
 
     try {
 
-      ScheduleBuilder scheduleBuilder = cronScheduleBuilder(cronExpression);
-
-      OperableTrigger trigger = newTriggerBuilder().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
-          .withTriggerImplementation(scheduleBuilder.build()).build();
+      OperableTrigger trigger = cronScheduleBuilder(cronExpression).withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+          .build();
 
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {

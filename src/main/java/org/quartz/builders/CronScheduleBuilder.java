@@ -47,7 +47,7 @@ import org.quartz.triggers.OperableTrigger;
  *
  * </pre>
  */
-public class CronScheduleBuilder extends ScheduleBuilder {
+public class CronScheduleBuilder extends TriggerBuilder {
 
   private String cronExpression;
   private TimeZone tz = null;
@@ -64,11 +64,25 @@ public class CronScheduleBuilder extends ScheduleBuilder {
   }
 
   /**
+   * Create a CronScheduleBuilder with the given cron-expression.
+   *
+   * @param cronExpression the cron expression to base the schedule on.
+   * @return the new CronScheduleBuilder
+   * @throws ParseException
+   * @see CronExpression
+   */
+  public static CronScheduleBuilder cronScheduleBuilder(String cronExpression) throws ParseException {
+
+    CronExpression.validateExpression(cronExpression);
+    return new CronScheduleBuilder(cronExpression);
+  }
+
+  /**
    * Build the actual Trigger -- NOT intended to be invoked by end users, but will rather be invoked by a TriggerBuilder which this ScheduleBuilder is
    * given to.
    */
   @Override
-  public OperableTrigger build() {
+  public OperableTrigger instantiate() {
 
     CronTriggerImpl ct = new CronTriggerImpl();
 
@@ -83,20 +97,6 @@ public class CronScheduleBuilder extends ScheduleBuilder {
     ct.setMisfireInstruction(misfireInstruction);
 
     return ct;
-  }
-
-  /**
-   * Create a CronScheduleBuilder with the given cron-expression.
-   *
-   * @param cronExpression the cron expression to base the schedule on.
-   * @return the new CronScheduleBuilder
-   * @throws ParseException
-   * @see CronExpression
-   */
-  public static CronScheduleBuilder cronScheduleBuilder(String cronExpression) throws ParseException {
-
-    CronExpression.validateExpression(cronExpression);
-    return new CronScheduleBuilder(cronExpression);
   }
 
   /**

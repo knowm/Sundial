@@ -20,6 +20,6 @@ import org.quartz.triggers.OperableTrigger;
 
 public abstract class ScheduleBuilder {
 
-  public abstract OperableTrigger build();
+  public abstract OperableTrigger instantiate();
 
 }

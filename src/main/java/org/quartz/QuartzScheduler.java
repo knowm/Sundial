@@ -17,6 +17,8 @@
  */
 package org.quartz;
 
+import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilderBuilder;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,8 +28,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.quartz.builders.SimpleScheduleBuilder;
-import org.quartz.builders.TriggerBuilder;
 import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
@@ -623,8 +623,10 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    OperableTrigger operableTrigger = TriggerBuilder.newTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey)
-        .withTriggerImplementation(SimpleScheduleBuilder.simpleScheduleBuilderBuilder().build()).startAt(new Date()).build();
+    OperableTrigger operableTrigger = simpleScheduleBuilderBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey).startAt(new Date()).build();
+
+    //    OperableTrigger operableTrigger = TriggerBuilder.newTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey)
+    //        .withTriggerImplementation(SimpleScheduleBuilder.simpleScheduleBuilderBuilder().instantiate()).startAt(new Date()).build();
 
     // TODO what does this accomplish??? Seems to sets it's next fire time internally
     operableTrigger.computeFirstFireTime(null);

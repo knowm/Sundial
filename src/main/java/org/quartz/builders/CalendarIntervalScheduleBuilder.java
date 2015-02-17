@@ -42,7 +42,7 @@ import org.quartz.triggers.OperableTrigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -50,7 +50,7 @@ import org.quartz.triggers.OperableTrigger;
  *
  * <pre>
  */
-public class CalendarIntervalScheduleBuilder extends ScheduleBuilder {
+public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
 
   private int interval = 1;
   private IntervalUnit intervalUnit = IntervalUnit.DAY;
@@ -76,7 +76,7 @@ public class CalendarIntervalScheduleBuilder extends ScheduleBuilder {
    * given to.
    */
   @Override
-  public OperableTrigger build() {
+  public OperableTrigger instantiate() {
 
     CalendarIntervalTriggerImpl st = new CalendarIntervalTriggerImpl();
     st.setRepeatInterval(interval);
