@@ -20,9 +20,6 @@ package org.quartz.jobs;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import org.quartz.core.JobExecutionContext;
-import org.quartz.triggers.Trigger;
-
 /**
  * Holds state information for <code>Job</code> instances.
  * <p>
@@ -39,10 +36,6 @@ import org.quartz.triggers.Trigger;
  * merging the contents of the trigger's JobDataMap (if any) over the Job's JobDataMap (if any).
  * </p>
  *
- * @see Job
- * @see StatefulJob
- * @see Trigger
- * @see JobExecutionContext
  * @author James House
  * @author timmolter
  */
@@ -61,7 +54,7 @@ public class JobDataMap extends HashMap<String, Object> implements Serializable 
   }
 
   /**
-   * Constructor
+   * Constructor - creates a shallow copy of the passed in JobDataMap
    *
    * @param jobDataMap
    */
@@ -88,8 +81,7 @@ public class JobDataMap extends HashMap<String, Object> implements Serializable 
     }
   }
 
-  @Override
-  public Object clone() {
+  public JobDataMap shallowCopy() {
 
     return new JobDataMap(this);
   }

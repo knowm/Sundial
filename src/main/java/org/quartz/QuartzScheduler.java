@@ -625,7 +625,10 @@ public class QuartzScheduler implements Scheduler {
 
     OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
         .withScheduleBuilder(SimpleScheduleBuilder.simpleScheduleBuilder()).startAt(new Date()).build();
+
+    // TODO what does this accomplish??? Seems to sets it's next fire time internally
     operableTrigger.computeFirstFireTime(null);
+
     if (data != null) {
       operableTrigger.setJobDataMap(data);
     }

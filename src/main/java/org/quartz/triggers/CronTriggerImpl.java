@@ -434,6 +434,25 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
     return cronEx == null ? null : cronEx.getExpressionSummary();
   }
 
+  // //////////////////////////////////////////////////////////////////////////
+  //
+  // Computation Functions
+  //
+  // //////////////////////////////////////////////////////////////////////////
+
+  private Date getTimeAfter(Date afterTime) {
+
+    return (cronEx == null) ? null : cronEx.getTimeAfter(afterTime);
+  }
+
+  /**
+   * NOT YET IMPLEMENTED: Returns the time before the given time that this <code>CronTrigger</code> will fire.
+   */
+  private Date getTimeBefore(Date endTime) {
+
+    return (cronEx == null) ? null : cronEx.getTimeBefore(endTime);
+  }
+
   /**
    * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
    *
@@ -460,24 +479,4 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
 
     return cb;
   }
-
-  // //////////////////////////////////////////////////////////////////////////
-  //
-  // Computation Functions
-  //
-  // //////////////////////////////////////////////////////////////////////////
-
-  private Date getTimeAfter(Date afterTime) {
-
-    return (cronEx == null) ? null : cronEx.getTimeAfter(afterTime);
-  }
-
-  /**
-   * NOT YET IMPLEMENTED: Returns the time before the given time that this <code>CronTrigger</code> will fire.
-   */
-  private Date getTimeBefore(Date endTime) {
-
-    return (cronEx == null) ? null : cronEx.getTimeBefore(endTime);
-  }
-
 }

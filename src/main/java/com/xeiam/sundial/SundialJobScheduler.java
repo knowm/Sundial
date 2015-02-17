@@ -37,7 +37,6 @@ import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
-import org.quartz.triggers.CronTrigger;
 import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -274,7 +273,7 @@ public class SundialJobScheduler {
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name
    *
-   * @param jobName
+   * @param jobName The job name
    */
   public static void stopJob(String jobName) {
 
@@ -299,9 +298,11 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and value
+   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String.
    *
-   * @param jobName
+   * @param jobName The job name
+   * @param key The key in the job data map
+   * @param pValue The value in the job data map
    */
   public static void stopJob(String jobName, String key, String pValue) {
 

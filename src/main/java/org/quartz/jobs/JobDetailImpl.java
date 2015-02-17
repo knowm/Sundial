@@ -275,7 +275,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
     try {
       copy = (JobDetailImpl) super.clone();
       if (jobDataMap != null) {
-        copy.jobDataMap = (JobDataMap) jobDataMap.clone();
+        copy.jobDataMap = (JobDataMap) jobDataMap.shallowCopy();
       }
     } catch (CloneNotSupportedException ex) {
       throw new IncompatibleClassChangeError("Not Cloneable.");

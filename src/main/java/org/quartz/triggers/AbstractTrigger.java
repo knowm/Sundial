@@ -327,7 +327,7 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
       // modifies a value object in this map from the cloned Trigger
       // they will also be modifying this Trigger.
       if (jobDataMap != null) {
-        copy.jobDataMap = (JobDataMap) jobDataMap.clone();
+        copy.jobDataMap = (JobDataMap) jobDataMap.shallowCopy();
       }
 
     } catch (CloneNotSupportedException ex) {
