@@ -37,10 +37,8 @@ import org.quartz.triggers.Trigger;
  *
  * <pre>
  *
- *
- *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -212,10 +210,10 @@ public class TriggerBuilder<T extends Trigger> {
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T>  withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
+  public TriggerBuilder<T> withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
 
     this.scheduleBuilder = scheduleBuilder;
-    return  this;
+    return this;
   }
 
   /**

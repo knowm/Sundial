@@ -37,7 +37,7 @@ import org.quartz.exceptions.JobExecutionException;
  * @author Sharada Jambula, James House
  * @author Contributions from Mads Henderson
  */
-public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements CronTrigger {
+public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants.
@@ -255,7 +255,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
    * Sets the time zone for which the <code>cronExpression</code> of this <code>CronTrigger</code> will be resolved.
    * </p>
    * <p>
-   * If {@link #setCronExpression(CronExpression)} is called after this method, the TimeZon setting on the CronExpression will "win". However if
+   * If {@link #setCronExpression(CronExpression)} is called after this method, the TimeZone setting on the CronExpression will "win". However if
    * {@link #setCronExpression(String)} is called after this method, the time zone applied by this method will remain in effect, since the String cron
    * expression does not carry a time zone!
    */

@@ -44,7 +44,7 @@ import org.quartz.jobs.JobDataMap;
  * @author James House
  * @author Sharada Jambula
  */
-abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
+abstract class AbstractTrigger implements OperableTrigger {
 
   private static final long serialVersionUID = -3904243490805975570L;
 
@@ -201,10 +201,10 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   @Override
   public TriggerBuilder<Trigger> getTriggerBuilder() {
 
-    TriggerBuilder<Trigger> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
+    TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
         .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
         .withScheduleBuilder(getScheduleBuilder());
-    return b;
+    return triggerBuilder;
   }
 
   /*
@@ -327,7 +327,7 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
       // modifies a value object in this map from the cloned Trigger
       // they will also be modifying this Trigger.
       if (jobDataMap != null) {
-        copy.jobDataMap = (JobDataMap) jobDataMap.shallowCopy();
+        copy.jobDataMap = jobDataMap.shallowCopy();
       }
 
     } catch (CloneNotSupportedException ex) {
