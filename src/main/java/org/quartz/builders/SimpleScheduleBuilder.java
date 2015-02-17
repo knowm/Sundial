@@ -34,12 +34,6 @@ import org.quartz.triggers.SimpleTriggerImpl;
  * <pre>
  *
  *
- *
- *
- *
- *
- *
- *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
  * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
@@ -49,7 +43,7 @@ import org.quartz.triggers.SimpleTriggerImpl;
  *
  * <pre>
  */
-public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
+public class SimpleScheduleBuilder extends ScheduleBuilder {
 
   private long interval = 0;
   private int repeatCount = 0;
@@ -64,7 +58,7 @@ public class SimpleScheduleBuilder extends ScheduleBuilder<SimpleTrigger> {
    *
    * @return the new SimpleScheduleBuilder
    */
-  public static SimpleScheduleBuilder simpleSchedule() {
+  public static SimpleScheduleBuilder simpleScheduleBuilder() {
 
     return new SimpleScheduleBuilder();
   }

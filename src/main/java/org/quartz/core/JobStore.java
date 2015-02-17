@@ -31,19 +31,13 @@ import org.quartz.triggers.Trigger.CompletedExecutionInstruction;
 
 /**
  * <p>
- * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.jobs.Job}</code> and <code>{@link org.quartz.triggers.Trigger}</code>
- * storage mechanism for the <code>{@link org.quartz.QuartzScheduler}</code>'s use.
+ * The interface to be implemented by classes that want to provide a <code>{@link org.quartz.jobs.Job}</code> and
+ * <code>{@link org.quartz.triggers.Trigger}</code> storage mechanism for the <code>{@link org.quartz.QuartzScheduler}</code>'s use.
  * </p>
  * <p>
  * Storage of <code>Job</code> s and <code>Trigger</code> s should be keyed on the combination of their name and group for uniqueness.
  * </p>
  *
- * @see org.quartz.QuartzScheduler
- * @see org.quartz.triggers.Trigger
- * @see org.quartz.jobs.Job
- * @see org.quartz.jobs.JobDetail
- * @see org.quartz.jobs.JobDataMap
- * @see org.quartz.core.Calendar
  * @author James House
  * @author Eric Mueller
  */
@@ -90,7 +84,8 @@ public interface JobStore {
   void storeJob(JobDetail newJob, boolean replaceExisting) throws ObjectAlreadyExistsException, JobPersistenceException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given key, and any <code>{@link org.quartz.triggers.Trigger}</code> s that reference it.
+   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given key, and any <code>{@link org.quartz.triggers.Trigger}</code> s that
+   * reference it.
    * <p>
    * If removal of the <code>Job</code> results in an empty group, the group should be removed from the <code>JobStore</code>'s list of known group
    * names.
@@ -134,8 +129,8 @@ public interface JobStore {
   boolean removeTrigger(String triggerKey) throws JobPersistenceException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated with the
-   * same job.
+   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated
+   * with the same job.
    *
    * @param newTrigger The new <code>Trigger</code> to be stored.
    * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
@@ -217,8 +212,8 @@ public interface JobStore {
 
   /**
    * Inform the <code>JobStore</code> that the scheduler has completed the firing of the given <code>Trigger</code> (and the execution of its
-   * associated <code>Job</code> completed, threw an exception, or was vetoed), and that the <code>{@link org.quartz.jobs.JobDataMap}</code> in the given
-   * <code>JobDetail</code> should be updated if the <code>Job</code> is stateful.
+   * associated <code>Job</code> completed, threw an exception, or was vetoed), and that the <code>{@link org.quartz.jobs.JobDataMap}</code> in the
+   * given <code>JobDetail</code> should be updated if the <code>Job</code> is stateful.
    */
   void triggeredJobComplete(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode)
       throws JobPersistenceException;

@@ -21,7 +21,7 @@ package org.quartz.plugins.xml;
 import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
 import static org.quartz.builders.CronScheduleBuilder.cronSchedule;
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilder;
 import static org.quartz.builders.TriggerBuilder.newTrigger;
 
 import java.io.File;
@@ -388,7 +388,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         int repeatCount = repeatCountString == null ? SimpleTrigger.REPEAT_INDEFINITELY : Integer.parseInt(repeatCountString);
         long repeatInterval = repeatIntervalString == null ? 0 : Long.parseLong(repeatIntervalString);
 
-        sched = simpleSchedule().withIntervalInMilliseconds(repeatInterval).withRepeatCount(repeatCount);
+        sched = simpleScheduleBuilder().withIntervalInMilliseconds(repeatInterval).withRepeatCount(repeatCount);
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_NOW")) {

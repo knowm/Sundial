@@ -61,8 +61,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * This is the heart of Quartz, an indirect implementation of the <code>{@link org.quartz.core.Scheduler}</code> interface, containing methods to schedule
- * <code>{@link org.quartz.jobs.Job}</code>s, register <code>{@link org.quartz.listeners.JobListener}</code> instances, etc.
+ * This is the heart of Quartz, an indirect implementation of the <code>{@link org.quartz.core.Scheduler}</code> interface, containing methods to
+ * schedule <code>{@link org.quartz.jobs.Job}</code>s, register <code>{@link org.quartz.listeners.JobListener}</code> instances, etc.
  * </p>
  *
  * @see org.quartz.core.Scheduler
@@ -471,7 +471,7 @@ public class QuartzScheduler implements Scheduler {
     quartzSchedulerResources.getJobStore().storeJobAndTrigger(jobDetail, trig);
     notifySchedulerListenersJobAdded(jobDetail);
     notifySchedulerThread(trigger.getNextFireTime().getTime());
-    notifySchedulerListenersSchduled(trigger);
+    notifySchedulerListenersScheduled(trigger);
 
     return ft;
   }
@@ -513,7 +513,7 @@ public class QuartzScheduler implements Scheduler {
 
     quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
     notifySchedulerThread(trigger.getNextFireTime().getTime());
-    notifySchedulerListenersSchduled(trigger);
+    notifySchedulerListenersScheduled(trigger);
 
     return ft;
   }
@@ -595,7 +595,7 @@ public class QuartzScheduler implements Scheduler {
     if (quartzSchedulerResources.getJobStore().replaceTrigger(triggerKey, trig)) {
       notifySchedulerThread(newTrigger.getNextFireTime().getTime());
       notifySchedulerListenersUnscheduled(triggerKey);
-      notifySchedulerListenersSchduled(newTrigger);
+      notifySchedulerListenersScheduled(newTrigger);
     } else {
       return null;
     }
@@ -623,26 +623,25 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    OperableTrigger trig = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
-        .withScheduleBuilder(SimpleScheduleBuilder.simpleSchedule()).startAt(new Date()).build();
-    // OperableTrigger trig = new org.quartz.impl.triggers.SimpleTriggerImpl(newTriggerId(), Key.DEFAULT_GROUP, jobKey.getName(), jobKey.getGroup(), new Date(), null, 0, 0);
-    trig.computeFirstFireTime(null);
+    OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
+        .withScheduleBuilder(SimpleScheduleBuilder.simpleScheduleBuilder()).startAt(new Date()).build();
+    operableTrigger.computeFirstFireTime(null);
     if (data != null) {
-      trig.setJobDataMap(data);
+      operableTrigger.setJobDataMap(data);
     }
 
     boolean collision = true;
     while (collision) {
       try {
-        quartzSchedulerResources.getJobStore().storeTrigger(trig, false);
+        quartzSchedulerResources.getJobStore().storeTrigger(operableTrigger, false);
         collision = false;
       } catch (ObjectAlreadyExistsException oaee) {
-        trig.setName(newTriggerId());
+        operableTrigger.setName(newTriggerId());
       }
     }
 
-    notifySchedulerThread(trig.getNextFireTime().getTime());
-    notifySchedulerListenersSchduled(trig);
+    notifySchedulerThread(operableTrigger.getNextFireTime().getTime());
+    notifySchedulerListenersScheduled(operableTrigger);
   }
 
   /**
@@ -942,7 +941,7 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
-  private void notifySchedulerListenersSchduled(Trigger trigger) {
+  private void notifySchedulerListenersScheduled(Trigger trigger) {
 
     // build a list of all scheduler listeners that are to be notified...
     List<SchedulerListener> schedListeners = buildSchedulerListenerList();

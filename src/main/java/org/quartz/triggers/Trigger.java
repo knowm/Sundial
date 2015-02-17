@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
-import org.quartz.builders.ScheduleBuilder;
 import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Calendar;
 import org.quartz.core.JobExecutionContext;
@@ -232,13 +231,6 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * @see #getScheduleBuilder()
    */
   public TriggerBuilder<? extends Trigger> getTriggerBuilder();
-
-  /**
-   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
-   *
-   * @see #getTriggerBuilder()
-   */
-  public ScheduleBuilder<? extends Trigger> getScheduleBuilder();
 
   /**
    * Trigger equality is based upon the equality of the TriggerKey.

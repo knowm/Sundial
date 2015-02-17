@@ -641,7 +641,7 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger<CalendarInterva
    * @see #getTriggerBuilder()
    */
   @Override
-  public ScheduleBuilder<CalendarIntervalTrigger> getScheduleBuilder() {
+  public ScheduleBuilder getScheduleBuilder() {
 
     CalendarIntervalScheduleBuilder cb = CalendarIntervalScheduleBuilder.calendarIntervalSchedule().withInterval(getRepeatInterval(),
         getRepeatIntervalUnit());

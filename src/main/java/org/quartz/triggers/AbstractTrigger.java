@@ -49,9 +49,11 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   private static final long serialVersionUID = -3904243490805975570L;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ abstract methodss.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ abstract methods.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
+
+  public abstract ScheduleBuilder getScheduleBuilder();
 
   protected abstract boolean validateMisfireInstruction(int misfireInstruction);
 
@@ -197,12 +199,9 @@ abstract class AbstractTrigger<T extends Trigger> implements OperableTrigger {
   }
 
   @Override
-  public abstract ScheduleBuilder<T> getScheduleBuilder();
+  public TriggerBuilder<Trigger> getTriggerBuilder() {
 
-  @Override
-  public TriggerBuilder<T> getTriggerBuilder() {
-
-    TriggerBuilder<T> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
+    TriggerBuilder<Trigger> b = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName()).usingJobData(getJobDataMap())
         .withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority()).startAt(getStartTime())
         .withScheduleBuilder(getScheduleBuilder());
     return b;

@@ -40,7 +40,7 @@ import org.quartz.triggers.Trigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -91,28 +91,28 @@ public class TriggerBuilder<T extends Trigger> {
   public T build() {
 
     if (scheduleBuilder == null) {
-      scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
+      scheduleBuilder = SimpleScheduleBuilder.simpleScheduleBuilder();
     }
-    MutableTrigger trig = scheduleBuilder.build();
+    MutableTrigger mutableTrigger = scheduleBuilder.build();
 
-    trig.setCalendarName(calendarName);
-    trig.setDescription(description);
-    trig.setEndTime(endTime);
+    mutableTrigger.setCalendarName(calendarName);
+    mutableTrigger.setDescription(description);
+    mutableTrigger.setEndTime(endTime);
     if (name == null) {
       name = UUID.randomUUID().toString();
     }
-    trig.setName(name);
+    mutableTrigger.setName(name);
     if (jobName != null) {
-      trig.setJobName(jobName);
+      mutableTrigger.setJobName(jobName);
     }
-    trig.setPriority(priority);
-    trig.setStartTime(startTime);
+    mutableTrigger.setPriority(priority);
+    mutableTrigger.setStartTime(startTime);
 
     if (!jobDataMap.isEmpty()) {
-      trig.setJobDataMap(jobDataMap);
+      mutableTrigger.setJobDataMap(jobDataMap);
     }
 
-    return (T) trig;
+    return (T) mutableTrigger;
   }
 
   /**
@@ -212,10 +212,10 @@ public class TriggerBuilder<T extends Trigger> {
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
    */
-  public <SBT extends T> TriggerBuilder<SBT> withScheduleBuilder(ScheduleBuilder<SBT> scheduleBuilder) {
+  public TriggerBuilder<T>  withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
 
     this.scheduleBuilder = scheduleBuilder;
-    return (TriggerBuilder<SBT>) this;
+    return  this;
   }
 
   /**

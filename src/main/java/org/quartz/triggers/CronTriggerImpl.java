@@ -440,7 +440,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
    * @see #getTriggerBuilder()
    */
   @Override
-  public ScheduleBuilder<CronTrigger> getScheduleBuilder() {
+  public ScheduleBuilder getScheduleBuilder() {
 
     CronScheduleBuilder cb = null;
     try {

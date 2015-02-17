@@ -29,8 +29,8 @@ import org.quartz.exceptions.SchedulerException;
 
 /**
  * <p>
- * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.jobs.JobDetail}</code> at a given moment in time, and optionally
- * repeated at a specified interval.
+ * A concrete <code>{@link Trigger}</code> that is used to fire a <code>{@link org.quartz.jobs.JobDetail}</code> at a given moment in time, and
+ * optionally repeated at a specified interval.
  * </p>
  *
  * @see Trigger
@@ -626,9 +626,9 @@ public class SimpleTriggerImpl extends AbstractTrigger<SimpleTrigger> implements
    * @see #getTriggerBuilder()
    */
   @Override
-  public ScheduleBuilder<SimpleTrigger> getScheduleBuilder() {
+  public ScheduleBuilder getScheduleBuilder() {
 
-    SimpleScheduleBuilder sb = SimpleScheduleBuilder.simpleSchedule().withIntervalInMilliseconds(getRepeatInterval())
+    SimpleScheduleBuilder sb = SimpleScheduleBuilder.simpleScheduleBuilder().withIntervalInMilliseconds(getRepeatInterval())
         .withRepeatCount(getRepeatCount());
 
     switch (getMisfireInstruction()) {

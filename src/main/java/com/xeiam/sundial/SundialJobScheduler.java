@@ -341,7 +341,7 @@ public class SundialJobScheduler {
 
     try {
 
-      ScheduleBuilder<CronTrigger> scheduleBuilder = cronSchedule(cronExpression);
+      ScheduleBuilder scheduleBuilder = cronSchedule(cronExpression);
 
       Trigger trigger = newTrigger().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
           .withScheduleBuilder(scheduleBuilder).build();

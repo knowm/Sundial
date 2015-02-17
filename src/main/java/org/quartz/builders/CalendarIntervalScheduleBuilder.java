@@ -17,9 +17,9 @@
 package org.quartz.builders;
 
 import org.quartz.triggers.CalendarIntervalTrigger;
+import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 import org.quartz.triggers.CalendarIntervalTriggerImpl;
 import org.quartz.triggers.MutableTrigger;
-import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 
 /**
  * <code>CalendarIntervalScheduleBuilder</code> is a {@link ScheduleBuilder} that defines calendar time (day, week, month, year) interval-based
@@ -42,7 +42,7 @@ import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -50,7 +50,7 @@ import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
  *
  * <pre>
  */
-public class CalendarIntervalScheduleBuilder extends ScheduleBuilder<CalendarIntervalTrigger> {
+public class CalendarIntervalScheduleBuilder extends ScheduleBuilder {
 
   private int interval = 1;
   private IntervalUnit intervalUnit = IntervalUnit.DAY;

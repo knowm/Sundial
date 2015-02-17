@@ -82,11 +82,11 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
           JobDetail job = newJob(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
           Trigger trigger;
           try {
-            trigger = buildTrigger(cronTrigger, jobClass.getSimpleName());
+            trigger = buildCronTrigger(cronTrigger, jobClass.getSimpleName());
             scheduler.scheduleJob(job, trigger);
             logger.info("Scheduled job {} with trigger {}", job, trigger);
           } catch (Exception e) {
-            logger.warn("ANNOTATED JOB+TRIGGER NOT ADDED!", e);
+            logger.warn("ANNOTATED JOB + TRIGGER NOT ADDED!", e);
           }
 
         }
@@ -97,14 +97,14 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
   }
 
-  public Trigger buildTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
+  public Trigger buildCronTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
 
     TriggerBuilder<Trigger> trigger = newTrigger();
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
       trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withScheduleBuilder(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
     } else {
-      throw new IllegalArgumentException("One of 'cron', 'interval' is required for the @Scheduled annotation");
+      throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }
 
     return trigger.build();
