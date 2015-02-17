@@ -252,7 +252,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-      ClassNotFoundException, ParseException, XPathException {
+  ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -428,7 +428,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       OperableTrigger trigger = newTriggerBuilder().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName)
           .startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef)
-          .withScheduleBuilder(sched).build();
+          .withTriggerImplementation(sched.build()).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 

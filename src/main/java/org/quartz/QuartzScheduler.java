@@ -624,7 +624,7 @@ public class QuartzScheduler implements Scheduler {
     validateState();
 
     OperableTrigger operableTrigger = TriggerBuilder.newTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey)
-        .withScheduleBuilder(SimpleScheduleBuilder.simpleScheduleBuilderBuilder()).startAt(new Date()).build();
+        .withTriggerImplementation(SimpleScheduleBuilder.simpleScheduleBuilderBuilder().build()).startAt(new Date()).build();
 
     // TODO what does this accomplish??? Seems to sets it's next fire time internally
     operableTrigger.computeFirstFireTime(null);

@@ -38,7 +38,7 @@ import org.quartz.triggers.Trigger;
  * <pre>
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -57,7 +57,7 @@ public class TriggerBuilder {
   private String jobName;
   private JobDataMap jobDataMap = new JobDataMap();
 
-  private ScheduleBuilder scheduleBuilder = null;
+  private OperableTrigger operableTrigger = null;
 
   /**
    * Constructor
@@ -88,7 +88,7 @@ public class TriggerBuilder {
     //    }
 
     // get a trigger impl. but without the meta data filled in yet
-    OperableTrigger operableTrigger = scheduleBuilder.build();
+    //    OperableTrigger operableTrigger = operableTrigger;
 
     // fill in metadata
     operableTrigger.setCalendarName(calendarName);
@@ -208,9 +208,9 @@ public class TriggerBuilder {
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
+  public TriggerBuilder withTriggerImplementation(OperableTrigger operableTrigger) {
 
-    this.scheduleBuilder = scheduleBuilder;
+    this.operableTrigger = operableTrigger;
     return this;
   }
 

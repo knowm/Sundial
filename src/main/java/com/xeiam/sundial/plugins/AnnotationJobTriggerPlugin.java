@@ -102,7 +102,8 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
     TriggerBuilder trigger = newTriggerBuilder();
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
-      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withScheduleBuilder(CronScheduleBuilder.cronScheduleBuilder(cronTrigger.cron()));
+      trigger.forJob(jobName).withIdentity(jobName + "-Trigger")
+          .withTriggerImplementation(CronScheduleBuilder.cronScheduleBuilder(cronTrigger.cron()).build());
     } else {
       throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }
