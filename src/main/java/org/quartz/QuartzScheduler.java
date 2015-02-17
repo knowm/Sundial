@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,10 +66,6 @@ import org.slf4j.LoggerFactory;
  * schedule <code>{@link org.quartz.jobs.Job}</code>s, register <code>{@link org.quartz.listeners.JobListener}</code> instances, etc.
  * </p>
  *
- * @see org.quartz.core.Scheduler
- * @see org.quartz.core.QuartzSchedulerThread
- * @see org.quartz.core.JobStore
- * @see org.quartz.core.ThreadPool
  * @author James House
  */
 public class QuartzScheduler implements Scheduler {
@@ -86,23 +83,21 @@ public class QuartzScheduler implements Scheduler {
 
   private final ListenerManager listenerManager = new ListenerManagerImpl();
 
-  private final HashMap<String, JobListener> internalJobListeners = new HashMap<String, JobListener>(10);
+  private final Map<String, JobListener> internalJobListeners = new HashMap<String, JobListener>(10);
 
-  private final HashMap<String, TriggerListener> internalTriggerListeners = new HashMap<String, TriggerListener>(10);
+  private final Map<String, TriggerListener> internalTriggerListeners = new HashMap<String, TriggerListener>(10);
 
-  private final ArrayList<SchedulerListener> internalSchedulerListeners = new ArrayList<SchedulerListener>(10);
+  private final List<SchedulerListener> internalSchedulerListeners = new ArrayList<SchedulerListener>(10);
 
   private JobFactory jobFactory = new SimpleJobFactory();
 
   private ExecutingJobsManager jobMgr = null;
 
-  private ErrorLogger errLogger = null;
+  private ErrorLoggingScheduleListener errLogger = null;
 
   private final SchedulerSignaler signaler;
 
   private final Random random = new Random();
-
-  private final ArrayList<Object> holdToPreventGC = new ArrayList<Object>(5);
 
   private boolean signalOnSchedulingChange = true;
 
@@ -139,7 +134,7 @@ public class QuartzScheduler implements Scheduler {
 
     jobMgr = new ExecutingJobsManager();
     addInternalJobListener(jobMgr);
-    errLogger = new ErrorLogger();
+    errLogger = new ErrorLoggingScheduleListener();
     addInternalSchedulerListener(errLogger);
 
     signaler = new SchedulerSignalerImpl(this, this.quartzSchedulerThread);
@@ -355,8 +350,6 @@ public class QuartzScheduler implements Scheduler {
     shutdownPlugins();
 
     notifySchedulerListenersShutdown();
-
-    holdToPreventGC.clear();
 
     logger.info("Scheduler shutdown complete.");
   }
@@ -601,7 +594,6 @@ public class QuartzScheduler implements Scheduler {
     }
 
     return ft;
-
   }
 
   private String newTriggerId() {
@@ -1135,14 +1127,14 @@ public class QuartzScheduler implements Scheduler {
 //
 // ///////////////////////////////////////////////////////////////////////////
 
-class ErrorLogger extends SchedulerListenerSupport {
+class ErrorLoggingScheduleListener extends SchedulerListenerSupport {
 
-  private final Logger logger = LoggerFactory.getLogger(ErrorLogger.class);
+  private final Logger logger = LoggerFactory.getLogger(ErrorLoggingScheduleListener.class);
 
   /**
    * Constructor
    */
-  ErrorLogger() {
+  ErrorLoggingScheduleListener() {
 
   }
 

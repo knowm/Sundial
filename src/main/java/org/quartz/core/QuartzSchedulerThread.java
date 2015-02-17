@@ -163,7 +163,7 @@ public class QuartzSchedulerThread extends Thread {
 
   /**
    * <p>
-   * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occuring while
+   * Signals the main processing loop that a change in scheduling has been made - in order to interrupt any sleeping that may be occurring while
    * waiting for the fire time to arrive.
    * </p>
    *

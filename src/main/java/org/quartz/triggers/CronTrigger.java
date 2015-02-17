@@ -23,14 +23,14 @@ import java.util.TimeZone;
 import org.quartz.core.Scheduler;
 
 /**
- * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.jobs.Job}</code> at given
+ * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.Job}</code> at given
  * moments in time, defined with Unix 'cron-like' schedule definitions.
  * <p>
- * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or
- * "At 1:30am every last Friday of the month".
+ * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or "At 1:30am
+ * every last Friday of the month".
  * </p>
  * <p>
- * The format of a "Cron-Expression" string is documented on the {@link org.quartz.triggers.CronExpression} class.
+ * The format of a "Cron-Expression" string is documented on the {@link org.quartz.CronExpression} class.
  * </p>
  * <p>
  * Here are some full examples: <br>

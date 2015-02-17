@@ -24,9 +24,6 @@ import org.quartz.triggers.Trigger;
 /**
  * The interface to be implemented by classes that want to be informed of major <code>{@link Scheduler}</code> events.
  *
- * @see Scheduler
- * @see JobListener
- * @see TriggerListener
  * @author James House
  */
 public interface SchedulerListener {
