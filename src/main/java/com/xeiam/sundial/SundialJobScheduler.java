@@ -15,8 +15,8 @@
  */
 package com.xeiam.sundial;
 
-import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
-import static org.quartz.builders.JobBuilder.newJob;
+import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
+import static org.quartz.builders.JobBuilder.newJobBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -207,7 +207,7 @@ public class SundialJobScheduler {
         }
       }
 
-      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName).usingJobData(jobDataMap).build();
+      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).usingJobData(jobDataMap).build();
 
       getScheduler().addJob(jobDetail);
 
@@ -341,7 +341,7 @@ public class SundialJobScheduler {
 
     try {
 
-      OperableTrigger trigger = cronScheduleBuilder(cronExpression).withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+      OperableTrigger trigger = cronTriggerBuilder(cronExpression).withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
           .build();
 
       getScheduler().scheduleJob(trigger);

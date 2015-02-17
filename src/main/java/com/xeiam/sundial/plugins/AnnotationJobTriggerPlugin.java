@@ -1,7 +1,7 @@
 package com.xeiam.sundial.plugins;
 
-import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
-import static org.quartz.builders.JobBuilder.newJob;
+import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
+import static org.quartz.builders.JobBuilder.newJobBuilder;
 
 import java.text.ParseException;
 import java.util.Set;
@@ -78,7 +78,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, cronTrigger.jobDataMap());
           }
 
-          JobDetail job = newJob(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
+          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
           OperableTrigger trigger;
           try {
             trigger = buildCronTrigger(cronTrigger, jobClass.getSimpleName());
@@ -100,7 +100,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
 
-      return cronScheduleBuilder(cronTrigger.cron()).withIdentity(jobName + "-Trigger").forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+      return cronTriggerBuilder(cronTrigger.cron()).withIdentity(jobName + "-Trigger").forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
           .build();
 
     } else {

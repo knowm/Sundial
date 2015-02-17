@@ -18,10 +18,10 @@
 
 package org.quartz.plugins.xml;
 
-import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarIntervalScheduleBuilder;
-import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
-import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilderBuilder;
+import static org.quartz.builders.CalendarIntervalTriggerBuilder.calendarIntervalTriggerBuilder;
+import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
+import static org.quartz.builders.JobBuilder.newJobBuilder;
+import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,9 +52,9 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.quartz.builders.CalendarIntervalScheduleBuilder;
-import org.quartz.builders.CronScheduleBuilder;
-import org.quartz.builders.SimpleScheduleBuilder;
+import org.quartz.builders.CalendarIntervalTriggerBuilder;
+import org.quartz.builders.CronTriggerBuilder;
+import org.quartz.builders.SimpleTriggerBuilder;
 import org.quartz.classloading.ClassLoadHelper;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
@@ -73,6 +73,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import com.xeiam.sundial.Job;
 
 /**
  * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data.
@@ -250,7 +252,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-      ClassNotFoundException, ParseException, XPathException {
+  ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -296,9 +298,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       String jobName = getTrimmedToNullString(xpath, "name", jobDetailNode);
       String jobDescription = getTrimmedToNullString(xpath, "description", jobDetailNode);
       String jobClassName = getTrimmedToNullString(xpath, "job-class", jobDetailNode);
-      Class jobClass = classLoadHelper.loadClass(jobClassName);
+      Class<? extends Job> jobClass = classLoadHelper.loadClass(jobClassName);
 
-      JobDetail jobDetail = newJob(jobClass).withIdentity(jobName).withDescription(jobDescription).build();
+      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).withDescription(jobDescription).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", jobDetailNode, XPathConstants.NODESET);
 
@@ -311,7 +313,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       logger.debug("Parsed job definition: " + jobDetail);
 
-      addJobToSchedule(jobDetail);
+      addJobToLoadedJobs(jobDetail);
     }
 
     //
@@ -359,21 +361,21 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         int repeatCount = repeatCountString == null ? SimpleTrigger.REPEAT_INDEFINITELY : Integer.parseInt(repeatCountString);
         long repeatInterval = repeatIntervalString == null ? 0 : Long.parseLong(repeatIntervalString);
 
-        trigger = simpleScheduleBuilderBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName)
+        trigger = simpleTriggerBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName)
             .withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
             .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_NOW")) {
-            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionFireNow();
+            ((SimpleTriggerBuilder) trigger).withMisfireHandlingInstructionFireNow();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT")) {
-            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNextWithExistingCount();
+            ((SimpleTriggerBuilder) trigger).withMisfireHandlingInstructionNextWithExistingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT")) {
-            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNextWithRemainingCount();
+            ((SimpleTriggerBuilder) trigger).withMisfireHandlingInstructionNextWithRemainingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT")) {
-            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNowWithExistingCount();
+            ((SimpleTriggerBuilder) trigger).withMisfireHandlingInstructionNowWithExistingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT")) {
-            ((SimpleScheduleBuilder) trigger).withMisfireHandlingInstructionNowWithRemainingCount();
+            ((SimpleTriggerBuilder) trigger).withMisfireHandlingInstructionNowWithRemainingCount();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -388,15 +390,15 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         TimeZone tz = timezoneString == null ? null : TimeZone.getTimeZone(timezoneString);
 
-        trigger = cronScheduleBuilder(cronExpression).inTimeZone(tz).withIdentity(triggerName).withDescription(triggerDescription)
+        trigger = cronTriggerBuilder(cronExpression).inTimeZone(tz).withIdentity(triggerName).withDescription(triggerDescription)
             .forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
             .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
-            ((CronScheduleBuilder) trigger).withMisfireHandlingInstructionDoNothing();
+            ((CronTriggerBuilder) trigger).withMisfireHandlingInstructionDoNothing();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
-            ((CronScheduleBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
+            ((CronTriggerBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -412,15 +414,15 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         int repeatInterval = Integer.parseInt(repeatIntervalString);
         IntervalUnit repeatUnit = IntervalUnit.valueOf(repeatUnitString);
 
-        trigger = calendarIntervalScheduleBuilder().withInterval(repeatInterval, repeatUnit).withIdentity(triggerName)
+        trigger = calendarIntervalTriggerBuilder().withInterval(repeatInterval, repeatUnit).withIdentity(triggerName)
             .withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
             .modifiedByCalendar(triggerCalendarRef).build();
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
-            ((CalendarIntervalScheduleBuilder) trigger).withMisfireHandlingInstructionDoNothing();
+            ((CalendarIntervalTriggerBuilder) trigger).withMisfireHandlingInstructionDoNothing();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
-            ((CalendarIntervalScheduleBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
+            ((CalendarIntervalTriggerBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
@@ -443,7 +445,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       logger.debug("Parsed trigger definition: " + trigger);
 
-      addTriggerToSchedule(trigger);
+      addTriggerToLoadedTriggers(trigger);
     }
   }
 
@@ -495,12 +497,12 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     return this.classLoadHelper.getResourceAsStream(fileName);
   }
 
-  private void addJobToSchedule(JobDetail job) {
+  private void addJobToLoadedJobs(JobDetail job) {
 
     loadedJobs.add(job);
   }
 
-  private void addTriggerToSchedule(OperableTrigger trigger) {
+  private void addTriggerToLoadedTriggers(OperableTrigger trigger) {
 
     loadedTriggers.add(trigger);
   }

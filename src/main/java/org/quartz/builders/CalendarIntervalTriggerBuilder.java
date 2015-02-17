@@ -36,13 +36,8 @@ import org.quartz.triggers.OperableTrigger;
  * <pre>
  *
  *
- *
- *
- *
- *
- *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -50,14 +45,14 @@ import org.quartz.triggers.OperableTrigger;
  *
  * <pre>
  */
-public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
+public class CalendarIntervalTriggerBuilder extends TriggerBuilder {
 
   private int interval = 1;
   private IntervalUnit intervalUnit = IntervalUnit.DAY;
 
   private int misfireInstruction = CalendarIntervalTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
-  private CalendarIntervalScheduleBuilder() {
+  private CalendarIntervalTriggerBuilder() {
 
   }
 
@@ -66,9 +61,9 @@ public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
    *
    * @return the new CalendarIntervalScheduleBuilder
    */
-  public static CalendarIntervalScheduleBuilder calendarIntervalScheduleBuilder() {
+  public static CalendarIntervalTriggerBuilder calendarIntervalTriggerBuilder() {
 
-    return new CalendarIntervalScheduleBuilder();
+    return new CalendarIntervalTriggerBuilder();
   }
 
   /**
@@ -95,7 +90,7 @@ public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
    * @see CalendarIntervalTrigger#getRepeatInterval()
    * @see CalendarIntervalTrigger#getRepeatIntervalUnit()
    */
-  public CalendarIntervalScheduleBuilder withInterval(int interval, CalendarIntervalTrigger.IntervalUnit unit) {
+  public CalendarIntervalTriggerBuilder withInterval(int interval, CalendarIntervalTrigger.IntervalUnit unit) {
 
     if (unit == null) {
       throw new IllegalArgumentException("TimeUnit must be specified.");
@@ -112,7 +107,7 @@ public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
    * @return the updated CalendarIntervalScheduleBuilder
    * @see CalendarIntervalTrigger#MISFIRE_INSTRUCTION_DO_NOTHING
    */
-  public CalendarIntervalScheduleBuilder withMisfireHandlingInstructionDoNothing() {
+  public CalendarIntervalTriggerBuilder withMisfireHandlingInstructionDoNothing() {
 
     misfireInstruction = CalendarIntervalTrigger.MISFIRE_INSTRUCTION_DO_NOTHING;
     return this;
@@ -124,7 +119,7 @@ public class CalendarIntervalScheduleBuilder extends TriggerBuilder {
    * @return the updated CalendarIntervalScheduleBuilder
    * @see CalendarIntervalTrigger#MISFIRE_INSTRUCTION_FIRE_ONCE_NOW
    */
-  public CalendarIntervalScheduleBuilder withMisfireHandlingInstructionFireAndProceed() {
+  public CalendarIntervalTriggerBuilder withMisfireHandlingInstructionFireAndProceed() {
 
     misfireInstruction = CalendarIntervalTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW;
     return this;

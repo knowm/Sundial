@@ -47,7 +47,7 @@ import org.quartz.triggers.OperableTrigger;
  *
  * </pre>
  */
-public class CronScheduleBuilder extends TriggerBuilder {
+public class CronTriggerBuilder extends TriggerBuilder {
 
   private String cronExpression;
   private TimeZone tz = null;
@@ -58,7 +58,7 @@ public class CronScheduleBuilder extends TriggerBuilder {
    *
    * @param cronExpression
    */
-  private CronScheduleBuilder(String cronExpression) {
+  private CronTriggerBuilder(String cronExpression) {
 
     this.cronExpression = cronExpression;
   }
@@ -71,10 +71,10 @@ public class CronScheduleBuilder extends TriggerBuilder {
    * @throws ParseException
    * @see CronExpression
    */
-  public static CronScheduleBuilder cronScheduleBuilder(String cronExpression) throws ParseException {
+  public static CronTriggerBuilder cronTriggerBuilder(String cronExpression) throws ParseException {
 
     CronExpression.validateExpression(cronExpression);
-    return new CronScheduleBuilder(cronExpression);
+    return new CronTriggerBuilder(cronExpression);
   }
 
   /**
@@ -106,7 +106,7 @@ public class CronScheduleBuilder extends TriggerBuilder {
    * @return the updated CronScheduleBuilder
    * @see CronExpression#getTimeZone()
    */
-  public CronScheduleBuilder inTimeZone(TimeZone tz) {
+  public CronTriggerBuilder inTimeZone(TimeZone tz) {
 
     this.tz = tz;
     return this;
@@ -118,7 +118,7 @@ public class CronScheduleBuilder extends TriggerBuilder {
    * @return the updated CronScheduleBuilder
    * @see CronTrigger#MISFIRE_INSTRUCTION_DO_NOTHING
    */
-  public CronScheduleBuilder withMisfireHandlingInstructionDoNothing() {
+  public CronTriggerBuilder withMisfireHandlingInstructionDoNothing() {
 
     misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING;
     return this;
@@ -130,7 +130,7 @@ public class CronScheduleBuilder extends TriggerBuilder {
    * @return the updated CronScheduleBuilder
    * @see CronTrigger#MISFIRE_INSTRUCTION_FIRE_ONCE_NOW
    */
-  public CronScheduleBuilder withMisfireHandlingInstructionFireAndProceed() {
+  public CronTriggerBuilder withMisfireHandlingInstructionFireAndProceed() {
 
     misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW;
     return this;

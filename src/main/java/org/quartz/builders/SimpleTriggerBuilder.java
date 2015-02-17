@@ -43,13 +43,13 @@ import org.quartz.triggers.SimpleTriggerImpl;
  *
  * <pre>
  */
-public class SimpleScheduleBuilder extends TriggerBuilder {
+public class SimpleTriggerBuilder extends TriggerBuilder {
 
   private long interval = 0;
   private int repeatCount = 0;
   private int misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
-  private SimpleScheduleBuilder() {
+  private SimpleTriggerBuilder() {
 
   }
 
@@ -58,9 +58,9 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    *
    * @return the new SimpleScheduleBuilder
    */
-  public static SimpleScheduleBuilder simpleScheduleBuilderBuilder() {
+  public static SimpleTriggerBuilder simpleTriggerBuilder() {
 
-    return new SimpleScheduleBuilder();
+    return new SimpleTriggerBuilder();
   }
 
   /**
@@ -85,7 +85,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @see SimpleTrigger#getRepeatInterval()
    * @see #withRepeatCount(int)
    */
-  public SimpleScheduleBuilder withIntervalInMilliseconds(long intervalInMillis) {
+  public SimpleTriggerBuilder withIntervalInMilliseconds(long intervalInMillis) {
 
     this.interval = intervalInMillis;
     return this;
@@ -99,7 +99,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @see SimpleTrigger#getRepeatCount()
    * @see #repeatForever()
    */
-  public SimpleScheduleBuilder withRepeatCount(int repeatCount) {
+  public SimpleTriggerBuilder withRepeatCount(int repeatCount) {
 
     this.repeatCount = repeatCount;
     return this;
@@ -113,7 +113,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @see SimpleTrigger#REPEAT_INDEFINITELY
    * @see #withIntervalInMilliseconds(long)
    */
-  public SimpleScheduleBuilder repeatForever() {
+  public SimpleTriggerBuilder repeatForever() {
 
     this.repeatCount = SimpleTrigger.REPEAT_INDEFINITELY;
     return this;
@@ -126,7 +126,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_FIRE_NOW
    */
 
-  public SimpleScheduleBuilder withMisfireHandlingInstructionFireNow() {
+  public SimpleTriggerBuilder withMisfireHandlingInstructionFireNow() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW;
     return this;
@@ -138,7 +138,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT
    */
-  public SimpleScheduleBuilder withMisfireHandlingInstructionNextWithExistingCount() {
+  public SimpleTriggerBuilder withMisfireHandlingInstructionNextWithExistingCount() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT;
     return this;
@@ -150,7 +150,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT
    */
-  public SimpleScheduleBuilder withMisfireHandlingInstructionNextWithRemainingCount() {
+  public SimpleTriggerBuilder withMisfireHandlingInstructionNextWithRemainingCount() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT;
     return this;
@@ -162,7 +162,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT
    */
-  public SimpleScheduleBuilder withMisfireHandlingInstructionNowWithExistingCount() {
+  public SimpleTriggerBuilder withMisfireHandlingInstructionNowWithExistingCount() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT;
     return this;
@@ -174,7 +174,7 @@ public class SimpleScheduleBuilder extends TriggerBuilder {
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT
    */
-  public SimpleScheduleBuilder withMisfireHandlingInstructionNowWithRemainingCount() {
+  public SimpleTriggerBuilder withMisfireHandlingInstructionNowWithRemainingCount() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT;
     return this;

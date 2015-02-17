@@ -287,7 +287,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   @Override
   public JobBuilder getJobBuilder() {
 
-    JobBuilder b = JobBuilder.newJob().ofType(getJobClass()).requestRecovery(requestsRecovery()).storeDurably(isDurable())
+    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).requestRecovery(requestsRecovery()).storeDurably(isDurable())
         .usingJobData(getJobDataMap()).withDescription(getDescription()).withIdentity(getName());
     return b;
   }

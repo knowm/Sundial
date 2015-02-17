@@ -17,7 +17,7 @@
  */
 package org.quartz;
 
-import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilderBuilder;
+import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -623,7 +623,7 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    OperableTrigger operableTrigger = simpleScheduleBuilderBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey).startAt(new Date()).build();
+    OperableTrigger operableTrigger = simpleTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey).startAt(new Date()).build();
 
     //    OperableTrigger operableTrigger = TriggerBuilder.newTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey)
     //        .withTriggerImplementation(SimpleScheduleBuilder.simpleScheduleBuilderBuilder().instantiate()).startAt(new Date()).build();

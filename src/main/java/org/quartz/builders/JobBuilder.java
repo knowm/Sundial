@@ -72,7 +72,7 @@ public class JobBuilder {
    *
    * @return a new JobBuilder
    */
-  public static JobBuilder newJob() {
+  public static JobBuilder newJobBuilder() {
 
     return new JobBuilder();
   }
@@ -82,7 +82,7 @@ public class JobBuilder {
    *
    * @return a new JobBuilder
    */
-  public static JobBuilder newJob(Class<? extends Job> jobClass) {
+  public static JobBuilder newJobBuilder(Class<? extends Job> jobClass) {
 
     JobBuilder b = new JobBuilder();
     b.ofType(jobClass);

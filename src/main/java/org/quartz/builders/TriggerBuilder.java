@@ -38,7 +38,7 @@ import org.quartz.triggers.Trigger;
  * <pre>
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -46,7 +46,7 @@ import org.quartz.triggers.Trigger;
  *
  * <pre>
  */
-public abstract class TriggerBuilder extends ScheduleBuilder {
+public abstract class TriggerBuilder {
 
   private String name;
   private String description;
@@ -58,6 +58,8 @@ public abstract class TriggerBuilder extends ScheduleBuilder {
   private JobDataMap jobDataMap = new JobDataMap();
 
   private OperableTrigger operableTrigger = null;
+
+  public abstract OperableTrigger instantiate();
 
   /**
    * Produce the <code>OperableTrigger</code>.
