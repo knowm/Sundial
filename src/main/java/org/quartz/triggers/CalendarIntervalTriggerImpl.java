@@ -20,8 +20,6 @@ package org.quartz.triggers;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.quartz.builders.CalendarIntervalScheduleBuilder;
-import org.quartz.builders.ScheduleBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -64,20 +62,9 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private Date startTime = null;
-
-  private Date endTime = null;
-
-  private Date nextFireTime = null;
-
-  private Date previousFireTime = null;
-
   private int repeatInterval = 0;
-
   private IntervalUnit repeatIntervalUnit = IntervalUnit.DAY;
-
   private int timesTriggered = 0;
-
   private final boolean complete = false;
 
   /*
@@ -635,27 +622,27 @@ public class CalendarIntervalTriggerImpl extends AbstractTrigger implements Cale
     }
   }
 
-  /**
-   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
-   *
-   * @see #getTriggerBuilder()
-   */
-  @Override
-  public ScheduleBuilder getScheduleBuilder() {
-
-    CalendarIntervalScheduleBuilder cb = CalendarIntervalScheduleBuilder.calendarIntervalSchedule().withInterval(getRepeatInterval(),
-        getRepeatIntervalUnit());
-
-    switch (getMisfireInstruction()) {
-    case MISFIRE_INSTRUCTION_DO_NOTHING:
-      cb.withMisfireHandlingInstructionDoNothing();
-      break;
-    case MISFIRE_INSTRUCTION_FIRE_ONCE_NOW:
-      cb.withMisfireHandlingInstructionFireAndProceed();
-      break;
-    }
-
-    return cb;
-  }
+  //  /**
+  //   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
+  //   *
+  //   * @see #getTriggerBuilder()
+  //   */
+  //  @Override
+  //  public ScheduleBuilder getScheduleBuilder() {
+  //
+  //    CalendarIntervalScheduleBuilder cb = CalendarIntervalScheduleBuilder.calendarIntervalSchedule().withInterval(getRepeatInterval(),
+  //        getRepeatIntervalUnit());
+  //
+  //    switch (getMisfireInstruction()) {
+  //    case MISFIRE_INSTRUCTION_DO_NOTHING:
+  //      cb.withMisfireHandlingInstructionDoNothing();
+  //      break;
+  //    case MISFIRE_INSTRUCTION_FIRE_ONCE_NOW:
+  //      cb.withMisfireHandlingInstructionFireAndProceed();
+  //      break;
+  //    }
+  //
+  //    return cb;
+  //  }
 
 }

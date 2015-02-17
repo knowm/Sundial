@@ -17,8 +17,8 @@
  */
 package org.quartz.triggers;
 
-import org.quartz.builders.ScheduleBuilder;
-import org.quartz.builders.TriggerBuilder;
+import java.util.Date;
+
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -44,7 +44,7 @@ import org.quartz.jobs.JobDataMap;
  * @author James House
  * @author Sharada Jambula
  */
-abstract class AbstractTrigger implements OperableTrigger {
+public abstract class AbstractTrigger implements OperableTrigger {
 
   private static final long serialVersionUID = -3904243490805975570L;
 
@@ -53,14 +53,17 @@ abstract class AbstractTrigger implements OperableTrigger {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  public abstract ScheduleBuilder getScheduleBuilder();
-
   protected abstract boolean validateMisfireInstruction(int misfireInstruction);
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
+
+  protected Date startTime = null;
+  protected Date endTime = null;
+  protected Date nextFireTime = null;
+  protected Date previousFireTime = null;
 
   private String name;
 
@@ -196,15 +199,6 @@ abstract class AbstractTrigger implements OperableTrigger {
       throw new IllegalArgumentException("The misfire instruction code is invalid for this type of trigger.");
     }
     this.misfireInstruction = misfireInstruction;
-  }
-
-  @Override
-  public TriggerBuilder<Trigger> getTriggerBuilder() {
-
-    TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().forJob(getJobName()).modifiedByCalendar(getCalendarName())
-        .usingJobData(getJobDataMap()).withDescription(getDescription()).endAt(getEndTime()).withIdentity(getName()).withPriority(getPriority())
-        .startAt(getStartTime()).withScheduleBuilder(getScheduleBuilder());
-    return triggerBuilder;
   }
 
   /*

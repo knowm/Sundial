@@ -16,10 +16,10 @@
  */
 package org.quartz.builders;
 
-import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.OperableTrigger;
 
 public abstract class ScheduleBuilder {
 
-  public abstract MutableTrigger build();
+  public abstract OperableTrigger build();
 
 }

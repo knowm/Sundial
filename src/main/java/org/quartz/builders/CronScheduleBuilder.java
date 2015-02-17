@@ -23,7 +23,7 @@ import java.util.TimeZone;
 import org.quartz.triggers.CronExpression;
 import org.quartz.triggers.CronTrigger;
 import org.quartz.triggers.CronTriggerImpl;
-import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.OperableTrigger;
 
 /**
  * <code>CronScheduleBuilder</code> is a {@link ScheduleBuilder} that defines {@link CronExpression}-based schedules for <code>Trigger</code>s.
@@ -53,6 +53,11 @@ public class CronScheduleBuilder extends ScheduleBuilder {
   private TimeZone tz = null;
   private int misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
+  /**
+   * Constructor
+   *
+   * @param cronExpression
+   */
   private CronScheduleBuilder(String cronExpression) {
 
     this.cronExpression = cronExpression;
@@ -63,7 +68,7 @@ public class CronScheduleBuilder extends ScheduleBuilder {
    * given to.
    */
   @Override
-  public MutableTrigger build() {
+  public OperableTrigger build() {
 
     CronTriggerImpl ct = new CronTriggerImpl();
 
@@ -88,7 +93,7 @@ public class CronScheduleBuilder extends ScheduleBuilder {
    * @throws ParseException
    * @see CronExpression
    */
-  public static CronScheduleBuilder cronSchedule(String cronExpression) throws ParseException {
+  public static CronScheduleBuilder cronScheduleBuilder(String cronExpression) throws ParseException {
 
     CronExpression.validateExpression(cronExpression);
     return new CronScheduleBuilder(cronExpression);

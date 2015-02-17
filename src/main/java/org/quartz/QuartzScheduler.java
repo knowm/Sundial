@@ -428,7 +428,7 @@ public class QuartzScheduler implements Scheduler {
    * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
   @Override
-  public Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException {
+  public Date scheduleJob(JobDetail jobDetail, OperableTrigger trigger) throws SchedulerException {
 
     validateState();
 
@@ -448,7 +448,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Job's class cannot be null");
     }
 
-    OperableTrigger trig = (OperableTrigger) trigger;
+    OperableTrigger trig = trigger;
 
     if (trigger.getJobName() == null) {
       trig.setJobName(jobDetail.getName());
@@ -486,7 +486,7 @@ public class QuartzScheduler implements Scheduler {
    */
 
   @Override
-  public Date scheduleJob(Trigger trigger) throws SchedulerException {
+  public Date scheduleJob(OperableTrigger trigger) throws SchedulerException {
 
     validateState();
 
@@ -494,7 +494,7 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Trigger cannot be null");
     }
 
-    OperableTrigger trig = (OperableTrigger) trigger;
+    OperableTrigger trig = trigger;
 
     trig.validate();
 
@@ -562,7 +562,7 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public Date rescheduleJob(String triggerKey, Trigger newTrigger) throws SchedulerException {
+  public Date rescheduleJob(String triggerKey, OperableTrigger newTrigger) throws SchedulerException {
 
     validateState();
 
@@ -573,7 +573,7 @@ public class QuartzScheduler implements Scheduler {
       throw new IllegalArgumentException("newTrigger cannot be null");
     }
 
-    OperableTrigger trig = (OperableTrigger) newTrigger;
+    OperableTrigger trig = newTrigger;
     Trigger oldTrigger = getTrigger(triggerKey);
     if (oldTrigger == null) {
       return null;
@@ -623,8 +623,8 @@ public class QuartzScheduler implements Scheduler {
 
     validateState();
 
-    OperableTrigger operableTrigger = (OperableTrigger) TriggerBuilder.newTrigger().withIdentity(jobKey + "-trigger").forJob(jobKey)
-        .withScheduleBuilder(SimpleScheduleBuilder.simpleScheduleBuilder()).startAt(new Date()).build();
+    OperableTrigger operableTrigger = TriggerBuilder.newTriggerBuilder().withIdentity(jobKey + "-trigger").forJob(jobKey)
+        .withScheduleBuilder(SimpleScheduleBuilder.simpleScheduleBuilderBuilder()).startAt(new Date()).build();
 
     // TODO what does this accomplish??? Seems to sets it's next fire time internally
     operableTrigger.computeFirstFireTime(null);
@@ -654,7 +654,7 @@ public class QuartzScheduler implements Scheduler {
    */
 
   @Override
-  public List<? extends Trigger> getTriggersOfJob(String jobKey) throws SchedulerException {
+  public List<Trigger> getTriggersOfJob(String jobKey) throws SchedulerException {
 
     validateState();
 

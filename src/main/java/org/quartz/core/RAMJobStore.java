@@ -205,8 +205,8 @@ public class RAMJobStore implements JobStore {
     boolean found = false;
 
     synchronized (lock) {
-      List<OperableTrigger> triggers = getTriggersForJob(jobKey);
-      for (OperableTrigger trig : triggers) {
+      List<Trigger> triggers = getTriggersForJob(jobKey);
+      for (Trigger trig : triggers) {
         this.removeTrigger(trig.getName());
         found = true;
       }
@@ -298,7 +298,7 @@ public class RAMJobStore implements JobStore {
 
         if (removeOrphanedJob) {
           JobWrapper jw = jobsByKey.get(tw.jobKey);
-          List<OperableTrigger> trigs = getTriggersForJob(tw.jobKey);
+          List<Trigger> trigs = getTriggersForJob(tw.jobKey);
           if ((trigs == null || trigs.size() == 0) && !jw.jobDetail.isDurable()) {
             if (removeJob(jw.key)) {
               mSignaler.notifySchedulerListenersJobDeleted(jw.key);
@@ -416,9 +416,9 @@ public class RAMJobStore implements JobStore {
    * </p>
    */
   @Override
-  public List<OperableTrigger> getTriggersForJob(String jobKey) {
+  public List<Trigger> getTriggersForJob(String jobKey) {
 
-    ArrayList<OperableTrigger> trigList = new ArrayList<OperableTrigger>();
+    ArrayList<Trigger> trigList = new ArrayList<Trigger>();
 
     synchronized (lock) {
       for (int i = 0; i < wrappedTriggers.size(); i++) {

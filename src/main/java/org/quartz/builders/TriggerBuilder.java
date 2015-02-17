@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import org.quartz.core.Calendar;
 import org.quartz.jobs.JobDataMap;
-import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
 
 /**
@@ -45,13 +45,8 @@ import org.quartz.triggers.Trigger;
  * scheduler.scheduleJob(job, trigger);
  *
  * <pre>
- *
- * @see JobBuilder
- * @see ScheduleBuilder
- * @see DateBuilder
- * @see Trigger
  */
-public class TriggerBuilder<T extends Trigger> {
+public class TriggerBuilder {
 
   private String name;
   private String description;
@@ -76,41 +71,44 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @return the new TriggerBuilder
    */
-  public static TriggerBuilder<Trigger> newTrigger() {
+  public static TriggerBuilder newTriggerBuilder() {
 
-    return new TriggerBuilder<Trigger>();
+    return new TriggerBuilder();
   }
 
   /**
-   * Produce the <code>Trigger</code>.
+   * Produce the <code>OperableTrigger</code>.
    *
-   * @return a Trigger that meets the specifications of the builder.
+   * @return a OperableTrigger that meets the specifications of the builder.
    */
-  public T build() {
+  public OperableTrigger build() {
 
-    if (scheduleBuilder == null) {
-      scheduleBuilder = SimpleScheduleBuilder.simpleScheduleBuilder();
-    }
-    MutableTrigger mutableTrigger = scheduleBuilder.build();
+    //    if (scheduleBuilder == null) {
+    //      scheduleBuilder = SimpleScheduleBuilder.simpleScheduleBuilder();
+    //    }
 
-    mutableTrigger.setCalendarName(calendarName);
-    mutableTrigger.setDescription(description);
-    mutableTrigger.setEndTime(endTime);
+    // get a trigger impl. but without the meta data filled in yet
+    OperableTrigger operableTrigger = scheduleBuilder.build();
+
+    // fill in metadata
+    operableTrigger.setCalendarName(calendarName);
+    operableTrigger.setDescription(description);
+    operableTrigger.setEndTime(endTime);
     if (name == null) {
       name = UUID.randomUUID().toString();
     }
-    mutableTrigger.setName(name);
+    operableTrigger.setName(name);
     if (jobName != null) {
-      mutableTrigger.setJobName(jobName);
+      operableTrigger.setJobName(jobName);
     }
-    mutableTrigger.setPriority(priority);
-    mutableTrigger.setStartTime(startTime);
+    operableTrigger.setPriority(priority);
+    operableTrigger.setStartTime(startTime);
 
     if (!jobDataMap.isEmpty()) {
-      mutableTrigger.setJobDataMap(jobDataMap);
+      operableTrigger.setJobDataMap(jobDataMap);
     }
 
-    return (T) mutableTrigger;
+    return operableTrigger;
   }
 
   /**
@@ -122,7 +120,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param name the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> withIdentity(String name) {
+  public TriggerBuilder withIdentity(String name) {
 
     this.name = name;
     return this;
@@ -134,7 +132,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param description the description for the Trigger
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> withDescription(String description) {
+  public TriggerBuilder withDescription(String description) {
 
     this.description = description;
     return this;
@@ -146,7 +144,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param priority the priority for the Trigger
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> withPriority(int priority) {
+  public TriggerBuilder withPriority(int priority) {
 
     this.priority = priority;
     return this;
@@ -158,7 +156,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param calendarName the name of the Calendar to reference.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> modifiedByCalendar(String calendarName) {
+  public TriggerBuilder modifiedByCalendar(String calendarName) {
 
     this.calendarName = calendarName;
     return this;
@@ -170,7 +168,7 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> startNow() {
+  public TriggerBuilder startNow() {
 
     this.startTime = new Date();
     return this;
@@ -183,7 +181,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param startTime the start time for the Trigger.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> startAt(Date startTime) {
+  public TriggerBuilder startAt(Date startTime) {
 
     this.startTime = startTime;
     return this;
@@ -195,7 +193,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param endTime the end time for the Trigger. If null, the end time is indefinite.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> endAt(Date endTime) {
+  public TriggerBuilder endAt(Date endTime) {
 
     this.endTime = endTime;
     return this;
@@ -210,7 +208,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
+  public TriggerBuilder withScheduleBuilder(ScheduleBuilder scheduleBuilder) {
 
     this.scheduleBuilder = scheduleBuilder;
     return this;
@@ -222,7 +220,7 @@ public class TriggerBuilder<T extends Trigger> {
    * @param jobName the identity of the Job to fire.
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> forJob(String jobName) {
+  public TriggerBuilder forJob(String jobName) {
 
     this.jobName = jobName;
     return this;
@@ -233,7 +231,7 @@ public class TriggerBuilder<T extends Trigger> {
    *
    * @return the updated TriggerBuilder
    */
-  public TriggerBuilder<T> usingJobData(JobDataMap newJobDataMap) {
+  public TriggerBuilder usingJobData(JobDataMap newJobDataMap) {
 
     this.jobDataMap = newJobDataMap; // set new map as the map to use
     return this;

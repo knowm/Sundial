@@ -164,7 +164,7 @@ public interface JobStore {
    * If there are no matches, a zero-length array should be returned.
    * </p>
    */
-  List<OperableTrigger> getTriggersForJob(String jobKey) throws JobPersistenceException;
+  List<Trigger> getTriggersForJob(String jobKey) throws JobPersistenceException;
 
   /**
    * Get the keys of all of the <code>{@link org.quartz.jobs.Job}</code> s

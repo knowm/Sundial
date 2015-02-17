@@ -22,7 +22,6 @@ import java.util.Date;
 
 import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Calendar;
-import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.jobs.JobDataMap;
 
@@ -40,14 +39,6 @@ import org.quartz.jobs.JobDataMap;
  * Triggers can 'send' parameters/data to <code>Job</code>s by placing contents into the <code>JobDataMap</code> on the <code>Trigger</code>.
  * </p>
  *
- * @see TriggerBuilder
- * @see JobDataMap
- * @see JobExecutionContext
- * @see TriggerUtils
- * @see SimpleTrigger
- * @see CronTrigger
- * @see CalendarIntervalTrigger
- * @see NthIncludedDayTrigger
  * @author James House
  */
 public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
@@ -224,13 +215,6 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * @see CronTrigger
    */
   public int getMisfireInstruction();
-
-  /**
-   * Get a {@link TriggerBuilder} that is configured to produce a <code>Trigger</code> identical to this one.
-   *
-   * @see #getScheduleBuilder()
-   */
-  public TriggerBuilder<? extends Trigger> getTriggerBuilder();
 
   /**
    * Trigger equality is based upon the equality of the TriggerKey.

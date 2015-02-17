@@ -18,11 +18,11 @@
 
 package org.quartz.plugins.xml;
 
-import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
-import static org.quartz.builders.CronScheduleBuilder.cronSchedule;
+import static org.quartz.builders.CalendarIntervalScheduleBuilder.calendarIntervalScheduleBuilder;
+import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilder;
-import static org.quartz.builders.TriggerBuilder.newTrigger;
+import static org.quartz.builders.SimpleScheduleBuilder.simpleScheduleBuilderBuilder;
+import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,7 +63,7 @@ import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
 import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
-import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.SimpleTrigger;
 import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
@@ -112,13 +112,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
   // scheduling commands
   private List<JobDetail> loadedJobs = new LinkedList<JobDetail>();
-  private List<Trigger> loadedTriggers = new LinkedList<Trigger>();
+  private List<OperableTrigger> loadedTriggers = new LinkedList<OperableTrigger>();
 
   private Collection<Exception> validationExceptions = new ArrayList<Exception>();
 
   private ClassLoadHelper classLoadHelper = null;
-  private List<String> jobGroupsToNeverDelete = new LinkedList<String>();
-  private List<String> triggerGroupsToNeverDelete = new LinkedList<String>();
 
   private DocumentBuilder docBuilder = null;
   private XPath xpath = null;
@@ -183,32 +181,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     return inputSource;
-  }
-
-  /**
-   * Add the given group to the list of job groups that will never be deleted by this processor, even if a pre-processing-command to delete the group
-   * is encountered.
-   *
-   * @param group
-   */
-  public void addJobGroupToNeverDelete(String group) {
-
-    if (group != null) {
-      jobGroupsToNeverDelete.add(group);
-    }
-  }
-
-  /**
-   * Add the given group to the list of trigger groups that will never be deleted by this processor, even if a pre-processing-command to delete the
-   * group is encountered.
-   *
-   * @param group
-   */
-  public void addTriggerGroupToNeverDelete(String group) {
-
-    if (group != null) {
-      triggerGroupsToNeverDelete.add(group);
-    }
   }
 
   /**
@@ -388,7 +360,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         int repeatCount = repeatCountString == null ? SimpleTrigger.REPEAT_INDEFINITELY : Integer.parseInt(repeatCountString);
         long repeatInterval = repeatIntervalString == null ? 0 : Long.parseLong(repeatIntervalString);
 
-        sched = simpleScheduleBuilder().withIntervalInMilliseconds(repeatInterval).withRepeatCount(repeatCount);
+        sched = simpleScheduleBuilderBuilder().withIntervalInMilliseconds(repeatInterval).withRepeatCount(repeatCount);
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_NOW")) {
@@ -414,7 +386,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         TimeZone tz = timezoneString == null ? null : TimeZone.getTimeZone(timezoneString);
 
-        sched = cronSchedule(cronExpression).inTimeZone(tz);
+        sched = cronScheduleBuilder(cronExpression).inTimeZone(tz);
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
@@ -436,7 +408,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
         IntervalUnit repeatUnit = IntervalUnit.valueOf(repeatUnitString);
 
-        sched = calendarIntervalSchedule().withInterval(repeatInterval, repeatUnit);
+        sched = calendarIntervalScheduleBuilder().withInterval(repeatInterval, repeatUnit);
 
         if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
           if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
@@ -454,8 +426,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
-      Trigger trigger = newTrigger().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime)
-          .endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef).withScheduleBuilder(sched).build();
+      OperableTrigger trigger = newTriggerBuilder().withIdentity(triggerName).withDescription(triggerDescription).forJob(triggerJobName)
+          .startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority).modifiedByCalendar(triggerCalendarRef)
+          .withScheduleBuilder(sched).build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", triggerNode, XPathConstants.NODESET);
 
@@ -504,7 +477,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    *
    * @return a <code>List</code> of triggers.
    */
-  private List<Trigger> getLoadedTriggers() {
+  private List<OperableTrigger> getLoadedTriggers() {
 
     return Collections.unmodifiableList(loadedTriggers);
   }
@@ -525,25 +498,31 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     loadedJobs.add(job);
   }
 
-  private void addTriggerToSchedule(Trigger trigger) {
+  private void addTriggerToSchedule(OperableTrigger trigger) {
 
     loadedTriggers.add(trigger);
   }
 
-  private Map<String, List<MutableTrigger>> buildTriggersByFQJobNameMap(List<MutableTrigger> triggers) {
+  /**
+   * Given the Triggers, build a Map where key==>JobName and Value==>List of Triggers
+   *
+   * @param triggers
+   * @return
+   */
+  private Map<String, List<OperableTrigger>> buildTriggersByJobNameMap(List<OperableTrigger> triggers) {
 
-    Map<String, List<MutableTrigger>> triggersByFQJobName = new HashMap<String, List<MutableTrigger>>();
+    Map<String, List<OperableTrigger>> returnMap = new HashMap<String, List<OperableTrigger>>();
 
-    for (MutableTrigger trigger : triggers) {
-      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(trigger.getJobName());
+    for (OperableTrigger trigger : triggers) {
+      List<OperableTrigger> triggersOfJob = returnMap.get(trigger.getJobName());
       if (triggersOfJob == null) {
-        triggersOfJob = new LinkedList<MutableTrigger>();
-        triggersByFQJobName.put(trigger.getJobName(), triggersOfJob);
+        triggersOfJob = new LinkedList<OperableTrigger>();
+        returnMap.put(trigger.getJobName(), triggersOfJob);
       }
       triggersOfJob.add(trigger);
     }
 
-    return triggersByFQJobName;
+    return returnMap;
   }
 
   /**
@@ -555,11 +534,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   public void scheduleJobs(Scheduler sched) throws SchedulerException {
 
     List<JobDetail> jobs = new LinkedList<JobDetail>(getLoadedJobs());
-    List<MutableTrigger> triggers = new LinkedList(getLoadedTriggers());
+    List<OperableTrigger> triggers = new LinkedList<OperableTrigger>(getLoadedTriggers());
 
     logger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
-    Map<String, List<MutableTrigger>> triggersByFQJobName = buildTriggersByFQJobNameMap(triggers);
+    Map<String, List<OperableTrigger>> triggersByJobName = buildTriggersByJobNameMap(triggers);
 
     // add each job, and it's associated triggers
     Iterator<JobDetail> itr = jobs.iterator();
@@ -576,7 +555,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         logger.info("Adding job: " + detail.getName());
       }
 
-      List<MutableTrigger> triggersOfJob = triggersByFQJobName.get(detail.getName());
+      List<OperableTrigger> triggersOfJob = triggersByJobName.get(detail.getName());
 
       // log.debug("detail.isDurable()" + detail.isDurable());
       if (!detail.isDurable() && (triggersOfJob == null || triggersOfJob.size() == 0)) {
@@ -595,9 +574,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         boolean addJobWithFirstSchedule = true;
 
         // Add triggers related to the job...
-        Iterator<MutableTrigger> titr = triggersOfJob.iterator();
+        Iterator<OperableTrigger> titr = triggersOfJob.iterator();
         while (titr.hasNext()) {
-          MutableTrigger trigger = titr.next();
+          OperableTrigger trigger = titr.next();
           triggers.remove(trigger); // remove triggers as we handle them...
 
           if (trigger.getStartTime() == null) {
@@ -639,7 +618,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     // add triggers that weren't associated with a new job... (those we already handled were removed above)
-    for (MutableTrigger trigger : triggers) {
+    for (OperableTrigger trigger : triggers) {
 
       if (trigger.getStartTime() == null) {
         trigger.setStartTime(new Date());

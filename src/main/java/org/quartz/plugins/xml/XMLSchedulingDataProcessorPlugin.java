@@ -38,8 +38,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private Scheduler scheduler;
 
-  private static final String JOB_INITIALIZATION_PLUGIN_NAME = "JobSchedulingDataLoaderPlugin";
-
   private boolean failOnFileNotFound = true;
 
   private String fileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
@@ -134,8 +132,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
     try {
       XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(scheduler.getCascadingClassLoadHelper());
-      processor.addJobGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
-      processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
       processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);
       processor.scheduleJobs(getScheduler());
 

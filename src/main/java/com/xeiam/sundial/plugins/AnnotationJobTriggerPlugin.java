@@ -1,7 +1,7 @@
 package com.xeiam.sundial.plugins;
 
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.TriggerBuilder.newTrigger;
+import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
 import org.quartz.plugins.SchedulerPlugin;
-import org.quartz.triggers.Trigger;
+import org.quartz.triggers.OperableTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +80,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
           }
 
           JobDetail job = newJob(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
-          Trigger trigger;
+          OperableTrigger trigger;
           try {
             trigger = buildCronTrigger(cronTrigger, jobClass.getSimpleName());
             scheduler.scheduleJob(job, trigger);
@@ -97,12 +97,12 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
   }
 
-  public Trigger buildCronTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
+  public OperableTrigger buildCronTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
 
-    TriggerBuilder<Trigger> trigger = newTrigger();
+    TriggerBuilder trigger = newTriggerBuilder();
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
-      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withScheduleBuilder(CronScheduleBuilder.cronSchedule(cronTrigger.cron()));
+      trigger.forJob(jobName).withIdentity(jobName + "-Trigger").withScheduleBuilder(CronScheduleBuilder.cronScheduleBuilder(cronTrigger.cron()));
     } else {
       throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }

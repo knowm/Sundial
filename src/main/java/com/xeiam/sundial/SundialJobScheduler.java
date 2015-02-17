@@ -15,9 +15,9 @@
  */
 package com.xeiam.sundial;
 
-import static org.quartz.builders.CronScheduleBuilder.cronSchedule;
+import static org.quartz.builders.CronScheduleBuilder.cronScheduleBuilder;
 import static org.quartz.builders.JobBuilder.newJob;
-import static org.quartz.builders.TriggerBuilder.newTrigger;
+import static org.quartz.builders.TriggerBuilder.newTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
+import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -342,9 +343,9 @@ public class SundialJobScheduler {
 
     try {
 
-      ScheduleBuilder scheduleBuilder = cronSchedule(cronExpression);
+      ScheduleBuilder scheduleBuilder = cronScheduleBuilder(cronExpression);
 
-      Trigger trigger = newTrigger().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+      OperableTrigger trigger = newTriggerBuilder().withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
           .withScheduleBuilder(scheduleBuilder).build();
 
       getScheduler().scheduleJob(trigger);
@@ -402,7 +403,7 @@ public class SundialJobScheduler {
     try {
       Set<String> allJobKeys = getScheduler().getJobKeys();
       for (String jobKey : allJobKeys) {
-        List<Trigger> triggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
+        List<Trigger> triggers = getScheduler().getTriggersOfJob(jobKey);
         allJobsMap.put(jobKey, triggers);
       }
 

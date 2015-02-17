@@ -28,6 +28,7 @@ import org.quartz.listeners.JobListener;
 import org.quartz.listeners.ListenerManager;
 import org.quartz.listeners.SchedulerListener;
 import org.quartz.listeners.TriggerListener;
+import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
 
 /**
@@ -188,34 +189,36 @@ public interface Scheduler {
   // /////////////////////////////////////////////////////////////////////////
 
   /**
-   * Add the given <code>{@link org.quartz.jobs.JobDetail}</code> to the Scheduler, and associate the given <code>{@link Trigger}</code> with it.
+   * Add the given <code>{@link org.quartz.jobs.JobDetail}</code> to the Scheduler, and associate the given <code>{@link OperableTrigger}</code> with
+   * it.
    * <p>
    * If the given Trigger does not reference any <code>Job</code>, then it will be set to reference the Job passed with it into this method.
    * </p>
    *
    * @throws SchedulerException if the Job or Trigger cannot be added to the Scheduler, or there is an internal Scheduler error.
    */
-  Date scheduleJob(JobDetail jobDetail, Trigger trigger) throws SchedulerException;
+  Date scheduleJob(JobDetail jobDetail, OperableTrigger trigger) throws SchedulerException;
 
   /**
-   * Schedule the given <code>{@link org.quartz.triggers.Trigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s settings.
+   * Schedule the given <code>{@link org.quartz.triggers.OperableTrigger}</code> with the <code>Job</code> identified by the <code>Trigger</code>'s
+   * settings.
    *
    * @throws SchedulerException if the indicated Job does not exist, or the Trigger cannot be added to the Scheduler, or there is an internal
    *         Scheduler error.
    */
-  Date scheduleJob(Trigger trigger) throws SchedulerException;
+  Date scheduleJob(OperableTrigger trigger) throws SchedulerException;
 
   /**
-   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given key, and store the new given one - which must be associated
-   * with the same job (the new trigger must have the job name & group specified) - however, the new trigger need not have the same name as the old
-   * trigger.
+   * Remove (delete) the <code>{@link org.quartz.triggers.OperableTrigger}</code> with the given key, and store the new given one - which must be
+   * associated with the same job (the new trigger must have the job name & group specified) - however, the new trigger need not have the same name as
+   * the old trigger.
    *
    * @param triggerKey identity of the trigger to replace
    * @param newTrigger The new <code>Trigger</code> to be stored.
    * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found and removed from the store, otherwise the first
    *         fire time of the newly scheduled trigger.
    */
-  Date rescheduleJob(String triggerKey, Trigger newTrigger) throws SchedulerException;
+  Date rescheduleJob(String triggerKey, OperableTrigger newTrigger) throws SchedulerException;
 
   /**
    * Add the given <code>Job</code> to the Scheduler - with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is
@@ -243,7 +246,7 @@ public interface Scheduler {
    * afterward (e.g. see {@link #rescheduleJob(TriggerKey, Trigger)}).
    * </p>
    */
-  List<? extends Trigger> getTriggersOfJob(String jobKey) throws SchedulerException;
+  List<Trigger> getTriggersOfJob(String jobKey) throws SchedulerException;
 
   /**
    * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.

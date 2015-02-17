@@ -22,8 +22,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.quartz.builders.CronScheduleBuilder;
-import org.quartz.builders.ScheduleBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -52,19 +50,12 @@ public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
    */
   private static final long serialVersionUID = -8644953146451592766L;
 
-  private static final int YEAR_TO_GIVEUP_SCHEDULING_AT = CronExpression.MAX_YEAR;
-
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  // TODO move some of these to AbstractTrigger
   private CronExpression cronEx = null;
-  private Date startTime = null;
-  private Date endTime = null;
-  private Date nextFireTime = null;
-  private Date previousFireTime = null;
   private transient TimeZone timeZone = null;
 
   /*
@@ -453,30 +444,30 @@ public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
     return (cronEx == null) ? null : cronEx.getTimeBefore(endTime);
   }
 
-  /**
-   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
-   *
-   * @see #getTriggerBuilder()
-   */
-  @Override
-  public ScheduleBuilder getScheduleBuilder() {
-
-    CronScheduleBuilder cb = null;
-    try {
-      cb = CronScheduleBuilder.cronSchedule(getCronExpression()).inTimeZone(getTimeZone());
-    } catch (ParseException ignore) {
-      // can't happen (because the expression was validated to get here in the first place)
-    }
-
-    switch (getMisfireInstruction()) {
-    case MISFIRE_INSTRUCTION_DO_NOTHING:
-      cb.withMisfireHandlingInstructionDoNothing();
-      break;
-    case MISFIRE_INSTRUCTION_FIRE_ONCE_NOW:
-      cb.withMisfireHandlingInstructionFireAndProceed();
-      break;
-    }
-
-    return cb;
-  }
+  //  /**
+  //   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
+  //   *
+  //   * @see #getTriggerBuilder()
+  //   */
+  //  @Override
+  //  public ScheduleBuilder getScheduleBuilder() {
+  //
+  //    CronScheduleBuilder cb = null;
+  //    try {
+  //      cb = CronScheduleBuilder.cronSchedule(getCronExpression()).inTimeZone(getTimeZone());
+  //    } catch (ParseException ignore) {
+  //      // can't happen (because the expression was validated to get here in the first place)
+  //    }
+  //
+  //    switch (getMisfireInstruction()) {
+  //    case MISFIRE_INSTRUCTION_DO_NOTHING:
+  //      cb.withMisfireHandlingInstructionDoNothing();
+  //      break;
+  //    case MISFIRE_INSTRUCTION_FIRE_ONCE_NOW:
+  //      cb.withMisfireHandlingInstructionFireAndProceed();
+  //      break;
+  //    }
+  //
+  //    return cb;
+  //  }
 }

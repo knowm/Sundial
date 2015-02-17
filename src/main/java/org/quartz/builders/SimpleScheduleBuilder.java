@@ -16,7 +16,7 @@
  */
 package org.quartz.builders;
 
-import org.quartz.triggers.MutableTrigger;
+import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.SimpleTrigger;
 import org.quartz.triggers.SimpleTriggerImpl;
 
@@ -35,7 +35,7 @@ import org.quartz.triggers.SimpleTriggerImpl;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -58,7 +58,7 @@ public class SimpleScheduleBuilder extends ScheduleBuilder {
    *
    * @return the new SimpleScheduleBuilder
    */
-  public static SimpleScheduleBuilder simpleScheduleBuilder() {
+  public static SimpleScheduleBuilder simpleScheduleBuilderBuilder() {
 
     return new SimpleScheduleBuilder();
   }
@@ -68,7 +68,7 @@ public class SimpleScheduleBuilder extends ScheduleBuilder {
    * given to.
    */
   @Override
-  public MutableTrigger build() {
+  public OperableTrigger build() {
 
     SimpleTriggerImpl st = new SimpleTriggerImpl();
     st.setRepeatInterval(interval);
