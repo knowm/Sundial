@@ -2,9 +2,11 @@ package com.xeiam.sundial.plugins;
 
 import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
 import static org.quartz.builders.JobBuilder.newJobBuilder;
+import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.Job;
 import com.xeiam.sundial.annotations.CronTrigger;
+import com.xeiam.sundial.annotations.SimpleTrigger;
 
 /**
  * This plugin adds jobs and schedules them with triggers from annotated Job classes as the scheduler is initialized.
@@ -69,6 +72,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
       Set<Class<? extends Job>> scheduledClasses = scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
 
       for (Class<? extends Job> jobClass : scheduledClasses) {
+
         CronTrigger cronTrigger = jobClass.getAnnotation(CronTrigger.class);
         if (cronTrigger != null) {
 
@@ -87,7 +91,25 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
           } catch (Exception e) {
             logger.warn("ANNOTATED JOB + TRIGGER NOT ADDED!", e);
           }
+        }
+        SimpleTrigger simpleTrigger = jobClass.getAnnotation(SimpleTrigger.class);
+        if (simpleTrigger != null) {
 
+          JobDataMap jobDataMap = new JobDataMap();
+
+          if (simpleTrigger.jobDataMap() != null && simpleTrigger.jobDataMap().length > 0) {
+            addToJobDataMap(jobDataMap, simpleTrigger.jobDataMap());
+          }
+
+          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).usingJobData(jobDataMap).build();
+          OperableTrigger trigger;
+          try {
+            trigger = buildSimpleTrigger(simpleTrigger, jobClass.getSimpleName());
+            scheduler.scheduleJob(job, trigger);
+            logger.info("Scheduled job {} with trigger {}", job, trigger);
+          } catch (Exception e) {
+            logger.warn("ANNOTATED JOB + TRIGGER NOT ADDED!", e);
+          }
         }
       }
     } else {
@@ -100,13 +122,22 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
 
-      return cronTriggerBuilder(cronTrigger.cron()).withIdentity(jobName + "-Trigger").forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
-          .build();
+      TimeZone tz = (cronTrigger.timeZone() == null || cronTrigger.timeZone().length() < 1) ? null : TimeZone.getTimeZone(cronTrigger.timeZone());
+
+      return cronTriggerBuilder(cronTrigger.cron()).inTimeZone(tz).withIdentity(jobName + "-Trigger").forJob(jobName)
+          .withPriority(Trigger.DEFAULT_PRIORITY).build();
 
     } else {
       throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }
 
+  }
+
+  public OperableTrigger buildSimpleTrigger(SimpleTrigger simpleTrigger, String jobName) {
+
+    return simpleTriggerBuilder().withRepeatCount(simpleTrigger.repeatCount())
+        .withIntervalInMilliseconds(simpleTrigger.timeUnit().toMillis(simpleTrigger.repeatInterval())).withIdentity(jobName + "-Trigger")
+        .forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY).build();
   }
 
   private void addToJobDataMap(JobDataMap jobDataMap, String[] stringEncodedMap) {

@@ -31,9 +31,6 @@ import org.quartz.exceptions.SchedulerException;
  * optionally repeated at a specified interval.
  * </p>
  *
- * @see Trigger
- * @see CronTrigger
- * @see TriggerUtils
  * @author James House
  * @author contributions by Lieven Govaerts of Ebitec Nv, Belgium.
  */
@@ -43,14 +40,6 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constants.
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
-
-  /**
-   * Required for serialization support. Introduced in Quartz 1.6.1 to maintain compatibility after the introduction of hasAdditionalProperties
-   * method.
-   *
-   * @see java.io.Serializable
-   */
-  private static final long serialVersionUID = -3735980074222850397L;
 
   private static final int YEAR_TO_GIVEUP_SCHEDULING_AT = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) + 100;
 

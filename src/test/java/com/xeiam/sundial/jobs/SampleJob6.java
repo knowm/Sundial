@@ -19,18 +19,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xeiam.sundial.Job;
-import com.xeiam.sundial.annotations.CronTrigger;
+import com.xeiam.sundial.annotations.SimpleTrigger;
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
-@CronTrigger(cron = "0/20 * * * * ?")
-public class SampleJob5 extends Job {
+@SimpleTrigger(repeatInterval = 1000, repeatCount = 10)
+public class SampleJob6 extends Job {
 
-  private final Logger logger = LoggerFactory.getLogger(SampleJob5.class);
+  private final Logger logger = LoggerFactory.getLogger(SampleJob6.class);
 
   @Override
   public void doRun() throws JobInterruptException {
 
-    logger.info("Running SampleJob5.");
+    logger.info("Running SampleJob6.");
 
     // Do something interesting...
 

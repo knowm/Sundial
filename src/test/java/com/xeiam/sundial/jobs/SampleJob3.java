@@ -37,7 +37,5 @@ public class SampleJob3 extends Job {
 
     new SampleJobAction().run();
 
-    logger.info("Finished SampleJob3.");
-
   }
 }

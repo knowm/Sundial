@@ -39,7 +39,5 @@ public class SampleJob2 extends Job {
     Integer valueAsInt = Integer.valueOf(valueAsString);
     logger.info("valueAsInt = " + valueAsInt);
 
-    logger.info("Finished SampleJob2.");
-
   }
 }

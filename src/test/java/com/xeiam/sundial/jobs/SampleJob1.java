@@ -32,6 +32,5 @@ public class SampleJob1 extends Job {
 
     // Do something interesting...
 
-    logger.info("Finished SampleJob1.");
   }
 }
