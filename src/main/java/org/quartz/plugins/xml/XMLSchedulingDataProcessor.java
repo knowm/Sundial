@@ -17,7 +17,6 @@
  */
 package org.quartz.plugins.xml;
 
-import static org.quartz.builders.CalendarIntervalTriggerBuilder.calendarIntervalTriggerBuilder;
 import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
 import static org.quartz.builders.JobBuilder.newJobBuilder;
 import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
@@ -48,7 +47,6 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.quartz.builders.CalendarIntervalTriggerBuilder;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;
 import org.quartz.classloading.ClassLoadHelper;
@@ -56,7 +54,6 @@ import org.quartz.core.Scheduler;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDetail;
-import org.quartz.triggers.CalendarIntervalTrigger.IntervalUnit;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.SimpleTrigger;
 import org.quartz.triggers.Trigger;
@@ -248,7 +245,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-  ClassNotFoundException, ParseException, XPathException {
+      ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -311,7 +308,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       logger.debug("Parsed job definition: " + jobDetail);
 
-      addJobToLoadedJobs(jobDetail);
+      loadedJobs.add(jobDetail);
     }
 
     //
@@ -404,31 +401,9 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
                 + triggerName, -1);
           }
         }
-      } else if (triggerNode.getNodeName().equals("calendar-interval")) {
+      }
 
-        String repeatIntervalString = getTrimmedToNullString(xpath, "repeat-interval", triggerNode);
-        String repeatUnitString = getTrimmedToNullString(xpath, "repeat-interval-unit", triggerNode);
-
-        int repeatInterval = Integer.parseInt(repeatIntervalString);
-        IntervalUnit repeatUnit = IntervalUnit.valueOf(repeatUnitString);
-
-        trigger = calendarIntervalTriggerBuilder().withInterval(repeatInterval, repeatUnit).withIdentity(triggerName)
-            .withDescription(triggerDescription).forJob(triggerJobName).startAt(triggerStartTime).endAt(triggerEndTime).withPriority(triggerPriority)
-            .modifiedByCalendar(triggerCalendarRef).build();
-
-        if (triggerMisfireInstructionConst != null && triggerMisfireInstructionConst.length() != 0) {
-          if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_DO_NOTHING")) {
-            ((CalendarIntervalTriggerBuilder) trigger).withMisfireHandlingInstructionDoNothing();
-          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_FIRE_ONCE_NOW")) {
-            ((CalendarIntervalTriggerBuilder) trigger).withMisfireHandlingInstructionFireAndProceed();
-          } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
-            // do nothing.... (smart policy is default)
-          } else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerName, -1);
-          }
-        }
-      } else {
+      else {
         throw new ParseException("Unknown trigger type: " + triggerNode.getNodeName(), -1);
       }
 
@@ -443,7 +418,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
       logger.debug("Parsed trigger definition: " + trigger);
 
-      addTriggerToLoadedTriggers(trigger);
+      loadedTriggers.add(trigger);
     }
   }
 
@@ -500,16 +475,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   private InputStream getInputStream(String fileName) {
 
     return this.classLoadHelper.getResourceAsStream(fileName);
-  }
-
-  private void addJobToLoadedJobs(JobDetail job) {
-
-    loadedJobs.add(job);
-  }
-
-  private void addTriggerToLoadedTriggers(OperableTrigger trigger) {
-
-    loadedTriggers.add(trigger);
   }
 
   /**

@@ -69,7 +69,6 @@
 		<xs:choice>
 			<xs:element name="simple" type="simpleTriggerType" />
 			<xs:element name="cron" type="cronTriggerType" />
-			<xs:element name="calendar-interval" type="calendarIntervalTriggerType" />
 		</xs:choice>
 	</xs:complexType>
 
@@ -126,22 +125,6 @@
 						minOccurs="0" />
 					<xs:element name="cron-expression" type="cron-expressionType" />
 					<xs:element name="time-zone" type="xs:string" minOccurs="0" />
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:complexType name="calendarIntervalTriggerType">
-		<xs:annotation>
-			<xs:documentation>Define a DateIntervalTrigger</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="abstractTriggerType">
-				<xs:sequence>
-					<xs:element name="misfire-instruction"
-						type="date-interval-trigger-misfire-instructionType" minOccurs="0" />
-					<xs:element name="repeat-interval" type="xs:nonNegativeInteger" />
-					<xs:element name="repeat-interval-unit" type="interval-unitType" />
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -269,33 +252,6 @@
 			<xs:pattern value="MISFIRE_INSTRUCTION_SMART_POLICY" />
 			<xs:pattern value="MISFIRE_INSTRUCTION_DO_NOTHING" />
 			<xs:pattern value="MISFIRE_INSTRUCTION_FIRE_ONCE_NOW" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="date-interval-trigger-misfire-instructionType">
-		<xs:annotation>
-			<xs:documentation>Date Interval Trigger Misfire Instructions
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:pattern value="MISFIRE_INSTRUCTION_SMART_POLICY" />
-			<xs:pattern value="MISFIRE_INSTRUCTION_DO_NOTHING" />
-			<xs:pattern value="MISFIRE_INSTRUCTION_FIRE_ONCE_NOW" />
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:simpleType name="interval-unitType">
-		<xs:annotation>
-			<xs:documentation>Interval Units</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:pattern value="DAY" />
-			<xs:pattern value="HOUR" />
-			<xs:pattern value="MINUTE" />
-			<xs:pattern value="MONTH" />
-			<xs:pattern value="SECOND" />
-			<xs:pattern value="WEEK" />
-			<xs:pattern value="YEAR" />
 		</xs:restriction>
 	</xs:simpleType>
 
