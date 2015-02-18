@@ -35,6 +35,5 @@ public class SampleJob7 extends Job {
     logger.info("Running SampleJob7.");
 
     // Do something interesting...
-
   }
 }

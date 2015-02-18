@@ -23,7 +23,6 @@ import org.quartz.annotations.DisallowConcurrentExecution;
 import org.quartz.builders.JobBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
-import org.quartz.triggers.Trigger;
 
 /**
  * Conveys the detail properties of a given <code>Job</code> instance. JobDetails are to be created/defined with {@link JobBuilder}.
@@ -67,18 +66,6 @@ public interface JobDetail extends Serializable, Cloneable {
    * </p>
    */
   public JobDataMap getJobDataMap();
-
-  /**
-   * <p>
-   * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-   * </p>
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   *
-   * @return <code>true</code> if the Job should remain persisted after being orphaned.
-   */
-  public boolean isDurable();
 
   /**
    * @see DisallowConcurrentExecution

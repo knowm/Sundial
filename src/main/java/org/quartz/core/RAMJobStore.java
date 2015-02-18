@@ -242,7 +242,7 @@ public class RAMJobStore implements JobStore {
           throw new ObjectAlreadyExistsException(newTrigger);
         }
 
-        removeTrigger(newTrigger.getName(), false);
+        removeTrigger(newTrigger.getName());
       }
 
       if (retrieveJob(newTrigger.getJobName()) == null) {
@@ -263,48 +263,27 @@ public class RAMJobStore implements JobStore {
     }
   }
 
-  /**
-   * <p>
-   * Remove (delete) the <code>{@link org.quartz.triggers.Trigger}</code> with the given name.
-   * </p>
-   *
-   * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
-   */
   @Override
-  public boolean removeTrigger(String triggerKey) {
-
-    return removeTrigger(triggerKey, true);
-  }
-
-  private boolean removeTrigger(String key, boolean removeOrphanedJob) {
+  public boolean removeTrigger(String triggerName) {
 
     boolean found = false;
 
     synchronized (lock) {
       // remove from triggers by FQN map
-      found = (wrappedTriggersByKey.remove(key) == null) ? false : true;
+      found = (wrappedTriggersByKey.remove(triggerName) == null) ? false : true;
       if (found) {
         TriggerWrapper tw = null;
         // remove from triggers array
         Iterator<TriggerWrapper> tgs = wrappedTriggers.iterator();
         while (tgs.hasNext()) {
           tw = tgs.next();
-          if (key.equals(tw.key)) {
+          if (triggerName.equals(tw.key)) {
             tgs.remove();
             break;
           }
         }
         timeWrappedTriggers.remove(tw);
 
-        if (removeOrphanedJob) {
-          JobWrapper jw = jobsByKey.get(tw.jobKey);
-          List<Trigger> trigs = getTriggersForJob(tw.jobKey);
-          if ((trigs == null || trigs.size() == 0) && !jw.jobDetail.isDurable()) {
-            if (removeJob(jw.key)) {
-              mSignaler.notifySchedulerListenersJobDeleted(jw.key);
-            }
-          }
-        }
       }
     }
 

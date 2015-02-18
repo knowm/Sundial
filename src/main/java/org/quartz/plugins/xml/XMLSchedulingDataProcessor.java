@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2001-2010 Terracotta, Inc.
  * Copyright 2011 Xeiam LLC
  *
@@ -15,7 +15,6 @@
  * under the License.
  *
  */
-
 package org.quartz.plugins.xml;
 
 import static org.quartz.builders.CalendarIntervalTriggerBuilder.calendarIntervalTriggerBuilder;
@@ -36,11 +35,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -252,7 +248,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-  ClassNotFoundException, ParseException, XPathException {
+      ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -508,28 +504,6 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   }
 
   /**
-   * Given the Triggers, build a Map where key==>JobName and Value==>List of Triggers
-   *
-   * @param triggers
-   * @return
-   */
-  private Map<String, List<OperableTrigger>> buildTriggersByJobNameMap(List<OperableTrigger> triggers) {
-
-    Map<String, List<OperableTrigger>> returnMap = new HashMap<String, List<OperableTrigger>>();
-
-    for (OperableTrigger trigger : triggers) {
-      List<OperableTrigger> triggersOfJob = returnMap.get(trigger.getJobName());
-      if (triggersOfJob == null) {
-        triggersOfJob = new LinkedList<OperableTrigger>();
-        returnMap.put(trigger.getJobName(), triggersOfJob);
-      }
-      triggersOfJob.add(trigger);
-    }
-
-    return returnMap;
-  }
-
-  /**
    * Schedules the given sets of jobs and triggers.
    *
    * @param sched job scheduler.
@@ -542,83 +516,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
 
     logger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
-    Map<String, List<OperableTrigger>> triggersByJobName = buildTriggersByJobNameMap(triggers);
-
-    // add each job, and it's associated triggers
-    Iterator<JobDetail> itr = jobs.iterator();
-    while (itr.hasNext()) {
-      JobDetail detail = itr.next();
-
-      itr.remove(); // remove jobs as we handle them...
-
-      JobDetail dupeJ = sched.getJobDetail(detail.getName());
-
-      if (dupeJ != null) {
-        logger.info("Replacing job: " + detail.getName());
-      } else {
-        logger.info("Adding job: " + detail.getName());
-      }
-
-      List<OperableTrigger> triggersOfJob = triggersByJobName.get(detail.getName());
-
-      // log.debug("detail.isDurable()" + detail.isDurable());
-      if (!detail.isDurable() && (triggersOfJob == null || triggersOfJob.size() == 0)) {
-        if (dupeJ == null) {
-          throw new SchedulerException("A new job defined without any triggers must be durable: " + detail.getName());
-        }
-
-        if ((dupeJ.isDurable() && (sched.getTriggersOfJob(detail.getName()).size() == 0))) {
-          throw new SchedulerException("Can't change existing durable job without triggers to non-durable: " + detail.getName());
-        }
-      }
-
-      if (dupeJ != null || detail.isDurable()) {
-        sched.addJob(detail); // add the job if a replacement or durable
-      } else {
-        boolean addJobWithFirstSchedule = true;
-
-        // Add triggers related to the job...
-        Iterator<OperableTrigger> titr = triggersOfJob.iterator();
-        while (titr.hasNext()) {
-          OperableTrigger trigger = titr.next();
-          triggers.remove(trigger); // remove triggers as we handle them...
-
-          if (trigger.getStartTime() == null) {
-            trigger.setStartTime(new Date());
-          }
-
-          boolean addedTrigger = false;
-          while (addedTrigger == false) {
-            Trigger dupeT = sched.getTrigger(trigger.getName());
-            if (dupeT != null) {
-
-              if (!dupeT.getJobName().equals(trigger.getJobName())) {
-                logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getName());
-              }
-
-              sched.rescheduleJob(trigger.getName(), trigger);
-            } else {
-              logger.debug("Scheduling job: " + trigger.getJobName() + " with trigger: " + trigger.getName());
-
-              try {
-                if (addJobWithFirstSchedule) {
-
-                  sched.scheduleJob(detail, trigger); // add the job if it's not in yet...
-                  addJobWithFirstSchedule = false;
-                } else {
-                  sched.scheduleJob(trigger);
-                }
-              } catch (ObjectAlreadyExistsException e) {
-                logger.debug("Adding trigger: " + trigger.getName() + " for job: " + detail.getName()
-                    + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
-                    + "in the cluster.  Will try to reschedule instead.");
-                continue;
-              }
-            }
-            addedTrigger = true;
-          }
-        }
-      }
+    for (JobDetail jobDetail : jobs) {
+      sched.addJob(jobDetail);
     }
 
     // add triggers that weren't associated with a new job... (those we already handled were removed above)
@@ -628,29 +527,22 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
         trigger.setStartTime(new Date());
       }
 
-      boolean addedTrigger = false;
-      while (addedTrigger == false) {
-        Trigger dupeT = sched.getTrigger(trigger.getName());
-        if (dupeT != null) {
+      Trigger dupeT = sched.getTrigger(trigger.getName());
+      if (dupeT != null) { // if trigger with name already exists
 
-          if (!dupeT.getJobName().equals(trigger.getJobName())) {
-            logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getName());
-          }
-
-          sched.rescheduleJob(trigger.getName(), trigger);
-        } else {
-          logger.debug("Scheduling job: " + trigger.getJobName() + " with trigger: " + trigger.getName());
-
-          try {
-            sched.scheduleJob(trigger);
-          } catch (ObjectAlreadyExistsException e) {
-            logger.debug("Adding trigger: " + trigger.getName() + " for job: " + trigger.getJobName()
-                + " failed because the trigger already existed.  " + "This is likely due to a race condition between multiple instances "
-                + "in the cluster.  Will try to reschedule instead.");
-            continue;
-          }
+        if (!dupeT.getJobName().equals(trigger.getJobName())) {
+          logger.warn("Possibly duplicately named ({}) triggers in jobs xml file! ", trigger.getName());
         }
-        addedTrigger = true;
+
+        sched.rescheduleJob(trigger.getName(), trigger);
+      } else {
+        logger.debug("Scheduling job: " + trigger.getJobName() + " with trigger: " + trigger.getName());
+
+        try {
+          sched.scheduleJob(trigger);
+        } catch (ObjectAlreadyExistsException e) {
+          logger.debug("Adding trigger: " + trigger.getName() + " for job: " + trigger.getJobName() + " failed because the trigger already existed.");
+        }
       }
     }
 

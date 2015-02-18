@@ -25,7 +25,6 @@ import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
 import org.quartz.jobs.JobDetailImpl;
 import org.quartz.jobs.NoOpJob;
-import org.quartz.triggers.Trigger;
 
 /**
  * <code>JobBuilder</code> is used to instantiate {@link JobDetail}s.
@@ -43,7 +42,7 @@ import org.quartz.triggers.Trigger;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
+ *
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -104,7 +103,6 @@ public class JobBuilder {
       key = UUID.randomUUID().toString();
     }
     job.setName(key);
-    job.setDurability(durability);
     job.setRequestsRecovery(shouldRecover);
 
     if (!jobDataMap.isEmpty()) {
@@ -168,22 +166,6 @@ public class JobBuilder {
   public JobBuilder requestRecovery(boolean shouldRecover) {
 
     this.shouldRecover = shouldRecover;
-    return this;
-  }
-
-  /**
-   * Whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   *
-   * @param durability the value to set for the durability property.
-   * @return the updated JobBuilder
-   * @see JobDetail#isDurable()
-   */
-  public JobBuilder storeDurably(boolean durability) {
-
-    this.durability = durability;
     return this;
   }
 

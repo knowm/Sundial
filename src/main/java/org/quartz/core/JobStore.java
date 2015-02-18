@@ -77,7 +77,7 @@ public interface JobStore {
    * Store the given <code>{@link org.quartz.jobs.JobDetail}</code>.
    *
    * @param newJob The <code>JobDetail</code> to be stored.
-   * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>JobStore</code> with the same name & group should be
+   * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>JobStore</code> with the same name should be
    *        over-written.
    * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists, and replaceExisting is set to false.
    */
@@ -124,7 +124,7 @@ public interface JobStore {
    * deleted also.
    * </p>
    *
-   * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
+   * @return <code>true</code> if a <code>Trigger</code> with the given name was found and removed from the store.
    */
   boolean removeTrigger(String triggerKey) throws JobPersistenceException;
 
@@ -133,7 +133,7 @@ public interface JobStore {
    * with the same job.
    *
    * @param newTrigger The new <code>Trigger</code> to be stored.
-   * @return <code>true</code> if a <code>Trigger</code> with the given name & group was found and removed from the store.
+   * @return <code>true</code> if a <code>Trigger</code> with the given name was found and removed from the store.
    */
   boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger) throws JobPersistenceException;
 

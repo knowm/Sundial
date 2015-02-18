@@ -91,7 +91,7 @@
                     <xs:element name="start-time" type="xs:dateTime"/>
                     <xs:element name="start-time-seconds-in-future" type="xs:nonNegativeInteger"/>
                 </xs:choice>
-                <xs:element name="end-time"  type="xs:dateTime" minOccurs="0"/>
+                <xs:element name="end-time" type="xs:dateTime" minOccurs="0"/>
             </xs:sequence>
         </xs:sequence>
     </xs:complexType>

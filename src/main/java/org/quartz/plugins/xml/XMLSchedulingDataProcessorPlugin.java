@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2001-2010 Terracotta, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +14,6 @@
  * under the License.
  *
  */
-
 package org.quartz.plugins.xml;
 
 import org.quartz.core.Scheduler;

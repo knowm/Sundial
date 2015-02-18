@@ -454,6 +454,9 @@ public class QuartzScheduler implements Scheduler {
     Calendar cal = null;
     if (trigger.getCalendarName() != null) {
       cal = quartzSchedulerResources.getJobStore().retrieveCalendar(trigger.getCalendarName());
+      if (cal == null) {
+        throw new SchedulerException("Calendar not found: " + trigger.getCalendarName());
+      }
     }
     Date ft = trig.computeFirstFireTime(cal);
 
@@ -555,11 +558,11 @@ public class QuartzScheduler implements Scheduler {
   }
 
   @Override
-  public Date rescheduleJob(String triggerKey, OperableTrigger newTrigger) throws SchedulerException {
+  public Date rescheduleJob(String triggerName, OperableTrigger newTrigger) throws SchedulerException {
 
     validateState();
 
-    if (triggerKey == null) {
+    if (triggerName == null) {
       throw new IllegalArgumentException("triggerKey cannot be null");
     }
     if (newTrigger == null) {
@@ -567,7 +570,7 @@ public class QuartzScheduler implements Scheduler {
     }
 
     OperableTrigger trig = newTrigger;
-    Trigger oldTrigger = getTrigger(triggerKey);
+    Trigger oldTrigger = getTrigger(triggerName);
     if (oldTrigger == null) {
       return null;
     } else {
@@ -585,9 +588,9 @@ public class QuartzScheduler implements Scheduler {
       throw new SchedulerException("Based on configured schedule, the given trigger will never fire.");
     }
 
-    if (quartzSchedulerResources.getJobStore().replaceTrigger(triggerKey, trig)) {
+    if (quartzSchedulerResources.getJobStore().replaceTrigger(triggerName, trig)) {
       notifySchedulerThread(newTrigger.getNextFireTime().getTime());
-      notifySchedulerListenersUnscheduled(triggerKey);
+      notifySchedulerListenersUnscheduled(triggerName);
       notifySchedulerListenersScheduled(newTrigger);
     } else {
       return null;

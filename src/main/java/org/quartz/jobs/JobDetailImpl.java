@@ -64,8 +64,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
 
   private JobDataMap jobDataMap;
 
-  private boolean durability = true;
-
   private boolean shouldRecover = false;
 
   /*
@@ -182,19 +180,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
 
   /**
    * <p>
-   * Set whether or not the <code>Job</code> should remain stored after it is orphaned (no <code>{@link Trigger}s</code> point to it).
-   * </p>
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   */
-  public void setDurability(boolean durability) {
-
-    this.durability = durability;
-  }
-
-  /**
-   * <p>
    * Set whether or not the the <code>Scheduler</code> should re-execute the <code>Job</code> if a 'recovery' or 'fail-over' situation is encountered.
    * </p>
    * <p>
@@ -206,12 +191,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   public void setRequestsRecovery(boolean shouldRecover) {
 
     this.shouldRecover = shouldRecover;
-  }
-
-  @Override
-  public boolean isDurable() {
-
-    return durability;
   }
 
   /**
@@ -238,8 +217,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   public String toString() {
 
     return "JobDetail '" + getName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName())
-        + " concurrentExectionDisallowed: " + isConcurrentExectionDisallowed() + " isDurable: " + isDurable() + " requestsRecovers: "
-        + requestsRecovery();
+        + " concurrentExectionDisallowed: " + isConcurrentExectionDisallowed() + " requestsRecovers: " + requestsRecovery();
   }
 
   @Override
@@ -275,7 +253,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
     try {
       copy = (JobDetailImpl) super.clone();
       if (jobDataMap != null) {
-        copy.jobDataMap = (JobDataMap) jobDataMap.shallowCopy();
+        copy.jobDataMap = jobDataMap.shallowCopy();
       }
     } catch (CloneNotSupportedException ex) {
       throw new IncompatibleClassChangeError("Not Cloneable.");
@@ -287,8 +265,8 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   @Override
   public JobBuilder getJobBuilder() {
 
-    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).requestRecovery(requestsRecovery()).storeDurably(isDurable())
-        .usingJobData(getJobDataMap()).withDescription(getDescription()).withIdentity(getName());
+    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).requestRecovery(requestsRecovery()).usingJobData(getJobDataMap())
+        .withDescription(getDescription()).withIdentity(getName());
     return b;
   }
 
