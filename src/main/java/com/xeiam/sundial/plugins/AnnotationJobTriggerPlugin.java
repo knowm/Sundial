@@ -102,7 +102,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, simpleTrigger.jobDataMap());
           }
 
-          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).isConcurrencyAllowed(cronTrigger.isConcurrencyAllowed())
+          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).isConcurrencyAllowed(simpleTrigger.isConcurrencyAllowed())
               .usingJobData(jobDataMap).build();
           OperableTrigger trigger;
           try {
