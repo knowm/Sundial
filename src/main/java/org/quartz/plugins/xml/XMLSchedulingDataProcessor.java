@@ -248,7 +248,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-      ClassNotFoundException, ParseException, XPathException {
+  ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -294,9 +294,11 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
       String jobName = getTrimmedToNullString(xpath, "name", jobDetailNode);
       String jobDescription = getTrimmedToNullString(xpath, "description", jobDetailNode);
       String jobClassName = getTrimmedToNullString(xpath, "job-class", jobDetailNode);
+      boolean isConcurrencyAllowed = getBoolean(xpath, "concurrency-allowed", jobDetailNode);
       Class<? extends Job> jobClass = classLoadHelper.loadClass(jobClassName);
 
-      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).withDescription(jobDescription).build();
+      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).isConcurrencyAllowed(isConcurrencyAllowed).withDescription(jobDescription)
+          .build();
 
       NodeList jobDataEntries = (NodeList) xpath.evaluate("job-data-map/entry", jobDetailNode, XPathConstants.NODESET);
 
@@ -458,6 +460,13 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     }
 
     return str;
+  }
+
+  protected Boolean getBoolean(XPath xpathToElement, String elementName, Node parentNode) throws XPathExpressionException {
+
+    String str = (String) xpath.evaluate(elementName, parentNode, XPathConstants.STRING);
+
+    return str.equalsIgnoreCase("true");
   }
 
   /**

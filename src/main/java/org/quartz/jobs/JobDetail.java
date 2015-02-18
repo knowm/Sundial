@@ -19,9 +19,7 @@ package org.quartz.jobs;
 
 import java.io.Serializable;
 
-import org.quartz.annotations.DisallowConcurrentExecution;
 import org.quartz.builders.JobBuilder;
-import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 
 /**
@@ -68,23 +66,12 @@ public interface JobDetail extends Serializable, Cloneable {
   public JobDataMap getJobDataMap();
 
   /**
-   * @see DisallowConcurrentExecution
-   * @return whether the associated Job class carries the {@link DisallowConcurrentExecution} annotation.
-   */
-  public boolean isConcurrentExectionDisallowed();
-
-  /**
-   * <p>
-   * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is
-   * encountered.
-   * </p>
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
+   * The default behavior is to veto any job is currently running concurrent. However, concurrent jobs can be created by setting the 'Concurrency' to
+   * true
    *
-   * @see JobExecutionContext#isRecovering()
+   * @return
    */
-  public boolean requestsRecovery();
+  public boolean isConcurrencyAllowed();
 
   public Object clone();
 

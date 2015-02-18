@@ -13,6 +13,8 @@ public @interface CronTrigger {
 
   String timeZone() default "";
 
+  boolean isConcurrencyAllowed() default false;
+
   String[] jobDataMap() default {};
 
 }

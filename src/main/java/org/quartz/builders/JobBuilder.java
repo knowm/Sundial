@@ -42,7 +42,7 @@ import org.quartz.jobs.NoOpJob;
  *
  *
  * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- *
+ * 
  * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
  *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
  *
@@ -58,7 +58,7 @@ public class JobBuilder {
   private String description;
   private Class<? extends Job> jobClass = NoOpJob.class;
   private boolean durability = true;
-  private boolean shouldRecover = false;
+  private boolean isConcurrencyAllowed = false;
 
   private JobDataMap jobDataMap = new JobDataMap();
 
@@ -103,7 +103,7 @@ public class JobBuilder {
       key = UUID.randomUUID().toString();
     }
     job.setName(key);
-    job.setRequestsRecovery(shouldRecover);
+    job.setIsConcurrencyAllowed(isConcurrencyAllowed);
 
     if (!jobDataMap.isEmpty()) {
       job.setJobDataMap(jobDataMap);
@@ -154,18 +154,15 @@ public class JobBuilder {
   }
 
   /**
-   * Instructs the <code>Scheduler</code> whether or not the <code>Job</code> should be re-executed if a 'recovery' or 'fail-over' situation is
-   * encountered.
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
+   * The default behavior is to veto any job is currently running concurrent. However, concurrent jobs can be created by setting the 'Concurrency' to
+   * true
    *
-   * @param shouldRecover
+   * @param isConcurrencyAllowed
    * @return the updated JobBuilder
    */
-  public JobBuilder requestRecovery(boolean shouldRecover) {
+  public JobBuilder isConcurrencyAllowed(boolean isConcurrencyAllowed) {
 
-    this.shouldRecover = shouldRecover;
+    this.isConcurrencyAllowed = isConcurrencyAllowed;
     return this;
   }
 

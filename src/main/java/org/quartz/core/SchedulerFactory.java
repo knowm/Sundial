@@ -24,7 +24,6 @@ import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xeiam.sundial.listeners.DefaultTriggerListener;
 import com.xeiam.sundial.plugins.AnnotationJobTriggerPlugin;
 
 /**
@@ -108,8 +107,6 @@ public class SchedulerFactory {
     // Set up any TriggerListeners
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    DefaultTriggerListener defaultTriggerListener = new DefaultTriggerListener();
-
     boolean tpInited = false;
     boolean qsInited = false;
 
@@ -150,9 +147,6 @@ public class SchedulerFactory {
 
       AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
       quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
-
-      // add listeners
-      quartzScheduler.getListenerManager().addTriggerListener(defaultTriggerListener);
 
       // fire up job store, and runshell factory
       jobstore.initialize(quartzScheduler.getSchedulerSignaler());

@@ -17,6 +17,8 @@ public @interface SimpleTrigger {
   // set to -1 for indefinite repeating
   int repeatCount() default -1;
 
+  boolean isConcurrencyAllowed() default false;
+
   String[] jobDataMap() default {};
 
 }

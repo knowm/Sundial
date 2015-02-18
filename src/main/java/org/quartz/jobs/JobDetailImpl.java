@@ -18,10 +18,7 @@
 
 package org.quartz.jobs;
 
-import org.quartz.annotations.AnnotationUtils;
-import org.quartz.annotations.DisallowConcurrentExecution;
 import org.quartz.builders.JobBuilder;
-import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.triggers.Trigger;
 
@@ -64,7 +61,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
 
   private JobDataMap jobDataMap;
 
-  private boolean shouldRecover = false;
+  private boolean isConcurrencyAllowed = false;
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
@@ -178,46 +175,22 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
     this.jobDataMap = jobDataMap;
   }
 
-  /**
-   * <p>
-   * Set whether or not the the <code>Scheduler</code> should re-execute the <code>Job</code> if a 'recovery' or 'fail-over' situation is encountered.
-   * </p>
-   * <p>
-   * If not explicitly set, the default value is <code>false</code>.
-   * </p>
-   *
-   * @see JobExecutionContext#isRecovering()
-   */
-  public void setRequestsRecovery(boolean shouldRecover) {
+  public void setIsConcurrencyAllowed(boolean isConcurrencyAllowed) {
 
-    this.shouldRecover = shouldRecover;
-  }
-
-  /**
-   * @return whether the associated Job class carries the {@link DisallowConcurrentExecution} annotation.
-   */
-  @Override
-  public boolean isConcurrentExectionDisallowed() {
-
-    return AnnotationUtils.isAnnotationPresent(jobClass, DisallowConcurrentExecution.class);
+    this.isConcurrencyAllowed = isConcurrencyAllowed;
   }
 
   @Override
-  public boolean requestsRecovery() {
+  public boolean isConcurrencyAllowed() {
 
-    return shouldRecover;
+    return isConcurrencyAllowed;
   }
 
-  /**
-   * <p>
-   * Return a simple string representation of this object.
-   * </p>
-   */
   @Override
   public String toString() {
 
-    return "JobDetail '" + getName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName())
-        + " concurrentExectionDisallowed: " + isConcurrentExectionDisallowed() + " requestsRecovers: " + requestsRecovery();
+    return "JobDetail '" + getName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName()) + " isConcurrencyAllowed: "
+        + isConcurrencyAllowed() + " requestsRecovers: " + isConcurrencyAllowed();
   }
 
   @Override
@@ -265,7 +238,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   @Override
   public JobBuilder getJobBuilder() {
 
-    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).requestRecovery(requestsRecovery()).usingJobData(getJobDataMap())
+    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).isConcurrencyAllowed(isConcurrencyAllowed()).usingJobData(getJobDataMap())
         .withDescription(getDescription()).withIdentity(getName());
     return b;
   }

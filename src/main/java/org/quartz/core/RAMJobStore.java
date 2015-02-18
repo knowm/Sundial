@@ -585,7 +585,7 @@ public class RAMJobStore implements JobStore {
 
         JobDetail job = bndle.getJobDetail();
 
-        if (job.isConcurrentExectionDisallowed()) {
+        if (!job.isConcurrencyAllowed()) {
           ArrayList<TriggerWrapper> trigs = getTriggerWrappersForJob(job.getName());
           Iterator<TriggerWrapper> itr = trigs.iterator();
           while (itr.hasNext()) {
@@ -633,7 +633,7 @@ public class RAMJobStore implements JobStore {
       if (jw != null) {
         JobDetail jd = jw.jobDetail;
 
-        if (jd.isConcurrentExectionDisallowed()) {
+        if (!jd.isConcurrencyAllowed()) {
           blockedJobs.remove(jd.getName());
           ArrayList<TriggerWrapper> trigs = getTriggerWrappersForJob(jd.getName());
           for (TriggerWrapper ttw : trigs) {
