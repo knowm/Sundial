@@ -27,8 +27,8 @@ public class SampleRun {
 
     SundialJobScheduler.startScheduler("com.xeiam.sundial.jobs"); // package with annotated Jobs
 
-    //    SundialJobScheduler.addJob("SampleJob1", "com.xeiam.sundial.jobs.SampleJob1");
-    //    SundialJobScheduler.addCronTrigger("SampleJob1-Trigger", "SampleJob1", "0/10 * * * * ?");
+    SundialJobScheduler.addJob("SampleJob1", "com.xeiam.sundial.jobs.SampleJob1");
+    SundialJobScheduler.addCronTrigger("SampleJob1-Trigger", "SampleJob1", "0/10 * * * * ?");
 
   }
 }
