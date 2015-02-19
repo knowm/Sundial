@@ -1,10 +1,10 @@
 ## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://xeiam.com/sundial) Sundial
 
-A Lightweight Job Scheduling Framework
+A Lightweight Job Scheduling Framework for Java
 
 ## In a Nutshell
 
-Sundial makes adding cron jobs to your Java application a walk in the park. Simply define jobs, define cron triggers, and start the Sundial scheduler.
+Sundial makes adding scheduled jobs to your Java application a walk in the park. Simply define jobs, define triggers, and start the Sundial scheduler.
 
 ## Long Description
 
@@ -17,21 +17,25 @@ job key-value pairs. Convenience methods allow easy access to these
 parameters. JobActions are reusable components that also have
 access to the context parameters. If you are looking
 for a hassle-free 100% Java job scheduling framework that is easy to integrate
-into your applications, Sundial is for you.
+into your applications, look no further.
 
-Usage is very simple: create a Job and start the scheduler.
-
-## Create a Job Class with CronTrigger Annotation
+## Create a Job Class
 
 ```java
-@CronTrigger(cron = "0/5 * * * * ?")
-public class SampleJob5 extends Job {
+public class SampleJob extends com.xeiam.sundial.Job {
 
   @Override
   public void doRun() throws JobInterruptException {
     // Do something interesting...
   }
 }
+```
+##  ...with CronTrigger or SimpleTrigger Annotation
+```java
+@CronTrigger(cron = "0/5 * * * * ?")
+```
+```java
+@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS)
 ```
 
 ## Start Sundial Job Scheduler
@@ -51,13 +55,13 @@ public static void main(String[] args) {
 
     <schedule>
         <job>
-            <name>SampleJob1</name>
-            <job-class>com.xeiam.sundial.SampleJob1</job-class>
+            <name>SampleJob</name>
+            <job-class>com.xeiam.sundial.SampleJob</job-class>
         </job>
         <trigger>
             <cron>
-                <name>SampleJob1-Trigger</name>
-                <job-name>SampleJob1</job-name>
+                <name>SampleJob-Trigger</name>
+                <job-name>SampleJob</job-name>
                 <cron-expression>0/45 * * * * ?</cron-expression>
             </cron>
         </trigger>
@@ -70,24 +74,25 @@ public static void main(String[] args) {
 ## Or, Define Jobs and Triggers Manually
 
 ```java
-SundialJobScheduler.addJob("SampleJob1", "com.xeiam.sundial.jobs.SampleJob1");
-SundialJobScheduler.addCronTrigger("SampleJob1-Trigger", "SampleJob1", "0/10 * * * * ?");
+SundialJobScheduler.addJob("SampleJob", "com.xeiam.sundial.jobs.SampleJob");
+SundialJobScheduler.addCronTrigger("SampleJob-Cron-Trigger", "SampleJob", "0/10 * * * * ?");
+SundialJobScheduler.addSimpleTrigger("SampleJob-Simple-Trigger", "SampleJob", -1, TimeUnit.SECONDS.toMillis(3));
 ```
 
 ## More Functions
 
 ```java
 // asynchronously start a job by name
-SundialJobScheduler.startJob("SampleJob1");
+SundialJobScheduler.startJob("SampleJob");
 
 // interrupt a running job
-SundialJobScheduler.stopJob("SampleJob1");
+SundialJobScheduler.stopJob("SampleJob");
 
 // remove a job from the scheduler
-SundialJobScheduler.removeJob("SampleJob1");
+SundialJobScheduler.removeJob("SampleJob");
 
 // remove a trigger from the scheduler
-SundialJobScheduler.removeTrigger("SampleJob1-Trigger");
+SundialJobScheduler.removeTrigger("SampleJob-Trigger");
 
 // lock scheduler
 SundialJobScheduler.lockScheduler();
@@ -96,7 +101,7 @@ SundialJobScheduler.lockScheduler();
 SundialJobScheduler.unlockScheduler();
 
 // check if job a running
-SundialJobScheduler.isJobRunning("SampleJob1");
+SundialJobScheduler.isJobRunning("SampleJob");
 ```
 And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/com/xeiam/sundial/SundialJobScheduler.java
 
@@ -110,14 +115,14 @@ SundialJobScheduler.startJob("SampleJob1", params);
 ```java
 // annotate CronTrigger with data map (separate key/values with ":" )
 @CronTrigger(cron = "0/5 * * * * ?", jobDataMap = { "KEY_1:VALUE_1", "KEY_2:1000" })
-public class SampleJob4 extends Job {
+public class SampleJob extends Job {
 }
 ```
 ```xml
 <!-- configure data map in jobs.xml -->
 <job>
-  <name>SampleJob2</name>
-  <job-class>com.xeiam.sundial.jobs.SampleJob2</job-class>
+  <name>SampleJob</name>
+  <job-class>com.xeiam.sundial.jobs.SampleJob</job-class>
   <job-data-map>
     <entry>
       <key>MyParam</key>
@@ -163,7 +168,8 @@ Now go ahead and [study some more examples](http://xeiam.com/sundial-example-cod
  * [x] Define jobs and triggers in job.xml
  * [x] or define jobs and triggers via annotations
  * [x] or define jobs and triggers programmatically
- * [x] In-memory multi-threaded jobs
+ * [x] Cron Triggers
+ * [x] Simple Triggers
  * [x] Java 6 and up
 
 ## Getting Started

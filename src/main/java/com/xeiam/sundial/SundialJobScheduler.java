@@ -17,6 +17,7 @@ package com.xeiam.sundial;
 
 import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
 import static org.quartz.builders.JobBuilder.newJobBuilder;
+import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -349,7 +350,26 @@ public class SundialJobScheduler {
       logger.error("ERROR ADDING CRON TRIGGER!!!", e);
     } catch (ParseException e) {
       logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+    }
+  }
 
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param repeatCount
+   * @param repeatInterval
+   */
+  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) {
+
+    try {
+
+      OperableTrigger trigger = simpleTriggerBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval)
+          .withIdentity(triggerName).forJob(jobName).build();
+
+      getScheduler().scheduleJob(trigger);
+
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
     }
   }
 

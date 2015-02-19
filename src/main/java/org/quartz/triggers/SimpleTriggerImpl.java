@@ -596,36 +596,4 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
     }
   }
 
-  //  /**
-  //   * Get a {@link ScheduleBuilder} that is configured to produce a schedule identical to this trigger's schedule.
-  //   *
-  //   * @see #getTriggerBuilder()
-  //   */
-  //  @Override
-  //  public ScheduleBuilder getScheduleBuilder() {
-  //
-  //    SimpleScheduleBuilder sb = SimpleScheduleBuilder.simpleScheduleBuilder().withIntervalInMilliseconds(getRepeatInterval())
-  //        .withRepeatCount(getRepeatCount());
-  //
-  //    switch (getMisfireInstruction()) {
-  //    case MISFIRE_INSTRUCTION_FIRE_NOW:
-  //      sb.withMisfireHandlingInstructionFireNow();
-  //      break;
-  //    case MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT:
-  //      sb.withMisfireHandlingInstructionNextWithExistingCount();
-  //      break;
-  //    case MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT:
-  //      sb.withMisfireHandlingInstructionNextWithRemainingCount();
-  //      break;
-  //    case MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT:
-  //      sb.withMisfireHandlingInstructionNowWithExistingCount();
-  //      break;
-  //    case MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT:
-  //      sb.withMisfireHandlingInstructionNowWithRemainingCount();
-  //      break;
-  //    }
-  //
-  //    return sb;
-  //  }
-
 }

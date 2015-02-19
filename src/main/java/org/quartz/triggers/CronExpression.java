@@ -241,7 +241,7 @@ public final class CronExpression implements Serializable, Cloneable {
    */
   public CronExpression(CronExpression expression) {
     /*
-     * We don't call the other constructor here since we need to swallow the ParseException. We also elide some of the sanity checking as it is not
+     * We don't call the other constructor here since we need to swallow the ParseException. We also avoid some of the sanity checking as it is not
      * logically trippable.
      */
     this.cronExpression = expression.getCronExpression();
