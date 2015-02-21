@@ -19,6 +19,18 @@ access to the context parameters. If you are looking
 for a hassle-free 100% Java job scheduling framework that is easy to integrate
 into your applications, look no further.
 
+## Features
+
+ * [x] Apache 2.0 license
+ * [x] ~175 KB Jar
+ * [x] In-memory multi-threaded jobs
+ * [x] Define jobs and triggers in job.xml
+ * [x] or define jobs and triggers via annotations
+ * [x] or define jobs and triggers programmatically
+ * [x] Cron Triggers
+ * [x] Simple Triggers
+ * [x] Java 6 and up
+
 ## Create a Job Class
 
 ```java
@@ -53,20 +65,43 @@ public static void main(String[] args) {
 <?xml version='1.0' encoding='utf-8'?>
 <job-scheduling-data>
 
-    <schedule>
-        <job>
-            <name>SampleJob</name>
-            <job-class>com.xeiam.sundial.SampleJob</job-class>
-        </job>
-        <trigger>
-            <cron>
-                <name>SampleJob-Trigger</name>
-                <job-name>SampleJob</job-name>
-                <cron-expression>0/45 * * * * ?</cron-expression>
-            </cron>
-        </trigger>
+	<schedule>
 
-    </schedule>
+		<!-- job with cron trigger -->
+		<job>
+			<name>SampleJob3</name>
+			<job-class>com.foo.bar.jobs.SampleJob3</job-class>
+			<concurrency-allowed>true</concurrency-allowed>
+		</job>
+		<trigger>
+			<cron>
+				<name>SampleJob3-Trigger</name>
+				<job-name>SampleJob3</job-name>
+				<cron-expression>*/15 * * * * ?</cron-expression>
+			</cron>
+		</trigger>
+
+		<!-- job with simple trigger -->
+		<job>
+			<name>SampleJob2</name>
+			<job-class>com.foo.bar.jobs.SampleJob2</job-class>
+			<job-data-map>
+				<entry>
+					<key>MyParam</key>
+					<value>42</value>
+				</entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<simple>
+				<name>SampleJob2-Trigger</name>
+				<job-name>SampleJob2</job-name>
+				<repeat-count>5</repeat-count>
+				<repeat-interval>5000</repeat-interval>
+			</simple>
+		</trigger>
+
+	</schedule>
 
 </job-scheduling-data>
 ```
@@ -160,19 +195,7 @@ new SampleJobAction().run();
 
 Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
-## Features
-
- * [x] Apache 2.0 license
- * [x] ~175 KB Jar
- * [x] In-memory multi-threaded jobs
- * [x] Define jobs and triggers in job.xml
- * [x] or define jobs and triggers via annotations
- * [x] or define jobs and triggers programmatically
- * [x] Cron Triggers
- * [x] Simple Triggers
- * [x] Java 6 and up
-
-## Getting Started
+## Getting the Goods
 ### Non-Maven
 Download Jar: http://xeiam.com/sundial-change-log
 #### Dependencies
