@@ -1,6 +1,6 @@
 ## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://xeiam.com/sundial) Sundial
 
-A Lightweight Job Scheduling Framework for Java
+A Lightweight Job Scheduling Framework for Java.
 
 ## In a Nutshell
 
@@ -30,6 +30,7 @@ into your applications, look no further.
  * [x] Cron Triggers
  * [x] Simple Triggers
  * [x] Java 6 and up
+ * [x] Depends only on slf4j
 
 ## Create a Job Class
 
@@ -211,7 +212,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>1.1.3</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -227,7 +228,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
