@@ -15,28 +15,37 @@
  */
 package com.xeiam.sundial;
 
+import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
+import static org.quartz.builders.JobBuilder.newJobBuilder;
+import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.quartz.core.JobExecutionContext;
+import org.quartz.core.Scheduler;
+import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.impl.SchedulerFactory;
+import org.quartz.jobs.JobDataMap;
+import org.quartz.jobs.JobDetail;
+import org.quartz.triggers.OperableTrigger;
+import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.xeiam.sundial.exceptions.SchedulerStartupException;
+
 /**
  * Main entry-point to the Sundial scheduler
- * 
+ *
  * @author timmolter
  */
 public class SundialJobScheduler {
@@ -53,48 +62,81 @@ public class SundialJobScheduler {
   private static ServletContext servletContext = null;
 
   /**
-   * Gets the underlying Sundial scheduler
-   * 
-   * @return
+   * Starts the Sundial Scheduler
    */
-  public static Scheduler getScheduler() {
+  public static void startScheduler() {
 
-    if (scheduler == null) {
-      scheduler = createScheduler(10);
+    startScheduler(10, null);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param threadPoolSize
+   */
+  public static void startScheduler(int threadPoolSize) {
+
+    startScheduler(threadPoolSize, null);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param annotatedJobsPackageName
+   */
+  public static void startScheduler(String annotatedJobsPackageName) {
+
+    startScheduler(10, annotatedJobsPackageName);
+  }
+
+  /**
+   * Starts the Sundial Scheduler
+   *
+   * @param threadPoolSize
+   * @param annotatedJobsPackageName
+   */
+  public static void startScheduler(int threadPoolSize, String annotatedJobsPackageName) {
+
+    try {
+      createScheduler(threadPoolSize, annotatedJobsPackageName);
+      getScheduler().start();
+    } catch (SchedulerException e) {
+      logger.error("COULD NOT START SUNDIAL SCHEDULER!!!", e);
+      throw new SchedulerStartupException(e);
     }
-    return scheduler;
   }
 
   /**
    * Creates the Sundial Scheduler
-   * 
-   * @param threadPoolSize
+   *
+   * @param threadPoolSize the thread pool size used by the scheduler
+   * @param annotatedJobsPackageName the package where trigger annotated Job calsses can be found
    * @return
    */
-  public static Scheduler createScheduler(int threadPoolSize) {
+  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) {
 
     if (scheduler == null) {
       try {
-        scheduler = new SchedulerFactory().getScheduler(threadPoolSize);
+        scheduler = new SchedulerFactory().getScheduler(threadPoolSize, annotatedJobsPackageName);
 
       } catch (SchedulerException e) {
-        logger.error("COULD NOT CREATE QUARTZ SCHEDULER!!!" + e);
+        logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
       }
     }
     return scheduler;
   }
 
   /**
-   * Starts the Sundial Scheduler
+   * Gets the underlying Quartz scheduler
+   *
+   * @return
    */
-  public static void startScheduler() {
+  public static Scheduler getScheduler() {
 
-    try {
-      getScheduler().start();
-    } catch (SchedulerException e) {
-      logger.error("COULD NOT START QUARTZ SCHEDULER!!!" + e);
-
+    if (scheduler == null) {
+      logger.warn("Scheduler has not yet been created!!! Call \"createScheduler\" first.");
     }
+    return scheduler;
   }
 
   public static void toggleGlobalLock() {
@@ -118,7 +160,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * @return the mServletContext
+   * @return the ServletContext
    */
   public static ServletContext getServletContext() {
 
@@ -126,7 +168,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * @param servletContext the mServletContext to set
+   * @param servletContext the ServletContext to set
    */
   public static void setServletContext(ServletContext servletContext) {
 
@@ -134,24 +176,81 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Starts a Job matching the the given Job Name found in jobs.xml
-   * 
+   * Adds a Job to the scheduler. Replaces a matching existing Job.
+   *
+   * @param jobName
+   * @param jobClassName
+   */
+  public static void addJob(String jobName, String jobClassName) {
+
+    addJob(jobName, jobClassName, null);
+
+  }
+
+  /**
+   * Adds a Job matching to the scheduler with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a
+   * <code>Trigger</code>, or <code>Scheduler.startJob()</code> is called for it. Replaces a matching existing Job.
+   *
+   * @param jobName
+   * @param jobClassName
+   * @param params
+   */
+  public static void addJob(String jobName, String jobClassName, Map<String, Object> params) {
+
+    try {
+
+      Class<? extends Job> jobClass = getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName);
+
+      JobDataMap jobDataMap = new JobDataMap();
+      if (params != null) {
+        for (Entry<String, Object> entry : params.entrySet()) {
+          jobDataMap.put(entry.getKey(), entry.getValue());
+        }
+      }
+
+      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).usingJobData(jobDataMap).build();
+
+      getScheduler().addJob(jobDetail);
+
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING JOB!!!", e);
+    } catch (ClassNotFoundException e) {
+      logger.error("ERROR ADDING JOB!!!", e);
+    }
+  }
+
+  /**
+   * Starts a Job matching the given Job Name
+   *
    * @param jobName
    */
   public static void startJob(String jobName) {
 
     try {
-      JobKey jobKey = new JobKey(jobName);
-      getScheduler().triggerJob(jobKey, null);
+      getScheduler().triggerJob(jobName, null);
     } catch (SchedulerException e) {
-      logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
+      logger.error("ERROR STARTING JOB!!!", e);
+    }
+  }
+
+  /**
+   * Removes a Job matching the given Job Name
+   *
+   * @param jobName
+   */
+  public static void removeJob(String jobName) {
+
+    try {
+      getScheduler().deleteJob(jobName);
+    } catch (SchedulerException e) {
+      logger.error("ERROR REMOVING JOB!!!", e);
     }
 
   }
 
   /**
    * Starts a Job matching the the given Job Name found in jobs.xml
-   * 
+   *
    * @param jobName
    */
   public static void startJob(String jobName, Map<String, Object> params) {
@@ -164,47 +263,46 @@ public class SundialJobScheduler {
         // logger.debug("value= " + pParams.get(key));
         jobDataMap.put(key, params.get(key));
       }
-      JobKey jobKey = new JobKey(jobName);
-      getScheduler().triggerJob(jobKey, jobDataMap);
+      getScheduler().triggerJob(jobName, jobDataMap);
     } catch (SchedulerException e) {
-      logger.error("ERROR SCHEDULING FIRE ONCE JOB!!!", e);
+      logger.error("ERROR STARTING JOB!!!", e);
     }
 
   }
 
   /**
    * Triggers a Job interrupt on all Jobs matching the given Job Name
-   * 
-   * @param jobName
+   *
+   * @param jobName The job name
    */
   public static void stopJob(String jobName) {
 
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching Job found. Now Stopping!");
           if (jobExecutionContext.getJobInstance() instanceof Job) {
             ((Job) jobExecutionContext.getJobInstance()).interrupt();
-          }
-          else {
+          } else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        }
-        else {
+        } else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR DURING STOP Job!!!" + e);
+      logger.error("ERROR STOPPING JOB!!!", e);
     }
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and value
-   * 
-   * @param jobName
+   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String.
+   *
+   * @param jobName The job name
+   * @param key The key in the job data map
+   * @param pValue The value in the job data map
    */
   public static void stopJob(String jobName, String key, String pValue) {
 
@@ -213,7 +311,7 @@ public class SundialJobScheduler {
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           if (jobExecutionContext.getJobInstance() instanceof Job) {
             JobDataMap jobDataMap = jobExecutionContext.getMergedJobDataMap();
@@ -221,35 +319,89 @@ public class SundialJobScheduler {
             if (value != null & value.equalsIgnoreCase(pValue)) {
               ((Job) jobExecutionContext.getJobInstance()).interrupt();
             }
-          }
-          else {
+          } else {
             logger.warn("CANNOT STOP NON-INTERRUPTABLE JOB!!!");
           }
-        }
-        else {
+        } else {
           logger.debug("Non-matching Job found. Not Stopping!");
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR DURING STOP Job!!!" + e);
+      logger.error("ERROR DURING STOP Job!!!", e);
+    }
+  }
+
+  // TRIGGERS /////////////////////////////////////////////
+
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param cronExpression
+   */
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression) {
+
+    try {
+
+      OperableTrigger trigger = cronTriggerBuilder(cronExpression).withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
+          .build();
+
+      getScheduler().scheduleJob(trigger);
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+    } catch (ParseException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+    }
+  }
+
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param repeatCount
+   * @param repeatInterval
+   */
+  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) {
+
+    try {
+
+      OperableTrigger trigger = simpleTriggerBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval)
+          .withIdentity(triggerName).forJob(jobName).build();
+
+      getScheduler().scheduleJob(trigger);
+
+    } catch (SchedulerException e) {
+      logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+    }
+  }
+
+  /**
+   * Removes a Trigger matching the the given Trigger Name
+   *
+   * @param triggerName
+   */
+  public static void removeTrigger(String triggerName) {
+
+    try {
+      getScheduler().unscheduleJob(triggerName);
+    } catch (SchedulerException e) {
+      logger.error("ERROR REMOVING TRIGGER!!!", e);
     }
   }
 
   /**
    * Generates an alphabetically sorted List of all Job names in the DEFAULT job group
-   * 
+   *
    * @return
    */
   public static List<String> getAllJobNames() {
 
     List<String> allJobNames = new ArrayList<String>();
     try {
-      Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
-      for (JobKey jobKey : allJobKeys) {
-        allJobNames.add(jobKey.getName());
+      Set<String> allJobKeys = getScheduler().getJobKeys();
+      for (String jobKey : allJobKeys) {
+        allJobNames.add(jobKey);
       }
     } catch (SchedulerException e) {
-      logger.error("COULD NOT GET JOB NAMES!!!" + e);
+      logger.error("COULD NOT GET JOB NAMES!!!", e);
     }
     Collections.sort(allJobNames);
 
@@ -258,21 +410,21 @@ public class SundialJobScheduler {
 
   /**
    * Generates a Map of all Job names with corresponding Triggers
-   * 
+   *
    * @return
    */
   public static Map<String, List<Trigger>> getAllJobsAndTriggers() {
 
     Map<String, List<Trigger>> allJobsMap = new TreeMap<String, List<Trigger>>();
     try {
-      Set<JobKey> allJobKeys = getScheduler().getJobKeys(null);
-      for (JobKey jobKey : allJobKeys) {
-        List<Trigger> lTriggers = (List<Trigger>) getScheduler().getTriggersOfJob(jobKey);
-        allJobsMap.put(jobKey.getName(), lTriggers);
+      Set<String> allJobKeys = getScheduler().getJobKeys();
+      for (String jobKey : allJobKeys) {
+        List<Trigger> triggers = getScheduler().getTriggersOfJob(jobKey);
+        allJobsMap.put(jobKey, triggers);
       }
 
     } catch (SchedulerException e) {
-      logger.error("COULD NOT GET JOB NAMES!!!" + e);
+      logger.error("COULD NOT GET JOB NAMES!!!", e);
     }
     return allJobsMap;
   }
@@ -282,14 +434,14 @@ public class SundialJobScheduler {
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
       for (JobExecutionContext jobExecutionContext : currentlyExecutingJobs) {
-        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getKey().getName();
+        String currentlyExecutingJobName = jobExecutionContext.getJobDetail().getName();
         if (currentlyExecutingJobName.equals(jobName)) {
           logger.debug("Matching running Job found!");
           return true;
         }
       }
     } catch (SchedulerException e) {
-      logger.error("ERROR CHECKING RUNNING JOB!!!" + e);
+      logger.error("ERROR CHECKING RUNNING JOB!!!", e);
     }
     logger.debug("Matching running NOT Job found!");
 

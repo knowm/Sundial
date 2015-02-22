@@ -15,20 +15,24 @@
  */
 package com.xeiam.sundial.exceptions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author timothy.molter
- */
 public class RequiredParameterException extends RuntimeException {
 
-  /** slf4J logger wrapper */
-  private Logger logger = LoggerFactory.getLogger(RequiredParameterException.class);
+  /**
+   * Constructor
+   *
+   * @param message
+   */
+  private RequiredParameterException(String message) {
 
+    super(message);
+  }
+
+  /**
+   * Constructor
+   */
   public RequiredParameterException() {
 
-    logger.error("Required Value not found in Context! Job aborted!!!");
+    this("Required Value not found in Context! Job aborted!!!");
   }
 
 }

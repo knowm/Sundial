@@ -19,13 +19,13 @@ package org.quartz.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.quartz.spi.JobStore;
-import org.quartz.spi.SchedulerPlugin;
-import org.quartz.spi.ThreadPool;
+import org.quartz.QuartzScheduler;
+import org.quartz.plugins.SchedulerPlugin;
 
 /**
  * <p>
- * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to create a <code>{@link QuartzScheduler}</code> instance.
+ * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to create a <code>{@link QuartzScheduler}</code>
+ * instance.
  * </p>
  * 
  * @see QuartzScheduler
@@ -171,8 +171,8 @@ public class QuartzSchedulerResources {
 
   /**
    * <p>
-   * Add the given <code>{@link org.quartz.spi.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects the plugin's "initialize" method to be invoked
-   * externally (either before or after this method is called).
+   * Add the given <code>{@link org.quartz.plugins.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects
+   * the plugin's "initialize" method to be invoked externally (either before or after this method is called).
    * </p>
    */
   public void addSchedulerPlugin(SchedulerPlugin plugin) {
@@ -182,7 +182,7 @@ public class QuartzSchedulerResources {
 
   /**
    * <p>
-   * Get the <code>List</code> of all <code>{@link org.quartz.spi.SchedulerPlugin}</code>s for the <code>{@link QuartzScheduler}</code> to use.
+   * Get the <code>List</code> of all <code>{@link org.quartz.plugins.SchedulerPlugin}</code>s for the <code>{@link QuartzScheduler}</code> to use.
    * </p>
    */
   public List<SchedulerPlugin> getSchedulerPlugins() {

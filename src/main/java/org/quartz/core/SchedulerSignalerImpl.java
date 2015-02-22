@@ -1,34 +1,33 @@
-/** 
- * Copyright 2001-2009 Terracotta, Inc. 
- * Copyright 2014 Xeiam 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not 
- * use this file except in compliance with the License. You may obtain a copy 
- * of the License at 
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0 
- *   
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
- * License for the specific language governing permissions and limitations 
+/**
+ * Copyright 2001-2009 Terracotta, Inc.
+ * Copyright 2014 Xeiam
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
  * under the License.
  */
 package org.quartz.core;
 
-import org.quartz.JobKey;
-import org.quartz.Trigger;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerSignaler;
+import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * An interface to be used by <code>JobStore</code> instances in order to communicate signals back to the <code>QuartzScheduler</code>.
- * 
+ *
  * @author jhouse
  */
-class SchedulerSignalerImpl implements SchedulerSignaler {
+public class SchedulerSignalerImpl implements SchedulerSignaler {
 
   private Logger logger = LoggerFactory.getLogger(SchedulerSignalerImpl.class);
 
@@ -37,11 +36,11 @@ class SchedulerSignalerImpl implements SchedulerSignaler {
 
   /**
    * Constructor
-   * 
+   *
    * @param quartzScheduler
    * @param quartzSchedulerThread
    */
-  SchedulerSignalerImpl(QuartzScheduler quartzScheduler, QuartzSchedulerThread quartzSchedulerThread) {
+  public SchedulerSignalerImpl(QuartzScheduler quartzScheduler, QuartzSchedulerThread quartzSchedulerThread) {
 
     this.quartzScheduler = quartzScheduler;
     this.quartzSchedulerThread = quartzSchedulerThread;
@@ -73,7 +72,7 @@ class SchedulerSignalerImpl implements SchedulerSignaler {
   }
 
   @Override
-  public void notifySchedulerListenersJobDeleted(JobKey jobKey) {
+  public void notifySchedulerListenersJobDeleted(String jobKey) {
 
     quartzScheduler.notifySchedulerListenersJobDeleted(jobKey);
   }

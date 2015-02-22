@@ -16,7 +16,8 @@
 package com.xeiam.sundial;
 
 /**
- * A JobAction encapsulates business logic that can be reused in more than one place. Extenders of JobAction have access to the JobContext and Job logging functions.
+ * A JobAction encapsulates business logic that can be reused in more than one place. Extenders of JobAction have access to the JobContext and Job
+ * logging functions.
  * 
  * @author timothy.molter
  */

@@ -17,10 +17,9 @@
 
 package org.quartz.core;
 
-import org.quartz.Scheduler;
+import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.TriggerFiredBundle;
 
 /**
  * <p>
@@ -32,12 +31,14 @@ import org.quartz.spi.TriggerFiredBundle;
 public interface JobRunShellFactory {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
    * <p>
-   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and the <code>JobExecutionContext</code> s within it.
+   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and
+   * the <code>JobExecutionContext</code> s within it.
    * </p>
    */
   void initialize(Scheduler scheduler) throws SchedulerConfigException;

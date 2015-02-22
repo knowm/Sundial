@@ -17,23 +17,24 @@
 
 package org.quartz.plugins.management;
 
-import org.quartz.Scheduler;
+import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
-import org.quartz.spi.SchedulerPlugin;
+import org.quartz.plugins.SchedulerPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This plugin catches the event of the JVM terminating (such as upon a CRTL-C) and tells the scheduler to shutdown.
  * 
- * @see org.quartz.Scheduler#shutdown(boolean)
+ * @see org.quartz.core.Scheduler#shutdown(boolean)
  * @author James House
  */
 public class ShutdownHookPlugin implements SchedulerPlugin {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private boolean cleanShutdown = true;
@@ -41,7 +42,8 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   public ShutdownHookPlugin() {
@@ -49,7 +51,8 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -58,7 +61,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * The default value is <code>true</code>.
    * </p>
    * 
-   * @see org.quartz.Scheduler#shutdown(boolean)
+   * @see org.quartz.core.Scheduler#shutdown(boolean)
    */
   public boolean isCleanShutdown() {
 
@@ -71,7 +74,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * The default value is <code>true</code>.
    * </p>
    * 
-   * @see org.quartz.Scheduler#shutdown(boolean)
+   * @see org.quartz.core.Scheduler#shutdown(boolean)
    */
   public void setCleanShutdown(boolean b) {
 
@@ -79,7 +82,8 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**

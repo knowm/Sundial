@@ -31,22 +31,24 @@ import com.xeiam.sundial.SundialJobScheduler;
  * A ServletContextListner that can be used to initialize Sundial.
  * </p>
  * <p>
- * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded (usually when the application server is being
- * shutdown). Possible values are "true" or "false". The default is "true".
+ * The init parameter 'quartz:shutdown-on-unload' can be used to specify whether you want scheduler.shutdown() called when the listener is unloaded
+ * (usually when the application server is being shutdown). Possible values are "true" or "false". The default is "true".
  * </p>
  * <p>
- * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want scheduler.shutdown(true) called when the listener is
- * unloaded (usually when the application server is being shutdown). Passing "true" to the shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or
- * "false". The default is "false".
+ * The init parameter 'quartz:wait-on-shutdown' has effect when 'quartz:shutdown-on-unload' is specified "true", and indicates whether you want
+ * scheduler.shutdown(true) called when the listener is unloaded (usually when the application server is being shutdown). Passing "true" to the
+ * shutdown() call causes the scheduler to wait for existing jobs to complete. Possible values are "true" or "false". The default is "false".
  * </p>
  * <p>
- * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first loaded. If set to false, your application will need
- * to call the start() method before the scheduler begins to run and process jobs. Possible values are "true" or "false". The default is "true", which means the scheduler is started.
+ * The init parameter 'quartz:start-on-load' can be used to specify whether you want the scheduler.start() method called when the listener is first
+ * loaded. If set to false, your application will need to call the start() method before the scheduler begins to run and process jobs. Possible values
+ * are "true" or "false". The default is "true", which means the scheduler is started.
  * </p>
  * <p>
- * The init parameter 'quartz:start-delay-seconds' can be used to specify the amount of time to wait after initializing the scheduler before scheduler.start() is called.
+ * The init parameter 'quartz:start-delay-seconds' can be used to specify the amount of time to wait after initializing the scheduler before
+ * scheduler.start() is called.
  * </p>
- * 
+ *
  * @author James House
  * @author Chuck Cavaness
  * @author John Petrocik
@@ -80,19 +82,22 @@ public class SundialInitializerListener implements ServletContextListener {
 
       // THREAD POOL SIZE
       int threadPoolSize = 10; // ten is default
-      String ThreadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
+      String threadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
 
       try {
-        if (ThreadPoolSizeString != null && ThreadPoolSizeString.trim().length() > 0) {
-          threadPoolSize = Integer.parseInt(ThreadPoolSizeString);
+        if (threadPoolSizeString != null && threadPoolSizeString.trim().length() > 0) {
+          threadPoolSize = Integer.parseInt(threadPoolSizeString);
         }
       } catch (Exception e) {
-        logger.error("Cannot parse value of 'thread-pool-size' to an integer: " + ThreadPoolSizeString + ", defaulting to 10 threads.");
+        logger.error("Cannot parse value of 'thread-pool-size' to an integer: " + threadPoolSizeString + ", defaulting to 10 threads.");
       }
+
+      // JOBS PACKAGE NAME
+      String packageName = servletContext.getInitParameter("annotated-jobs-package-name");
 
       // Always want to get the scheduler, even if it isn't starting,
       // to make sure it is both initialized and registered.
-      SundialJobScheduler.createScheduler(threadPoolSize);
+      SundialJobScheduler.createScheduler(threadPoolSize, packageName);
 
       // Give a reference to the servletContext so jobs can access "global" webapp objects
       SundialJobScheduler.setServletContext(servletContext);
@@ -117,14 +122,12 @@ public class SundialInitializerListener implements ServletContextListener {
           // Start now
           SundialJobScheduler.getScheduler().start();
           logger.info("Sundial Scheduler has been started...");
-        }
-        else {
+        } else {
           // Start delayed
           SundialJobScheduler.getScheduler().startDelayed(startDelay);
           logger.info("Sundial Scheduler will start in " + startDelay + " seconds.");
         }
-      }
-      else {
+      } else {
         logger.info("Sundial Scheduler has not been started. Use scheduler.start()");
       }
 

@@ -17,14 +17,14 @@
 
 package org.quartz.exceptions;
 
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.Scheduler;
+import org.quartz.core.JobExecutionContext;
+import org.quartz.core.Scheduler;
+import org.quartz.jobs.Job;
 
 /**
- * An exception that can be thrown by a <code>{@link org.quartz.Job}</code> to indicate to the Quartz <code>{@link Scheduler}</code> that an error occurred while executing, and whether or not the
- * <code>Job</code> requests to be re-fired immediately
- * (using the same <code>{@link JobExecutionContext}</code>, or whether it wants to be unscheduled.
+ * An exception that can be thrown by a <code>{@link org.quartz.jobs.Job}</code> to indicate to the Quartz <code>{@link Scheduler}</code> that an
+ * error occurred while executing, and whether or not the <code>Job</code> requests to be re-fired immediately (using the same
+ * <code>{@link JobExecutionContext}</code>, or whether it wants to be unscheduled.
  * <p>
  * Note that if the flag for 'refire immediately' is set, the flags for unscheduling the Job are ignored.
  * </p>
@@ -37,7 +37,8 @@ import org.quartz.Scheduler;
 public class JobExecutionException extends SchedulerException {
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Data members.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   private boolean refire = false;
@@ -47,7 +48,8 @@ public class JobExecutionException extends SchedulerException {
   private boolean unscheduleAllTriggs = false;
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   /**
@@ -72,7 +74,8 @@ public class JobExecutionException extends SchedulerException {
   }
 
   /*
-   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
+   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
   public void setRefireImmediately(boolean refire) {
