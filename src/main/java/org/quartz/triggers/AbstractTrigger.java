@@ -17,6 +17,7 @@
  */
 package org.quartz.triggers;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.quartz.core.JobExecutionContext;
@@ -333,7 +334,8 @@ public abstract class AbstractTrigger implements OperableTrigger {
   @Override
   public String toString() {
 
-    return "Trigger '" + getName() + "':  triggerClass: '" + getClass().getName() + " calendar: '" + getCalendarName() + "' misfireInstruction: "
-        + getMisfireInstruction() + " nextFireTime: " + getNextFireTime();
+    return "Trigger '" + getName() + "',  triggerClass: " + getClass().getSimpleName() + ", jobName: " + getJobName() + ", jobDataMap: "
+        + ((jobDataMap == null) ? "empty" : Arrays.toString(jobDataMap.entrySet().toArray())) + ", calendar: " + getCalendarName()
+        + ", misfireInstruction: " + getMisfireInstruction() + ", priority: " + getPriority() + ", nextFireTime: " + getNextFireTime();
   }
 }

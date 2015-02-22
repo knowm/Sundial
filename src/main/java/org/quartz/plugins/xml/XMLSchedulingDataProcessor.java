@@ -168,7 +168,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     is = classLoadHelper.getResourceAsStream(QUARTZ_XSD_PATH_IN_JAR);
 
     if (is == null) {
-      logger.warn("Could not load xml scheme from classpath");
+      logger.warn("Could not load jobs schema from classpath!");
     } else {
       inputSource = new InputSource(is);
     }
@@ -245,7 +245,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName) throws ValidationException, ParserConfigurationException, SAXException, IOException, SchedulerException,
-  ClassNotFoundException, ParseException, XPathException {
+      ClassNotFoundException, ParseException, XPathException {
 
     prepForProcessing();
 
@@ -491,11 +491,14 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
     logger.info("Adding " + jobs.size() + " jobs, " + triggers.size() + " triggers.");
 
     for (JobDetail jobDetail : jobs) {
+      logger.info("Scheduled job: {} ", jobDetail);
+
       sched.addJob(jobDetail);
     }
 
-    // add triggers that weren't associated with a new job... (those we already handled were removed above)
     for (OperableTrigger trigger : triggers) {
+
+      logger.info("Scheduled trigger: {}", trigger);
 
       if (trigger.getStartTime() == null) {
         trigger.setStartTime(new Date());

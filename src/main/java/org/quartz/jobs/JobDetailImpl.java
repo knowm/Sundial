@@ -18,9 +18,10 @@
 
 package org.quartz.jobs;
 
+import java.util.Arrays;
+
 import org.quartz.builders.JobBuilder;
 import org.quartz.core.Scheduler;
-import org.quartz.triggers.Trigger;
 
 /**
  * <p>
@@ -38,10 +39,6 @@ import org.quartz.triggers.Trigger;
  * <code>Job</code>, but a single <code>Trigger</code> can only point to one <code>Job</code>.
  * </p>
  *
- * @see Job
- * @see StatefulJob
- * @see JobDataMap
- * @see Trigger
  * @author James House
  * @author Sharada Jambula
  * @author timmolter
@@ -55,13 +52,21 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
 
   private String name;
 
-  private String description;
-
   private Class<? extends Job> jobClass;
+
+  private String description = "";
 
   private JobDataMap jobDataMap;
 
   private boolean isConcurrencyAllowed = false;
+
+  @Override
+  public String toString() {
+
+    return "name: '" + getName() + "', Job Class: " + ((getJobClass() == null) ? null : getJobClass().getName()) + ", description: "
+        + getDescription() + " isConcurrencyAllowed: " + isConcurrencyAllowed() + ", jobDataMap: "
+        + ((jobDataMap == null) ? "empty" : Arrays.toString(jobDataMap.entrySet().toArray()));
+  }
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Constructors.
@@ -184,13 +189,6 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   public boolean isConcurrencyAllowed() {
 
     return isConcurrencyAllowed;
-  }
-
-  @Override
-  public String toString() {
-
-    return "JobDetail '" + getName() + "':  jobClass: '" + ((getJobClass() == null) ? null : getJobClass().getName()) + " isConcurrencyAllowed: "
-        + isConcurrencyAllowed() + " requestsRecovers: " + isConcurrencyAllowed();
   }
 
   @Override

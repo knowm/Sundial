@@ -444,4 +444,10 @@ public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
     return (cronEx == null) ? null : cronEx.getTimeBefore(endTime);
   }
 
+  @Override
+  public String toString() {
+
+    return super.toString() + ", cronEx: " + getCronExpression() + ", timeZone: " + getTimeZone().getID();
+  }
+
 }

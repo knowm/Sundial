@@ -596,4 +596,9 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
     }
   }
 
+  @Override
+  public String toString() {
+
+    return super.toString() + ", repeatCount: " + getRepeatCount() + ", repeatInterval: " + getRepeatInterval();
+  }
 }

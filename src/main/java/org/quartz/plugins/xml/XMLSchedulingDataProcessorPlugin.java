@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
  * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the
  * file for changes.
  *
- * @see org.quartz.plugins.xml.XMLSchedulingDataProcessor
  * @author James House
  * @author Pierre Awaragi
  * @author pl47ypus

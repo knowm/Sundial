@@ -82,13 +82,13 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, cronTrigger.jobDataMap());
           }
 
-          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).isConcurrencyAllowed(cronTrigger.isConcurrencyAllowed())
-              .usingJobData(jobDataMap).build();
+          JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName())
+              .isConcurrencyAllowed(cronTrigger.isConcurrencyAllowed()).usingJobData(jobDataMap).build();
           OperableTrigger trigger;
           try {
             trigger = buildCronTrigger(cronTrigger, jobClass.getSimpleName());
-            scheduler.scheduleJob(job, trigger);
-            logger.info("Scheduled job {} with trigger {}", job, trigger);
+            scheduler.scheduleJob(jobDetail, trigger);
+            logger.info("Scheduled job: {} with trigger: {}", jobDetail, trigger);
           } catch (Exception e) {
             logger.warn("ANNOTATED JOB + TRIGGER NOT ADDED!", e);
           }
