@@ -22,7 +22,7 @@ into your applications, look no further.
 ## Features
 
  * [x] Apache 2.0 license
- * [x] ~175 KB Jar
+ * [x] ~150 KB Jar
  * [x] In-memory multi-threaded jobs
  * [x] Define jobs and triggers in job.xml
  * [x] or define jobs and triggers via annotations
