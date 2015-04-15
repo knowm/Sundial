@@ -24,7 +24,7 @@ into your applications, look no further.
  * [x] Apache 2.0 license
  * [x] ~150 KB Jar
  * [x] In-memory multi-threaded jobs
- * [x] Define jobs and triggers in job.xml
+ * [x] Define jobs and triggers in jobs.xml
  * [x] or define jobs and triggers via annotations
  * [x] or define jobs and triggers programmatically
  * [x] Cron Triggers
