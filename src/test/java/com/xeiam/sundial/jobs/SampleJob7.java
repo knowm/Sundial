@@ -24,7 +24,7 @@ import com.xeiam.sundial.Job;
 import com.xeiam.sundial.annotations.SimpleTrigger;
 import com.xeiam.sundial.exceptions.JobInterruptException;
 
-@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS)
+@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)
 public class SampleJob7 extends Job {
 
   private final Logger logger = LoggerFactory.getLogger(SampleJob7.class);
