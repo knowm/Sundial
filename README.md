@@ -196,7 +196,7 @@ new SampleJobAction().run();
 
 ## Job Termination
 
-To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `setTerminate()` at an appropriate location.
+To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
 
 ## Concurrent Job Execution
 
