@@ -83,9 +83,9 @@ public abstract class JobContainer {
   }
 
   /**
-   * Set the terminate flag to true
+   * Set the terminate flag to true. Client code should not call this.
    */
-  public void setTerminate() {
+  protected void setTerminate() {
 
     terminate = true;
   }
