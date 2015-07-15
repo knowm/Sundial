@@ -212,7 +212,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     String relPath = pkgname.replace('.', '/');
 
     // Get a File object for the package
-    URL resource = ClassLoader.getSystemClassLoader().getResource(relPath);
+    URL resource = getResource(relPath);
     if (resource == null) {
       throw new RuntimeException("Unexpected problem: No resource for " + relPath);
     }
