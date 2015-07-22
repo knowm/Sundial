@@ -183,19 +183,19 @@ public class SundialJobScheduler {
    */
   public static void addJob(String jobName, String jobClassName) {
 
-    addJob(jobName, jobClassName, null);
+    addJob(jobName, jobClassName, null, false);
 
   }
 
   /**
-   * Adds a Job matching to the scheduler with no associated <code>Trigger</code>. The <code>Job</code> will be 'dormant' until it is scheduled with a
-   * <code>Trigger</code>, or <code>Scheduler.startJob()</code> is called for it. Replaces a matching existing Job.
+   * Adds a Job to the scheduler. Replaces a matching existing Job.
    *
    * @param jobName
    * @param jobClassName
-   * @param params
+   * @param params Set this null if there are no params
+   * @param isConcurrencyAllowed
    */
-  public static void addJob(String jobName, String jobClassName, Map<String, Object> params) {
+  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed) {
 
     try {
 
@@ -208,7 +208,7 @@ public class SundialJobScheduler {
         }
       }
 
-      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).usingJobData(jobDataMap).build();
+      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).usingJobData(jobDataMap).isConcurrencyAllowed(isConcurrencyAllowed).build();
 
       getScheduler().addJob(jobDetail);
 
