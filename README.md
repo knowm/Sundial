@@ -223,7 +223,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -239,7 +239,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
