@@ -4,7 +4,7 @@
 	<name>Sundial</name>
 	<groupId>com.xeiam</groupId>
 	<artifactId>sundial</artifactId>
-	<version>2.0.1</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>A Lightweight Java Job Scheduling Framework</description>
 	<url>http://xeiam.com/sundial</url>
@@ -39,7 +39,7 @@
 		<connection>scm:git:git@github.com:timmolter/Sundial.git</connection>
 		<developerConnection>scm:git:git@github.com:timmolter/Sundial.git</developerConnection>
 		<url>git@github.com:timmolter/Sundial.git</url>
-		<tag>sundial-2.0.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<ciManagement>
