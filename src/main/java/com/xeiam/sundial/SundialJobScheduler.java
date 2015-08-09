@@ -22,6 +22,7 @@ import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +31,8 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
+import org.quartz.builders.CronTriggerBuilder;
+import org.quartz.builders.SimpleTriggerBuilder;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.core.SchedulerFactory;
@@ -339,11 +342,29 @@ public class SundialJobScheduler {
    * @param cronExpression
    */
   public static void addCronTrigger(String triggerName, String jobName, String cronExpression) {
+      addCronTrigger(triggerName, jobName, cronExpression, null, null);
+  }
+  
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param cronExpression
+   * @param startTime
+   * @param endTime
+   */
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime) {
 
     try {
-
-      OperableTrigger trigger = cronTriggerBuilder(cronExpression).withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY)
-          .build();
+        CronTriggerBuilder cronTriggerBuilder = cronTriggerBuilder(cronExpression);
+        cronTriggerBuilder.withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY);
+        if(startTime != null){
+            cronTriggerBuilder.startAt(startTime);
+        }
+        if(endTime != null){
+            cronTriggerBuilder.endAt(endTime);
+        }
+      OperableTrigger trigger = cronTriggerBuilder.build();
+     
 
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {
@@ -360,11 +381,29 @@ public class SundialJobScheduler {
    * @param repeatInterval
    */
   public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) {
+    addSimpleTrigger(triggerName, jobName, repeatCount, repeatInterval, null, null);
+  }
+  
+  /**
+   * @param triggerName
+   * @param jobName
+   * @param repeatCount
+   * @param repeatInterval
+   * @param startTime
+   * @param endTime
+   */
+  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime) {
 
     try {
-
-      OperableTrigger trigger = simpleTriggerBuilder().withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval)
-          .withIdentity(triggerName).forJob(jobName).build();
+        SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
+        simpleTriggerBuilder.withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName).forJob(jobName);
+        if(startTime != null){
+            simpleTriggerBuilder.startAt(startTime);
+        }
+        if(endTime != null){
+            simpleTriggerBuilder.endAt(endTime);
+        }
+      OperableTrigger trigger = simpleTriggerBuilder.build();
 
       getScheduler().scheduleJob(trigger);
 
