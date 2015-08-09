@@ -1060,7 +1060,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobAdded(jobDetail);
       } catch (Exception e) {
-        logger.error("Error while notifying SchedulerListener of JobAdded.", e);
+        logger.error("Error while notifying SchedulerListener of Job Added.", e);
       }
     }
   }
@@ -1075,7 +1075,7 @@ public class QuartzScheduler implements Scheduler {
       try {
         sl.jobDeleted(jobKey);
       } catch (Exception e) {
-        logger.error("Error while notifying SchedulerListener of JobAdded.", e);
+        logger.error("Error while notifying SchedulerListener of Job Deleted.", e);
       }
     }
   }

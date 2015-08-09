@@ -22,9 +22,9 @@ into your applications, look no further.
 ## Features
 
  * [x] Apache 2.0 license
- * [x] ~175 KB Jar
+ * [x] ~150 KB Jar
  * [x] In-memory multi-threaded jobs
- * [x] Define jobs and triggers in job.xml
+ * [x] Define jobs and triggers in jobs.xml
  * [x] or define jobs and triggers via annotations
  * [x] or define jobs and triggers programmatically
  * [x] Cron Triggers
@@ -194,6 +194,17 @@ getJobContext().put("MyValue", new Integer(123));
 new SampleJobAction().run();
 ```
 
+## Job Termination
+
+To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
+
+## Concurrent Job Execution
+
+By default jobs are not set to concurrently execute. This means if a job is currently running and a trigger is fired for that job, it will skip running the job. In some cases concurrent job execution is desired and there are a few ways to configure it.
+
+1. You can add `<concurrency-allowed>true</concurrency-allowed>` in jobs.xml.
+1. You can add it to the Sundial annotations like this: `@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)` Same idea for cron annotation too.
+
 Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Getting the Goods
@@ -212,7 +223,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -228,7 +239,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>com.xeiam</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
