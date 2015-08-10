@@ -8,16 +8,8 @@ Sundial makes adding scheduled jobs to your Java application a walk in the park.
 
 ## Long Description
 
-Sundial is a lightweight Java job scheduling framework forked from
-Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the
-nitty-gritty configuration details of Quartz, reducing the time
-needed to get a simple RAM job scheduler up and running. Sundial
-uses a ThreadLocal wrapper for each job containing a HashMap for
-job key-value pairs. Convenience methods allow easy access to these
-parameters. JobActions are reusable components that also have
-access to the context parameters. If you are looking
-for a hassle-free 100% Java job scheduling framework that is easy to integrate
-into your applications, look no further.
+Sundial is a lightweight Java job scheduling framework forked from Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the nitty-gritty configuration details of Quartz, reducing the time needed to get a simple RAM job scheduler up and running. Sundial
+uses a ThreadLocal wrapper for each job containing a HashMap for job key-value pairs. Convenience methods allow easy access to these parameters. JobActions are reusable components that also have access to the context parameters. If you are looking for a hassle-free 100% Java job scheduling framework that is easy to integrate into your applications, look no further.
 
 ## Features
 

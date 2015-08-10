@@ -374,8 +374,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerName, -1);
+            throw new ParseException(
+                "Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerName, -1);
           }
         }
       } else if (triggerNode.getNodeName().equals("cron")) {
@@ -397,8 +397,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerName, -1);
+            throw new ParseException(
+                "Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerName, -1);
           }
         }
       }

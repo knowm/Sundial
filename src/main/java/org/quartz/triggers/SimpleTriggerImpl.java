@@ -380,7 +380,8 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
    * </p>
    *
    * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value
-   *         <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>). </p>
+   *         <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>).
+   *         </p>
    */
   @Override
   public Date computeFirstFireTime(Calendar calendar) {

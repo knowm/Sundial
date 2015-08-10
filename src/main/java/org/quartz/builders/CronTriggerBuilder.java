@@ -90,8 +90,8 @@ public class CronTriggerBuilder extends TriggerBuilder {
       ct.setCronExpression(cronExpression);
     } catch (ParseException e) {
       // all methods of construction ensure the expression is valid by this point...
-      throw new RuntimeException("CronExpression '" + cronExpression
-          + "' is invalid, which should not be possible, please report bug to Quartz developers.");
+      throw new RuntimeException(
+          "CronExpression '" + cronExpression + "' is invalid, which should not be possible, please report bug to Quartz developers.");
     }
     ct.setTimeZone(tz);
     ct.setMisfireInstruction(misfireInstruction);

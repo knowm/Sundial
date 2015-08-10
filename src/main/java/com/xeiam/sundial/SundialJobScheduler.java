@@ -342,9 +342,9 @@ public class SundialJobScheduler {
    * @param cronExpression
    */
   public static void addCronTrigger(String triggerName, String jobName, String cronExpression) {
-      addCronTrigger(triggerName, jobName, cronExpression, null, null);
+    addCronTrigger(triggerName, jobName, cronExpression, null, null);
   }
-  
+
   /**
    * @param triggerName
    * @param jobName
@@ -355,16 +355,15 @@ public class SundialJobScheduler {
   public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime) {
 
     try {
-        CronTriggerBuilder cronTriggerBuilder = cronTriggerBuilder(cronExpression);
-        cronTriggerBuilder.withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY);
-        if(startTime != null){
-            cronTriggerBuilder.startAt(startTime);
-        }
-        if(endTime != null){
-            cronTriggerBuilder.endAt(endTime);
-        }
+      CronTriggerBuilder cronTriggerBuilder = cronTriggerBuilder(cronExpression);
+      cronTriggerBuilder.withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY);
+      if (startTime != null) {
+        cronTriggerBuilder.startAt(startTime);
+      }
+      if (endTime != null) {
+        cronTriggerBuilder.endAt(endTime);
+      }
       OperableTrigger trigger = cronTriggerBuilder.build();
-     
 
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {
@@ -377,17 +376,17 @@ public class SundialJobScheduler {
   /**
    * @param triggerName
    * @param jobName
-   * @param repeatCount
+   * @param repeatCount - set to -1 to repeat indefinitely
    * @param repeatInterval
    */
   public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) {
     addSimpleTrigger(triggerName, jobName, repeatCount, repeatInterval, null, null);
   }
-  
+
   /**
    * @param triggerName
    * @param jobName
-   * @param repeatCount
+   * @param repeatCount - set to -1 to repeat indefinitely
    * @param repeatInterval
    * @param startTime
    * @param endTime
@@ -395,14 +394,14 @@ public class SundialJobScheduler {
   public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime) {
 
     try {
-        SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
-        simpleTriggerBuilder.withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName).forJob(jobName);
-        if(startTime != null){
-            simpleTriggerBuilder.startAt(startTime);
-        }
-        if(endTime != null){
-            simpleTriggerBuilder.endAt(endTime);
-        }
+      SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
+      simpleTriggerBuilder.withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName).forJob(jobName);
+      if (startTime != null) {
+        simpleTriggerBuilder.startAt(startTime);
+      }
+      if (endTime != null) {
+        simpleTriggerBuilder.endAt(endTime);
+      }
       OperableTrigger trigger = simpleTriggerBuilder.build();
 
       getScheduler().scheduleJob(trigger);

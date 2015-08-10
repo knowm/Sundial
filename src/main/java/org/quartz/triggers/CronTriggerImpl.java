@@ -405,7 +405,8 @@ public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
    * </p>
    *
    * @return the first time at which the <code>Trigger</code> will be fired by the scheduler, which is also the same value
-   *         <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>). </p>
+   *         <code>getNextFireTime()</code> will return (until after the first firing of the <code>Trigger</code>).
+   *         </p>
    */
   @Override
   public Date computeFirstFireTime(org.quartz.core.Calendar calendar) {

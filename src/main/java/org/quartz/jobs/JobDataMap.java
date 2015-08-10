@@ -39,7 +39,7 @@ import java.util.HashMap;
  * @author James House
  * @author timmolter
  */
-public class JobDataMap extends HashMap<String, Object> implements Serializable {
+public class JobDataMap extends HashMap<String, Object>implements Serializable {
 
   private static final long serialVersionUID = -6939901990106713909L;
 

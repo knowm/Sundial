@@ -19,6 +19,6 @@ public @interface SimpleTrigger {
 
   boolean isConcurrencyAllowed() default false;
 
-  String[] jobDataMap() default {};
+  String[]jobDataMap() default {};
 
 }

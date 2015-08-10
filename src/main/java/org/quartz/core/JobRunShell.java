@@ -262,8 +262,8 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
     try {
       vetoed = qs.notifyTriggerListenersFired(jec);
     } catch (SchedulerException se) {
-      qs.notifySchedulerListenersError("Unable to notify TriggerListener(s) while firing trigger "
-          + "(Trigger and Job will NOT be fired!). trigger= " + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
+      qs.notifySchedulerListenersError("Unable to notify TriggerListener(s) while firing trigger " + "(Trigger and Job will NOT be fired!). trigger= "
+          + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       return false;
     }
@@ -272,9 +272,8 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
       try {
         qs.notifyJobListenersWasVetoed(jec);
       } catch (SchedulerException se) {
-        qs.notifySchedulerListenersError("Unable to notify JobListener(s) of vetoed execution "
-            + "while firing trigger (Trigger and Job will NOT be " + "fired!). trigger= " + jec.getTrigger().getName() + " job= "
-            + jec.getJobDetail().getName(), se);
+        qs.notifySchedulerListenersError("Unable to notify JobListener(s) of vetoed execution " + "while firing trigger (Trigger and Job will NOT be "
+            + "fired!). trigger= " + jec.getTrigger().getName() + " job= " + jec.getJobDetail().getName(), se);
 
       }
       throw new VetoedException();
