@@ -218,7 +218,6 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     }
     logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
 
-    resource.getPath();
     if (resource.toString().startsWith("jar:")) {
       processJarfile(resource, pkgname, classes);
     } else {
@@ -256,7 +255,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   private void processJarfile(URL resource, String pkgname, Set<Class<? extends Job>> classes) {
 
     String relPath = pkgname.replace('.', '/');
-    String resPath = resource.getPath();
+    String resPath = resource.getPath().replace("%20", " ");
     String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
     logger.debug("Reading JAR file: '" + jarPath + "'");
     JarFile jarFile;
