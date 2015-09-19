@@ -115,8 +115,9 @@ public class SundialJobScheduler {
    * @param threadPoolSize the thread pool size used by the scheduler
    * @param annotatedJobsPackageName the package where trigger annotated Job calsses can be found
    * @return
+   * @throws SchedulerException 
    */
-  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) {
+  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SchedulerException {
 
     if (scheduler == null) {
       try {
@@ -124,6 +125,7 @@ public class SundialJobScheduler {
 
       } catch (SchedulerException e) {
         logger.error("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
+        throw e;
       }
     }
     return scheduler;
@@ -183,8 +185,10 @@ public class SundialJobScheduler {
    *
    * @param jobName
    * @param jobClassName
+   * @throws SchedulerException 
+   * @throws ClassNotFoundException 
    */
-  public static void addJob(String jobName, String jobClassName) {
+  public static void addJob(String jobName, String jobClassName) throws SchedulerException, ClassNotFoundException {
 
     addJob(jobName, jobClassName, null, false);
 
@@ -197,8 +201,10 @@ public class SundialJobScheduler {
    * @param jobClassName
    * @param params Set this null if there are no params
    * @param isConcurrencyAllowed
+   * @throws SchedulerException 
+   * @throws ClassNotFoundException 
    */
-  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed) {
+  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed) throws SchedulerException, ClassNotFoundException {
 
     try {
 
@@ -217,8 +223,10 @@ public class SundialJobScheduler {
 
     } catch (SchedulerException e) {
       logger.error("ERROR ADDING JOB!!!", e);
+      throw e;
     } catch (ClassNotFoundException e) {
       logger.error("ERROR ADDING JOB!!!", e);
+      throw e;
     }
   }
 
@@ -226,13 +234,15 @@ public class SundialJobScheduler {
    * Starts a Job matching the given Job Name
    *
    * @param jobName
+   * @throws SchedulerException 
    */
-  public static void startJob(String jobName) {
+  public static void startJob(String jobName) throws SchedulerException {
 
     try {
       getScheduler().triggerJob(jobName, null);
     } catch (SchedulerException e) {
       logger.error("ERROR STARTING JOB!!!", e);
+      throw e;
     }
   }
 
@@ -240,13 +250,15 @@ public class SundialJobScheduler {
    * Removes a Job matching the given Job Name
    *
    * @param jobName
+   * @throws SchedulerException 
    */
-  public static void removeJob(String jobName) {
+  public static void removeJob(String jobName) throws SchedulerException {
 
     try {
       getScheduler().deleteJob(jobName);
     } catch (SchedulerException e) {
       logger.error("ERROR REMOVING JOB!!!", e);
+      throw e;
     }
 
   }
@@ -255,8 +267,9 @@ public class SundialJobScheduler {
    * Starts a Job matching the the given Job Name found in jobs.xml
    *
    * @param jobName
+   * @throws SchedulerException 
    */
-  public static void startJob(String jobName, Map<String, Object> params) {
+  public static void startJob(String jobName, Map<String, Object> params) throws SchedulerException {
 
     try {
 
@@ -269,6 +282,7 @@ public class SundialJobScheduler {
       getScheduler().triggerJob(jobName, jobDataMap);
     } catch (SchedulerException e) {
       logger.error("ERROR STARTING JOB!!!", e);
+      throw e;
     }
 
   }
@@ -277,8 +291,9 @@ public class SundialJobScheduler {
    * Triggers a Job interrupt on all Jobs matching the given Job Name
    *
    * @param jobName The job name
+   * @throws SchedulerException 
    */
-  public static void stopJob(String jobName) {
+  public static void stopJob(String jobName) throws SchedulerException {
 
     try {
       List<JobExecutionContext> currentlyExecutingJobs = getScheduler().getCurrentlyExecutingJobs();
@@ -297,6 +312,7 @@ public class SundialJobScheduler {
       }
     } catch (SchedulerException e) {
       logger.error("ERROR STOPPING JOB!!!", e);
+      throw e;
     }
   }
 
@@ -306,8 +322,9 @@ public class SundialJobScheduler {
    * @param jobName The job name
    * @param key The key in the job data map
    * @param pValue The value in the job data map
+   * @throws SchedulerException 
    */
-  public static void stopJob(String jobName, String key, String pValue) {
+  public static void stopJob(String jobName, String key, String pValue) throws SchedulerException {
 
     logger.debug("key= " + key);
     logger.debug("value= " + pValue);
@@ -331,6 +348,7 @@ public class SundialJobScheduler {
       }
     } catch (SchedulerException e) {
       logger.error("ERROR DURING STOP Job!!!", e);
+      throw e;
     }
   }
 
@@ -340,8 +358,10 @@ public class SundialJobScheduler {
    * @param triggerName
    * @param jobName
    * @param cronExpression
+   * @throws ParseException 
+   * @throws SchedulerException 
    */
-  public static void addCronTrigger(String triggerName, String jobName, String cronExpression) {
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression) throws SchedulerException, ParseException {
     addCronTrigger(triggerName, jobName, cronExpression, null, null);
   }
 
@@ -351,8 +371,10 @@ public class SundialJobScheduler {
    * @param cronExpression
    * @param startTime
    * @param endTime
+   * @throws SchedulerException 
+   * @throws ParseException 
    */
-  public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime) {
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime) throws SchedulerException, ParseException {
 
     try {
       CronTriggerBuilder cronTriggerBuilder = cronTriggerBuilder(cronExpression);
@@ -368,8 +390,10 @@ public class SundialJobScheduler {
       getScheduler().scheduleJob(trigger);
     } catch (SchedulerException e) {
       logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+      throw e;
     } catch (ParseException e) {
       logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+      throw e;
     }
   }
 
@@ -378,8 +402,9 @@ public class SundialJobScheduler {
    * @param jobName
    * @param repeatCount - set to -1 to repeat indefinitely
    * @param repeatInterval
+   * @throws SchedulerException 
    */
-  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) {
+  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) throws SchedulerException {
     addSimpleTrigger(triggerName, jobName, repeatCount, repeatInterval, null, null);
   }
 
@@ -390,8 +415,9 @@ public class SundialJobScheduler {
    * @param repeatInterval
    * @param startTime
    * @param endTime
+   * @throws SchedulerException 
    */
-  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime) {
+  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime) throws SchedulerException {
 
     try {
       SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
@@ -408,6 +434,7 @@ public class SundialJobScheduler {
 
     } catch (SchedulerException e) {
       logger.error("ERROR ADDING CRON TRIGGER!!!", e);
+      throw e;
     }
   }
 
@@ -488,8 +515,9 @@ public class SundialJobScheduler {
 
   /**
    * Halts the Scheduler's firing of Triggers, and cleans up all resources associated with the Scheduler.
+   * @throws Exception 
    */
-  public static void shutdown() {
+  public static void shutdown() throws Exception {
 
     logger.debug("shutdown() called.");
 
@@ -497,6 +525,7 @@ public class SundialJobScheduler {
       getScheduler().shutdown(true);
     } catch (Exception e) {
       logger.error("COULD NOT SHUTDOWN SCHEDULER!!!", e);
+      throw e;
     }
   }
 }

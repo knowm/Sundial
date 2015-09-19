@@ -15,7 +15,10 @@
  */
 package com.xeiam.sundial;
 
+import java.text.ParseException;
 import java.util.concurrent.TimeUnit;
+
+import org.quartz.exceptions.SchedulerException;
 
 /**
  * @author timmolter
@@ -29,11 +32,27 @@ public class SampleRun {
 
     SundialJobScheduler.startScheduler("com.xeiam.sundial.jobs"); // package with annotated Jobs
 
-    SundialJobScheduler.addJob("SampleJob1", "com.xeiam.sundial.jobs.SampleJob1");
+    try {
+        SundialJobScheduler.addJob("SampleJob1", "com.xeiam.sundial.jobs.SampleJob1");
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    } catch (SchedulerException e) {
+        e.printStackTrace();
+    }
 
-    SundialJobScheduler.addCronTrigger("SampleJob1-Cron-Trigger", "SampleJob1", "0/10 * * * * ?");
+    try {
+        SundialJobScheduler.addCronTrigger("SampleJob1-Cron-Trigger", "SampleJob1", "0/10 * * * * ?");
+    } catch (SchedulerException e) {
+        e.printStackTrace();
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
 
-    SundialJobScheduler.addSimpleTrigger("SampleJob1-Simple-Trigger", "SampleJob1", -1, TimeUnit.SECONDS.toMillis(3));
+    try {
+        SundialJobScheduler.addSimpleTrigger("SampleJob1-Simple-Trigger", "SampleJob1", -1, TimeUnit.SECONDS.toMillis(3));
+    } catch (SchedulerException e) {
+        e.printStackTrace();
+    }
 
   }
 }
