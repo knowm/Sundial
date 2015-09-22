@@ -1,4 +1,4 @@
-## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://xeiam.com/sundial) Sundial
+## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
 
 A Lightweight Job Scheduling Framework for Java.
 
@@ -197,11 +197,11 @@ By default jobs are not set to concurrently execute. This means if a job is curr
 1. You can add `<concurrency-allowed>true</concurrency-allowed>` in jobs.xml.
 1. You can add it to the Sundial annotations like this: `@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)` Same idea for cron annotation too.
 
-Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Getting the Goods
 ### Non-Maven
-Download Jar: http://xeiam.com/sundial-change-log
+Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 #### Dependencies
 * org.slf4j.slf4j-api-1.7.10
 
@@ -260,4 +260,8 @@ Please report any bugs or submit feature requests to [Sundial's Github issue tra
 [Build History](https://travis-ci.org/timmolter/Sundial/builds)  
 
 ## Donations
-15MvtM8e3bzepmZ5vTe8cHvrEZg6eDzw2w  
+15MvtM8e3bzepmZ5vTe8cHvrEZg6eDzw2w
+
+## Release Information
+
+We will announce new releases on our [Twitter page](https://twitter.com/Knowmorg).
