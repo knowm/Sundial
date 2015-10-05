@@ -7,19 +7,19 @@
 	<version>2.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>A Lightweight Java Job Scheduling Framework</description>
-	<url>http://xeiam.com/sundial</url>
+	<url>http://knowm.org/open-source/sundial</url>
 	<inceptionYear>2011</inceptionYear>
 
-	<organization>
-		<name>Xeiam, LLC</name>
-		<url>http://xeiam.com/</url>
-	</organization>
+    <organization>
+        <name>Knowm Inc.</name>
+        <url>http://knowm.org/open-source/</url>
+    </organization>
 
-	<developers>
-		<developer>
-			<name>Tim Molter</name>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Tim Molter</name>
+        </developer>
+    </developers>
 
 	<licenses>
 		<license>
