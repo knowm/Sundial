@@ -448,12 +448,14 @@ public class SundialJobScheduler {
      * @param repeatInterval
      * @param startTime
      * @param endTime
+     * @param priority
      */
     public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime, int priority)
             throws SundialSchedulerException {
 
         try {
             SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
+            simpleTriggerBuilder.withPriority(priority);
             simpleTriggerBuilder.withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName).forJob(jobName);
             if (startTime != null) {
                 simpleTriggerBuilder.startAt(startTime);
