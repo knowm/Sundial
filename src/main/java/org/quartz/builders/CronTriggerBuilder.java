@@ -18,8 +18,10 @@
 package org.quartz.builders;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.TimeZone;
 
+import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.CronExpression;
 import org.quartz.triggers.CronTrigger;
 import org.quartz.triggers.CronTriggerImpl;
@@ -134,5 +136,41 @@ public class CronTriggerBuilder extends TriggerBuilder {
 
     misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW;
     return this;
+  }
+
+  public CronTriggerBuilder withIdentity(String name) {
+    return (CronTriggerBuilder)super.withIdentity(name);
+  }
+
+  public CronTriggerBuilder withDescription(String description) {
+    return (CronTriggerBuilder)super.withDescription(description);
+  }
+
+  public CronTriggerBuilder withPriority(int priority) {
+    return (CronTriggerBuilder)super.withPriority(priority);
+  }
+
+  public CronTriggerBuilder modifiedByCalendar(String calendarName) {
+    return (CronTriggerBuilder)super.modifiedByCalendar(calendarName);
+  }
+
+  public CronTriggerBuilder startNow() {
+    return (CronTriggerBuilder)super.startNow();
+  }
+
+  public CronTriggerBuilder startAt(Date startTime) {
+    return (CronTriggerBuilder)super.startAt(startTime);
+  }
+
+  public CronTriggerBuilder endAt(Date endTime) {
+    return (CronTriggerBuilder)super.endAt(endTime);
+  }
+
+  public CronTriggerBuilder forJob(String jobName) {
+    return (CronTriggerBuilder)super.forJob(jobName);
+  }
+
+  public CronTriggerBuilder usingJobData(JobDataMap newJobDataMap) {
+    return (CronTriggerBuilder)super.usingJobData(newJobDataMap);
   }
 }
