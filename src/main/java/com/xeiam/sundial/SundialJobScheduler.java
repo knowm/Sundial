@@ -181,6 +181,18 @@ public class SundialJobScheduler {
    * Adds a Job to the scheduler. Replaces a matching existing Job.
    *
    * @param jobName
+   * @param jobClass
+   */
+  public static void addJob(String jobName, Class<? extends Job> jobClass) throws SundialSchedulerException {
+
+    addJob(jobName, jobClass, null, false);
+
+  }
+
+  /**
+   * Adds a Job to the scheduler. Replaces a matching existing Job.
+   *
+   * @param jobName
    * @param jobClassName
    */
   public static void addJob(String jobName, String jobClassName) throws SundialSchedulerException {
@@ -193,17 +205,14 @@ public class SundialJobScheduler {
    * Adds a Job to the scheduler. Replaces a matching existing Job.
    *
    * @param jobName
-   * @param jobClassName
+   * @param jobClass
    * @param params Set this null if there are no params
    * @param isConcurrencyAllowed
    */
-  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed)
+  public static void addJob(String jobName, Class<? extends Job> jobClass, Map<String, Object> params, boolean isConcurrencyAllowed)
       throws SundialSchedulerException {
 
     try {
-
-      Class<? extends Job> jobClass = getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName);
-
       JobDataMap jobDataMap = new JobDataMap();
       if (params != null) {
         for (Entry<String, Object> entry : params.entrySet()) {
@@ -218,6 +227,22 @@ public class SundialJobScheduler {
     } catch (SchedulerException e) {
       logger.error("ERROR ADDING JOB!!!", e);
       throw new SundialSchedulerException("ERROR ADDING JOB!!!", e);
+    }
+  }
+
+  /**
+   * Adds a Job to the scheduler. Replaces a matching existing Job.
+   *
+   * @param jobName
+   * @param jobClassName
+   * @param params Set this null if there are no params
+   * @param isConcurrencyAllowed
+   */
+  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed)
+      throws SundialSchedulerException {
+
+    try {
+      addJob(jobName, getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName), params, isConcurrencyAllowed);
     } catch (ClassNotFoundException e) {
       throw new SundialSchedulerException("ERROR ADDING JOB!!!", e);
     }
