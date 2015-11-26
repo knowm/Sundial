@@ -15,8 +15,11 @@
  */
 package com.xeiam.sundial;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.quartz.classloading.CascadingClassLoadHelper;
 
@@ -32,8 +35,15 @@ public class AnnotatedClassFinderTest {
     classLoadHelper.initialize();
 
     Set<Class<? extends Job>> jobClasses = classLoadHelper.getJobClasses("com.xeiam.sundial.jobs");
+    Set<String> jobClassNames = new HashSet(jobClasses.size());
     for (Class<? extends Job> jobClass : jobClasses) {
-      System.out.println(jobClass.getName());
+      Assert.assertEquals(jobClass.getPackage().getName(), "com.xeiam.sundial.jobs");
+      jobClassNames.add(jobClass.getSimpleName());
     }
+    Set<String> expected = new HashSet(Arrays.asList(new String[]{
+      "SampleJob1", "SampleJob2", "SampleJob3", "SampleJob4",
+      "SampleJob5", "SampleJob6", "SampleJob7", "Concrete"
+    }));
+    Assert.assertEquals(jobClassNames, expected);
   }
 }

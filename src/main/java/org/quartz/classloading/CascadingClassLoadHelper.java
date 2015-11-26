@@ -20,6 +20,7 @@ package org.quartz.classloading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -283,7 +284,13 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     try {
 
       Class clazz = loadClass(className);
-      if (clazz.getSuperclass().getName().equals("com.xeiam.sundial.Job")) {
+      if (Modifier.isAbstract(clazz.getModifiers())) {
+          return;
+      }
+      if (Modifier.isInterface(clazz.getModifiers())) {
+          return;
+      }
+      if (Job.class.isAssignableFrom(clazz)) {
         classes.add(clazz);
       }
     } catch (ClassNotFoundException e) {
