@@ -350,8 +350,9 @@ public class SundialJobScheduler {
    * @param triggerName
    * @param jobName
    * @param cronExpression
-   * @param startTime
-   * @param endTime
+   * @param startTime - Trigger will NOT fire before this time, regardless of the Trigger's schedule.
+   * @param endTime - Set the time at which the Trigger will no longer fire - even if it's schedule has remaining repeats. If null, the end time is
+   *        indefinite.
    */
   public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime)
       throws SundialSchedulerException {
