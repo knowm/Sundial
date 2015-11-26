@@ -20,5 +20,5 @@ branches:
 
 env:
   global:
-    - secure: HDnwv4zR6yCDVVUROKw3oHmXFfBniaKVB/iX03knGemRGqG5yc6k8E6d/td5\naF3OPb+ymBRj6R+Ksxl6X7LYNMVTafIwJl1MKweDnGKkF0GpwC8JocUPxuyh\n/h9IrTYbJKtk/Sle1oYoQcmN7sK93TmrtUAO5qWYkRllL9kEGlk=
-    - secure: mnXSFedxwTETOFH7dXGZwYD7X9IfLAUPvZ97VvHpQp7lkoaq2/u+Z66XNNUW\nfFRr1z50EKJpo1ET1cQIaizGGuolARpNlLEmBP1M202LEysV/MERi/wLIGml\nz1Zrlr4wc8UO/b+1WGW3oCi6F0y8zv1TWGd+yWlHoLh4+XiNZLQ=
+    - secure: "HDnwv4zR6yCDVVUROKw3oHmXFfBniaKVB/iX03knGemRGqG5yc6k8E6d/td5\naF3OPb+ymBRj6R+Ksxl6X7LYNMVTafIwJl1MKweDnGKkF0GpwC8JocUPxuyh\n/h9IrTYbJKtk/Sle1oYoQcmN7sK93TmrtUAO5qWYkRllL9kEGlk="
+    - secure: "mnXSFedxwTETOFH7dXGZwYD7X9IfLAUPvZ97VvHpQp7lkoaq2/u+Z66XNNUW\nfFRr1z50EKJpo1ET1cQIaizGGuolARpNlLEmBP1M202LEysV/MERi/wLIGml\nz1Zrlr4wc8UO/b+1WGW3oCi6F0y8zv1TWGd+yWlHoLh4+XiNZLQ="
