@@ -6,7 +6,7 @@
 		<!-- job with cron trigger -->
 		<job>
 			<name>SampleJob3</name>
-			<job-class>com.xeiam.sundial.jobs.SampleJob3</job-class>
+			<job-class>org.knowm.sundial.jobs.SampleJob3</job-class>
 			<concurrency-allowed>true</concurrency-allowed>
 		</job>
 		<trigger>
@@ -20,7 +20,7 @@
 		<!-- job with simple trigger -->
 		<job>
 			<name>SampleJob2</name>
-			<job-class>com.xeiam.sundial.jobs.SampleJob2</job-class>
+			<job-class>org.knowm.sundial.jobs.SampleJob2</job-class>
 			<job-data-map>
 				<entry>
 					<key>MyParam</key>

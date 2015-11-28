@@ -17,14 +17,13 @@
  */
 package org.quartz.core;
 
+import org.knowm.sundial.plugins.AnnotationJobTriggerPlugin;
 import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.plugins.management.ShutdownHookPlugin;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.xeiam.sundial.plugins.AnnotationJobTriggerPlugin;
 
 /**
  * <p>

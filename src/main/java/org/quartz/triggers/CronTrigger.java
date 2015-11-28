@@ -79,7 +79,8 @@ import org.quartz.core.Scheduler;
  * <td align="left"><code>"0 0/5 14,18 * * ?"</code></td>
  * <td align="left">&nbsp;</th>
  * <td align="left">
- * <code>Fire every 5 minutes starting at 2pm and ending at 2:55pm, AND fire every 5 minutes starting at 6pm and ending at 6:55pm, every day</code></td>
+ * <code>Fire every 5 minutes starting at 2pm and ending at 2:55pm, AND fire every 5 minutes starting at 6pm and ending at 6:55pm, every day</code>
+ * </td>
  * </tr>
  * <tr>
  * <td align="left"><code>"0 0-5 14 * * ?"</code></td>

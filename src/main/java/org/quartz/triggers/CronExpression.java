@@ -176,6 +176,7 @@ public final class CronExpression implements Serializable, Cloneable {
 
   protected static final Map<String, Integer> monthMap = new HashMap<String, Integer>(20);
   protected static final Map<String, Integer> dayMap = new HashMap<String, Integer>(60);
+
   static {
     monthMap.put("JAN", 0);
     monthMap.put("FEB", 1);

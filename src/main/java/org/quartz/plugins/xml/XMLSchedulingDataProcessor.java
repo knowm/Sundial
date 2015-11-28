@@ -47,6 +47,7 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.knowm.sundial.Job;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;
 import org.quartz.classloading.ClassLoadHelper;
@@ -67,8 +68,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.xeiam.sundial.Job;
-
 /**
  * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data.
  *
@@ -85,7 +84,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
+  private static final String QUARTZ_XSD_PATH_IN_JAR = "org/knowm/sundial/xml/job_scheduling_data.xsd";
 
   public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
 
@@ -374,8 +373,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerName, -1);
+            throw new ParseException(
+                "Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerName, -1);
           }
         }
       } else if (triggerNode.getNodeName().equals("cron")) {
@@ -397,8 +396,8 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
           } else if (triggerMisfireInstructionConst.equals("MISFIRE_INSTRUCTION_SMART_POLICY")) {
             // do nothing.... (smart policy is default)
           } else {
-            throw new ParseException("Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: "
-                + triggerName, -1);
+            throw new ParseException(
+                "Unexpected/Unhandlable Misfire Instruction encountered '" + triggerMisfireInstructionConst + "', for trigger: " + triggerName, -1);
           }
         }
       }

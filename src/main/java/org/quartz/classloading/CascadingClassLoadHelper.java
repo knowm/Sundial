@@ -20,6 +20,7 @@ package org.quartz.classloading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -29,10 +30,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.knowm.sundial.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.xeiam.sundial.Job;
 
 /**
  * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code> types that are found in this package in its attempts to load a class,
@@ -218,7 +218,6 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     }
     logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
 
-    resource.getPath();
     if (resource.toString().startsWith("jar:")) {
       processJarfile(resource, pkgname, classes);
     } else {
@@ -256,7 +255,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   private void processJarfile(URL resource, String pkgname, Set<Class<? extends Job>> classes) {
 
     String relPath = pkgname.replace('.', '/');
-    String resPath = resource.getPath();
+    String resPath = resource.getPath().replace("%20", " ");
     String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
     logger.debug("Reading JAR file: '" + jarPath + "'");
     JarFile jarFile;
@@ -284,7 +283,13 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     try {
 
       Class clazz = loadClass(className);
-      if (clazz.getSuperclass().getName().equals("com.xeiam.sundial.Job")) {
+      if (Modifier.isAbstract(clazz.getModifiers())) {
+          return;
+      }
+      if (Modifier.isInterface(clazz.getModifiers())) {
+          return;
+      }
+      if (Job.class.isAssignableFrom(clazz)) {
         classes.add(clazz);
       }
     } catch (ClassNotFoundException e) {

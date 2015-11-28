@@ -16,6 +16,9 @@
  */
 package org.quartz.builders;
 
+import java.util.Date;
+
+import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.SimpleTrigger;
 import org.quartz.triggers.SimpleTriggerImpl;
@@ -32,14 +35,10 @@ import org.quartz.triggers.SimpleTriggerImpl;
  * </p>
  *
  * <pre>
- *
- *
- * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build();
- * 
- * Trigger trigger = newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
- *     .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build();
- *
- * scheduler.scheduleJob(job, trigger);
+ * JobDetail job = newJob(MyJob.class).withIdentity(&quot;myJob&quot;).build(); Trigger trigger =
+ * newTrigger().withIdentity(triggerKey(&quot;myTrigger&quot;, &quot;myTriggerGroup&quot;))
+ * .withSchedule(simpleSchedule().withIntervalInHours(1).repeatForever()).startAt(futureDate(10, MINUTES)).build(); scheduler.scheduleJob(job,
+ * trigger);
  *
  * <pre>
  */
@@ -180,4 +179,39 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
     return this;
   }
 
+  public SimpleTriggerBuilder withIdentity(String name) {
+    return (SimpleTriggerBuilder)super.withIdentity(name);
+  }
+
+  public SimpleTriggerBuilder withDescription(String description) {
+    return (SimpleTriggerBuilder)super.withDescription(description);
+  }
+
+  public SimpleTriggerBuilder withPriority(int priority) {
+    return (SimpleTriggerBuilder)super.withPriority(priority);
+  }
+
+  public SimpleTriggerBuilder modifiedByCalendar(String calendarName) {
+    return (SimpleTriggerBuilder)super.modifiedByCalendar(calendarName);
+  }
+
+  public SimpleTriggerBuilder startNow() {
+    return (SimpleTriggerBuilder)super.startNow();
+  }
+
+  public SimpleTriggerBuilder startAt(Date startTime) {
+    return (SimpleTriggerBuilder)super.startAt(startTime);
+  }
+
+  public SimpleTriggerBuilder endAt(Date endTime) {
+    return (SimpleTriggerBuilder)super.endAt(endTime);
+  }
+
+  public SimpleTriggerBuilder forJob(String jobName) {
+    return (SimpleTriggerBuilder)super.forJob(jobName);
+  }
+
+  public SimpleTriggerBuilder usingJobData(JobDataMap newJobDataMap) {
+    return (SimpleTriggerBuilder)super.usingJobData(newJobDataMap);
+  }
 }

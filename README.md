@@ -1,4 +1,4 @@
-## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://xeiam.com/sundial) Sundial
+## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
 
 A Lightweight Job Scheduling Framework for Java.
 
@@ -8,16 +8,8 @@ Sundial makes adding scheduled jobs to your Java application a walk in the park.
 
 ## Long Description
 
-Sundial is a lightweight Java job scheduling framework forked from
-Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the
-nitty-gritty configuration details of Quartz, reducing the time
-needed to get a simple RAM job scheduler up and running. Sundial
-uses a ThreadLocal wrapper for each job containing a HashMap for
-job key-value pairs. Convenience methods allow easy access to these
-parameters. JobActions are reusable components that also have
-access to the context parameters. If you are looking
-for a hassle-free 100% Java job scheduling framework that is easy to integrate
-into your applications, look no further.
+Sundial is a lightweight Java job scheduling framework forked from Quartz (http://www.quartz-scheduler.org/) stripped down to the bare essentials. Sundial also hides the nitty-gritty configuration details of Quartz, reducing the time needed to get a simple RAM job scheduler up and running. Sundial
+uses a ThreadLocal wrapper for each job containing a HashMap for job key-value pairs. Convenience methods allow easy access to these parameters. JobActions are reusable components that also have access to the context parameters. If you are looking for a hassle-free 100% Java job scheduling framework that is easy to integrate into your applications, look no further.
 
 ## Features
 
@@ -35,7 +27,7 @@ into your applications, look no further.
 ## Create a Job Class
 
 ```java
-public class SampleJob extends com.xeiam.sundial.Job {
+public class SampleJob extends org.knowm.sundial.Job {
 
   @Override
   public void doRun() throws JobInterruptException {
@@ -56,7 +48,7 @@ public class SampleJob extends com.xeiam.sundial.Job {
 ```java
 public static void main(String[] args) {
 
-  SundialJobScheduler.startScheduler("com.xeiam.sundial.jobs"); // package with annotated Jobs
+  SundialJobScheduler.startScheduler("org.knowm.sundial.jobs"); // package with annotated Jobs
 }
 ```
 
@@ -110,7 +102,7 @@ public static void main(String[] args) {
 ## Or, Define Jobs and Triggers Manually
 
 ```java
-SundialJobScheduler.addJob("SampleJob", "com.xeiam.sundial.jobs.SampleJob");
+SundialJobScheduler.addJob("SampleJob", "org.knowm.sundial.jobs.SampleJob");
 SundialJobScheduler.addCronTrigger("SampleJob-Cron-Trigger", "SampleJob", "0/10 * * * * ?");
 SundialJobScheduler.addSimpleTrigger("SampleJob-Simple-Trigger", "SampleJob", -1, TimeUnit.SECONDS.toMillis(3));
 ```
@@ -139,7 +131,7 @@ SundialJobScheduler.unlockScheduler();
 // check if job a running
 SundialJobScheduler.isJobRunning("SampleJob");
 ```
-And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/com/xeiam/sundial/SundialJobScheduler.java
+And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
 
 ## Job Data Map
 ```java
@@ -158,7 +150,7 @@ public class SampleJob extends Job {
 <!-- configure data map in jobs.xml -->
 <job>
   <name>SampleJob</name>
-  <job-class>com.xeiam.sundial.jobs.SampleJob</job-class>
+  <job-class>org.knowm.sundial.jobs.SampleJob</job-class>
   <job-data-map>
     <entry>
       <key>MyParam</key>
@@ -205,11 +197,11 @@ By default jobs are not set to concurrently execute. This means if a job is curr
 1. You can add `<concurrency-allowed>true</concurrency-allowed>` in jobs.xml.
 1. You can add it to the Sundial annotations like this: `@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)` Same idea for cron annotation too.
 
-Now go ahead and [study some more examples](http://xeiam.com/sundial-example-code), [download the thing](http://xeiam.com/sundial-change-log) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Getting the Goods
 ### Non-Maven
-Download Jar: http://xeiam.com/sundial-change-log
+Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 #### Dependencies
 * org.slf4j.slf4j-api-1.7.10
 
@@ -221,9 +213,9 @@ Add the Sundial library as a dependency to your pom.xml file:
 
 ```xml
 <dependency>
-    <groupId>com.xeiam</groupId>
+    <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.1</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -237,9 +229,9 @@ For snapshots, add the following to your pom.xml file:
 </repository>
 
 <dependency>
-    <groupId>com.xeiam</groupId>
+    <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -268,4 +260,11 @@ Please report any bugs or submit feature requests to [Sundial's Github issue tra
 [Build History](https://travis-ci.org/timmolter/Sundial/builds)  
 
 ## Donations
-15MvtM8e3bzepmZ5vTe8cHvrEZg6eDzw2w  
+
+Donate with Bitcoin: [1JVyTP9v9z54dALuhDTZDQfS6FUjcKjPgZ](https://blockchain.info/address/1JVyTP9v9z54dALuhDTZDQfS6FUjcKjPgZ)
+
+All donations will be used to pay bounties for new features, refactoring, etc. Please consider donating or even posting your own bounties on our [Issues Page](https://github.com/timmolter/sundial/issues?state=open). Open bounties and bounties paid thus far can be found on knowm's [bounties](http://knowm.org/open-source/) page.
+
+## Release Information
+
+We will announce new releases on our [Twitter page](https://twitter.com/Knowmorg).

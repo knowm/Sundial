@@ -90,7 +90,8 @@ public class QuartzSchedulerThread extends Thread {
    * Construct a new <code>QuartzSchedulerThread</code> for the given <code>QuartzScheduler</code> as a <code>Thread</code> with the given attributes.
    * </p>
    */
-  private QuartzSchedulerThread(QuartzScheduler quartzScheduler, QuartzSchedulerResources quartzSchedulerResources, boolean setDaemon, int threadPrio) {
+  private QuartzSchedulerThread(QuartzScheduler quartzScheduler, QuartzSchedulerResources quartzSchedulerResources, boolean setDaemon,
+      int threadPrio) {
 
     super(quartzScheduler.getSchedulerThreadGroup(), quartzSchedulerResources.getThreadName());
     this.quartzScheduler = quartzScheduler;
@@ -348,8 +349,8 @@ public class QuartzSchedulerThread extends Thread {
                   quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(),
                       CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
-                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
-                      + triggers.get(i).getName() + "'", se2);
+                  quartzScheduler.notifySchedulerListenersError(
+                      "An error occurred while placing job's triggers in error state '" + triggers.get(i).getName() + "'", se2);
 
                 }
                 continue;
@@ -365,8 +366,8 @@ public class QuartzSchedulerThread extends Thread {
                   quartzSchedulerResources.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(),
                       CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
                 } catch (SchedulerException se2) {
-                  quartzScheduler.notifySchedulerListenersError("An error occurred while placing job's triggers in error state '"
-                      + triggers.get(i).getName() + "'", se2);
+                  quartzScheduler.notifySchedulerListenersError(
+                      "An error occurred while placing job's triggers in error state '" + triggers.get(i).getName() + "'", se2);
 
                 }
               }

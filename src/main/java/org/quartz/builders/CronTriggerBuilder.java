@@ -18,8 +18,10 @@
 package org.quartz.builders;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.TimeZone;
 
+import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.CronExpression;
 import org.quartz.triggers.CronTrigger;
 import org.quartz.triggers.CronTriggerImpl;
@@ -90,8 +92,8 @@ public class CronTriggerBuilder extends TriggerBuilder {
       ct.setCronExpression(cronExpression);
     } catch (ParseException e) {
       // all methods of construction ensure the expression is valid by this point...
-      throw new RuntimeException("CronExpression '" + cronExpression
-          + "' is invalid, which should not be possible, please report bug to Quartz developers.");
+      throw new RuntimeException(
+          "CronExpression '" + cronExpression + "' is invalid, which should not be possible, please report bug to Quartz developers.");
     }
     ct.setTimeZone(tz);
     ct.setMisfireInstruction(misfireInstruction);
@@ -134,5 +136,41 @@ public class CronTriggerBuilder extends TriggerBuilder {
 
     misfireInstruction = CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW;
     return this;
+  }
+
+  public CronTriggerBuilder withIdentity(String name) {
+    return (CronTriggerBuilder)super.withIdentity(name);
+  }
+
+  public CronTriggerBuilder withDescription(String description) {
+    return (CronTriggerBuilder)super.withDescription(description);
+  }
+
+  public CronTriggerBuilder withPriority(int priority) {
+    return (CronTriggerBuilder)super.withPriority(priority);
+  }
+
+  public CronTriggerBuilder modifiedByCalendar(String calendarName) {
+    return (CronTriggerBuilder)super.modifiedByCalendar(calendarName);
+  }
+
+  public CronTriggerBuilder startNow() {
+    return (CronTriggerBuilder)super.startNow();
+  }
+
+  public CronTriggerBuilder startAt(Date startTime) {
+    return (CronTriggerBuilder)super.startAt(startTime);
+  }
+
+  public CronTriggerBuilder endAt(Date endTime) {
+    return (CronTriggerBuilder)super.endAt(endTime);
+  }
+
+  public CronTriggerBuilder forJob(String jobName) {
+    return (CronTriggerBuilder)super.forJob(jobName);
+  }
+
+  public CronTriggerBuilder usingJobData(JobDataMap newJobDataMap) {
+    return (CronTriggerBuilder)super.usingJobData(newJobDataMap);
   }
 }
