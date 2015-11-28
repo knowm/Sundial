@@ -4,7 +4,7 @@
 	<name>Sundial</name>
 	<groupId>org.knowm</groupId>
 	<artifactId>sundial</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>XDropWizard is a jump-start DropWizard Web Application integrating and demonstrating several useful open source projects such as Yank, Sundial (a Quartz fork), Flot, Bootstrap, AngularJS, HSQLDB, XChart, JUnit, etc</description>
 	<url>http://knowm.org/open-source/sundial</url>
@@ -39,7 +39,7 @@
 		<connection>scm:git:git@github.com:timmolter/Sundial.git</connection>
 		<developerConnection>scm:git:git@github.com:timmolter/Sundial.git</developerConnection>
 		<url>git@github.com:timmolter/Sundial.git</url>
-		<tag>sundial-2.1.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<ciManagement>
