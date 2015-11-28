@@ -84,7 +84,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private static final String QUARTZ_XSD_PATH_IN_JAR = "com/xeiam/sundial/xml/job_scheduling_data.xsd";
+  private static final String QUARTZ_XSD_PATH_IN_JAR = "org/knowm/sundial/xml/job_scheduling_data.xsd";
 
   public static final String QUARTZ_XML_DEFAULT_FILE_NAME = "jobs.xml";
 

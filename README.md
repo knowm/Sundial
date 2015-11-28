@@ -131,7 +131,7 @@ SundialJobScheduler.unlockScheduler();
 // check if job a running
 SundialJobScheduler.isJobRunning("SampleJob");
 ```
-And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/com/xeiam/sundial/SundialJobScheduler.java
+And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
 
 ## Job Data Map
 ```java
@@ -231,7 +231,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.1.1-SNAPSHOT</version>
 </dependency>
 ```
 
