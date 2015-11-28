@@ -1,25 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>Sundial</name>
-	<groupId>com.xeiam</groupId>
+	<groupId>org.knowm</groupId>
 	<artifactId>sundial</artifactId>
 	<version>2.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<description>A Lightweight Java Job Scheduling Framework</description>
+	<description>XDropWizard is a jump-start DropWizard Web Application integrating and demonstrating several useful open source projects such as Yank, Sundial (a Quartz fork), Flot, Bootstrap, AngularJS, HSQLDB, XChart, JUnit, etc</description>
 	<url>http://knowm.org/open-source/sundial</url>
 	<inceptionYear>2011</inceptionYear>
 
-    <organization>
-        <name>Knowm Inc.</name>
-        <url>http://knowm.org/open-source/</url>
-    </organization>
+	<organization>
+		<name>Knowm Inc.</name>
+		<url>http://knowm.org/open-source/</url>
+	</organization>
 
-    <developers>
-        <developer>
-            <name>Tim Molter</name>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<name>Tim Molter</name>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
@@ -51,7 +52,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.10</version>
+			<version>1.7.13</version>
 		</dependency>
 
 		<!-- provided -->
@@ -63,16 +64,16 @@
 		</dependency>
 
 		<!-- test -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.10</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.13</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -207,7 +208,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

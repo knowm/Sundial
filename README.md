@@ -27,7 +27,7 @@ uses a ThreadLocal wrapper for each job containing a HashMap for job key-value p
 ## Create a Job Class
 
 ```java
-public class SampleJob extends com.xeiam.sundial.Job {
+public class SampleJob extends org.knowm.sundial.Job {
 
   @Override
   public void doRun() throws JobInterruptException {
@@ -48,7 +48,7 @@ public class SampleJob extends com.xeiam.sundial.Job {
 ```java
 public static void main(String[] args) {
 
-  SundialJobScheduler.startScheduler("com.xeiam.sundial.jobs"); // package with annotated Jobs
+  SundialJobScheduler.startScheduler("org.knowm.sundial.jobs"); // package with annotated Jobs
 }
 ```
 
@@ -102,7 +102,7 @@ public static void main(String[] args) {
 ## Or, Define Jobs and Triggers Manually
 
 ```java
-SundialJobScheduler.addJob("SampleJob", "com.xeiam.sundial.jobs.SampleJob");
+SundialJobScheduler.addJob("SampleJob", "org.knowm.sundial.jobs.SampleJob");
 SundialJobScheduler.addCronTrigger("SampleJob-Cron-Trigger", "SampleJob", "0/10 * * * * ?");
 SundialJobScheduler.addSimpleTrigger("SampleJob-Simple-Trigger", "SampleJob", -1, TimeUnit.SECONDS.toMillis(3));
 ```
@@ -150,7 +150,7 @@ public class SampleJob extends Job {
 <!-- configure data map in jobs.xml -->
 <job>
   <name>SampleJob</name>
-  <job-class>com.xeiam.sundial.jobs.SampleJob</job-class>
+  <job-class>org.knowm.sundial.jobs.SampleJob</job-class>
   <job-data-map>
     <entry>
       <key>MyParam</key>
@@ -213,9 +213,9 @@ Add the Sundial library as a dependency to your pom.xml file:
 
 ```xml
 <dependency>
-    <groupId>com.xeiam</groupId>
+    <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.0.1</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -229,7 +229,7 @@ For snapshots, add the following to your pom.xml file:
 </repository>
 
 <dependency>
-    <groupId>com.xeiam</groupId>
+    <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
     <version>2.0.2-SNAPSHOT</version>
 </dependency>

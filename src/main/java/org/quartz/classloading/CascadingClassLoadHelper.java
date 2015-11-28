@@ -30,10 +30,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.knowm.sundial.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.xeiam.sundial.Job;
 
 /**
  * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code> types that are found in this package in its attempts to load a class,

@@ -47,6 +47,7 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.knowm.sundial.Job;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;
 import org.quartz.classloading.ClassLoadHelper;
@@ -66,8 +67,6 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import com.xeiam.sundial.Job;
 
 /**
  * Parses an XML file that declares Jobs and their schedules (Triggers), and processes the related data.
