@@ -526,6 +526,7 @@ public class SundialJobScheduler {
 
     try {
       getScheduler().shutdown(true);
+      scheduler = null;
     } catch (Exception e) {
       throw new SundialSchedulerException("COULD NOT SHUTDOWN SCHEDULER!!!", e);
     }
