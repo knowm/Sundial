@@ -25,6 +25,7 @@ import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
+import org.quartz.jobs.JobFactory;
 import org.quartz.listeners.JobListener;
 import org.quartz.listeners.ListenerManager;
 import org.quartz.listeners.SchedulerListener;
@@ -174,6 +175,20 @@ public interface Scheduler {
    * @throws SchedulerException On error
    */
   Set<String> getJobKeys() throws SchedulerException;
+
+  /**
+   * Set the <code>JobFactory</code> that will be responsible for producing
+   * instances of <code>Job</code> classes.
+   *
+   * <p>
+   * JobFactories may be of use to those wishing to have their application
+   * produce <code>Job</code> instances via some special mechanism, such as to
+   * give the opportunity for dependency injection.
+   * </p>
+   *
+   * @see org.quartz.spi.JobFactory
+   */
+  void setJobFactory(JobFactory factory) throws SchedulerException;
 
   /**
    * Get a reference to the scheduler's <code>ListenerManager</code>, through which listeners may be registered.
