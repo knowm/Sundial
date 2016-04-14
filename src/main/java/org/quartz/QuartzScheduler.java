@@ -1080,6 +1080,17 @@ public class QuartzScheduler implements Scheduler {
     }
   }
 
+  @Override
+  public void setJobFactory(JobFactory factory) throws SchedulerException {
+
+    if(factory == null) {
+      throw new IllegalArgumentException("JobFactory cannot be set to null!");
+    }
+
+    logger.info("JobFactory set to: " + factory);
+    this.jobFactory = factory;
+  }
+
   public JobFactory getJobFactory() {
 
     return jobFactory;
