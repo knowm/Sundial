@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.19</version>
+			<version>1.7.21</version>
 		</dependency>
 
 		<!-- provided -->
@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.19</version>
+			<version>1.7.21</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
