@@ -29,7 +29,7 @@ import org.quartz.core.Scheduler;
  * <code>JobDetail</code>.
  * </p>
  * <p>
- * <code>Job</code>s have a name and group associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>.
+ * <code>Job</code>s have a name associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>.
  * </p>
  * <p>
  * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many <code>Trigger</code>s can point to the same
