@@ -11,7 +11,7 @@ else
 fi"
 
 jdk:
-  - openjdk6
+  - oraclejdk8
 
 # whitelist
 branches:
@@ -19,5 +19,5 @@ branches:
     - develop
 env:
   global:
-    - secure: "HDnwv4zR6yCDVVUROKw3oHmXFfBniaKVB/iX03knGemRGqG5yc6k8E6d/td5\naF3OPb+ymBRj6R+Ksxl6X7LYNMVTafIwJl1MKweDnGKkF0GpwC8JocUPxuyh\n/h9IrTYbJKtk/Sle1oYoQcmN7sK93TmrtUAO5qWYkRllL9kEGlk="
-    - secure: "mnXSFedxwTETOFH7dXGZwYD7X9IfLAUPvZ97VvHpQp7lkoaq2/u+Z66XNNUW\nfFRr1z50EKJpo1ET1cQIaizGGuolARpNlLEmBP1M202LEysV/MERi/wLIGml\nz1Zrlr4wc8UO/b+1WGW3oCi6F0y8zv1TWGd+yWlHoLh4+XiNZLQ="
+    - secure: "VSpfLQ+8CziLvcYi5Fab4KhOTepQtJ/43V8kLsX+pdy+NkxG8ENnmxQlPiPf8hGdqnYGkMoWNq8xhJjz3puv2LbwiBT8NBzm/AllcFQa8NhzWercPZRWA7ezJbfrMiyJ61ZAXnBdC0xwPVHPGnjaDmg5WAFiOeftTntxtAr0RMo="
+    - secure: "BARiNKOHG3a/UYkbVL6RLS1EX/UDFj8z7OKFYb2LjpFSrseQKG2FypoBZyLutJ7TLl38OY9DqhxRdwMohy6mr/Q1/f2vNnBud8omMj9a2UfxY+dr4adPyHN2agRnxupCVAuxwdH9jCagNQcc5phrDRPJPHNrxsAX5klM+LOACJ0="

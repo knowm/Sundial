@@ -1,5 +1,7 @@
 /**
- * Copyright 2011 - 2015 Xeiam LLC.
+ * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
+ * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
+ * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
