@@ -209,7 +209,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
 
     Set<Class<? extends Job>> classes = new HashSet<Class<? extends Job>>();
 
-    String relPath = pkgname.replace('.', '/');
+    String relPath = pkgname.replace('.', '/').replace("%20", " ");
 
     // Get a File object for the package
     URL resource = getResource(relPath);
@@ -284,10 +284,10 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
 
       Class clazz = loadClass(className);
       if (Modifier.isAbstract(clazz.getModifiers())) {
-          return;
+        return;
       }
       if (Modifier.isInterface(clazz.getModifiers())) {
-          return;
+        return;
       }
       if (Job.class.isAssignableFrom(clazz)) {
         classes.add(clazz);
