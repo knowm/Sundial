@@ -38,7 +38,6 @@ public abstract class Job extends JobContainer implements InterruptableJob {
    */
   public Job() {
 
-    // this is a comment.
   }
 
   @Override
@@ -72,7 +71,6 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
     setTerminate();
     logger.info("Interrupt called!");
-
   }
 
   /**

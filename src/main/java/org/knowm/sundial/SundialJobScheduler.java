@@ -301,7 +301,9 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name
+   * Triggers a Job interrupt on all Jobs matching the given Job Name. The Job termination mechanism works by setting a flag that the Job should be
+   * terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you
+   * anticipate the need to terminate, put the method call checkTerminated() at an appropriate location.
    *
    * @param jobName The job name
    */
@@ -328,7 +330,10 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String.
+   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String. The Job
+   * termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point
+   * termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call checkTerminated() at
+   * an appropriate location.
    *
    * @param jobName The job name
    * @param key The key in the job data map
