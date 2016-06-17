@@ -36,16 +36,11 @@ import org.quartz.exceptions.UnableToInterruptJobException;
  * <code>execute(..)</code> signals that it has noticed the set flag.
  * </p>
  * <p>
- * If the Job performs some form of blocking I/O or similar functions, you may want to consider having the <code>Job.execute(..)</code> method store a
- * reference to the calling <code>Thread</code> as a member variable. Then the Implementation of this interfaces <code>interrupt()</code> method can
- * call <code>interrupt()</code> on that Thread. Before attempting this, make sure that you fully understand what
- * <code>java.lang.Thread.interrupt()</code> does and doesn't do. Also make sure that you clear the Job's member reference to the Thread when the
- * execute(..) method exits (preferably in a <code>finally</code> block.
+ * If the Job performs some form of blocking I/O or similar functions, you may want to consider extending InterruptingJob. Its
+ * <code>interrupt()</code> method calls <code>interrupt()</code> on the thread that is executing the job. Before attempting this, make sure that you
+ * fully understand what <code>java.lang.Thread.interrupt()</code> does and doesn't do.
  * </p>
- * <p>
- * See Example 7 (org.quartz.examples.example7.DumbInterruptableJob) for a simple implementation demonstration.
- * </p>
- * 
+ *
  * @see Job
  * @see StatefulJob
  * @see Scheduler#interrupt(JobKey)
