@@ -53,6 +53,7 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
       initContextContainer(jobExecutionContext);
 
+      setup();
       doRun();
 
     } catch (RequiredParameterException e) {
@@ -73,7 +74,14 @@ public abstract class Job extends JobContainer implements InterruptableJob {
     logger.info("Interrupt called!");
   }
 
-  /**
+    /**
+     * Override and place any code in here that should be called before doRun
+     */
+    public void setup() {
+
+    }
+
+    /**
    * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
    */
   public void cleanup() {
