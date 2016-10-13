@@ -113,7 +113,7 @@ public class SundialJobScheduler {
    * Creates the Sundial Scheduler
    *
    * @param threadPoolSize the thread pool size used by the scheduler
-   * @param annotatedJobsPackageName the package where trigger annotated Job calsses can be found
+   * @param annotatedJobsPackageName the package where trigger annotated Job classes can be found
    * @return
    */
   public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {
