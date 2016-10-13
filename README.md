@@ -51,6 +51,7 @@ public static void main(String[] args) {
   SundialJobScheduler.startScheduler("org.knowm.sundial.jobs"); // package with annotated Jobs
 }
 ```
+If you need a bigger thread pool (default size is 10) use `startScheduler(int threadPoolSize, String annotatedJobsPackageName)` instead.
 
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
