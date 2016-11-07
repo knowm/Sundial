@@ -130,6 +130,25 @@ public class SundialJobScheduler {
   }
 
   /**
+   * Creates the Sundial Scheduler
+   *
+   * @param schedulerFactory factory to create the scheduler
+   * @return
+   */
+  public static Scheduler createScheduler(SchedulerFactory schedulerFactory) throws SundialSchedulerException {
+
+    if (scheduler == null) {
+      try {
+        scheduler = schedulerFactory.getScheduler();
+
+      } catch (SchedulerException e) {
+        throw new SundialSchedulerException("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
+      }
+    }
+    return scheduler;
+  }
+
+  /**
    * Gets the underlying Quartz scheduler
    *
    * @return
