@@ -27,6 +27,8 @@ import org.junit.Test;
 import org.knowm.sundial.Job;
 import org.quartz.classloading.CascadingClassLoadHelper;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author timmolter
  */
@@ -55,7 +57,7 @@ public class AnnotatedClassFinderTest {
       jobClassNames.add(jobClass.getSimpleName());
     }
 
-    Assert.assertEquals(EXPECTED_JOBS, jobClassNames);
+    assertEquals(EXPECTED_JOBS, jobClassNames);
   }
 
   @Test
@@ -71,6 +73,23 @@ public class AnnotatedClassFinderTest {
       jobClassNames.add(jobClass.getSimpleName());
     }
 
-    Assert.assertEquals(EXPECTED_JOBS, jobClassNames);
+    assertEquals(EXPECTED_JOBS, jobClassNames);
+  }
+
+  @Test
+  public void testOnePackage() {
+
+    CascadingClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
+    classLoadHelper.initialize();
+
+    Set<Class<? extends Job>> jobClasses = classLoadHelper.getJobClasses("org.knowm.sundial.jobs2");
+
+    assertEquals(1, jobClasses.size());
+
+    Class<? extends Job> theClass = jobClasses.iterator().next();
+
+    assertEquals("org.knowm.sundial.jobs2", theClass.getPackage().getName());
+
+    assertEquals("SampleJob8", theClass.getSimpleName());
   }
 }

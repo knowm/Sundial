@@ -204,6 +204,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
    *
    * A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    *
+   *
    * @param pkgname
    * @return
    */
@@ -218,7 +219,6 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       }
     }
     else {
-
       String relPath = pkgname.replace('.', '/').replace("%20", " ");
 
       // Get a File object for the package
