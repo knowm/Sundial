@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.knowm.sundial.Job;
 import org.quartz.classloading.CascadingClassLoadHelper;
@@ -31,22 +32,45 @@ import org.quartz.classloading.CascadingClassLoadHelper;
  */
 public class AnnotatedClassFinderTest {
 
+  private static final Set<String> EXPECTED_JOBS = new HashSet(Arrays.asList(new String[]{
+          "SampleJob1", "SampleJob2", "SampleJob3", "SampleJob4",
+          "SampleJob5", "SampleJob8", "SampleJob6", "SampleJob7", "Concrete"
+  }));
+
+  private CascadingClassLoadHelper classLoadHelper;
+
+  @Before
+  public void before(){
+    classLoadHelper = new CascadingClassLoadHelper();
+    classLoadHelper.initialize();
+  }
+
   @Test
-  public void test0() {
+  public void testJobsAreLoadedAndCommaWorksAsPackageSeparator() {
+
+    Set<Class<? extends Job>> jobClasses = classLoadHelper.getJobClasses("org.knowm.sundial.jobs,org.knowm.sundial.jobs2");
+    Set<String> jobClassNames = new HashSet(jobClasses.size());
+    for (Class<? extends Job> jobClass : jobClasses) {
+      Assert.assertTrue(jobClass.getPackage().getName().startsWith("org.knowm.sundial.jobs"));
+      jobClassNames.add(jobClass.getSimpleName());
+    }
+
+    Assert.assertEquals(EXPECTED_JOBS, jobClassNames);
+  }
+
+  @Test
+  public void testThatColonWorksAsPackageSeparator() {
 
     CascadingClassLoadHelper classLoadHelper = new CascadingClassLoadHelper();
     classLoadHelper.initialize();
 
-    Set<Class<? extends Job>> jobClasses = classLoadHelper.getJobClasses("org.knowm.sundial.jobs");
+    Set<Class<? extends Job>> jobClasses = classLoadHelper.getJobClasses("org.knowm.sundial.jobs:org.knowm.sundial.jobs2");
     Set<String> jobClassNames = new HashSet(jobClasses.size());
     for (Class<? extends Job> jobClass : jobClasses) {
-      Assert.assertEquals(jobClass.getPackage().getName(), "org.knowm.sundial.jobs");
+      Assert.assertTrue(jobClass.getPackage().getName().startsWith("org.knowm.sundial.jobs"));
       jobClassNames.add(jobClass.getSimpleName());
     }
-    Set<String> expected = new HashSet(Arrays.asList(new String[]{
-      "SampleJob1", "SampleJob2", "SampleJob3", "SampleJob4",
-      "SampleJob5", "SampleJob6", "SampleJob7", "Concrete"
-    }));
-    Assert.assertEquals(jobClassNames, expected);
+
+    Assert.assertEquals(EXPECTED_JOBS, jobClassNames);
   }
 }
