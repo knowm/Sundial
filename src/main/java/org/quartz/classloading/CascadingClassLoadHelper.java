@@ -200,7 +200,10 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
-   * Given a package name, search the classpath for all classes that extend sundial.job
+   * Given a package name(s), search the classpath for all classes that extend sundial.job .
+   *
+   * A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
+   *
    *
    * @param pkgname
    * @return
@@ -209,19 +212,27 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
 
     Set<Class<? extends Job>> classes = new HashSet<Class<? extends Job>>();
 
-    String relPath = pkgname.replace('.', '/').replace("%20", " ");
-
-    // Get a File object for the package
-    URL resource = getResource(relPath);
-    if (resource == null) {
-      throw new RuntimeException("Unexpected problem: No resource for " + relPath);
+    String[] packages = pkgname.split("[\\:,]");
+    if(packages.length > 1){
+      for(String pkg : packages ){
+        classes.addAll(getJobClasses(pkg));
+      }
     }
-    logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
+    else {
+      String relPath = pkgname.replace('.', '/').replace("%20", " ");
 
-    if (resource.toString().startsWith("jar:")) {
-      processJarfile(resource, pkgname, classes);
-    } else {
-      processDirectory(new File(resource.getPath()), pkgname, classes);
+      // Get a File object for the package
+      URL resource = getResource(relPath);
+      if (resource == null) {
+        throw new RuntimeException("Unexpected problem: No resource for " + relPath);
+      }
+      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
+
+      if (resource.toString().startsWith("jar:")) {
+        processJarfile(resource, pkgname, classes);
+      } else {
+        processDirectory(new File(resource.getPath()), pkgname, classes);
+      }
     }
 
     return classes;
