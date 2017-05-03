@@ -4,9 +4,9 @@
 	<name>Sundial</name>
 	<groupId>org.knowm</groupId>
 	<artifactId>sundial</artifactId>
-	<version>2.1.2-SNAPSHOT</version>
+	<version>2.1.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<description>XDropWizard is a jump-start DropWizard Web Application integrating and demonstrating several useful open source projects such as Yank, Sundial (a Quartz fork), Flot, Bootstrap, AngularJS, HSQLDB, XChart, JUnit, etc</description>
+	<description>A Lightweight Job Scheduling Framework forked from Quartz</description>
 	<url>http://knowm.org/open-source/sundial</url>
 	<inceptionYear>2011</inceptionYear>
 
@@ -119,7 +119,15 @@
 				</plugins>
 			</build>
 		</profile>
-
+        <profile>
+            <id>disable-java8-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
 	</profiles>
 
 	<build>
@@ -128,7 +136,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.6.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -140,7 +148,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.0.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -154,16 +162,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>2.10.4</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -173,14 +178,14 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5.3</version>
 				<configuration>
-					<autoversionsubmodules>true</autoversionsubmodules>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
 				</configuration>
 			</plugin>
 			<!-- for header in all .java files -->
 			<plugin>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>3.0</version>
 				<configuration>
 					<header>NOTICE</header>
 					<aggregate>true</aggregate>

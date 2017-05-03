@@ -113,7 +113,7 @@ public class SundialJobScheduler {
    * Creates the Sundial Scheduler
    *
    * @param threadPoolSize the thread pool size used by the scheduler
-   * @param annotatedJobsPackageName the package where trigger annotated Job calsses can be found
+   * @param annotatedJobsPackageName the package where trigger annotated Job classes can be found
    * @return
    */
   public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {
@@ -121,6 +121,25 @@ public class SundialJobScheduler {
     if (scheduler == null) {
       try {
         scheduler = new SchedulerFactory().getScheduler(threadPoolSize, annotatedJobsPackageName);
+
+      } catch (SchedulerException e) {
+        throw new SundialSchedulerException("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
+      }
+    }
+    return scheduler;
+  }
+
+  /**
+   * Creates the Sundial Scheduler
+   *
+   * @param schedulerFactory factory to create the scheduler
+   * @return
+   */
+  public static Scheduler createScheduler(SchedulerFactory schedulerFactory) throws SundialSchedulerException {
+
+    if (scheduler == null) {
+      try {
+        scheduler = schedulerFactory.getScheduler();
 
       } catch (SchedulerException e) {
         throw new SundialSchedulerException("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
@@ -301,7 +320,9 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name
+   * Triggers a Job interrupt on all Jobs matching the given Job Name. The Job termination mechanism works by setting a flag that the Job should be
+   * terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you
+   * anticipate the need to terminate, put the method call checkTerminated() at an appropriate location.
    *
    * @param jobName The job name
    */
@@ -328,7 +349,10 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String.
+   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String. The Job
+   * termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point
+   * termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call checkTerminated() at
+   * an appropriate location.
    *
    * @param jobName The job name
    * @param key The key in the job data map

@@ -51,6 +51,7 @@ public static void main(String[] args) {
   SundialJobScheduler.startScheduler("org.knowm.sundial.jobs"); // package with annotated Jobs
 }
 ```
+If you need a bigger thread pool (default size is 10) use `startScheduler(int threadPoolSize, String annotatedJobsPackageName)` instead.
 
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
@@ -215,7 +216,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
 </dependency>
 ```
 
@@ -231,7 +232,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.1.2-SNAPSHOT</version>
+    <version>2.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
