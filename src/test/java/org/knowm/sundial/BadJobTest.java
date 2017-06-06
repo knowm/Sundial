@@ -38,6 +38,5 @@ public class BadJobTest {
         SundialJobScheduler.addSimpleTrigger("bj-trigger", BadJob.class.getSimpleName(), 1,1);
         List<String> names = SundialJobScheduler.getAllJobNames();
         Thread.sleep(100);
-        SundialJobScheduler.getScheduler().shutdown(true);
     }
 }
