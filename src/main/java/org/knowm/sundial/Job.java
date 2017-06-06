@@ -58,7 +58,11 @@ public abstract class Job extends JobContainer implements InterruptableJob {
     } catch (RequiredParameterException e) {
     } catch (JobInterruptException e) {
     } catch (Exception e) {
-      logger.error("Error executing Job! Job aborted!!!", e);
+      logger.error(String.format(
+              "Job [%s] aborted due to execution error: %s",
+              jobExecutionContext.getJobDetail().getName(),
+              e.getMessage())
+              , e);
     } finally {
       cleanup();
       destroyContext(); // remove the JobContext from the ThreadLocal
