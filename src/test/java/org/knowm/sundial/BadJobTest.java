@@ -35,7 +35,7 @@ public class BadJobTest {
     public void testJobsNeverFail() throws InterruptedException, SchedulerException {
         BadJob bj = new BadJob();
         SundialJobScheduler.addJob(BadJob.class.getSimpleName(), BadJob.class);
-        SundialJobScheduler.addSimpleTrigger("bj-trigger", BadJob.class.getSimpleName(), 1,1);
+        SundialJobScheduler.addSimpleTrigger("bj-trigger", BadJob.class.getSimpleName(), 0,1);
         List<String> names = SundialJobScheduler.getAllJobNames();
         Thread.sleep(100);
     }
