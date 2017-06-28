@@ -17,10 +17,16 @@ The following list of authors was automatically generated from the Sundial proje
     git log --format='%aN' | sort -u
 
 Alex Nugent
+Carlo Dapor
 Franknozly
 Jeeva Kandasamy
 Lindholm, Jonas
 Magnus Reftel
+Mikael
 Tim Molter
 fengb
+mshaylor
+ricardo.jl.rufino@gmail.com
 timmolter
+
+

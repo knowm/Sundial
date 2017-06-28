@@ -86,7 +86,7 @@ public class SundialJobScheduler {
   /**
    * Starts the Sundial Scheduler
    *
-   * @param annotatedJobsPackageName
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    */
   public static void startScheduler(String annotatedJobsPackageName) throws SundialSchedulerException {
 
@@ -97,7 +97,7 @@ public class SundialJobScheduler {
    * Starts the Sundial Scheduler
    *
    * @param threadPoolSize
-   * @param annotatedJobsPackageName
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    */
   public static void startScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {
 
@@ -113,7 +113,7 @@ public class SundialJobScheduler {
    * Creates the Sundial Scheduler
    *
    * @param threadPoolSize the thread pool size used by the scheduler
-   * @param annotatedJobsPackageName the package where trigger annotated Job classes can be found
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    * @return
    */
   public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {

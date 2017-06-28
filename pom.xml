@@ -4,8 +4,8 @@
 	<name>Sundial</name>
 	<groupId>org.knowm</groupId>
 	<artifactId>sundial</artifactId>
-	<version>2.1.3-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>2.1.4-SNAPSHOT</version>
+	<packaging>bundle</packaging>
 	<description>A Lightweight Job Scheduling Framework forked from Quartz</description>
 	<url>http://knowm.org/open-source/sundial</url>
 	<inceptionYear>2011</inceptionYear>
@@ -119,15 +119,15 @@
 				</plugins>
 			</build>
 		</profile>
-        <profile>
-            <id>disable-java8-doclint</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <additionalparam>-Xdoclint:none</additionalparam>
-            </properties>
-        </profile>
+		<profile>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
@@ -194,6 +194,12 @@
 					</includes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>3.3.0</version>
+				<extensions>true</extensions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -201,6 +207,5 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-
 
 </project>

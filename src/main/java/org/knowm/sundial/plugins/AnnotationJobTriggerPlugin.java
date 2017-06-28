@@ -7,7 +7,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -56,7 +56,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
   /**
    * Constructor
    *
-   * @param packageName
+   * @param packageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    */
   public AnnotationJobTriggerPlugin(String packageName) {
 
@@ -81,11 +81,13 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
   @Override
   public void start() {
 
-    logger.info("Loading annotated jobs from {}.", packageName);
-
     if (packageName != null) {
 
+      logger.info("Loading annotated jobs from {}.", packageName);
+
       Set<Class<? extends Job>> scheduledClasses = scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
+
+      logger.info("Found {} annotated jobs.", scheduledClasses.size());
 
       for (Class<? extends Job> jobClass : scheduledClasses) {
 
@@ -130,8 +132,6 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
           }
         }
       }
-    } else {
-      logger.info("Not loading any annotated Jobs. No package name provided. Use SundialJobScheduler.createScheduler() to set the package name.");
     }
 
   }
