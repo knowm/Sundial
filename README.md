@@ -201,10 +201,14 @@ By default jobs are not set to concurrently execute. This means if a job is curr
 Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/timmolter/Sundial/issues).
 
 ## Getting the Goods
+
 ### Non-Maven
+
 Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
+
 #### Dependencies
-* org.slf4j.slf4j-api-1.7.21
+
+* org.slf4j.slf4j-api-1.7.25
 
 ### Maven
 
@@ -240,6 +244,10 @@ For snapshots, add the following to your pom.xml file:
 
     mvn clean package  
     mvn javadoc:javadoc  
+
+### Dependency Updates
+
+    mvn versions:display-dependency-updates
 
 ## Cron Expressions in jobs.xml
 
