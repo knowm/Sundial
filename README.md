@@ -1,4 +1,4 @@
-## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
+## [![Sundial](https://raw.githubusercontent.com/knowm/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
 
 A Lightweight Job Scheduling Framework for Java.
 
@@ -132,7 +132,7 @@ SundialJobScheduler.unlockScheduler();
 // check if job a running
 SundialJobScheduler.isJobRunning("SampleJob");
 ```
-And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
+And many more useful functions. See all here: https://github.com/knowm/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
 
 ## Job Data Map
 ```java
@@ -198,7 +198,7 @@ By default jobs are not set to concurrently execute. This means if a job is curr
 1. You can add `<concurrency-allowed>true</concurrency-allowed>` in jobs.xml.
 1. You can add it to the Sundial annotations like this: `@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)` Same idea for cron annotation too.
 
-Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/knowm/Sundial/issues).
 
 ## Getting the Goods
 
@@ -262,7 +262,7 @@ Expression | Meaning
 0 0/10 * * * ? | Fire every 10 mintes starting at 12 am (midnight) every day
 
 ## Bugs
-Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
+Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/knowm/Sundial/issues).  
 
 ## Continuous Integration
 [![Build Status](https://travis-ci.org/timmolter/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
