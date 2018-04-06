@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A sample Job Action that simply logs a message every time it's called.
- * 
+ *
  * @author timmolter
  */
 public class SampleJobAction extends JobAction {
@@ -18,7 +18,5 @@ public class SampleJobAction extends JobAction {
 
     Integer myValue = getJobContext().get("MyValue");
     logger.info("myValue: " + myValue);
-
   }
-
 }

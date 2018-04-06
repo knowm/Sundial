@@ -4,7 +4,8 @@ import org.knowm.sundial.exceptions.JobInterruptException;
 import org.quartz.core.JobExecutionContext;
 
 /**
- * The highest class of the Job hierarchy which contains the ThreadLocal instance, the JobContext, and handles terminating of Jobs.
+ * The highest class of the Job hierarchy which contains the ThreadLocal instance, the JobContext,
+ * and handles terminating of Jobs.
  *
  * @author timmolter
  */
@@ -28,9 +29,7 @@ public abstract class JobContainer {
     contextContainer.set(jobContext);
   }
 
-  /**
-   * Empty the ThreadLocal container
-   */
+  /** Empty the ThreadLocal container */
   protected void destroyContext() {
 
     contextContainer.remove();
@@ -56,9 +55,7 @@ public abstract class JobContainer {
     return contextContainer.get();
   }
 
-  /**
-   * Check if the terminate flag is true, and throw a JobInterruptException if it is.
-   */
+  /** Check if the terminate flag is true, and throw a JobInterruptException if it is. */
   public void checkTerminated() {
 
     if (terminate) {
@@ -66,12 +63,9 @@ public abstract class JobContainer {
     }
   }
 
-  /**
-   * Set the terminate flag to true. Client code should not call this.
-   */
+  /** Set the terminate flag to true. Client code should not call this. */
   protected void setTerminate() {
 
     terminate = true;
   }
-
 }

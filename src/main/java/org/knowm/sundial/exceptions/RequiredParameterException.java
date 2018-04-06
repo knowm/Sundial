@@ -12,12 +12,9 @@ public class RequiredParameterException extends RuntimeException {
     super(message);
   }
 
-  /**
-   * Constructor
-   */
+  /** Constructor */
   public RequiredParameterException() {
 
     this("Required Value not found in Context! Job aborted!!!");
   }
-
 }

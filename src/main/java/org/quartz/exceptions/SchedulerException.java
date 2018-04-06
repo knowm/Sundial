@@ -4,11 +4,10 @@ import org.quartz.core.Scheduler;
 
 /**
  * Base class for exceptions thrown by the Quartz <code>{@link Scheduler}</code>.
- * <p>
- * <code>SchedulerException</code>s may contain a reference to another <code>Exception</code>, which was the underlying cause of the
- * <code>SchedulerException</code>.
- * </p>
- * 
+ *
+ * <p><code>SchedulerException</code>s may contain a reference to another <code>Exception</code>,
+ * which was the underlying cause of the <code>SchedulerException</code>.
+ *
  * @author James House
  */
 public class SchedulerException extends Exception {
@@ -44,13 +43,10 @@ public class SchedulerException extends Exception {
    */
 
   /**
-   * <p>
    * Return the exception that is the underlying cause of this exception.
-   * </p>
-   * <p>
-   * This may be used to find more detail about the cause of the error.
-   * </p>
-   * 
+   *
+   * <p>This may be used to find more detail about the cause of the error.
+   *
    * @return the underlying exception, or <code>null</code> if there is not one.
    */
   public Throwable getUnderlyingException() {
@@ -68,5 +64,4 @@ public class SchedulerException extends Exception {
       return super.toString() + " [See nested exception: " + cause + "]";
     }
   }
-
 }

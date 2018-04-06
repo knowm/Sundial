@@ -6,7 +6,8 @@ import org.quartz.jobs.JobDetail;
 import org.quartz.triggers.Trigger;
 
 /**
- * The interface to be implemented by classes that want to be informed of major <code>{@link Scheduler}</code> events.
+ * The interface to be implemented by classes that want to be informed of major <code>
+ * {@link Scheduler}</code> events.
  *
  * @author James House
  */
@@ -18,84 +19,68 @@ public interface SchedulerListener {
    */
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}</code> is scheduled.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}
+   * </code> is scheduled.
    */
   void jobScheduled(Trigger trigger);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}</code> is unscheduled.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}
+   * </code> is unscheduled.
    *
    * @see SchedulerListener#schedulingDataCleared()
    */
   void jobUnscheduled(String triggerKey);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code> has reached the condition in which it will never fire again.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a <code>{@link Trigger}</code> has reached
+   * the condition in which it will never fire again.
    */
   void triggerFinalized(Trigger trigger);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}</code> has been added.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}
+   * </code> has been added.
    */
   void jobAdded(JobDetail jobDetail);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}</code> has been deleted.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a <code>{@link org.quartz.jobs.JobDetail}
+   * </code> has been deleted.
    */
   void jobDeleted(String jobKey);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> when a serious error has occurred within the scheduler - such as repeated failures in the
-   * <code>JobStore</code>, or the inability to instantiate a <code>Job</code> instance when its <code>Trigger</code> has fired.
-   * </p>
-   * <p>
-   * The <code>getErrorCode()</code> method of the given SchedulerException can be used to determine more specific information about the type of error
-   * that was encountered.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> when a serious error has occurred within the
+   * scheduler - such as repeated failures in the <code>JobStore</code>, or the inability to
+   * instantiate a <code>Job</code> instance when its <code>Trigger</code> has fired.
+   *
+   * <p>The <code>getErrorCode()</code> method of the given SchedulerException can be used to
+   * determine more specific information about the type of error that was encountered.
    */
   void schedulerError(String msg, SchedulerException cause);
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has move to standby mode.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has move to standby
+   * mode.
    */
   void schedulerInStandbyMode();
 
-  /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has started.
-   * </p>
-   */
+  /** Called by the <code>{@link Scheduler}</code> to inform the listener that it has started. */
   void schedulerStarted();
 
-  /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has shutdown.
-   * </p>
-   */
+  /** Called by the <code>{@link Scheduler}</code> to inform the listener that it has shutdown. */
   void schedulerShutdown();
 
   /**
-   * <p>
-   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has begun the shutdown sequence.
-   * </p>
+   * Called by the <code>{@link Scheduler}</code> to inform the listener that it has begun the
+   * shutdown sequence.
    */
   void schedulerShuttingdown();
 
   /**
-   * Called by the <code>{@link Scheduler}</code> to inform the listener that all jobs, triggers and calendars were deleted.
+   * Called by the <code>{@link Scheduler}</code> to inform the listener that all jobs, triggers and
+   * calendars were deleted.
    */
   void schedulingDataCleared();
 }

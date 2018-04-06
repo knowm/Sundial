@@ -2,21 +2,21 @@ package org.quartz.triggers;
 
 import java.util.Calendar;
 import java.util.TimeZone;
-
 import org.quartz.core.Scheduler;
 
 /**
- * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a <code>{@link org.quartz.Job}</code> at given
- * moments in time, defined with Unix 'cron-like' schedule definitions.
- * <p>
- * For those unfamiliar with "cron", this means being able to create a firing schedule such as: "At 8:00am every Monday through Friday" or "At 1:30am
- * every last Friday of the month".
- * </p>
- * <p>
- * The format of a "Cron-Expression" string is documented on the {@link org.quartz.CronExpression} class.
- * </p>
- * <p>
- * Here are some full examples: <br>
+ * The public interface for inspecting settings specific to a CronTrigger, . which is used to fire a
+ * <code>{@link org.quartz.Job}</code> at given moments in time, defined with Unix 'cron-like'
+ * schedule definitions.
+ *
+ * <p>For those unfamiliar with "cron", this means being able to create a firing schedule such as:
+ * "At 8:00am every Monday through Friday" or "At 1:30am every last Friday of the month".
+ *
+ * <p>The format of a "Cron-Expression" string is documented on the {@link
+ * org.quartz.CronExpression} class.
+ *
+ * <p>Here are some full examples: <br>
+ *
  * <table cellspacing="8">
  * <tr>
  * <th align="left">Expression</th>
@@ -111,19 +111,17 @@ import org.quartz.core.Scheduler;
  * <td align="left"><code>Fire at 10:15am on the third Friday of every month</code></td>
  * </tr>
  * </table>
- * </p>
- * <p>
- * Pay attention to the effects of '?' and '*' in the day-of-week and day-of-month fields!
- * </p>
- * <p>
- * <b>NOTES:</b>
+ *
+ * <p>Pay attention to the effects of '?' and '*' in the day-of-week and day-of-month fields!
+ *
+ * <p><b>NOTES:</b>
+ *
  * <ul>
- * <li>Support for specifying both a day-of-week and a day-of-month value is not complete (you'll need to use the '?' character in on of these
- * fields).</li>
- * <li>Be careful when setting fire times between mid-night and 1:00 AM - "daylight savings" can cause a skip or a repeat depending on whether the
- * time moves back or jumps forward.</li>
+ *   <li>Support for specifying both a day-of-week and a day-of-month value is not complete (you'll
+ *       need to use the '?' character in on of these fields).
+ *   <li>Be careful when setting fire times between mid-night and 1:00 AM - "daylight savings" can
+ *       cause a skip or a repeat depending on whether the time moves back or jumps forward.
  * </ul>
- * </p>
  *
  * @author jhouse
  * @author Contributions from Mads Henderson
@@ -133,31 +131,26 @@ public interface CronTrigger extends Trigger {
   public static final long serialVersionUID = -8644953146451592766L;
 
   /**
-   * <p>
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to be fired now by
-   * <code>Scheduler</code>.
-   * </p>
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>
+   * {@link CronTrigger}</code> wants to be fired now by <code>Scheduler</code>.
    */
   public static final int MISFIRE_INSTRUCTION_FIRE_ONCE_NOW = 1;
 
   /**
-   * <p>
-   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>{@link CronTrigger}</code> wants to have it's
-   * next-fire-time updated to the next time in the schedule after the current time (taking into account any associated <code>{@link Calendar}</code>,
-   * but it does not want to be fired now.
-   * </p>
+   * Instructs the <code>{@link Scheduler}</code> that upon a mis-fire situation, the <code>
+   * {@link CronTrigger}</code> wants to have it's next-fire-time updated to the next time in the
+   * schedule after the current time (taking into account any associated <code>{@link Calendar}
+   * </code>, but it does not want to be fired now.
    */
   public static final int MISFIRE_INSTRUCTION_DO_NOTHING = 2;
 
   public String getCronExpression();
 
   /**
-   * <p>
-   * Returns the time zone for which the <code>cronExpression</code> of this <code>CronTrigger</code> will be resolved.
-   * </p>
+   * Returns the time zone for which the <code>cronExpression</code> of this <code>CronTrigger
+   * </code> will be resolved.
    */
   public TimeZone getTimeZone();
 
   public String getExpressionSummary();
-
 }

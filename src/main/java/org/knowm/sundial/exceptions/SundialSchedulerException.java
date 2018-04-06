@@ -25,5 +25,4 @@ public class SundialSchedulerException extends RuntimeException {
     super(msg, cause);
     logger.error(msg, cause);
   }
-
 }

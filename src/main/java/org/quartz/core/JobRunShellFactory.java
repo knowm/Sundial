@@ -5,10 +5,9 @@ import org.quartz.exceptions.SchedulerConfigException;
 import org.quartz.exceptions.SchedulerException;
 
 /**
- * <p>
- * Responsible for creating the instances of <code>{@link JobRunShell}</code> to be used within the <class>{@link QuartzScheduler}</code> instance.
- * </p>
- * 
+ * Responsible for creating the instances of <code>{@link JobRunShell}</code> to be used within the
+ * <class>{@link QuartzScheduler}</code> instance.
+ *
  * @author James House
  */
 public interface JobRunShellFactory {
@@ -19,17 +18,15 @@ public interface JobRunShellFactory {
    */
 
   /**
-   * <p>
-   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made available within the <code>JobRunShell</code> and
-   * the <code>JobExecutionContext</code> s within it.
-   * </p>
+   * Initialize the factory, providing a handle to the <code>Scheduler</code> that should be made
+   * available within the <code>JobRunShell</code> and the <code>JobExecutionContext</code> s within
+   * it.
    */
   void initialize(Scheduler scheduler) throws SchedulerConfigException;
 
   /**
-   * <p>
-   * Called by the <code>{@link org.quartz.core.QuartzSchedulerThread}</code> to obtain instances of <code>{@link JobRunShell}</code>.
-   * </p>
+   * Called by the <code>{@link org.quartz.core.QuartzSchedulerThread}</code> to obtain instances of
+   * <code>{@link JobRunShell}</code>.
    */
   JobRunShell createJobRunShell(TriggerFiredBundle bundle) throws SchedulerException;
 }

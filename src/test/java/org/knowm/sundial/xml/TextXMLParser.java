@@ -5,9 +5,7 @@ import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.classloading.ClassLoadHelper;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessor;
 
-/**
- * @author timmolter
- */
+/** @author timmolter */
 public class TextXMLParser {
 
   @Test
@@ -21,5 +19,4 @@ public class TextXMLParser {
     // processor.addTriggerGroupToNeverDelete(JOB_INITIALIZATION_PLUGIN_NAME);
     processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, false);
   }
-
 }

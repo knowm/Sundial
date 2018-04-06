@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 /**
  * Reports JobSchedulingDataLoader validation exceptions.
- * 
+ *
  * @author <a href="mailto:bonhamcm@thirdeyeconsulting.com">Chris Bonham</a>
  */
 class ValidationException extends Exception {
@@ -24,9 +24,7 @@ class ValidationException extends Exception {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * Constructor for ValidationException.
-   */
+  /** Constructor for ValidationException. */
   public ValidationException() {
 
     super();
@@ -34,7 +32,7 @@ class ValidationException extends Exception {
 
   /**
    * Constructor for ValidationException.
-   * 
+   *
    * @param message exception message.
    */
   private ValidationException(String message) {
@@ -44,7 +42,7 @@ class ValidationException extends Exception {
 
   /**
    * Constructor for ValidationException.
-   * 
+   *
    * @param message exception message.
    * @param errors collection of validation exceptions.
    */
@@ -62,7 +60,7 @@ class ValidationException extends Exception {
 
   /**
    * Returns collection of errors.
-   * 
+   *
    * @return collection of errors.
    */
   public Collection getValidationExceptions() {
@@ -72,7 +70,7 @@ class ValidationException extends Exception {
 
   /**
    * Returns the detail message string.
-   * 
+   *
    * @return the detail message string.
    */
   @Override
@@ -86,7 +84,7 @@ class ValidationException extends Exception {
 
     boolean first = true;
 
-    for (Iterator iter = getValidationExceptions().iterator(); iter.hasNext();) {
+    for (Iterator iter = getValidationExceptions().iterator(); iter.hasNext(); ) {
       Exception e = (Exception) iter.next();
 
       if (!first) {
@@ -99,5 +97,4 @@ class ValidationException extends Exception {
 
     return sb.toString();
   }
-
 }

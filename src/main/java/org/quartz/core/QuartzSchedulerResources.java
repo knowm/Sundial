@@ -2,16 +2,13 @@ package org.quartz.core;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.quartz.QuartzScheduler;
 import org.quartz.plugins.SchedulerPlugin;
 
 /**
- * <p>
- * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to create a <code>{@link QuartzScheduler}</code>
- * instance.
- * </p>
- * 
+ * Contains all of the resources (<code>JobStore</code>,<code>ThreadPool</code>, etc.) necessary to
+ * create a <code>{@link QuartzScheduler}</code> instance.
+ *
  * @see QuartzScheduler
  * @author James House
  */
@@ -39,31 +36,21 @@ public class QuartzSchedulerResources {
 
   private boolean interruptJobsOnShutdownWithWait = false;
 
-  /**
-   * <p>
-   * Create an instance with no properties initialized.
-   * </p>
-   */
+  /** Create an instance with no properties initialized. */
   public QuartzSchedulerResources() {
 
     // do nothing...
   }
 
-  /**
-   * <p>
-   * Get the name for the <code>{@link QuartzSchedulerThread}</code>.
-   * </p>
-   */
+  /** Get the name for the <code>{@link QuartzSchedulerThread}</code>. */
   public String getThreadName() {
 
     return threadName;
   }
 
   /**
-   * <p>
    * Set the name for the <code>{@link QuartzSchedulerThread}</code>.
-   * </p>
-   * 
+   *
    * @exception IllegalArgumentException if name is null or empty.
    */
   public void setThreadName(String threadName) {
@@ -76,9 +63,7 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
    * Get the <code>{@link ThreadPool}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
    */
   public ThreadPool getThreadPool() {
 
@@ -86,10 +71,8 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
    * Set the <code>{@link ThreadPool}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
-   * 
+   *
    * @exception IllegalArgumentException if threadPool is null.
    */
   public void setThreadPool(ThreadPool threadPool) {
@@ -101,21 +84,15 @@ public class QuartzSchedulerResources {
     this.threadPool = threadPool;
   }
 
-  /**
-   * <p>
-   * Get the <code>{@link JobStore}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
-   */
+  /** Get the <code>{@link JobStore}</code> for the <code>{@link QuartzScheduler}</code> to use. */
   public JobStore getJobStore() {
 
     return jobStore;
   }
 
   /**
-   * <p>
    * Set the <code>{@link JobStore}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
-   * 
+   *
    * @exception IllegalArgumentException if jobStore is null.
    */
   public void setJobStore(JobStore jobStore) {
@@ -128,9 +105,8 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
-   * Get the <code>{@link JobRunShellFactory}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
+   * Get the <code>{@link JobRunShellFactory}</code> for the <code>{@link QuartzScheduler}</code> to
+   * use.
    */
   public JobRunShellFactory getJobRunShellFactory() {
 
@@ -138,10 +114,9 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
-   * Set the <code>{@link JobRunShellFactory}</code> for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
-   * 
+   * Set the <code>{@link JobRunShellFactory}</code> for the <code>{@link QuartzScheduler}</code> to
+   * use.
+   *
    * @exception IllegalArgumentException if jobRunShellFactory is null.
    */
   public void setJobRunShellFactory(JobRunShellFactory jobRunShellFactory) {
@@ -154,10 +129,9 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
-   * Add the given <code>{@link org.quartz.plugins.SchedulerPlugin}</code> for the <code>{@link QuartzScheduler}</code> to use. This method expects
-   * the plugin's "initialize" method to be invoked externally (either before or after this method is called).
-   * </p>
+   * Add the given <code>{@link org.quartz.plugins.SchedulerPlugin}</code> for the <code>
+   * {@link QuartzScheduler}</code> to use. This method expects the plugin's "initialize" method to
+   * be invoked externally (either before or after this method is called).
    */
   public void addSchedulerPlugin(SchedulerPlugin plugin) {
 
@@ -165,9 +139,8 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * <p>
-   * Get the <code>List</code> of all <code>{@link org.quartz.plugins.SchedulerPlugin}</code>s for the <code>{@link QuartzScheduler}</code> to use.
-   * </p>
+   * Get the <code>List</code> of all <code>{@link org.quartz.plugins.SchedulerPlugin}</code>s for
+   * the <code>{@link QuartzScheduler}</code> to use.
    */
   public List<SchedulerPlugin> getSchedulerPlugins() {
 
@@ -176,7 +149,7 @@ public class QuartzSchedulerResources {
 
   /**
    * Get whether to mark the Quartz scheduling thread as daemon.
-   * 
+   *
    * @see Thread#setDaemon(boolean)
    */
   public boolean getMakeSchedulerThreadDaemon() {
@@ -186,7 +159,7 @@ public class QuartzSchedulerResources {
 
   /**
    * Set whether to mark the Quartz scheduling thread as daemon.
-   * 
+   *
    * @see Thread#setDaemon(boolean)
    */
   public void setMakeSchedulerThreadDaemon(boolean makeSchedulerThreadDaemon) {
@@ -195,7 +168,8 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * Get whether to set the class load context of spawned threads to that of the initializing thread.
+   * Get whether to set the class load context of spawned threads to that of the initializing
+   * thread.
    */
   public boolean isThreadsInheritInitializersClassLoadContext() {
 
@@ -203,9 +177,11 @@ public class QuartzSchedulerResources {
   }
 
   /**
-   * Set whether to set the class load context of spawned threads to that of the initializing thread.
+   * Set whether to set the class load context of spawned threads to that of the initializing
+   * thread.
    */
-  public void setThreadsInheritInitializersClassLoadContext(boolean threadsInheritInitializersClassLoadContext) {
+  public void setThreadsInheritInitializersClassLoadContext(
+      boolean threadsInheritInitializersClassLoadContext) {
 
     this.threadsInheritInitializersClassLoadContext = threadsInheritInitializersClassLoadContext;
   }
@@ -249,5 +225,4 @@ public class QuartzSchedulerResources {
 
     this.interruptJobsOnShutdownWithWait = interruptJobsOnShutdownWithWait;
   }
-
 }

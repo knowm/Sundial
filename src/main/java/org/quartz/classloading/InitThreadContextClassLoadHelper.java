@@ -4,8 +4,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * A <code>ClassLoadHelper</code> that uses either the context class loader of the thread that initialized Quartz.
- * 
+ * A <code>ClassLoadHelper</code> that uses either the context class loader of the thread that
+ * initialized Quartz.
+ *
  * @see org.quartz.classloading.ClassLoadHelper
  * @see org.quartz.classloading.ThreadContextClassLoadHelper
  * @see org.quartz.classloading.SimpleClassLoadHelper
@@ -29,8 +30,9 @@ class InitThreadContextClassLoadHelper implements ClassLoadHelper {
    */
 
   /**
-   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling
-   * thread, which is the thread that is initializing Quartz.
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to
+   * "steal" the class loader off of the calling thread, which is the thread that is initializing
+   * Quartz.
    */
   @Override
   public void initialize() {
@@ -38,9 +40,7 @@ class InitThreadContextClassLoadHelper implements ClassLoadHelper {
     initClassLoader = Thread.currentThread().getContextClassLoader();
   }
 
-  /**
-   * Return the class with the given name.
-   */
+  /** Return the class with the given name. */
   @Override
   public Class loadClass(String name) throws ClassNotFoundException {
 
@@ -48,8 +48,9 @@ class InitThreadContextClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
-   * 
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
+   *
    * @param name name of the desired resource
    * @return a java.net.URL object
    */
@@ -60,8 +61,9 @@ class InitThreadContextClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
-   * 
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
+   *
    * @param name name of the desired resource
    * @return a java.io.InputStream object
    */
@@ -73,7 +75,7 @@ class InitThreadContextClassLoadHelper implements ClassLoadHelper {
 
   /**
    * Enable sharing of the class-loader with 3rd party.
-   * 
+   *
    * @return the class-loader user be the helper.
    */
   @Override

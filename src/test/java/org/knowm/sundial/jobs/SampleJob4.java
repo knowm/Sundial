@@ -6,7 +6,10 @@ import org.knowm.sundial.exceptions.JobInterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@CronTrigger(cron = "0/5 * * * * ?", jobDataMap = { "KEY_1:VALUE_1", "KEY_2:1000" })
+@CronTrigger(
+  cron = "0/5 * * * * ?",
+  jobDataMap = {"KEY_1:VALUE_1", "KEY_2:1000"}
+)
 public class SampleJob4 extends Job {
 
   private final Logger logger = LoggerFactory.getLogger(SampleJob4.class);
@@ -24,6 +27,5 @@ public class SampleJob4 extends Job {
     String value2AsString = getJobContext().get("KEY_2");
     Integer valueAsInt = Integer.valueOf(value2AsString);
     logger.info("value2 = " + valueAsInt);
-
   }
 }

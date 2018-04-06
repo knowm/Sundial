@@ -3,23 +3,21 @@ package org.quartz.core;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.quartz.exceptions.SchedulerConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * This is class is a simple implementation of a thread pool, based on the <code>{@link org.quartz.core.ThreadPool}</code> interface.
- * </p>
- * <p>
- * <CODE>Runnable</CODE> objects are sent to the pool with the <code>{@link #runInThread(Runnable)}</code> method, which blocks until a
- * <code>Thread</code> becomes available.
- * </p>
- * <p>
- * The pool has a fixed number of <code>Thread</code>s, and does not grow or shrink based on demand.
- * </p>
- * 
+ * This is class is a simple implementation of a thread pool, based on the <code>
+ * {@link org.quartz.core.ThreadPool}</code> interface.
+ *
+ * <p><CODE>Runnable</CODE> objects are sent to the pool with the <code>
+ * {@link #runInThread(Runnable)}</code> method, which blocks until a <code>Thread</code> becomes
+ * available.
+ *
+ * <p>The pool has a fixed number of <code>Thread</code>s, and does not grow or shrink based on
+ * demand.
+ *
  * @author James House
  * @author Juergen Donnerstag
  */
@@ -63,16 +61,12 @@ public class SimpleThreadPool implements ThreadPool {
    */
 
   /**
-   * <p>
    * Create a new (unconfigured) <code>SimpleThreadPool</code>.
-   * </p>
-   * 
+   *
    * @see #setThreadCount(int)
    * @see #setThreadPriority(int)
    */
-  public SimpleThreadPool() {
-
-  }
+  public SimpleThreadPool() {}
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
@@ -91,40 +85,30 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /**
-   * <p>
-   * Set the number of worker threads in the pool - has no effect after <code>initialize()</code> has been called.
-   * </p>
+   * Set the number of worker threads in the pool - has no effect after <code>initialize()</code>
+   * has been called.
    */
   public void setThreadCount(int count) {
 
     this.count = count;
   }
 
-  /**
-   * <p>
-   * Get the number of worker threads in the pool.
-   * </p>
-   */
+  /** Get the number of worker threads in the pool. */
   public int getThreadCount() {
 
     return count;
   }
 
   /**
-   * <p>
-   * Set the thread priority of worker threads in the pool - has no effect after <code>initialize()</code> has been called.
-   * </p>
+   * Set the thread priority of worker threads in the pool - has no effect after <code>initialize()
+   * </code> has been called.
    */
   public void setThreadPriority(int prio) {
 
     this.prio = prio;
   }
 
-  /**
-   * <p>
-   * Get the thread priority of worker threads in the pool.
-   * </p>
-   */
+  /** Get the thread priority of worker threads in the pool. */
   public int getThreadPriority() {
 
     return prio;
@@ -143,17 +127,13 @@ public class SimpleThreadPool implements ThreadPool {
     return threadNamePrefix;
   }
 
-  /**
-   * @return Returns the threadsInheritContextClassLoaderOfInitializingThread.
-   */
+  /** @return Returns the threadsInheritContextClassLoaderOfInitializingThread. */
   public boolean isThreadsInheritContextClassLoaderOfInitializingThread() {
 
     return inheritLoader;
   }
 
-  /**
-   * @param inheritLoader The threadsInheritContextClassLoaderOfInitializingThread to set.
-   */
+  /** @param inheritLoader The threadsInheritContextClassLoaderOfInitializingThread to set. */
   public void setThreadsInheritContextClassLoaderOfInitializingThread(boolean inheritLoader) {
 
     this.inheritLoader = inheritLoader;
@@ -169,25 +149,19 @@ public class SimpleThreadPool implements ThreadPool {
     this.inheritGroup = inheritGroup;
   }
 
-  /**
-   * @return Returns the value of makeThreadsDaemons.
-   */
+  /** @return Returns the value of makeThreadsDaemons. */
   public boolean isMakeThreadsDaemons() {
 
     return makeThreadsDaemons;
   }
 
-  /**
-   * @param makeThreadsDaemons The value of makeThreadsDaemons to set.
-   */
+  /** @param makeThreadsDaemons The value of makeThreadsDaemons to set. */
   public void setMakeThreadsDaemons(boolean makeThreadsDaemons) {
 
     this.makeThreadsDaemons = makeThreadsDaemons;
   }
 
-  public void setInstanceId(String schedInstId) {
-
-  }
+  public void setInstanceId(String schedInstId) {}
 
   @Override
   public void initialize() throws SchedulerConfigException {
@@ -220,7 +194,10 @@ public class SimpleThreadPool implements ThreadPool {
     }
 
     if (isThreadsInheritContextClassLoaderOfInitializingThread()) {
-      getLog().info("Job execution threads will use class loader of thread: " + Thread.currentThread().getName());
+      getLog()
+          .info(
+              "Job execution threads will use class loader of thread: "
+                  + Thread.currentThread().getName());
     }
 
     // create the worker threads and start them
@@ -236,7 +213,13 @@ public class SimpleThreadPool implements ThreadPool {
 
     workers = new LinkedList<WorkerThread>();
     for (int i = 1; i <= count; ++i) {
-      WorkerThread wt = new WorkerThread(this, threadGroup, getThreadNamePrefix() + "-" + i, getThreadPriority(), isMakeThreadsDaemons());
+      WorkerThread wt =
+          new WorkerThread(
+              this,
+              threadGroup,
+              getThreadNamePrefix() + "-" + i,
+              getThreadPriority(),
+              isMakeThreadsDaemons());
       if (isThreadsInheritContextClassLoaderOfInitializingThread()) {
         wt.setContextClassLoader(Thread.currentThread().getContextClassLoader());
       }
@@ -247,12 +230,9 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /**
-   * <p>
    * Terminate any worker threads in this thread group.
-   * </p>
-   * <p>
-   * Jobs currently in progress will complete.
-   * </p>
+   *
+   * <p>Jobs currently in progress will complete.
    */
   public void shutdown() {
 
@@ -260,12 +240,9 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /**
-   * <p>
    * Terminate any worker threads in this thread group.
-   * </p>
-   * <p>
-   * Jobs currently in progress will complete.
-   * </p>
+   *
+   * <p>Jobs currently in progress will complete.
    */
   @Override
   public void shutdown(boolean waitForJobsToComplete) {
@@ -319,11 +296,10 @@ public class SimpleThreadPool implements ThreadPool {
   }
 
   /**
-   * <p>
-   * Run the given <code>Runnable</code> object in the next available <code>Thread</code>. If while waiting the thread pool is asked to shut down, the
-   * Runnable is executed immediately within a new additional thread.
-   * </p>
-   * 
+   * Run the given <code>Runnable</code> object in the next available <code>Thread</code>. If while
+   * waiting the thread pool is asked to shut down, the Runnable is executed immediately within a
+   * new additional thread.
+   *
    * @param runnable the <code>Runnable</code> to be added.
    */
   @Override
@@ -334,7 +310,6 @@ public class SimpleThreadPool implements ThreadPool {
     }
 
     synchronized (nextRunnableLock) {
-
       handoffPending = true;
 
       // Wait until a worker thread is available
@@ -352,7 +327,9 @@ public class SimpleThreadPool implements ThreadPool {
       } else {
         // If the thread pool is going down, execute the Runnable
         // within a new additional worker thread (no thread from the pool).
-        WorkerThread wt = new WorkerThread(this, threadGroup, "WorkerThread-LastJob", prio, isMakeThreadsDaemons(), runnable);
+        WorkerThread wt =
+            new WorkerThread(
+                this, threadGroup, "WorkerThread-LastJob", prio, isMakeThreadsDaemons(), runnable);
         busyWorkers.add(wt);
         workers.add(wt);
         wt.start();
@@ -368,7 +345,6 @@ public class SimpleThreadPool implements ThreadPool {
   public int blockForAvailableThreads() {
 
     synchronized (nextRunnableLock) {
-
       while ((availWorkers.size() < 1 || handoffPending) && !isShutdown) {
         try {
           nextRunnableLock.wait(500);
@@ -404,11 +380,7 @@ public class SimpleThreadPool implements ThreadPool {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * <p>
-   * A Worker loops, waiting to execute tasks.
-   * </p>
-   */
+  /** A Worker loops, waiting to execute tasks. */
   private class WorkerThread extends Thread {
 
     // A flag that signals the WorkerThread to terminate.
@@ -421,22 +393,26 @@ public class SimpleThreadPool implements ThreadPool {
     private boolean runOnce = false;
 
     /**
-     * <p>
-     * Create a worker thread and start it. Waiting for the next Runnable, executing it, and waiting for the next Runnable, until the shutdown flag is
-     * set.
-     * </p>
+     * Create a worker thread and start it. Waiting for the next Runnable, executing it, and waiting
+     * for the next Runnable, until the shutdown flag is set.
      */
-    private WorkerThread(SimpleThreadPool tp, ThreadGroup threadGroup, String name, int prio, boolean isDaemon) {
+    private WorkerThread(
+        SimpleThreadPool tp, ThreadGroup threadGroup, String name, int prio, boolean isDaemon) {
 
       this(tp, threadGroup, name, prio, isDaemon, null);
     }
 
     /**
-     * <p>
-     * Create a worker thread, start it, execute the runnable and terminate the thread (one time execution).
-     * </p>
+     * Create a worker thread, start it, execute the runnable and terminate the thread (one time
+     * execution).
      */
-    private WorkerThread(SimpleThreadPool tp, ThreadGroup threadGroup, String name, int prio, boolean isDaemon, Runnable runnable) {
+    private WorkerThread(
+        SimpleThreadPool tp,
+        ThreadGroup threadGroup,
+        String name,
+        int prio,
+        boolean isDaemon,
+        Runnable runnable) {
 
       super(threadGroup, name);
       this.tp = tp;
@@ -448,11 +424,7 @@ public class SimpleThreadPool implements ThreadPool {
       setDaemon(isDaemon);
     }
 
-    /**
-     * <p>
-     * Signal the thread that it should terminate.
-     * </p>
-     */
+    /** Signal the thread that it should terminate. */
     void shutdown() {
 
       synchronized (this) {
@@ -472,11 +444,7 @@ public class SimpleThreadPool implements ThreadPool {
       }
     }
 
-    /**
-     * <p>
-     * Loop, executing targets as they are received.
-     * </p>
-     */
+    /** Loop, executing targets as they are received. */
     @Override
     public void run() {
 
@@ -529,7 +497,6 @@ public class SimpleThreadPool implements ThreadPool {
             ran = false;
             makeAvailable(this);
           }
-
         }
 
         // read value of run within synchronized block to be

@@ -7,7 +7,6 @@ import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 import java.text.ParseException;
 import java.util.Set;
 import java.util.TimeZone;
-
 import org.knowm.sundial.Job;
 import org.knowm.sundial.annotations.CronTrigger;
 import org.knowm.sundial.annotations.SimpleTrigger;
@@ -22,7 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This plugin adds jobs and schedules them with triggers from annotated Job classes as the scheduler is initialized.
+ * This plugin adds jobs and schedules them with triggers from annotated Job classes as the
+ * scheduler is initialized.
  *
  * @author timmolter
  */
@@ -39,7 +39,8 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
   /**
    * Constructor
    *
-   * @param packageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
+   * @param packageName A comma(,) or colon(:) can be used to specify multiple packages to scan for
+   *     Jobs.
    */
   public AnnotationJobTriggerPlugin(String packageName) {
 
@@ -47,9 +48,8 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
   }
 
   /**
-   * <p>
-   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
-   * </p>
+   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin
+   * </code> a chance to initialize.
    *
    * @throws org.quartz.exceptions.SchedulerConfigException if there is an error initializing.
    */
@@ -68,7 +68,8 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
       logger.info("Loading annotated jobs from {}.", packageName);
 
-      Set<Class<? extends Job>> scheduledClasses = scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
+      Set<Class<? extends Job>> scheduledClasses =
+          scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
 
       logger.info("Found {} annotated jobs.", scheduledClasses.size());
 
@@ -83,8 +84,12 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, cronTrigger.jobDataMap());
           }
 
-          JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName())
-              .isConcurrencyAllowed(cronTrigger.isConcurrencyAllowed()).usingJobData(jobDataMap).build();
+          JobDetail jobDetail =
+              newJobBuilder(jobClass)
+                  .withIdentity(jobClass.getSimpleName())
+                  .isConcurrencyAllowed(cronTrigger.isConcurrencyAllowed())
+                  .usingJobData(jobDataMap)
+                  .build();
           OperableTrigger trigger;
           try {
             trigger = buildCronTrigger(cronTrigger, jobClass.getSimpleName());
@@ -103,8 +108,12 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             addToJobDataMap(jobDataMap, simpleTrigger.jobDataMap());
           }
 
-          JobDetail job = newJobBuilder(jobClass).withIdentity(jobClass.getSimpleName()).isConcurrencyAllowed(simpleTrigger.isConcurrencyAllowed())
-              .usingJobData(jobDataMap).build();
+          JobDetail job =
+              newJobBuilder(jobClass)
+                  .withIdentity(jobClass.getSimpleName())
+                  .isConcurrencyAllowed(simpleTrigger.isConcurrencyAllowed())
+                  .usingJobData(jobDataMap)
+                  .build();
           OperableTrigger trigger;
           try {
             trigger = buildSimpleTrigger(simpleTrigger, jobClass.getSimpleName());
@@ -116,29 +125,40 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
         }
       }
     }
-
   }
 
-  public OperableTrigger buildCronTrigger(CronTrigger cronTrigger, String jobName) throws ParseException {
+  public OperableTrigger buildCronTrigger(CronTrigger cronTrigger, String jobName)
+      throws ParseException {
 
     if (cronTrigger.cron() != null && cronTrigger.cron().trim().length() > 0) {
 
-      TimeZone tz = (cronTrigger.timeZone() == null || cronTrigger.timeZone().length() < 1) ? null : TimeZone.getTimeZone(cronTrigger.timeZone());
+      TimeZone tz =
+          (cronTrigger.timeZone() == null || cronTrigger.timeZone().length() < 1)
+              ? null
+              : TimeZone.getTimeZone(cronTrigger.timeZone());
 
-      return cronTriggerBuilder(cronTrigger.cron()).inTimeZone(tz).withIdentity(jobName + "-Trigger").forJob(jobName)
-          .withPriority(Trigger.DEFAULT_PRIORITY).build();
+      return cronTriggerBuilder(cronTrigger.cron())
+          .inTimeZone(tz)
+          .withIdentity(jobName + "-Trigger")
+          .forJob(jobName)
+          .withPriority(Trigger.DEFAULT_PRIORITY)
+          .build();
 
     } else {
       throw new IllegalArgumentException("'cron' is required for the @CronTrigger annotation");
     }
-
   }
 
   public OperableTrigger buildSimpleTrigger(SimpleTrigger simpleTrigger, String jobName) {
 
-    return simpleTriggerBuilder().withRepeatCount(simpleTrigger.repeatCount())
-        .withIntervalInMilliseconds(simpleTrigger.timeUnit().toMillis(simpleTrigger.repeatInterval())).withIdentity(jobName + "-Trigger")
-        .forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY).build();
+    return simpleTriggerBuilder()
+        .withRepeatCount(simpleTrigger.repeatCount())
+        .withIntervalInMilliseconds(
+            simpleTrigger.timeUnit().toMillis(simpleTrigger.repeatInterval()))
+        .withIdentity(jobName + "-Trigger")
+        .forJob(jobName)
+        .withPriority(Trigger.DEFAULT_PRIORITY)
+        .build();
   }
 
   private void addToJobDataMap(JobDataMap jobDataMap, String[] stringEncodedMap) {
@@ -153,11 +173,11 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
 
       jobDataMap.put(keyValue[0].trim(), keyValue[1].trim());
     }
-
   }
 
   /**
-   * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
+   * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with
+   * the <code>Scheduler</code>.
    */
   @Override
   public void shutdown() {
@@ -165,5 +185,4 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
     // Since we have nothing to do, override base shutdown so don't
     // get extraneous UserTransactions.
   }
-
 }

@@ -1,7 +1,6 @@
 package org.knowm.sundial.jobs;
 
 import java.util.concurrent.TimeUnit;
-
 import org.knowm.sundial.Job;
 import org.knowm.sundial.annotations.SimpleTrigger;
 import org.knowm.sundial.exceptions.JobInterruptException;

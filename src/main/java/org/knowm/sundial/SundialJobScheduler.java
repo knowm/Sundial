@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-
 import javax.servlet.ServletContext;
-
 import org.knowm.sundial.exceptions.SundialSchedulerException;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;
@@ -48,9 +46,7 @@ public class SundialJobScheduler {
 
   private static ServletContext servletContext = null;
 
-  /**
-   * Starts the Sundial Scheduler
-   */
+  /** Starts the Sundial Scheduler */
   public static void startScheduler() throws SundialSchedulerException {
 
     startScheduler(10, null);
@@ -69,9 +65,11 @@ public class SundialJobScheduler {
   /**
    * Starts the Sundial Scheduler
    *
-   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages
+   *     to scan for Jobs.
    */
-  public static void startScheduler(String annotatedJobsPackageName) throws SundialSchedulerException {
+  public static void startScheduler(String annotatedJobsPackageName)
+      throws SundialSchedulerException {
 
     startScheduler(10, annotatedJobsPackageName);
   }
@@ -80,9 +78,11 @@ public class SundialJobScheduler {
    * Starts the Sundial Scheduler
    *
    * @param threadPoolSize
-   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages
+   *     to scan for Jobs.
    */
-  public static void startScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {
+  public static void startScheduler(int threadPoolSize, String annotatedJobsPackageName)
+      throws SundialSchedulerException {
 
     try {
       createScheduler(threadPoolSize, annotatedJobsPackageName);
@@ -96,10 +96,12 @@ public class SundialJobScheduler {
    * Creates the Sundial Scheduler
    *
    * @param threadPoolSize the thread pool size used by the scheduler
-   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages
+   *     to scan for Jobs.
    * @return
    */
-  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName) throws SundialSchedulerException {
+  public static Scheduler createScheduler(int threadPoolSize, String annotatedJobsPackageName)
+      throws SundialSchedulerException {
 
     if (scheduler == null) {
       try {
@@ -118,7 +120,8 @@ public class SundialJobScheduler {
    * @param schedulerFactory factory to create the scheduler
    * @return
    */
-  public static Scheduler createScheduler(SchedulerFactory schedulerFactory) throws SundialSchedulerException {
+  public static Scheduler createScheduler(SchedulerFactory schedulerFactory)
+      throws SundialSchedulerException {
 
     if (scheduler == null) {
       try {
@@ -164,17 +167,13 @@ public class SundialJobScheduler {
     return globalLock;
   }
 
-  /**
-   * @return the ServletContext
-   */
+  /** @return the ServletContext */
   public static ServletContext getServletContext() {
 
     return servletContext;
   }
 
-  /**
-   * @param servletContext the ServletContext to set
-   */
+  /** @param servletContext the ServletContext to set */
   public static void setServletContext(ServletContext servletContext) {
 
     SundialJobScheduler.servletContext = servletContext;
@@ -186,10 +185,10 @@ public class SundialJobScheduler {
    * @param jobName
    * @param jobClass
    */
-  public static void addJob(String jobName, Class<? extends Job> jobClass) throws SundialSchedulerException {
+  public static void addJob(String jobName, Class<? extends Job> jobClass)
+      throws SundialSchedulerException {
 
     addJob(jobName, jobClass, null, false);
-
   }
 
   /**
@@ -201,7 +200,6 @@ public class SundialJobScheduler {
   public static void addJob(String jobName, String jobClassName) throws SundialSchedulerException {
 
     addJob(jobName, jobClassName, null, false);
-
   }
 
   /**
@@ -212,7 +210,11 @@ public class SundialJobScheduler {
    * @param params Set this null if there are no params
    * @param isConcurrencyAllowed
    */
-  public static void addJob(String jobName, Class<? extends Job> jobClass, Map<String, Object> params, boolean isConcurrencyAllowed)
+  public static void addJob(
+      String jobName,
+      Class<? extends Job> jobClass,
+      Map<String, Object> params,
+      boolean isConcurrencyAllowed)
       throws SundialSchedulerException {
 
     try {
@@ -223,7 +225,12 @@ public class SundialJobScheduler {
         }
       }
 
-      JobDetail jobDetail = newJobBuilder(jobClass).withIdentity(jobName).usingJobData(jobDataMap).isConcurrencyAllowed(isConcurrencyAllowed).build();
+      JobDetail jobDetail =
+          newJobBuilder(jobClass)
+              .withIdentity(jobName)
+              .usingJobData(jobDataMap)
+              .isConcurrencyAllowed(isConcurrencyAllowed)
+              .build();
 
       getScheduler().addJob(jobDetail);
 
@@ -241,11 +248,16 @@ public class SundialJobScheduler {
    * @param params Set this null if there are no params
    * @param isConcurrencyAllowed
    */
-  public static void addJob(String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed)
+  public static void addJob(
+      String jobName, String jobClassName, Map<String, Object> params, boolean isConcurrencyAllowed)
       throws SundialSchedulerException {
 
     try {
-      addJob(jobName, getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName), params, isConcurrencyAllowed);
+      addJob(
+          jobName,
+          getScheduler().getCascadingClassLoadHelper().loadClass(jobClassName),
+          params,
+          isConcurrencyAllowed);
     } catch (ClassNotFoundException e) {
       throw new SundialSchedulerException("ERROR ADDING JOB!!!", e);
     }
@@ -277,7 +289,6 @@ public class SundialJobScheduler {
     } catch (SchedulerException e) {
       throw new SundialSchedulerException("ERROR REMOVING JOB!!!", e);
     }
-
   }
 
   /**
@@ -285,7 +296,8 @@ public class SundialJobScheduler {
    *
    * @param jobName
    */
-  public static void startJob(String jobName, Map<String, Object> params) throws SundialSchedulerException {
+  public static void startJob(String jobName, Map<String, Object> params)
+      throws SundialSchedulerException {
 
     try {
 
@@ -299,13 +311,14 @@ public class SundialJobScheduler {
     } catch (SchedulerException e) {
       throw new SundialSchedulerException("ERROR STARTING JOB!!!", e);
     }
-
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name. The Job termination mechanism works by setting a flag that the Job should be
-   * terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you
-   * anticipate the need to terminate, put the method call checkTerminated() at an appropriate location.
+   * Triggers a Job interrupt on all Jobs matching the given Job Name. The Job termination mechanism
+   * works by setting a flag that the Job should be terminated, but it is up to the logic in the Job
+   * to decide at what point termination should occur. Therefore, in any long-running job that you
+   * anticipate the need to terminate, put the method call checkTerminated() at an appropriate
+   * location.
    *
    * @param jobName The job name
    */
@@ -332,16 +345,18 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value. Doesn't work if the value is not a String. The Job
-   * termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point
-   * termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call checkTerminated() at
-   * an appropriate location.
+   * Triggers a Job interrupt on all Jobs matching the given Job Name, key and (String) value.
+   * Doesn't work if the value is not a String. The Job termination mechanism works by setting a
+   * flag that the Job should be terminated, but it is up to the logic in the Job to decide at what
+   * point termination should occur. Therefore, in any long-running job that you anticipate the need
+   * to terminate, put the method call checkTerminated() at an appropriate location.
    *
    * @param jobName The job name
    * @param key The key in the job data map
    * @param pValue The value in the job data map
    */
-  public static void stopJob(String jobName, String key, String pValue) throws SundialSchedulerException {
+  public static void stopJob(String jobName, String key, String pValue)
+      throws SundialSchedulerException {
 
     logger.debug("key= " + key);
     logger.debug("value= " + pValue);
@@ -375,7 +390,8 @@ public class SundialJobScheduler {
    * @param jobName
    * @param cronExpression
    */
-  public static void addCronTrigger(String triggerName, String jobName, String cronExpression) throws SundialSchedulerException {
+  public static void addCronTrigger(String triggerName, String jobName, String cronExpression)
+      throws SundialSchedulerException {
     addCronTrigger(triggerName, jobName, cronExpression, null, null);
   }
 
@@ -383,16 +399,21 @@ public class SundialJobScheduler {
    * @param triggerName
    * @param jobName
    * @param cronExpression
-   * @param startTime - Trigger will NOT fire before this time, regardless of the Trigger's schedule.
-   * @param endTime - Set the time at which the Trigger will no longer fire - even if it's schedule has remaining repeats. If null, the end time is
-   *        indefinite.
+   * @param startTime - Trigger will NOT fire before this time, regardless of the Trigger's
+   *     schedule.
+   * @param endTime - Set the time at which the Trigger will no longer fire - even if it's schedule
+   *     has remaining repeats. If null, the end time is indefinite.
    */
-  public static void addCronTrigger(String triggerName, String jobName, String cronExpression, Date startTime, Date endTime)
+  public static void addCronTrigger(
+      String triggerName, String jobName, String cronExpression, Date startTime, Date endTime)
       throws SundialSchedulerException {
 
     try {
       CronTriggerBuilder cronTriggerBuilder = cronTriggerBuilder(cronExpression);
-      cronTriggerBuilder.withIdentity(triggerName).forJob(jobName).withPriority(Trigger.DEFAULT_PRIORITY);
+      cronTriggerBuilder
+          .withIdentity(triggerName)
+          .forJob(jobName)
+          .withPriority(Trigger.DEFAULT_PRIORITY);
       if (startTime != null) {
         cronTriggerBuilder.startAt(startTime);
       }
@@ -416,7 +437,9 @@ public class SundialJobScheduler {
    * @param repeatCount - set to -1 to repeat indefinitely
    * @param repeatInterval
    */
-  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval) throws SundialSchedulerException {
+  public static void addSimpleTrigger(
+      String triggerName, String jobName, int repeatCount, long repeatInterval)
+      throws SundialSchedulerException {
     addSimpleTrigger(triggerName, jobName, repeatCount, repeatInterval, null, null);
   }
 
@@ -428,12 +451,22 @@ public class SundialJobScheduler {
    * @param startTime
    * @param endTime
    */
-  public static void addSimpleTrigger(String triggerName, String jobName, int repeatCount, long repeatInterval, Date startTime, Date endTime)
+  public static void addSimpleTrigger(
+      String triggerName,
+      String jobName,
+      int repeatCount,
+      long repeatInterval,
+      Date startTime,
+      Date endTime)
       throws SundialSchedulerException {
 
     try {
       SimpleTriggerBuilder simpleTriggerBuilder = simpleTriggerBuilder();
-      simpleTriggerBuilder.withRepeatCount(repeatCount).withIntervalInMilliseconds(repeatInterval).withIdentity(triggerName).forJob(jobName);
+      simpleTriggerBuilder
+          .withRepeatCount(repeatCount)
+          .withIntervalInMilliseconds(repeatInterval)
+          .withIdentity(triggerName)
+          .forJob(jobName);
       if (startTime != null) {
         simpleTriggerBuilder.startAt(startTime);
       }
@@ -489,7 +522,8 @@ public class SundialJobScheduler {
    *
    * @return
    */
-  public static Map<String, List<Trigger>> getAllJobsAndTriggers() throws SundialSchedulerException {
+  public static Map<String, List<Trigger>> getAllJobsAndTriggers()
+      throws SundialSchedulerException {
 
     Map<String, List<Trigger>> allJobsMap = new TreeMap<String, List<Trigger>>();
     try {
@@ -525,7 +559,8 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Halts the Scheduler's firing of Triggers, and cleans up all resources associated with the Scheduler.
+   * Halts the Scheduler's firing of Triggers, and cleans up all resources associated with the
+   * Scheduler.
    */
   public static void shutdown() throws SundialSchedulerException {
 

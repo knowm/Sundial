@@ -9,7 +9,8 @@ public class ListenerManagerImpl implements ListenerManager {
 
   private HashMap<String, JobListener> globalJobListeners = new HashMap<String, JobListener>(10);
 
-  private HashMap<String, TriggerListener> globalTriggerListeners = new HashMap<String, TriggerListener>(10);
+  private HashMap<String, TriggerListener> globalTriggerListeners =
+      new HashMap<String, TriggerListener>(10);
 
   private ArrayList<SchedulerListener> schedulerListeners = new ArrayList<SchedulerListener>(10);
 
@@ -17,7 +18,8 @@ public class ListenerManagerImpl implements ListenerManager {
   public List<JobListener> getJobListeners() {
 
     synchronized (globalJobListeners) {
-      return java.util.Collections.unmodifiableList(new LinkedList<JobListener>(globalJobListeners.values()));
+      return java.util.Collections.unmodifiableList(
+          new LinkedList<JobListener>(globalJobListeners.values()));
     }
   }
 
@@ -29,9 +31,7 @@ public class ListenerManagerImpl implements ListenerManager {
     }
 
     synchronized (globalTriggerListeners) {
-
       globalTriggerListeners.put(triggerListener.getName(), triggerListener);
-
     }
   }
 
@@ -39,7 +39,8 @@ public class ListenerManagerImpl implements ListenerManager {
   public List<TriggerListener> getTriggerListeners() {
 
     synchronized (globalTriggerListeners) {
-      return java.util.Collections.unmodifiableList(new LinkedList<TriggerListener>(globalTriggerListeners.values()));
+      return java.util.Collections.unmodifiableList(
+          new LinkedList<TriggerListener>(globalTriggerListeners.values()));
     }
   }
 
@@ -47,8 +48,8 @@ public class ListenerManagerImpl implements ListenerManager {
   public List<SchedulerListener> getSchedulerListeners() {
 
     synchronized (schedulerListeners) {
-      return java.util.Collections.unmodifiableList(new ArrayList<SchedulerListener>(schedulerListeners));
+      return java.util.Collections.unmodifiableList(
+          new ArrayList<SchedulerListener>(schedulerListeners));
     }
   }
-
 }

@@ -2,7 +2,6 @@ package org.quartz.builders;
 
 import java.util.Date;
 import java.util.UUID;
-
 import org.quartz.core.Calendar;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.OperableTrigger;
@@ -81,9 +80,9 @@ public abstract class TriggerBuilder {
 
   /**
    * Use the given TriggerKey to identify the Trigger.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique TriggerKey will be generated.
-   * </p>
+   *
+   * <p>If none of the 'withIdentity' methods are set on the TriggerBuilder, then a random, unique
+   * TriggerKey will be generated.
    *
    * @param name the TriggerKey for the Trigger to be built
    * @return the updated TriggerBuilder
@@ -107,7 +106,8 @@ public abstract class TriggerBuilder {
   }
 
   /**
-   * Set the Trigger's priority. When more than one Trigger have the same fire time, the scheduler will fire the one with the highest priority first.
+   * Set the Trigger's priority. When more than one Trigger have the same fire time, the scheduler
+   * will fire the one with the highest priority first.
    *
    * @param priority the priority for the Trigger
    * @return the updated TriggerBuilder
@@ -131,8 +131,8 @@ public abstract class TriggerBuilder {
   }
 
   /**
-   * Set the time the Trigger should start at to the current moment - the trigger may or may not fire at this time - depending upon the schedule
-   * configured for the Trigger.
+   * Set the time the Trigger should start at to the current moment - the trigger may or may not
+   * fire at this time - depending upon the schedule configured for the Trigger.
    *
    * @return the updated TriggerBuilder
    */
@@ -143,8 +143,9 @@ public abstract class TriggerBuilder {
   }
 
   /**
-   * Set the time the Trigger should start at - the trigger may or may not fire at this time - depending upon the schedule configured for the Trigger.
-   * However the Trigger will NOT fire before this time, regardless of the Trigger's schedule.
+   * Set the time the Trigger should start at - the trigger may or may not fire at this time -
+   * depending upon the schedule configured for the Trigger. However the Trigger will NOT fire
+   * before this time, regardless of the Trigger's schedule.
    *
    * @param startTime the start time for the Trigger.
    * @return the updated TriggerBuilder
@@ -156,7 +157,8 @@ public abstract class TriggerBuilder {
   }
 
   /**
-   * Set the time at which the Trigger will no longer fire - even if it's schedule has remaining repeats.
+   * Set the time at which the Trigger will no longer fire - even if it's schedule has remaining
+   * repeats.
    *
    * @param endTime the end time for the Trigger. If null, the end time is indefinite.
    * @return the updated TriggerBuilder
@@ -169,9 +171,9 @@ public abstract class TriggerBuilder {
 
   /**
    * Set the {@link ScheduleBuilder} that will be used to define the Trigger's schedule.
-   * <p>
-   * The particular <code>SchedulerBuilder</code> used will dictate the concrete type of Trigger that is produced by the TriggerBuilder.
-   * </p>
+   *
+   * <p>The particular <code>SchedulerBuilder</code> used will dictate the concrete type of Trigger
+   * that is produced by the TriggerBuilder.
    *
    * @param scheduleBuilder the SchedulerBuilder to use.
    * @return the updated TriggerBuilder
@@ -204,5 +206,4 @@ public abstract class TriggerBuilder {
     this.jobDataMap = newJobDataMap; // set new map as the map to use
     return this;
   }
-
 }

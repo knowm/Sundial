@@ -1,15 +1,13 @@
 package org.quartz.core;
 
 import java.util.Date;
-
 import org.quartz.jobs.JobDetail;
 import org.quartz.triggers.OperableTrigger;
 
 /**
- * <p>
- * A simple class (structure) used for returning execution-time data from the JobStore to the <code>QuartzSchedulerThread</code>.
- * </p>
- * 
+ * A simple class (structure) used for returning execution-time data from the JobStore to the <code>
+ * QuartzSchedulerThread</code>.
+ *
  * @see org.quartz.QuartzScheduler
  * @author James House
  */
@@ -41,8 +39,15 @@ public class TriggerFiredBundle implements java.io.Serializable {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  public TriggerFiredBundle(JobDetail job, OperableTrigger trigger, Calendar cal, boolean jobIsRecovering, Date fireTime, Date scheduledFireTime,
-      Date prevFireTime, Date nextFireTime) {
+  public TriggerFiredBundle(
+      JobDetail job,
+      OperableTrigger trigger,
+      Calendar cal,
+      boolean jobIsRecovering,
+      Date fireTime,
+      Date scheduledFireTime,
+      Date prevFireTime,
+      Date nextFireTime) {
 
     this.job = job;
     this.trigger = trigger;
@@ -79,36 +84,27 @@ public class TriggerFiredBundle implements java.io.Serializable {
     return jobIsRecovering;
   }
 
-  /**
-   * @return Returns the fireTime.
-   */
+  /** @return Returns the fireTime. */
   public Date getFireTime() {
 
     return fireTime;
   }
 
-  /**
-   * @return Returns the nextFireTime.
-   */
+  /** @return Returns the nextFireTime. */
   public Date getNextFireTime() {
 
     return nextFireTime;
   }
 
-  /**
-   * @return Returns the prevFireTime.
-   */
+  /** @return Returns the prevFireTime. */
   public Date getPrevFireTime() {
 
     return prevFireTime;
   }
 
-  /**
-   * @return Returns the scheduledFireTime.
-   */
+  /** @return Returns the scheduledFireTime. */
   public Date getScheduledFireTime() {
 
     return scheduledFireTime;
   }
-
 }

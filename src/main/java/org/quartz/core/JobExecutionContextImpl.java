@@ -1,7 +1,6 @@
 package org.quartz.core;
 
 import java.util.Date;
-
 import org.quartz.jobs.Job;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
@@ -47,11 +46,7 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * <p>
-   * Create a JobExcecutionContext with the given context data.
-   * </p>
-   */
+  /** Create a JobExcecutionContext with the given context data. */
   public JobExecutionContextImpl(Scheduler scheduler, TriggerFiredBundle firedBundle, Job job) {
 
     this.scheduler = scheduler;
@@ -155,9 +150,23 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
   @Override
   public String toString() {
 
-    return "JobExecutionContext:" + " trigger: '" + getTrigger().getName() + " job: " + getJobDetail().getName() + " fireTime: '" + getFireTime()
-        + " scheduledFireTime: " + getScheduledFireTime() + " previousFireTime: '" + getPreviousFireTime() + " nextFireTime: " + getNextFireTime()
-        + " isRecovering: " + isRecovering() + " refireCount: " + getRefireCount();
+    return "JobExecutionContext:"
+        + " trigger: '"
+        + getTrigger().getName()
+        + " job: "
+        + getJobDetail().getName()
+        + " fireTime: '"
+        + getFireTime()
+        + " scheduledFireTime: "
+        + getScheduledFireTime()
+        + " previousFireTime: '"
+        + getPreviousFireTime()
+        + " nextFireTime: "
+        + getNextFireTime()
+        + " isRecovering: "
+        + isRecovering()
+        + " refireCount: "
+        + getRefireCount();
   }
 
   @Override
@@ -178,12 +187,9 @@ public class JobExecutionContextImpl implements java.io.Serializable, JobExecuti
     return jobRunTime;
   }
 
-  /**
-   * @param jobRunTime The jobRunTime to set.
-   */
+  /** @param jobRunTime The jobRunTime to set. */
   public void setJobRunTime(long jobRunTime) {
 
     this.jobRunTime = jobRunTime;
   }
-
 }

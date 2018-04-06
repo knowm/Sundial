@@ -2,7 +2,6 @@ package org.quartz.triggers;
 
 import java.util.Arrays;
 import java.util.Date;
-
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -10,20 +9,17 @@ import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 
 /**
- * <p>
  * The base abstract class to be extended by all <code>Trigger</code>s.
- * </p>
- * <p>
- * <code>Triggers</code> s have a name and group associated with them, which should uniquely identify them within a single
- * <code>{@link Scheduler}</code>.
- * </p>
- * <p>
- * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code> s are scheduled. Many <code>Trigger</code> s can point to the same
- * <code>Job</code>, but a single <code>Trigger</code> can only point to one <code>Job</code>.
- * </p>
- * <p>
- * Triggers can 'send' parameters/data to <code>Job</code>s by placing contents into the <code>JobDataMap</code> on the <code>Trigger</code>.
- * </p>
+ *
+ * <p><code>Triggers</code> s have a name and group associated with them, which should uniquely
+ * identify them within a single <code>{@link Scheduler}</code>.
+ *
+ * <p><code>Trigger</code>s are the 'mechanism' by which <code>Job</code> s are scheduled. Many
+ * <code>Trigger</code> s can point to the same <code>Job</code>, but a single <code>Trigger</code>
+ * can only point to one <code>Job</code>.
+ *
+ * <p>Triggers can 'send' parameters/data to <code>Job</code>s by placing contents into the <code>
+ * JobDataMap</code> on the <code>Trigger</code>.
  *
  * @author James House
  * @author Sharada Jambula
@@ -71,13 +67,11 @@ public abstract class AbstractTrigger implements OperableTrigger {
    */
 
   /**
-   * <p>
-   * Create a <code>Trigger</code> with no specified name, group, or <code>{@link org.quartz.jobs.JobDetail}</code>.
-   * </p>
-   * <p>
-   * Note that the {@link #setName(String)}and the {@link #setJobName(String)} methods must be called before the <code>Trigger</code> can be placed
-   * into a {@link Scheduler}.
-   * </p>
+   * Create a <code>Trigger</code> with no specified name, group, or <code>
+   * {@link org.quartz.jobs.JobDetail}</code>.
+   *
+   * <p>Note that the {@link #setName(String)}and the {@link #setJobName(String)} methods must be
+   * called before the <code>Trigger</code> can be placed into a {@link Scheduler}.
    */
   public AbstractTrigger() {
 
@@ -180,7 +174,8 @@ public abstract class AbstractTrigger implements OperableTrigger {
   public void setMisfireInstruction(int misfireInstruction) {
 
     if (!validateMisfireInstruction(misfireInstruction)) {
-      throw new IllegalArgumentException("The misfire instruction code is invalid for this type of trigger.");
+      throw new IllegalArgumentException(
+          "The misfire instruction code is invalid for this type of trigger.");
     }
     this.misfireInstruction = misfireInstruction;
   }
@@ -191,7 +186,8 @@ public abstract class AbstractTrigger implements OperableTrigger {
    */
 
   @Override
-  public CompletedExecutionInstruction executionComplete(JobExecutionContext context, JobExecutionException result) {
+  public CompletedExecutionInstruction executionComplete(
+      JobExecutionContext context, JobExecutionException result) {
 
     if (result != null && result.refireImmediately()) {
       return CompletedExecutionInstruction.RE_EXECUTE_JOB;
@@ -242,10 +238,9 @@ public abstract class AbstractTrigger implements OperableTrigger {
    */
 
   /**
-   * <p>
-   * Compare the next fire time of this <code>Trigger</code> to that of another by comparing their keys, or in other words, sorts them according to
-   * the natural (i.e. alphabetical) order of their keys.
-   * </p>
+   * Compare the next fire time of this <code>Trigger</code> to that of another by comparing their
+   * keys, or in other words, sorts them according to the natural (i.e. alphabetical) order of their
+   * keys.
    */
   @Override
   public int compareTo(Trigger other) {
@@ -317,8 +312,21 @@ public abstract class AbstractTrigger implements OperableTrigger {
   @Override
   public String toString() {
 
-    return "Trigger '" + getName() + "',  triggerClass: " + getClass().getSimpleName() + ", jobName: " + getJobName() + ", jobDataMap: "
-        + ((jobDataMap == null) ? "empty" : Arrays.toString(jobDataMap.entrySet().toArray())) + ", calendar: " + getCalendarName()
-        + ", misfireInstruction: " + getMisfireInstruction() + ", priority: " + getPriority() + ", nextFireTime: " + getNextFireTime();
+    return "Trigger '"
+        + getName()
+        + "',  triggerClass: "
+        + getClass().getSimpleName()
+        + ", jobName: "
+        + getJobName()
+        + ", jobDataMap: "
+        + ((jobDataMap == null) ? "empty" : Arrays.toString(jobDataMap.entrySet().toArray()))
+        + ", calendar: "
+        + getCalendarName()
+        + ", misfireInstruction: "
+        + getMisfireInstruction()
+        + ", priority: "
+        + getPriority()
+        + ", nextFireTime: "
+        + getNextFireTime();
   }
 }

@@ -9,10 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * An implementation of <code>{@link org.quartz.core.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code>
- * instance.
- * </p>
+ * An implementation of <code>{@link org.quartz.core.SchedulerFactory}</code> that does all of its
+ * work of creating a <code>QuartzScheduler</code> instance.
  *
  * @author James House
  * @author Anthony Eden
@@ -31,8 +29,8 @@ public class SchedulerFactory {
   /**
    * @param threadPoolSize
    * @param String packageName
-   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize and packageName where it looks for
-   *         annotated Job classes
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given
+   *     threadPoolSize and packageName where it looks for annotated Job classes
    * @throws SchedulerException
    */
   public Scheduler getScheduler(int threadPoolSize, String packageName) throws SchedulerException {
@@ -45,7 +43,8 @@ public class SchedulerFactory {
 
   /**
    * @param threadPoolSize
-   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given
+   *     threadPoolSize
    * @throws SchedulerException
    */
   public Scheduler getScheduler(int threadPoolSize) throws SchedulerException {
@@ -56,13 +55,10 @@ public class SchedulerFactory {
   }
 
   /**
-   * <p>
    * Returns a handle to the Scheduler produced by this factory.
-   * </p>
-   * <p>
-   * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be
-   * called by this method.
-   * </p>
+   *
+   * <p>If one of the <code>initialize</code> methods has not be previously called, then the default
+   * (no-arg) <code>initialize()</code> method will be called by this method.
    */
   public Scheduler getScheduler() throws SchedulerException {
 
@@ -96,7 +92,8 @@ public class SchedulerFactory {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     try {
 
-      JobRunShellFactory jrsf = new StandardJobRunShellFactory(); // Create correct run-shell factory...
+      JobRunShellFactory jrsf =
+          new StandardJobRunShellFactory(); // Create correct run-shell factory...
 
       QuartzSchedulerResources quartzSchedulerResources = new QuartzSchedulerResources();
       quartzSchedulerResources.setThreadName("Quartz Scheduler Thread");
@@ -119,7 +116,8 @@ public class SchedulerFactory {
 
       // Set up any SchedulerPlugins
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
+      XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin =
+          new XMLSchedulingDataProcessorPlugin();
       xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
       xmlSchedulingDataProcessorPlugin.setScanInterval(0);
       quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
@@ -127,7 +125,8 @@ public class SchedulerFactory {
       ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
       quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
 
-      AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
+      AnnotationJobTriggerPlugin annotationJobTriggerPlugin =
+          new AnnotationJobTriggerPlugin(packageName);
       quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
 
       // fire up job store, and runshell factory
@@ -135,7 +134,8 @@ public class SchedulerFactory {
       jobstore.setThreadPoolSize(threadPool.getPoolSize());
 
       // Initialize plugins now that we have a Scheduler instance.
-      xmlSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", quartzScheduler);
+      xmlSchedulingDataProcessorPlugin.initialize(
+          "XMLSchedulingDataProcessorPlugin", quartzScheduler);
       shutdownHookPlugin.initialize("ShutdownHookPlugin", quartzScheduler);
       annotationJobTriggerPlugin.initialize("AnnotationJobTriggerPlugin", quartzScheduler);
 

@@ -20,6 +20,5 @@ public class SampleJob3 extends Job {
     context.put("MyValue", new Integer(123));
 
     new SampleJobAction().run();
-
   }
 }

@@ -2,13 +2,13 @@ package org.knowm.sundial;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.knowm.sundial.exceptions.RequiredParameterException;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.triggers.CronTrigger;
 
 /**
- * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and any key/value pairs the user wishes to add.
+ * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and
+ * any key/value pairs the user wishes to add.
  *
  * @author timothy.molter
  */
@@ -34,15 +34,17 @@ public class JobContext {
 
     for (Object mapKey : jobExecutionContext.getMergedJobDataMap().keySet()) {
       // logger.debug("added key: " + (String) mapKey);
-      // logger.debug("added value: " + (String) jobExecutionContext.getMergedJobDataMap().get(mapKey));
+      // logger.debug("added value: " + (String)
+      // jobExecutionContext.getMergedJobDataMap().get(mapKey));
       map.put((String) mapKey, jobExecutionContext.getMergedJobDataMap().get(mapKey));
     }
     map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getName());
     map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getName()));
     if (jobExecutionContext.getTrigger() instanceof CronTrigger) {
-      map.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
+      map.put(
+          KEY_TRIGGER_CRON_EXPRESSION,
+          ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
     }
-
   }
 
   /**
@@ -114,5 +116,4 @@ public class JobContext {
 
     return get(KEY_TRIGGER_CRON_EXPRESSION);
   }
-
 }

@@ -15,12 +15,9 @@ public class JobInterruptException extends RuntimeException {
     super(message);
   }
 
-  /**
-   * Constructor
-   */
+  /** Constructor */
   public JobInterruptException() {
 
     this("Job Interrupted!!!");
   }
-
 }

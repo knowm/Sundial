@@ -1,25 +1,21 @@
 package org.quartz.jobs;
 
 import java.util.Arrays;
-
 import org.quartz.builders.JobBuilder;
 import org.quartz.core.Scheduler;
 
 /**
- * <p>
  * Conveys the detail properties of a given <code>Job</code> instance.
- * </p>
- * <p>
- * Quartz does not store an actual instance of a <code>Job</code> class, but instead allows you to define an instance of one, through the use of a
- * <code>JobDetail</code>.
- * </p>
- * <p>
- * <code>Job</code>s have a name and group associated with them, which should uniquely identify them within a single <code>{@link Scheduler}</code>.
- * </p>
- * <p>
- * <code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many <code>Trigger</code>s can point to the same
- * <code>Job</code>, but a single <code>Trigger</code> can only point to one <code>Job</code>.
- * </p>
+ *
+ * <p>Quartz does not store an actual instance of a <code>Job</code> class, but instead allows you
+ * to define an instance of one, through the use of a <code>JobDetail</code>.
+ *
+ * <p><code>Job</code>s have a name and group associated with them, which should uniquely identify
+ * them within a single <code>{@link Scheduler}</code>.
+ *
+ * <p><code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many
+ * <code>Trigger</code>s can point to the same <code>Job</code>, but a single <code>Trigger</code>
+ * can only point to one <code>Job</code>.
  *
  * @author James House
  * @author Sharada Jambula
@@ -45,8 +41,15 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   @Override
   public String toString() {
 
-    return "name: '" + getName() + "', Job Class: " + ((getJobClass() == null) ? null : getJobClass().getName()) + ", description: "
-        + getDescription() + " isConcurrencyAllowed: " + isConcurrencyAllowed() + ", jobDataMap: "
+    return "name: '"
+        + getName()
+        + "', Job Class: "
+        + ((getJobClass() == null) ? null : getJobClass().getName())
+        + ", description: "
+        + getDescription()
+        + " isConcurrencyAllowed: "
+        + isConcurrencyAllowed()
+        + ", jobDataMap: "
         + ((jobDataMap == null) ? "empty" : Arrays.toString(jobDataMap.entrySet().toArray()));
   }
 
@@ -56,13 +59,12 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
    */
 
   /**
-   * <p>
-   * Create a <code>JobDetail</code> with no specified name or group, and the default settings of all the other properties.
-   * </p>
-   * <p>
-   * Note that the {@link #setName(String)},{@link #setGroup(String)}and {@link #setJobClass(Class)}methods must be called before the job can be
-   * placed into a {@link Scheduler}
-   * </p>
+   * Create a <code>JobDetail</code> with no specified name or group, and the default settings of
+   * all the other properties.
+   *
+   * <p>Note that the {@link #setName(String)},{@link #setGroup(String)}and {@link
+   * #setJobClass(Class)}methods must be called before the job can be placed into a {@link
+   * Scheduler}
    */
   public JobDetailImpl() {
 
@@ -74,11 +76,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * <p>
-   * Get the name of this <code>Job</code>.
-   * </p>
-   */
+  /** Get the name of this <code>Job</code>. */
   @Override
   public String getName() {
 
@@ -86,9 +84,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   }
 
   /**
-   * <p>
    * Set the name of this <code>Job</code>.
-   * </p>
    *
    * @exception IllegalArgumentException if name is null or empty.
    */
@@ -107,10 +103,8 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   }
 
   /**
-   * <p>
-   * Set a description for the <code>Job</code> instance - may be useful for remembering/displaying the purpose of the job, though the description has
-   * no meaning to Quartz.
-   * </p>
+   * Set a description for the <code>Job</code> instance - may be useful for remembering/displaying
+   * the purpose of the job, though the description has no meaning to Quartz.
    */
   public void setDescription(String description) {
 
@@ -124,9 +118,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   }
 
   /**
-   * <p>
    * Set the instance of <code>Job</code> that will be executed.
-   * </p>
    *
    * @exception IllegalArgumentException if jobClass is null or the class is not a <code>Job</code>.
    */
@@ -152,11 +144,7 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
     return jobDataMap;
   }
 
-  /**
-   * <p>
-   * Set the <code>JobDataMap</code> to be associated with the <code>Job</code>.
-   * </p>
-   */
+  /** Set the <code>JobDataMap</code> to be associated with the <code>Job</code>. */
   public void setJobDataMap(JobDataMap jobDataMap) {
 
     this.jobDataMap = jobDataMap;
@@ -218,9 +206,13 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
   @Override
   public JobBuilder getJobBuilder() {
 
-    JobBuilder b = JobBuilder.newJobBuilder().ofType(getJobClass()).isConcurrencyAllowed(isConcurrencyAllowed()).usingJobData(getJobDataMap())
-        .withDescription(getDescription()).withIdentity(getName());
+    JobBuilder b =
+        JobBuilder.newJobBuilder()
+            .ofType(getJobClass())
+            .isConcurrencyAllowed(isConcurrencyAllowed())
+            .usingJobData(getJobDataMap())
+            .withDescription(getDescription())
+            .withIdentity(getName());
     return b;
   }
-
 }

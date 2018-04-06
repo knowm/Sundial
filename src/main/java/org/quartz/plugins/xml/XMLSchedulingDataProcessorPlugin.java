@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is initialized, and can optionally periodically scan the
- * file for changes.
+ * This plugin loads XML file(s) to add jobs and schedule them with triggers as the scheduler is
+ * initialized, and can optionally periodically scan the file for changes.
  *
  * @author James House
  * @author Pierre Awaragi
@@ -31,29 +31,24 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
    *
    * @param classLoadHelper
    */
-  public XMLSchedulingDataProcessorPlugin() {
+  public XMLSchedulingDataProcessorPlugin() {}
 
-  }
-
-  /**
-   * Get this plugin's <code>Scheduler</code>. Set as part of initialize().
-   */
+  /** Get this plugin's <code>Scheduler</code>. Set as part of initialize(). */
   private Scheduler getScheduler() {
 
     return scheduler;
   }
 
-  /**
-   * Comma separated list of file names (with paths) to the XML files that should be read.
-   */
+  /** Comma separated list of file names (with paths) to the XML files that should be read. */
   public String getFileNames() {
 
     return fileName;
   }
 
   /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value
-   * for the interval is 0, which disables scanning.
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been
+   * changed, it is re-loaded and parsed. The default value for the interval is 0, which disables
+   * scanning.
    *
    * @return Returns the scanInterval.
    */
@@ -63,8 +58,9 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been changed, it is re-loaded and parsed. The default value
-   * for the interval is 0, which disables scanning.
+   * The interval (in seconds) at which to scan for changes to the file. If the file has been
+   * changed, it is re-loaded and parsed. The default value for the interval is 0, which disables
+   * scanning.
    *
    * @param scanInterval The scanInterval to set.
    */
@@ -74,7 +70,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
+   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot
+   * be found. Default is <code>true</code>.
    */
   public boolean isFailOnFileNotFound() {
 
@@ -82,7 +79,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot be found. Default is <code>true</code>.
+   * Whether or not initialization of the plugin should fail (throw an exception) if the file cannot
+   * be found. Default is <code>true</code>.
    */
   public void setFailOnFileNotFound(boolean failOnFileNotFound) {
 
@@ -95,9 +93,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
    */
 
   /**
-   * <p>
-   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin</code> a chance to initialize.
-   * </p>
+   * Called during creation of the <code>Scheduler</code> in order to give the <code>SchedulerPlugin
+   * </code> a chance to initialize.
    *
    * @throws org.quartz.exceptions.SchedulerConfigException if there is an error initializing.
    */
@@ -113,8 +110,10 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   public void start() {
 
     try {
-      XMLSchedulingDataProcessor processor = new XMLSchedulingDataProcessor(scheduler.getCascadingClassLoadHelper());
-      processor.processFile(XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);
+      XMLSchedulingDataProcessor processor =
+          new XMLSchedulingDataProcessor(scheduler.getCascadingClassLoadHelper());
+      processor.processFile(
+          XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME, failOnFileNotFound);
       processor.scheduleJobs(getScheduler());
 
     } catch (Exception e) {
@@ -123,7 +122,8 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   }
 
   /**
-   * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with the <code>Scheduler</code>.
+   * Overridden to ignore <em>wrapInUserTransaction</em> because shutdown() does not interact with
+   * the <code>Scheduler</code>.
    */
   @Override
   public void shutdown() {
@@ -131,5 +131,4 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
     // Since we have nothing to do, override base shutdown so don't
     // get extraneous UserTransactions.
   }
-
 }

@@ -1,8 +1,6 @@
 package org.quartz.core;
 
-/**
- * @author lorban
- */
+/** @author lorban */
 public class TriggerFiredResult {
 
   private TriggerFiredBundle triggerFiredBundle;

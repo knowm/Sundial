@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
-
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
@@ -23,13 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * This class implements a <code>{@link org.quartz.core.JobStore}</code> that utilizes RAM as its storage device.
- * </p>
- * <p>
- * As you should know, the ramification of this is that access is extremely fast, but the data is completely volatile - therefore this
- * <code>JobStore</code> should not be used if true persistence between program shutdowns is required.
- * </p>
+ * This class implements a <code>{@link org.quartz.core.JobStore}</code> that utilizes RAM as its
+ * storage device.
+ *
+ * <p>As you should know, the ramification of this is that access is extremely fast, but the data is
+ * completely volatile - therefore this <code>JobStore</code> should not be used if true persistence
+ * between program shutdowns is required.
  *
  * @author James House
  * @author Sharada Jambula
@@ -44,9 +42,11 @@ public class RAMJobStore implements JobStore {
 
   private HashMap<String, JobWrapper> jobsByKey = new HashMap<String, JobWrapper>(1000);
 
-  private HashMap<String, TriggerWrapper> wrappedTriggersByKey = new HashMap<String, TriggerWrapper>(1000);
+  private HashMap<String, TriggerWrapper> wrappedTriggersByKey =
+      new HashMap<String, TriggerWrapper>(1000);
 
-  private TreeSet<TriggerWrapper> timeWrappedTriggers = new TreeSet<TriggerWrapper>(new TriggerWrapperComparator());
+  private TreeSet<TriggerWrapper> timeWrappedTriggers =
+      new TreeSet<TriggerWrapper>(new TriggerWrapperComparator());
 
   private HashMap<String, Calendar> calendarsByName = new HashMap<String, Calendar>(25);
 
@@ -67,14 +67,8 @@ public class RAMJobStore implements JobStore {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * <p>
-   * Create a new <code>RAMJobStore</code>.
-   * </p>
-   */
-  public RAMJobStore() {
-
-  }
+  /** Create a new <code>RAMJobStore</code>. */
+  public RAMJobStore() {}
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface.
@@ -82,11 +76,9 @@ public class RAMJobStore implements JobStore {
    */
 
   /**
-   * <p>
-   * Called by the QuartzScheduler before the <code>JobStore</code> is used, in order to give the it a chance to initialize.
-   * </p>
+   * Called by the QuartzScheduler before the <code>JobStore</code> is used, in order to give the it
+   * a chance to initialize.
    */
-
   @Override
   public void initialize(SchedulerSignaler signaler) {
 
@@ -107,8 +99,8 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * The number of milliseconds by which a trigger must have missed its next-fire-time, in order for it to be considered "misfired" and thus have its
-   * misfire instruction applied.
+   * The number of milliseconds by which a trigger must have missed its next-fire-time, in order for
+   * it to be considered "misfired" and thus have its misfire instruction applied.
    *
    * @param misfireThreshold
    */
@@ -121,40 +113,40 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>{@link org.quartz.triggers.Trigger}</code>.
-   * </p>
+   * Store the given <code>{@link org.quartz.jobs.JobDetail}</code> and <code>
+   * {@link org.quartz.triggers.Trigger}</code>.
    *
    * @param newJob The <code>JobDetail</code> to be stored.
    * @param newTrigger The <code>Trigger</code> to be stored.
-   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists.
+   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already
+   *     exists.
    */
   @Override
-  public void storeJobAndTrigger(JobDetail newJob, OperableTrigger newTrigger) throws JobPersistenceException {
+  public void storeJobAndTrigger(JobDetail newJob, OperableTrigger newTrigger)
+      throws JobPersistenceException {
 
     storeJob(newJob, false);
     storeTrigger(newTrigger, false);
   }
 
   /**
-   * <p>
    * Store the given <code>{@link org.quartz.jobs.Job}</code>.
-   * </p>
    *
    * @param newJob The <code>Job</code> to be stored.
-   * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>JobStore</code> with the same name & group should be
-   *        over-written.
-   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already exists, and replaceExisting is set to false.
+   * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>
+   *     JobStore</code> with the same name & group should be over-written.
+   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already
+   *     exists, and replaceExisting is set to false.
    */
   @Override
-  public void storeJob(JobDetail newJob, boolean replaceExisting) throws ObjectAlreadyExistsException {
+  public void storeJob(JobDetail newJob, boolean replaceExisting)
+      throws ObjectAlreadyExistsException {
 
     JobWrapper jw = new JobWrapper((JobDetail) newJob.clone());
 
     boolean repl = false;
 
     synchronized (lock) {
-
       if (jobsByKey.get(jw.key) != null) {
         if (!replaceExisting) {
           throw new ObjectAlreadyExistsException(newJob);
@@ -175,12 +167,11 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given name, and any <code>{@link org.quartz.triggers.Trigger}</code> s that
-   * reference it.
-   * </p>
+   * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given name, and any
+   * <code>{@link org.quartz.triggers.Trigger}</code> s that reference it.
    *
-   * @return <code>true</code> if a <code>Job</code> with the given name & group was found and removed from the store.
+   * @return <code>true</code> if a <code>Job</code> with the given name & group was found and
+   *     removed from the store.
    */
   @Override
   public boolean removeJob(String jobKey) {
@@ -195,27 +186,25 @@ public class RAMJobStore implements JobStore {
       }
 
       found = (jobsByKey.remove(jobKey) != null) | found;
-      if (found) {
-
-      }
+      if (found) {}
     }
 
     return found;
   }
 
   /**
-   * <p>
    * Store the given <code>{@link org.quartz.triggers.Trigger}</code>.
-   * </p>
    *
    * @param newTrigger The <code>Trigger</code> to be stored.
-   * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>JobStore</code> with the same name & group should be
-   *        over-written.
-   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already exists, and replaceExisting is set to false.
+   * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>
+   *     JobStore</code> with the same name & group should be over-written.
+   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already
+   *     exists, and replaceExisting is set to false.
    * @see #pauseTriggerGroup(SchedulingContext, String)
    */
   @Override
-  public void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting) throws JobPersistenceException {
+  public void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting)
+      throws JobPersistenceException {
 
     TriggerWrapper tw = new TriggerWrapper((OperableTrigger) newTrigger.clone());
 
@@ -229,7 +218,8 @@ public class RAMJobStore implements JobStore {
       }
 
       if (retrieveJob(newTrigger.getJobName()) == null) {
-        throw new JobPersistenceException("The job (" + newTrigger.getJobName() + ") referenced by the trigger does not exist.");
+        throw new JobPersistenceException(
+            "The job (" + newTrigger.getJobName() + ") referenced by the trigger does not exist.");
       }
 
       // add to triggers array
@@ -266,7 +256,6 @@ public class RAMJobStore implements JobStore {
           }
         }
         timeWrappedTriggers.remove(tw);
-
       }
     }
 
@@ -274,10 +263,12 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * @see org.quartz.core.JobStore#replaceTrigger(org.quartz.core.SchedulingContext, java.lang.String, java.lang.String, org.quartz.triggers.Trigger)
+   * @see org.quartz.core.JobStore#replaceTrigger(org.quartz.core.SchedulingContext,
+   *     java.lang.String, java.lang.String, org.quartz.triggers.Trigger)
    */
   @Override
-  public boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger) throws JobPersistenceException {
+  public boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger)
+      throws JobPersistenceException {
 
     boolean found = false;
 
@@ -289,7 +280,8 @@ public class RAMJobStore implements JobStore {
       if (found) {
 
         if (!tw.getTrigger().getJobName().equals(newTrigger.getJobName())) {
-          throw new JobPersistenceException("New trigger is not related to the same job as the old trigger.");
+          throw new JobPersistenceException(
+              "New trigger is not related to the same job as the old trigger.");
         }
 
         tw = null;
@@ -317,9 +309,8 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Retrieve the <code>{@link org.quartz.jobs.JobDetail}</code> for the given <code>{@link org.quartz.jobs.Job}</code>.
-   * </p>
+   * Retrieve the <code>{@link org.quartz.jobs.JobDetail}</code> for the given <code>
+   * {@link org.quartz.jobs.Job}</code>.
    *
    * @return The desired <code>Job</code>, or null if there is no match.
    */
@@ -333,9 +324,7 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
    * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
-   * </p>
    *
    * @return The desired <code>Trigger</code>, or null if there is no match.
    */
@@ -350,9 +339,7 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
    * Retrieve the given <code>{@link org.quartz.triggers.Trigger}</code>.
-   * </p>
    *
    * @param calName The name of the <code>Calendar</code> to be retrieved.
    * @return The desired <code>Calendar</code>, or null if there is no match.
@@ -370,12 +357,9 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
    * Get all of the Triggers that are associated to the given Job.
-   * </p>
-   * <p>
-   * If there are no matches, a zero-length array should be returned.
-   * </p>
+   *
+   * <p>If there are no matches, a zero-length array should be returned.
    */
   @Override
   public List<Trigger> getTriggersForJob(String jobKey) {
@@ -418,7 +402,10 @@ public class RAMJobStore implements JobStore {
     }
 
     Date tnft = tw.trigger.getNextFireTime();
-    if (tnft == null || tnft.getTime() > misfireTime || tw.trigger.getMisfireInstruction() == Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
+    if (tnft == null
+        || tnft.getTime() > misfireTime
+        || tw.trigger.getMisfireInstruction()
+            == Trigger.MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY) {
       return false;
     }
 
@@ -452,14 +439,14 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Get a handle to the next trigger to be fired, and mark it as 'reserved' by the calling scheduler.
-   * </p>
+   * Get a handle to the next trigger to be fired, and mark it as 'reserved' by the calling
+   * scheduler.
    *
    * @see #releaseAcquiredTrigger(SchedulingContext, Trigger)
    */
   @Override
-  public List<OperableTrigger> acquireNextTriggers(long noLaterThan, int maxCount, long timeWindow) {
+  public List<OperableTrigger> acquireNextTriggers(
+      long noLaterThan, int maxCount, long timeWindow) {
 
     synchronized (lock) {
       List<OperableTrigger> result = new ArrayList<OperableTrigger>();
@@ -507,10 +494,8 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Inform the <code>JobStore</code> that the scheduler no longer plans to fire the given <code>Trigger</code>, that it had previously acquired
-   * (reserved).
-   * </p>
+   * Inform the <code>JobStore</code> that the scheduler no longer plans to fire the given <code>
+   * Trigger</code>, that it had previously acquired (reserved).
    */
   @Override
   public void releaseAcquiredTrigger(OperableTrigger trigger) {
@@ -525,10 +510,9 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Inform the <code>JobStore</code> that the scheduler is now firing the given <code>Trigger</code> (executing its associated <code>Job</code>),
-   * that it had previously acquired (reserved).
-   * </p>
+   * Inform the <code>JobStore</code> that the scheduler is now firing the given <code>Trigger
+   * </code> (executing its associated <code>Job</code>), that it had previously acquired
+   * (reserved).
    */
   @Override
   public List<TriggerFiredResult> triggersFired(List<OperableTrigger> triggers) {
@@ -563,8 +547,16 @@ public class RAMJobStore implements JobStore {
         // tw.state = TriggerWrapper.STATE_EXECUTING;
         tw.state = TriggerWrapper.STATE_WAITING;
 
-        TriggerFiredBundle bndle = new TriggerFiredBundle(retrieveJob(tw.jobKey), trigger, cal, false, new Date(), trigger.getPreviousFireTime(),
-            prevFireTime, trigger.getNextFireTime());
+        TriggerFiredBundle bndle =
+            new TriggerFiredBundle(
+                retrieveJob(tw.jobKey),
+                trigger,
+                cal,
+                false,
+                new Date(),
+                trigger.getPreviousFireTime(),
+                prevFireTime,
+                trigger.getNextFireTime());
 
         JobDetail job = bndle.getJobDetail();
 
@@ -595,17 +587,16 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * <p>
-   * Inform the <code>JobStore</code> that the scheduler has completed the firing of the given <code>Trigger</code> (and the execution its associated
-   * <code>Job</code>), and that the <code>{@link org.quartz.jobs.JobDataMap}</code> in the given <code>JobDetail</code> should be updated if the
-   * <code>Job</code> is stateful.
-   * </p>
+   * Inform the <code>JobStore</code> that the scheduler has completed the firing of the given
+   * <code>Trigger</code> (and the execution its associated <code>Job</code>), and that the <code>
+   * {@link org.quartz.jobs.JobDataMap}</code> in the given <code>JobDetail</code> should be updated
+   * if the <code>Job</code> is stateful.
    */
   @Override
-  public void triggeredJobComplete(OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode) {
+  public void triggeredJobComplete(
+      OperableTrigger trigger, JobDetail jobDetail, CompletedExecutionInstruction triggerInstCode) {
 
     synchronized (lock) {
-
       JobWrapper jw = jobsByKey.get(jobDetail.getName());
       TriggerWrapper tw = wrappedTriggersByKey.get(trigger.getName());
 
@@ -687,18 +678,13 @@ public class RAMJobStore implements JobStore {
     //
   }
 
-  /**
-   * <p>
-   * Get the names of all of the <code>{@link org.quartz.jobs.Job}</code> s
-   * </p>
-   */
+  /** Get the names of all of the <code>{@link org.quartz.jobs.Job}</code> s */
   @Override
   public Set<String> getJobKeys() {
 
     Set<String> outList = new HashSet<String>();
 
     synchronized (lock) {
-
       for (JobWrapper jw : jobsByKey.values()) {
 
         if (jw != null) {
@@ -708,16 +694,14 @@ public class RAMJobStore implements JobStore {
       }
     }
 
-    return outList == null ? java.util.Collections.<String> emptySet() : outList;
+    return outList == null ? java.util.Collections.<String>emptySet() : outList;
   }
-
 }
 
 /**
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * Helper Classes. * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * * * *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * Helper Classes. * * * * * *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-
 class TriggerWrapperComparator implements Comparator<TriggerWrapper> {
 
   private TriggerTimeComparator ttc = new TriggerTimeComparator();
@@ -765,7 +749,6 @@ class JobWrapper {
 
     return key.hashCode();
   }
-
 }
 
 class TriggerWrapper {

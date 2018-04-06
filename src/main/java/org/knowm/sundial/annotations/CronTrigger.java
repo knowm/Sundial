@@ -15,6 +15,5 @@ public @interface CronTrigger {
 
   boolean isConcurrencyAllowed() default false;
 
-  String[]jobDataMap() default {};
-
+  String[] jobDataMap() default {};
 }

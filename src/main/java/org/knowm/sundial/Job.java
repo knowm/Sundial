@@ -9,19 +9,13 @@ import org.quartz.jobs.InterruptableJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author timmolter
- */
+/** @author timmolter */
 public abstract class Job extends JobContainer implements InterruptableJob {
 
   private final Logger logger = LoggerFactory.getLogger(Job.class);
 
-  /**
-   * Required no-arg constructor
-   */
-  public Job() {
-
-  }
+  /** Required no-arg constructor */
+  public Job() {}
 
   @Override
   public final void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -41,16 +35,15 @@ public abstract class Job extends JobContainer implements InterruptableJob {
     } catch (RequiredParameterException e) {
     } catch (JobInterruptException e) {
     } catch (Exception e) {
-      logger.error(String.format(
+      logger.error(
+          String.format(
               "Job [%s] aborted due to execution error: %s",
-              jobExecutionContext.getJobDetail().getName(),
-              e.getMessage())
-              , e);
+              jobExecutionContext.getJobDetail().getName(), e.getMessage()),
+          e);
     } finally {
       cleanup();
       destroyContext(); // remove the JobContext from the ThreadLocal
     }
-
   }
 
   @Override
@@ -61,12 +54,10 @@ public abstract class Job extends JobContainer implements InterruptableJob {
   }
 
   /**
-   * Override and place any code in here that should be called no matter what after the Job runs or throws an exception.
+   * Override and place any code in here that should be called no matter what after the Job runs or
+   * throws an exception.
    */
-  public void cleanup() {
-
-  }
+  public void cleanup() {}
 
   public abstract void doRun() throws JobInterruptException;
-
 }
