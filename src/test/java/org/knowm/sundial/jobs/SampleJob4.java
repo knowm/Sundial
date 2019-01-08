@@ -7,9 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @CronTrigger(
-  cron = "0/5 * * * * ?",
-  jobDataMap = {"KEY_1:VALUE_1", "KEY_2:1000"}
-)
+    cron = "0/5 * * * * ?",
+    jobDataMap = {"KEY_1:VALUE_1", "KEY_2:1000"})
 public class SampleJob4 extends Job {
 
   private final Logger logger = LoggerFactory.getLogger(SampleJob4.class);

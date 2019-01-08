@@ -265,6 +265,6 @@ Expression | Meaning
 Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/knowm/Sundial/issues).  
 
 ## Continuous Integration
-[![Build Status](https://travis-ci.org/timmolter/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
-[Build History](https://travis-ci.org/timmolter/Sundial/builds)  
+[![Build Status](https://travis-ci.org/knowm/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
+[Build History](https://travis-ci.org/knowm/Sundial/builds)  
 
