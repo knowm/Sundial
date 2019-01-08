@@ -18,7 +18,7 @@ public class BadJobTest {
   }
 
   @BeforeClass
-  public void setup() {
+  public static void setup() {
     SundialJobScheduler.startScheduler(1, null); // null -> don't load anything
     List<String> names = SundialJobScheduler.getAllJobNames();
 
