@@ -1,8 +1,8 @@
 package org.knowm.sundial;
 
 import java.util.List;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.knowm.sundial.exceptions.JobInterruptException;
 import org.quartz.exceptions.SchedulerException;
@@ -17,7 +17,7 @@ public class BadJobTest {
     }
   }
 
-  @Before
+  @BeforeClass
   public void setup() {
     SundialJobScheduler.startScheduler(1, null); // null -> don't load anything
     List<String> names = SundialJobScheduler.getAllJobNames();
@@ -26,7 +26,7 @@ public class BadJobTest {
     // assertTrue( names.isEmpty() );
   }
 
-  @After
+  @AfterClass
   public static void shutdownScheduler() {
     SundialJobScheduler.shutdown();
   }
