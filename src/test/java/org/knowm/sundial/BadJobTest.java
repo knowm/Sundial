@@ -1,6 +1,7 @@
 package org.knowm.sundial;
 
 import java.util.List;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowm.sundial.exceptions.JobInterruptException;
@@ -23,6 +24,11 @@ public class BadJobTest {
 
     // We get the jobs from the XML for free
     // assertTrue( names.isEmpty() );
+  }
+
+  @After
+  public static void shutdownScheduler() {
+    SundialJobScheduler.shutdown();
   }
 
   @Test

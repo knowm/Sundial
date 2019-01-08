@@ -16,5 +16,7 @@ public class SampleRun {
 
     SundialJobScheduler.addSimpleTrigger(
         "SampleJob1-Simple-Trigger", "SampleJob1", -1, TimeUnit.SECONDS.toMillis(3));
+
+    SundialJobScheduler.shutdown();
   }
 }

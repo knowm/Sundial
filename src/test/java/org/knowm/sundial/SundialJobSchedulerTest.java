@@ -1,5 +1,6 @@
 package org.knowm.sundial;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,6 +11,11 @@ public class SundialJobSchedulerTest {
   @BeforeClass
   public static void createScheduler() {
     SundialJobScheduler.createScheduler(10, "com.example.empty");
+  }
+
+  @AfterClass
+  public static void shutdownScheduler() {
+    SundialJobScheduler.shutdown();
   }
 
   @Test
