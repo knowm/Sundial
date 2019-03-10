@@ -1,24 +1,40 @@
 <?xml version = "1.0" ?>
 <job-scheduling-data>
-<schedule>
-    <!-- job with simple trigger -->
-    <job>
-        <name>ServiceListenerJob</name>
-        <job-class>org.knowm.sundial.jobs.SampleJob2</job-class>
-        <job-data-map>
-            <entry>
-                <key>listernerTime</key>
-                <value>20000</value>
-            </entry>
-        </job-data-map>
-    </job>
-    <trigger>
-        <simple>
-            <name>ServiceListenerJob-Trigger</name>
-            <job-name>ServiceListenerJob</job-name>
-            <repeat-count>-1</repeat-count>
-            <repeat-interval>20000</repeat-interval>
-        </simple>
-    </trigger>
-</schedule>
+	<schedule>
+
+		<!-- job with cron trigger -->
+		<job>
+			<name>SampleJob3</name>
+			<job-class>org.knowm.sundial.jobs.SampleJob3</job-class>
+			<concurrency-allowed>true</concurrency-allowed>
+		</job>
+		<trigger>
+			<cron>
+				<name>SampleJob3-Trigger</name>
+				<job-name>SampleJob3</job-name>
+				<cron-expression>*/15 * * * * ?</cron-expression>
+			</cron>
+		</trigger>
+
+		<!-- job with simple trigger -->
+		<job>
+			<name>SampleJob2</name>
+			<job-class>org.knowm.sundial.jobs.SampleJob2</job-class>
+			<job-data-map>
+				<entry>
+					<key>MyParam</key>
+					<value>42</value>
+				</entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<simple>
+				<name>SampleJob2-Trigger</name>
+				<job-name>SampleJob2</job-name>
+				<repeat-count>-1</repeat-count>
+				<repeat-interval>5000</repeat-interval>
+			</simple>
+		</trigger>
+
+	</schedule>
 </job-scheduling-data>
