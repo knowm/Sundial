@@ -24,8 +24,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private String fileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-  private long scanInterval = 0;
-
   /**
    * Constructor
    *
@@ -43,30 +41,6 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
   public String getFileNames() {
 
     return fileName;
-  }
-
-  /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been
-   * changed, it is re-loaded and parsed. The default value for the interval is 0, which disables
-   * scanning.
-   *
-   * @return Returns the scanInterval.
-   */
-  public long getScanInterval() {
-
-    return scanInterval / 1000;
-  }
-
-  /**
-   * The interval (in seconds) at which to scan for changes to the file. If the file has been
-   * changed, it is re-loaded and parsed. The default value for the interval is 0, which disables
-   * scanning.
-   *
-   * @param scanInterval The scanInterval to set.
-   */
-  public void setScanInterval(long scanInterval) {
-
-    this.scanInterval = scanInterval * 1000;
   }
 
   /**

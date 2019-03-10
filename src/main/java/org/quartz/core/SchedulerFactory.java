@@ -119,7 +119,6 @@ public class SchedulerFactory {
       XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin =
           new XMLSchedulingDataProcessorPlugin();
       xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
-      xmlSchedulingDataProcessorPlugin.setScanInterval(0);
       quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
 
       ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
