@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * {@link org.quartz.core.ThreadPool}</code> interface.
  *
  * <p><CODE>Runnable</CODE> objects are sent to the pool with the <code>
- * {@link #runInThread(Runnable)}</code> method, which blocks until a <code>Thread</code> becomes
+ * {@link #runInThread(JobRunShell)}</code> method, which blocks until a <code>Thread</code> becomes
  * available.
  *
  * <p>The pool has a fixed number of <code>Thread</code>s, and does not grow or shrink based on
@@ -223,7 +223,6 @@ public class SimpleThreadPool implements ThreadPool {
     return workers;
   }
 
-
   /**
    * Terminate any worker threads in this thread group.
    *
@@ -243,16 +242,18 @@ public class SimpleThreadPool implements ThreadPool {
       Iterator<WorkerThread> workerThreads = workers.iterator();
       while (workerThreads.hasNext()) {
         WorkerThread wt = workerThreads.next();
+        JobRunShell jobRunShell = wt.getRunnable();
+        if (jobRunShell != null) {
+          log.info("Waiting for Job to shutdown: {}", wt.getRunnable().getJobName());
+        }
         wt.shutdown();
 
         availWorkers.remove(wt);
       }
 
-      // Give waiting (wait(1000)) worker threads a chance to shut down.
       // Active worker threads will shut down after finishing their
       // current job.
       nextRunnableLock.notifyAll();
-
     }
   }
 
@@ -264,7 +265,7 @@ public class SimpleThreadPool implements ThreadPool {
    * @param runnable the <code>Runnable</code> to be added.
    */
   @Override
-  public boolean runInThread(Runnable runnable) {
+  public boolean runInThread(JobRunShell runnable) {
 
     if (runnable == null) {
       return false;
@@ -349,7 +350,7 @@ public class SimpleThreadPool implements ThreadPool {
 
     private SimpleThreadPool tp;
 
-    private Runnable runnable = null;
+    private JobRunShell runnable = null;
 
     private boolean runOnce = false;
 
@@ -373,7 +374,7 @@ public class SimpleThreadPool implements ThreadPool {
         String name,
         int prio,
         boolean isDaemon,
-        Runnable runnable) {
+        JobRunShell runnable) {
 
       super(threadGroup, name);
       this.tp = tp;
@@ -393,7 +394,7 @@ public class SimpleThreadPool implements ThreadPool {
       }
     }
 
-    public void run(Runnable newRunnable) {
+    public void run(JobRunShell newRunnable) {
 
       synchronized (this) {
         if (runnable != null) {
@@ -463,6 +464,10 @@ public class SimpleThreadPool implements ThreadPool {
       }
 
       log.debug("WorkerThread is shut down.");
+    }
+
+    public JobRunShell getRunnable() {
+      return runnable;
     }
   }
 }

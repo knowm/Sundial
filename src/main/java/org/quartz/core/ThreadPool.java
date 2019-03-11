@@ -33,7 +33,7 @@ public interface ThreadPool {
    *
    * @return true, if the runnable was assigned to run on a Thread.
    */
-  boolean runInThread(Runnable runnable);
+  boolean runInThread(JobRunShell runnable);
 
   /**
    * Determines the number of threads that are currently available in in the pool. Useful for

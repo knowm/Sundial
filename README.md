@@ -191,6 +191,10 @@ new SampleJobAction().run();
 
 To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
 
+For an example see `SampleJob9.java`. In a loop within the Job you should just add a call to `checkTerminated();`.
+
+If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`. 
+
 ## Concurrent Job Execution
 
 By default jobs are not set to concurrently execute. This means if a job is currently running and a trigger is fired for that job, it will skip running the job. In some cases concurrent job execution is desired and there are a few ways to configure it.

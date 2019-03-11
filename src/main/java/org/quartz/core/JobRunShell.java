@@ -364,4 +364,11 @@ public class JobRunShell extends SchedulerListenerSupport implements Runnable {
 
     public VetoedException() {}
   }
+
+  public String getJobName() {
+
+    String jobName = firedTriggerBundle.getJobDetail().getName();
+    String triggerName = firedTriggerBundle.getTrigger().getName();
+    return jobName + " : " + triggerName;
+  }
 }
