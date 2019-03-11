@@ -22,9 +22,10 @@ public class AnnotatedClassFinderTest {
                 "SampleJob3",
                 "SampleJob4",
                 "SampleJob5",
-                "SampleJob9",
                 "SampleJob6",
                 "SampleJob7",
+                  "SampleJob8",
+                  "SampleJob9",
                 "Concrete"
               }));
 
@@ -81,6 +82,6 @@ public class AnnotatedClassFinderTest {
 
     assertEquals("org.knowm.sundial.jobs2", theClass.getPackage().getName());
 
-    assertEquals("SampleJob9", theClass.getSimpleName());
+    assertEquals("SampleJob8", theClass.getSimpleName());
   }
 }
