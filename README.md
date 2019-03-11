@@ -240,7 +240,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.1.4-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 </dependency>
 ```
 
