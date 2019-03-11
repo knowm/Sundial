@@ -4,7 +4,6 @@ import org.knowm.sundial.exceptions.JobInterruptException;
 import org.knowm.sundial.exceptions.RequiredParameterException;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.exceptions.JobExecutionException;
-import org.quartz.exceptions.UnableToInterruptJobException;
 import org.quartz.jobs.InterruptableJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +46,11 @@ public abstract class Job extends JobContainer implements InterruptableJob {
   }
 
   @Override
-  public void interrupt() throws UnableToInterruptJobException {
+  public void interrupt() {
+
+    logger.debug("Interrupt called!");
 
     setTerminate();
-    logger.info("Interrupt called!");
   }
 
   /**

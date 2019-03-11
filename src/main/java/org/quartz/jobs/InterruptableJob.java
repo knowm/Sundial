@@ -1,7 +1,6 @@
 package org.quartz.jobs;
 
 import org.quartz.core.Scheduler;
-import org.quartz.exceptions.UnableToInterruptJobException;
 
 /**
  * The interface to be implemented by <code>{@link Job}s</code> that provide a mechanism for having
@@ -32,12 +31,7 @@ import org.quartz.exceptions.UnableToInterruptJobException;
  * make sure that you clear the Job's member reference to the Thread when the execute(..) method
  * exits (preferably in a <code>finally</code> block.
  *
- * <p>See Example 7 (org.quartz.examples.example7.DumbInterruptableJob) for a simple implementation
- * demonstration.
- *
  * @see Job
- * @see StatefulJob
- * @see Scheduler#interrupt(JobKey)
  * @author James House
  */
 public interface InterruptableJob extends Job {
@@ -47,10 +41,6 @@ public interface InterruptableJob extends Job {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * Called by the <code>{@link Scheduler}</code> when a user interrupts the <code>Job</code>.
-   *
-   * @throws UnableToInterruptJobException if there is an exception while interrupting the job.
-   */
-  void interrupt() throws UnableToInterruptJobException;
+  /** Called by the <code>{@link Scheduler}</code> when a user interrupts the <code>Job</code>. */
+  void interrupt();
 }

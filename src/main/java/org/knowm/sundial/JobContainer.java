@@ -20,7 +20,7 @@ public abstract class JobContainer {
   /**
    * Initialize the ThreadLocal with a JobExecutionContext object
    *
-   * @param pJobContext
+   * @param jobExecutionContext
    */
   protected void initContextContainer(JobExecutionContext jobExecutionContext) {
 
@@ -56,7 +56,7 @@ public abstract class JobContainer {
   }
 
   /** Check if the terminate flag is true, and throw a JobInterruptException if it is. */
-  public void checkTerminated() {
+  public synchronized void checkTerminated() {
 
     if (terminate) {
       throw new JobInterruptException();

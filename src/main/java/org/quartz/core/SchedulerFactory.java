@@ -28,7 +28,7 @@ public class SchedulerFactory {
 
   /**
    * @param threadPoolSize
-   * @param String packageName
+   * @param packageName
    * @return Returns a handle to the Scheduler produced by this factory. Initialized with given
    *     threadPoolSize and packageName where it looks for annotated Job classes
    * @throws SchedulerException

@@ -292,7 +292,7 @@ public class SundialJobScheduler {
   }
 
   /**
-   * Starts a Job matching the the given Job Name found in jobs.xml
+   * Starts a Job matching the the given Job Name found in jobs.xml or jobs manually added.
    *
    * @param jobName
    */

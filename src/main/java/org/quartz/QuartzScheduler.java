@@ -270,6 +270,14 @@ public class QuartzScheduler implements Scheduler {
   @Override
   public void shutdown(boolean waitForJobsToComplete) {
 
+    // delay a little bit in case an added job is still taking it's time getting started right
+    // before shutdown is called.
+    try {
+      //      System.out.println("waiting...");
+      Thread.sleep(100);
+    } catch (Exception ignore) {
+    }
+
     if (shuttingDown || closed) {
       return;
     }
@@ -284,6 +292,7 @@ public class QuartzScheduler implements Scheduler {
 
     notifySchedulerListenersShuttingdown();
 
+    // if there are InterruptableJobs, notify them so they can gracefully shutdown
     if ((quartzSchedulerResources.isInterruptJobsOnShutdown() && !waitForJobsToComplete)
         || (quartzSchedulerResources.isInterruptJobsOnShutdownWithWait()
             && waitForJobsToComplete)) {
@@ -302,17 +311,19 @@ public class QuartzScheduler implements Scheduler {
         }
       }
     }
+    logger.info("Threadpool shutting down...");
 
     quartzSchedulerResources.getThreadPool().shutdown(waitForJobsToComplete);
 
-    if (waitForJobsToComplete) {
-      while (jobMgr.getNumJobsCurrentlyExecuting() > 0) {
-        try {
-          Thread.sleep(100);
-        } catch (Exception ignore) {
-        }
-      }
-    }
+    //    if (waitForJobsToComplete) {
+    //      while (jobMgr.getNumJobsCurrentlyExecuting() > 0) {
+    //        try {
+    //          System.out.println("waiting...");
+    //          Thread.sleep(100);
+    //        } catch (Exception ignore) {
+    //        }
+    //      }
+    //    }
 
     // Scheduler thread may have be waiting for the fire time of an acquired
     // trigger and need time to release the trigger once halted, so make sure
@@ -1197,7 +1208,8 @@ class ExecutingJobsManager implements JobListener {
   public List<JobExecutionContext> getExecutingJobs() {
 
     synchronized (executingJobs) {
-      return java.util.Collections.unmodifiableList(new ArrayList(executingJobs.values()));
+      return java.util.Collections.unmodifiableList(
+          new ArrayList<JobExecutionContext>(executingJobs.values()));
     }
   }
 

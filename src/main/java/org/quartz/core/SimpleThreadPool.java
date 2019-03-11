@@ -73,11 +73,6 @@ public class SimpleThreadPool implements ThreadPool {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  public Logger getLog() {
-
-    return log;
-  }
-
   @Override
   public int getPoolSize() {
 
@@ -194,10 +189,9 @@ public class SimpleThreadPool implements ThreadPool {
     }
 
     if (isThreadsInheritContextClassLoaderOfInitializingThread()) {
-      getLog()
-          .info(
-              "Job execution threads will use class loader of thread: "
-                  + Thread.currentThread().getName());
+      log.info(
+          "Job execution threads will use class loader of thread: "
+              + Thread.currentThread().getName());
     }
 
     // create the worker threads and start them
@@ -255,10 +249,11 @@ public class SimpleThreadPool implements ThreadPool {
       }
 
       // signal each worker thread to shut down
-      Iterator workerThreads = workers.iterator();
+      Iterator<WorkerThread> workerThreads = workers.iterator();
       while (workerThreads.hasNext()) {
-        WorkerThread wt = (WorkerThread) workerThreads.next();
+        WorkerThread wt = workerThreads.next();
         wt.shutdown();
+
         availWorkers.remove(wt);
       }
 
@@ -267,31 +262,37 @@ public class SimpleThreadPool implements ThreadPool {
       // current job.
       nextRunnableLock.notifyAll();
 
-      if (waitForJobsToComplete == true) {
 
-        // wait for hand-off in runInThread to complete...
-        while (handoffPending) {
-          try {
-            nextRunnableLock.wait(100);
-          } catch (Throwable t) {
-          }
-        }
-
-        // Wait until all worker threads are shut down
-        while (busyWorkers.size() > 0) {
-          WorkerThread wt = busyWorkers.getFirst();
-          try {
-            getLog().debug("Waiting for thread " + wt.getName() + " to shut down");
-
-            // note: with waiting infinite time the
-            // application may appear to 'hang'.
-            nextRunnableLock.wait(2000);
-          } catch (InterruptedException ex) {
-          }
-        }
-
-        getLog().debug("shutdown complete");
-      }
+//      if (waitForJobsToComplete == true) {
+//
+//
+//        // wait for hand-off in runInThread to complete...
+//        while (handoffPending) {
+//          try {
+//            nextRunnableLock.wait(100);
+//          } catch (Throwable t) {
+//          }
+//        }
+//
+//
+//        // Wait until all worker threads are shut down
+//        while (busyWorkers.size() > 0) {
+//
+//
+//          WorkerThread wt = busyWorkers.getFirst();
+//          try {
+//            log.info("Waiting for thread " + wt.getName() + " to shut down");
+//
+//            // note: with waiting infinite time the
+//            // application may appear to 'hang'.
+//            nextRunnableLock.wait(2000);
+//          } catch (InterruptedException ex) {
+//          }
+//        }
+//
+//
+//        log.info("threadpool shutdown complete");
+//      }
     }
   }
 
@@ -384,7 +385,7 @@ public class SimpleThreadPool implements ThreadPool {
   private class WorkerThread extends Thread {
 
     // A flag that signals the WorkerThread to terminate.
-    private boolean run = true;
+    private volatile boolean run = true;
 
     private SimpleThreadPool tp;
 
@@ -455,6 +456,9 @@ public class SimpleThreadPool implements ThreadPool {
       }
 
       while (shouldRun) {
+        if (Thread.interrupted()) {
+          return;
+        }
         try {
           synchronized (this) {
             while (runnable == null && run) {
@@ -468,17 +472,9 @@ public class SimpleThreadPool implements ThreadPool {
           }
         } catch (InterruptedException unblock) {
           // do nothing (loop will terminate if shutdown() was called
-          try {
-            getLog().error("Worker thread was interrupt()'ed.", unblock);
-          } catch (Exception e) {
-            // ignore to help with a tomcat glitch
-          }
+//                    log.error("Worker thread was interrupt()'ed.", unblock);
         } catch (Throwable exceptionInRunnable) {
-          try {
-            getLog().error("Error while executing the Runnable: ", exceptionInRunnable);
-          } catch (Exception e) {
-            // ignore to help with a tomcat glitch
-          }
+          log.error("Error while executing the Runnable: ", exceptionInRunnable);
         } finally {
           synchronized (this) {
             runnable = null;
@@ -506,12 +502,7 @@ public class SimpleThreadPool implements ThreadPool {
         }
       }
 
-      // if (log.isDebugEnabled())
-      try {
-        getLog().debug("WorkerThread is shut down.");
-      } catch (Exception e) {
-        // ignore to help with a tomcat glitch
-      }
+      log.debug("WorkerThread is shut down.");
     }
   }
 }
