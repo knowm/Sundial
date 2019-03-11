@@ -71,7 +71,7 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
       Set<Class<? extends Job>> scheduledClasses =
           scheduler.getCascadingClassLoadHelper().getJobClasses(packageName);
 
-      logger.info("Found {} annotated jobs.", scheduledClasses.size());
+      logger.info("Found {} jobs in package.", scheduledClasses.size());
 
       for (Class<? extends Job> jobClass : scheduledClasses) {
 
