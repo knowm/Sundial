@@ -25,7 +25,7 @@ public class SimpleJobFactory implements JobFactory {
       log.debug(
           "Producing instance of Job '" + jobDetail.getName() + "', class=" + jobClass.getName());
 
-      return jobClass.newInstance();
+      return jobClass.getDeclaredConstructor().newInstance();
     } catch (Exception e) {
       SchedulerException se =
           new SchedulerException(
