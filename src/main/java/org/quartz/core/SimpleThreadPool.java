@@ -223,15 +223,6 @@ public class SimpleThreadPool implements ThreadPool {
     return workers;
   }
 
-  /**
-   * Terminate any worker threads in this thread group.
-   *
-   * <p>Jobs currently in progress will complete.
-   */
-  public void shutdown() {
-
-    shutdown(true);
-  }
 
   /**
    * Terminate any worker threads in this thread group.
@@ -239,7 +230,7 @@ public class SimpleThreadPool implements ThreadPool {
    * <p>Jobs currently in progress will complete.
    */
   @Override
-  public void shutdown(boolean waitForJobsToComplete) {
+  public void shutdown() {
 
     synchronized (nextRunnableLock) {
       isShutdown = true;
@@ -262,37 +253,6 @@ public class SimpleThreadPool implements ThreadPool {
       // current job.
       nextRunnableLock.notifyAll();
 
-
-//      if (waitForJobsToComplete == true) {
-//
-//
-//        // wait for hand-off in runInThread to complete...
-//        while (handoffPending) {
-//          try {
-//            nextRunnableLock.wait(100);
-//          } catch (Throwable t) {
-//          }
-//        }
-//
-//
-//        // Wait until all worker threads are shut down
-//        while (busyWorkers.size() > 0) {
-//
-//
-//          WorkerThread wt = busyWorkers.getFirst();
-//          try {
-//            log.info("Waiting for thread " + wt.getName() + " to shut down");
-//
-//            // note: with waiting infinite time the
-//            // application may appear to 'hang'.
-//            nextRunnableLock.wait(2000);
-//          } catch (InterruptedException ex) {
-//          }
-//        }
-//
-//
-//        log.info("threadpool shutdown complete");
-//      }
     }
   }
 
@@ -472,7 +432,7 @@ public class SimpleThreadPool implements ThreadPool {
           }
         } catch (InterruptedException unblock) {
           // do nothing (loop will terminate if shutdown() was called
-//                    log.error("Worker thread was interrupt()'ed.", unblock);
+          log.error("Worker thread was interrupt()'ed.", unblock);
         } catch (Throwable exceptionInRunnable) {
           log.error("Error while executing the Runnable: ", exceptionInRunnable);
         } finally {

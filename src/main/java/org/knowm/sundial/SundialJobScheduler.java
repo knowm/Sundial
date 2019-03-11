@@ -567,7 +567,7 @@ public class SundialJobScheduler {
     logger.debug("shutdown() called.");
 
     try {
-      getScheduler().shutdown(true);
+      getScheduler().shutdown();
       scheduler = null;
     } catch (Exception e) {
       throw new SundialSchedulerException("COULD NOT SHUTDOWN SCHEDULER!!!", e);

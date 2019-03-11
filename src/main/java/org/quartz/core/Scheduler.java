@@ -130,10 +130,8 @@ public interface Scheduler {
    *
    * <p>The scheduler cannot be re-started.
    *
-   * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to
-   *     return until all currently executing jobs have completed.
    */
-  void shutdown(boolean waitForJobsToComplete) throws SchedulerException;
+  void shutdown( ) throws SchedulerException;
 
   /** Reports whether the <code>Scheduler</code> has been shutdown. */
   boolean isShutdown() throws SchedulerException;
@@ -154,7 +152,6 @@ public interface Scheduler {
   /**
    * Get the keys of all the <code>{@link org.quartz.jobs.JobDetail}s</code> in the matching groups.
    *
-   * @param matcher Matcher to evaluate against known groups
    * @return Set of all keys matching
    * @throws SchedulerException On error
    */
@@ -168,7 +165,6 @@ public interface Scheduler {
    * </code> instances via some special mechanism, such as to give the opportunity for dependency
    * injection.
    *
-   * @see org.quartz.spi.JobFactory
    */
   void setJobFactory(JobFactory factory) throws SchedulerException;
 

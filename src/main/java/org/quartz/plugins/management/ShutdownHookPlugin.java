@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * This plugin catches the event of the JVM terminating (such as upon a CRTL-C) and tells the
  * scheduler to shutdown.
  *
- * @see org.quartz.core.Scheduler#shutdown(boolean)
+ * @see org.quartz.core.Scheduler#shutdown()
  * @author James House
  */
 public class ShutdownHookPlugin implements SchedulerPlugin {
@@ -21,7 +21,6 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  private boolean cleanShutdown = true;
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,29 +36,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    */
 
-  /**
-   * Determine whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
-   *
-   * <p>The default value is <code>true</code>.
-   *
-   * @see org.quartz.core.Scheduler#shutdown(boolean)
-   */
-  public boolean isCleanShutdown() {
 
-    return cleanShutdown;
-  }
-
-  /**
-   * Set whether or not the plug-in is configured to cause a clean shutdown of the scheduler.
-   *
-   * <p>The default value is <code>true</code>.
-   *
-   * @see org.quartz.core.Scheduler#shutdown(boolean)
-   */
-  public void setCleanShutdown(boolean b) {
-
-    cleanShutdown = b;
-  }
 
   /*
    * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SchedulerPlugin Interface.
@@ -85,7 +62,7 @@ public class ShutdownHookPlugin implements SchedulerPlugin {
 
             logger.info("Shutting down Quartz...");
             try {
-              scheduler.shutdown(isCleanShutdown());
+              scheduler.shutdown();
             } catch (SchedulerException e) {
               logger.info("Error shutting down Quartz: " + e.getMessage(), e);
             }

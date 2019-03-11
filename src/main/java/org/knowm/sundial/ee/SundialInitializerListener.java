@@ -38,7 +38,6 @@ public class SundialInitializerListener implements ServletContextListener {
 
   private boolean performShutdown = true;
 
-  private boolean waitOnShutdown = false;
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,11 +54,6 @@ public class SundialInitializerListener implements ServletContextListener {
       if (shutdownPrefString != null) {
         performShutdown = Boolean.valueOf(shutdownPrefString).booleanValue();
       }
-      String shutdownWaitPrefString = servletContext.getInitParameter("wait-on-shutdown");
-      if (shutdownPrefString != null) {
-        waitOnShutdown = Boolean.valueOf(shutdownWaitPrefString).booleanValue();
-      }
-
       // THREAD POOL SIZE
       int threadPoolSize = 10; // ten is default
       String threadPoolSizeString = servletContext.getInitParameter("thread-pool-size");
@@ -141,7 +135,7 @@ public class SundialInitializerListener implements ServletContextListener {
 
     try {
       if (SundialJobScheduler.getScheduler() != null) {
-        SundialJobScheduler.getScheduler().shutdown(waitOnShutdown);
+        SundialJobScheduler.getScheduler().shutdown();
       }
     } catch (Exception e) {
       logger.error("Sundial Scheduler failed to shutdown cleanly: ", e);

@@ -102,8 +102,6 @@ public class SchedulerFactory {
       quartzSchedulerResources.setThreadsInheritInitializersClassLoadContext(false);
       quartzSchedulerResources.setBatchTimeWindow(0L);
       quartzSchedulerResources.setMaxBatchSize(1);
-      quartzSchedulerResources.setInterruptJobsOnShutdown(true);
-      quartzSchedulerResources.setInterruptJobsOnShutdownWithWait(true);
       quartzSchedulerResources.setThreadPool(threadPool);
       threadPool.setThreadNamePrefix("Quartz_Scheduler_Worker");
       threadPool.initialize();
@@ -146,23 +144,23 @@ public class SchedulerFactory {
 
     } catch (SchedulerException e) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw e;
     } catch (RuntimeException re) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw re;
     } catch (Error re) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw re;
     }

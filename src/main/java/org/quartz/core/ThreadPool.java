@@ -58,7 +58,7 @@ public interface ThreadPool {
    * Called by the QuartzScheduler to inform the <code>ThreadPool</code> that it should free up all
    * of it's resources because the scheduler is shutting down.
    */
-  void shutdown(boolean waitForJobsToComplete);
+  void shutdown();
 
   /** Get the current number of threads in the <code>ThreadPool</code>. */
   int getPoolSize();

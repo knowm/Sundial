@@ -7,9 +7,9 @@ public class SingleRun {
 
     SundialJobScheduler.startScheduler();
 
-    SundialJobScheduler.addJob("SampleJob8", "org.knowm.sundial.jobs.SampleJob8");
+    SundialJobScheduler.addJob("SampleJob9", "org.knowm.sundial.jobs.SampleJob9");
 
-    SundialJobScheduler.startJob("SampleJob8");
+    SundialJobScheduler.startJob("SampleJob9");
 
 //        try {
 //          Thread.sleep(1000);

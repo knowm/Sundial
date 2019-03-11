@@ -263,12 +263,9 @@ public class QuartzScheduler implements Scheduler {
    * </code>, and cleans up all resources associated with the QuartzScheduler.
    *
    * <p>The scheduler cannot be re-started.
-   *
-   * @param waitForJobsToComplete if <code>true</code> the scheduler will not allow this method to
-   *     return until all currently executing jobs have completed.
    */
   @Override
-  public void shutdown(boolean waitForJobsToComplete) {
+  public void shutdown() {
 
     // delay a little bit in case an added job is still taking it's time getting started right
     // before shutdown is called.
@@ -292,38 +289,25 @@ public class QuartzScheduler implements Scheduler {
 
     notifySchedulerListenersShuttingdown();
 
-    // if there are InterruptableJobs, notify them so they can gracefully shutdown
-    if ((quartzSchedulerResources.isInterruptJobsOnShutdown() && !waitForJobsToComplete)
-        || (quartzSchedulerResources.isInterruptJobsOnShutdownWithWait()
-            && waitForJobsToComplete)) {
-      List<JobExecutionContext> jobs = getCurrentlyExecutingJobs();
-      for (JobExecutionContext job : jobs) {
-        if (job.getJobInstance() instanceof InterruptableJob) {
-          try {
-            ((InterruptableJob) job.getJobInstance()).interrupt();
-          } catch (Throwable e) {
-            // do nothing, this was just a courtesy effort
-            logger.warn(
-                "Encountered error when interrupting job {} during shutdown: {}",
-                job.getJobDetail().getName(),
-                e);
-          }
+    // notify Jobs, so they can gracefully shutdown
+    List<JobExecutionContext> jobs = getCurrentlyExecutingJobs();
+    for (JobExecutionContext job : jobs) {
+      if (job.getJobInstance() instanceof InterruptableJob) {
+        try {
+          ((InterruptableJob) job.getJobInstance()).interrupt();
+        } catch (Throwable e) {
+          // do nothing, this was just a courtesy effort
+          logger.warn(
+              "Encountered error when interrupting job {} during shutdown: {}",
+              job.getJobDetail().getName(),
+              e);
         }
       }
     }
+
     logger.info("Threadpool shutting down...");
+    quartzSchedulerResources.getThreadPool().shutdown();
 
-    quartzSchedulerResources.getThreadPool().shutdown(waitForJobsToComplete);
-
-    //    if (waitForJobsToComplete) {
-    //      while (jobMgr.getNumJobsCurrentlyExecuting() > 0) {
-    //        try {
-    //          System.out.println("waiting...");
-    //          Thread.sleep(100);
-    //        } catch (Exception ignore) {
-    //        }
-    //      }
-    //    }
 
     // Scheduler thread may have be waiting for the fire time of an acquired
     // trigger and need time to release the trigger once halted, so make sure
