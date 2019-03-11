@@ -3,8 +3,10 @@ package org.quartz.classloading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -210,20 +212,28 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       if (resource == null) {
         throw new RuntimeException("Unexpected problem: No resource for " + relPath);
       }
-      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
+      String resPath = "";
+      try {
+        resPath = URLDecoder.decode(resource.getPath(), "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+
+      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resPath + "'");
 
       if (resource.toString().startsWith("jar:")) {
-        processJarfile(resource, pkgname, classes);
+        processJarfile(resPath, pkgname, classes);
       } else {
-        processDirectory(new File(resource.getPath()), pkgname, classes);
+        processDirectory(resPath, pkgname, classes);
       }
     }
 
     return classes;
   }
 
-  private void processDirectory(File directory, String pkgname, Set<Class<? extends Job>> classes) {
+  private void processDirectory(String path, String pkgname, Set<Class<? extends Job>> classes) {
 
+    File directory = new File(path);
     logger.debug("Reading Directory '" + directory + "'");
     // Get the list of the files contained in the package
     String[] files = directory.list();
@@ -241,16 +251,16 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       }
       File subdir = new File(directory, fileName);
       if (subdir.isDirectory()) {
-        processDirectory(subdir, pkgname + '.' + fileName, classes);
+        processDirectory(subdir.getPath(), pkgname + '.' + fileName, classes);
       }
     }
   }
 
-  private void processJarfile(URL resource, String pkgname, Set<Class<? extends Job>> classes) {
+  private void processJarfile(String path, String pkgname, Set<Class<? extends Job>> classes) {
 
     String relPath = pkgname.replace('.', '/');
-    String resPath = resource.getPath().replace("%20", " ");
-    String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+
+    String jarPath = path.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
     logger.debug("Reading JAR file: '" + jarPath + "'");
     JarFile jarFile;
     try {
