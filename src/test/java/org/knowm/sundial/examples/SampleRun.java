@@ -1,6 +1,7 @@
-package org.knowm.sundial;
+package org.knowm.sundial.examples;
 
 import java.util.concurrent.TimeUnit;
+import org.knowm.sundial.SundialJobScheduler;
 
 /** @author timmolter */
 public class SampleRun {

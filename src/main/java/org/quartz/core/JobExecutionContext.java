@@ -40,24 +40,24 @@ import org.quartz.triggers.Trigger;
 public interface JobExecutionContext {
 
   /** Get a handle to the <code>Scheduler</code> instance that fired the <code>Job</code>. */
-  public Scheduler getScheduler();
+  Scheduler getScheduler();
 
   /** Get a handle to the <code>Trigger</code> instance that fired the <code>Job</code>. */
-  public Trigger getTrigger();
+  Trigger getTrigger();
 
   /**
    * Get a handle to the <code>Calendar</code> referenced by the <code>Trigger</code> instance that
    * fired the <code>Job</code>.
    */
-  public Calendar getCalendar();
+  Calendar getCalendar();
 
   /**
    * If the <code>Job</code> is being re-executed because of a 'recovery' situation, this method
    * will return <code>true</code>.
    */
-  public boolean isRecovering();
+  boolean isRecovering();
 
-  public int getRefireCount();
+  int getRefireCount();
 
   /**
    * Get the convenience <code>JobDataMap</code> of this execution context.
@@ -74,17 +74,17 @@ public interface JobExecutionContext {
    * <p>Attempts to change the contents of this map typically result in an <code>
    * IllegalStateException</code>.
    */
-  public JobDataMap getMergedJobDataMap();
+  JobDataMap getMergedJobDataMap();
 
   /** Get the <code>JobDetail</code> associated with the <code>Job</code>. */
-  public JobDetail getJobDetail();
+  JobDetail getJobDetail();
 
   /**
    * Get the instance of the <code>Job</code> that was created for this execution.
    *
    * <p>Note: The Job instance is not available through remote scheduler interfaces.
    */
-  public Job getJobInstance();
+  Job getJobInstance();
 
   /**
    * The actual time the trigger fired. For instance the scheduled time may have been 10:00:00 but
@@ -93,7 +93,7 @@ public interface JobExecutionContext {
    * @return Returns the fireTime.
    * @see #getScheduledFireTime()
    */
-  public Date getFireTime();
+  Date getFireTime();
 
   /**
    * The scheduled time the trigger fired for. For instance the scheduled time may have been
@@ -102,11 +102,11 @@ public interface JobExecutionContext {
    * @return Returns the scheduledFireTime.
    * @see #getFireTime()
    */
-  public Date getScheduledFireTime();
+  Date getScheduledFireTime();
 
-  public Date getPreviousFireTime();
+  Date getPreviousFireTime();
 
-  public Date getNextFireTime();
+  Date getNextFireTime();
 
   /**
    * Returns the result (if any) that the <code>Job</code> set before its execution completed (the
@@ -118,7 +118,7 @@ public interface JobExecutionContext {
    *
    * @return Returns the result.
    */
-  public Object getResult();
+  Object getResult();
 
   /**
    * Set the result (if any) of the <code>Job</code>'s execution (the type of object set as the
@@ -128,7 +128,7 @@ public interface JobExecutionContext {
    * {@link JobListener}s</code> or <code>{@link TriggerListener}s</code> that are watching the
    * job's execution.
    */
-  public void setResult(Object result);
+  void setResult(Object result);
 
   /**
    * The amount of time the job ran for (in milliseconds). The returned value will be -1 until the
@@ -137,5 +137,5 @@ public interface JobExecutionContext {
    *
    * @return Returns the jobRunTime.
    */
-  public long getJobRunTime();
+  long getJobRunTime();
 }

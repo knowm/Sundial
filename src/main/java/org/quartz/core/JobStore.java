@@ -99,7 +99,6 @@ public interface JobStore {
    *     JobStore</code> with the same name & group should be over-written.
    * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already
    *     exists, and replaceExisting is set to false.
-   * @see #pauseTriggers(org.quartz.impl.matchers.GroupMatcher)
    */
   void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting)
       throws ObjectAlreadyExistsException, JobPersistenceException;
@@ -183,7 +182,6 @@ public interface JobStore {
    *
    * @param noLaterThan If > 0, the JobStore should only return a Trigger that will fire no later
    *     than the time represented in this value as milliseconds.
-   * @see #releaseAcquiredTrigger(Trigger)
    */
   List<OperableTrigger> acquireNextTriggers(long noLaterThan, int maxCount, long timeWindow)
       throws JobPersistenceException;

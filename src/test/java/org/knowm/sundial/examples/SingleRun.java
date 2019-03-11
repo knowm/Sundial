@@ -1,4 +1,6 @@
-package org.knowm.sundial;
+package org.knowm.sundial.examples;
+
+import org.knowm.sundial.SundialJobScheduler;
 
 /** @author timmolter */
 public class SingleRun {

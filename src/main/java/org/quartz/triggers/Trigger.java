@@ -26,8 +26,6 @@ import org.quartz.jobs.JobDataMap;
  */
 public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
 
-  public static final long serialVersionUID = -3904243490805975570L;
-
   /**
    * <code>NOOP</code> Instructs the <code>{@link Scheduler}</code> that the <code>{@link Trigger}
    * </code> has no further instructions.
