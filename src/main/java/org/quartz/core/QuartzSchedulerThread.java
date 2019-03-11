@@ -216,10 +216,8 @@ public class QuartzSchedulerThread extends Thread {
                         Math.min(availThreadCount, quartzSchedulerResources.getMaxBatchSize()),
                         quartzSchedulerResources.getBatchTimeWindow());
             lastAcquireFailed = false;
-            if (logger.isDebugEnabled()) {
-              logger.debug(
-                  "batch acquisition of " + (triggers == null ? 0 : triggers.size()) + " triggers");
-            }
+            logger.debug(
+                "batch acquisition of " + (triggers == null ? 0 : triggers.size()) + " triggers");
           } catch (JobPersistenceException jpe) {
 
             lastAcquireFailed = true;
