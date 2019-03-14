@@ -129,9 +129,8 @@ public interface Scheduler {
    * resources associated with the Scheduler.
    *
    * <p>The scheduler cannot be re-started.
-   *
    */
-  void shutdown( ) throws SchedulerException;
+  void shutdown() throws SchedulerException;
 
   /** Reports whether the <code>Scheduler</code> has been shutdown. */
   boolean isShutdown() throws SchedulerException;
@@ -164,7 +163,6 @@ public interface Scheduler {
    * <p>JobFactories may be of use to those wishing to have their application produce <code>Job
    * </code> instances via some special mechanism, such as to give the opportunity for dependency
    * injection.
-   *
    */
   void setJobFactory(JobFactory factory) throws SchedulerException;
 

@@ -32,7 +32,6 @@ public class QuartzSchedulerResources {
 
   private int maxBatchSize;
 
-
   /** Create an instance with no properties initialized. */
   public QuartzSchedulerResources() {
 
@@ -202,5 +201,4 @@ public class QuartzSchedulerResources {
 
     this.maxBatchSize = maxBatchSize;
   }
-
 }

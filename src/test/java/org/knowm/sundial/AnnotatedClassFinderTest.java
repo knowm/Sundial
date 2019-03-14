@@ -24,8 +24,8 @@ public class AnnotatedClassFinderTest {
                 "SampleJob5",
                 "SampleJob6",
                 "SampleJob7",
-                  "SampleJob8",
-                  "SampleJob9",
+                "SampleJob8",
+                "SampleJob9",
                 "Concrete"
               }));
 

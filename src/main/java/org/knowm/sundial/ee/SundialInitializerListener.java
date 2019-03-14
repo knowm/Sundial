@@ -38,7 +38,6 @@ public class SundialInitializerListener implements ServletContextListener {
 
   private boolean performShutdown = true;
 
-
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Override

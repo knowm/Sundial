@@ -308,7 +308,6 @@ public class QuartzScheduler implements Scheduler {
     logger.info("Threadpool shutting down...");
     quartzSchedulerResources.getThreadPool().shutdown();
 
-
     // Scheduler thread may have be waiting for the fire time of an acquired
     // trigger and need time to release the trigger once halted, so make sure
     // the thread is dead before continuing to shutdown the job store.

@@ -14,20 +14,20 @@ public class SampleJob9 extends Job {
 
     logger.info("Running SampleJob9.");
 
-            try {
-          Thread.sleep(10000);
-        } catch (InterruptedException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+    try {
+      Thread.sleep(10000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     do {
       checkTerminated();
     } while (true);
   }
 
-//  @Override
-//  public void cleanup() {
-//    System.out.println("CLEAN");
-//  }
+  //  @Override
+  //  public void cleanup() {
+  //    System.out.println("CLEAN");
+  //  }
 }
