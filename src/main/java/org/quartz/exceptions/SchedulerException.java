@@ -1,31 +1,13 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.exceptions;
 
 import org.quartz.core.Scheduler;
 
 /**
  * Base class for exceptions thrown by the Quartz <code>{@link Scheduler}</code>.
- * <p>
- * <code>SchedulerException</code>s may contain a reference to another <code>Exception</code>, which was the underlying cause of the
- * <code>SchedulerException</code>.
- * </p>
- * 
+ *
+ * <p><code>SchedulerException</code>s may contain a reference to another <code>Exception</code>,
+ * which was the underlying cause of the <code>SchedulerException</code>.
+ *
  * @author James House
  */
 public class SchedulerException extends Exception {
@@ -61,13 +43,10 @@ public class SchedulerException extends Exception {
    */
 
   /**
-   * <p>
    * Return the exception that is the underlying cause of this exception.
-   * </p>
-   * <p>
-   * This may be used to find more detail about the cause of the error.
-   * </p>
-   * 
+   *
+   * <p>This may be used to find more detail about the cause of the error.
+   *
    * @return the underlying exception, or <code>null</code> if there is not one.
    */
   public Throwable getUnderlyingException() {
@@ -85,5 +64,4 @@ public class SchedulerException extends Exception {
       return super.toString() + " [See nested exception: " + cause + "]";
     }
   }
-
 }

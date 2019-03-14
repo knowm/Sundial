@@ -1,4 +1,4 @@
-## [![Sundial](https://raw.githubusercontent.com/timmolter/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
+## [![Sundial](https://raw.githubusercontent.com/knowm/Sundial/develop/etc/Sundial_64_64.png)](http://knowm.org/open-source/sundial/) Sundial
 
 A Lightweight Job Scheduling Framework for Java.
 
@@ -132,7 +132,7 @@ SundialJobScheduler.unlockScheduler();
 // check if job a running
 SundialJobScheduler.isJobRunning("SampleJob");
 ```
-And many more useful functions. See all here: https://github.com/timmolter/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
+And many more useful functions. See all here: https://github.com/knowm/Sundial/blob/develop/src/main/java/org/knowm/sundial/SundialJobScheduler.java
 
 ## Job Data Map
 ```java
@@ -191,6 +191,10 @@ new SampleJobAction().run();
 
 To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
 
+For an example see `SampleJob9.java`. In a loop within the Job you should just add a call to `checkTerminated();`.
+
+If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`. 
+
 ## Concurrent Job Execution
 
 By default jobs are not set to concurrently execute. This means if a job is currently running and a trigger is fired for that job, it will skip running the job. In some cases concurrent job execution is desired and there are a few ways to configure it.
@@ -198,13 +202,17 @@ By default jobs are not set to concurrently execute. This means if a job is curr
 1. You can add `<concurrency-allowed>true</concurrency-allowed>` in jobs.xml.
 1. You can add it to the Sundial annotations like this: `@SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS, isConcurrencyAllowed = true)` Same idea for cron annotation too.
 
-Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/timmolter/Sundial/issues).
+Now go ahead and [study some more examples](http://knowm.org/open-source/sundial/sundial-example-code), [download the thing](http://knowm.org/open-source/sundial/sundial-change-log/) and [provide feedback](https://github.com/knowm/Sundial/issues).
 
 ## Getting the Goods
+
 ### Non-Maven
+
 Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
+
 #### Dependencies
-* org.slf4j.slf4j-api-1.7.21
+
+* org.slf4j.slf4j-api-1.7.26
 
 ### Maven
 
@@ -216,7 +224,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.1.3</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -232,7 +240,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.1.4-SNAPSHOT</version>
+    <version>2.2.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -240,6 +248,10 @@ For snapshots, add the following to your pom.xml file:
 
     mvn clean package  
     mvn javadoc:javadoc  
+
+### Dependency Updates
+
+    mvn versions:display-dependency-updates
 
 ## Cron Expressions in jobs.xml
 
@@ -254,18 +266,9 @@ Expression | Meaning
 0 0/10 * * * ? | Fire every 10 mintes starting at 12 am (midnight) every day
 
 ## Bugs
-Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/timmolter/Sundial/issues).  
+Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/knowm/Sundial/issues).  
 
 ## Continuous Integration
-[![Build Status](https://travis-ci.org/timmolter/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
-[Build History](https://travis-ci.org/timmolter/Sundial/builds)  
+[![Build Status](https://travis-ci.org/knowm/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
+[Build History](https://travis-ci.org/knowm/Sundial/builds)  
 
-## Donations
-
-Donate with Bitcoin: [1JVyTP9v9z54dALuhDTZDQfS6FUjcKjPgZ](https://blockchain.info/address/1JVyTP9v9z54dALuhDTZDQfS6FUjcKjPgZ)
-
-All donations will be used to pay bounties for new features, refactoring, etc. Please consider donating or even posting your own bounties on our [Issues Page](https://github.com/timmolter/sundial/issues?state=open). Open bounties and bounties paid thus far can be found on knowm's [bounties](http://knowm.org/open-source/) page.
-
-## Release Information
-
-We will announce new releases on our [Twitter page](https://twitter.com/Knowmorg).

@@ -1,27 +1,12 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.classloading;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,20 +14,21 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 import org.knowm.sundial.Job;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code> types that are found in this package in its attempts to load a class,
- * when one scheme is found to work, it is promoted to the scheme that will be used first the next time a class is loaded (in order to improve
+ * A <code>ClassLoadHelper</code> uses all of the <code>ClassLoadHelper</code> types that are found
+ * in this package in its attempts to load a class, when one scheme is found to work, it is promoted
+ * to the scheme that will be used first the next time a class is loaded (in order to improve
  * performance).
- * <p>
- * This approach is used because of the wide variance in class loader behavior between the various environments in which Quartz runs (e.g. disparate
- * application servers, stand-alone, mobile devices, etc.). Because of this disparity, Quartz ran into difficulty with a one class-load style fits-all
- * design. Thus, this class loader finds the approach that works, then 'remembers' it.
- * </p>
+ *
+ * <p>This approach is used because of the wide variance in class loader behavior between the
+ * various environments in which Quartz runs (e.g. disparate application servers, stand-alone,
+ * mobile devices, etc.). Because of this disparity, Quartz ran into difficulty with a one
+ * class-load style fits-all design. Thus, this class loader finds the approach that works, then
+ * 'remembers' it.
  *
  * @see org.quartz.classloading.ClassLoadHelper
  * @see org.quartz.classloading.LoadingLoaderClassLoadHelper
@@ -70,8 +56,9 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
    */
 
   /**
-   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling
-   * thread, which is the thread that is initializing Quartz.
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to
+   * "steal" the class loader off of the calling thread, which is the thread that is initializing
+   * Quartz.
    */
   @Override
   public void initialize() {
@@ -88,9 +75,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     }
   }
 
-  /**
-   * Return the class with the given name.
-   */
+  /** Return the class with the given name. */
   @Override
   public Class loadClass(String name) throws ClassNotFoundException {
 
@@ -122,7 +107,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       if (throwable instanceof ClassNotFoundException) {
         throw (ClassNotFoundException) throwable;
       } else {
-        throw new ClassNotFoundException(String.format("Unable to load class %s by any known loaders.", name), throwable);
+        throw new ClassNotFoundException(
+            String.format("Unable to load class %s by any known loaders.", name), throwable);
       }
     }
 
@@ -132,7 +118,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
    *
    * @param name name of the desired resource
    * @return a java.net.URL object
@@ -166,7 +153,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
    *
    * @param name name of the desired resource
    * @return a java.io.InputStream object
@@ -202,8 +190,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   /**
    * Given a package name(s), search the classpath for all classes that extend sundial.job .
    *
-   * A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
-   *
+   * <p>A comma(,) or colon(:) can be used to specify multiple packages to scan for Jobs.
    *
    * @param pkgname
    * @return
@@ -213,12 +200,11 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     Set<Class<? extends Job>> classes = new HashSet<Class<? extends Job>>();
 
     String[] packages = pkgname.split("[\\:,]");
-    if(packages.length > 1){
-      for(String pkg : packages ){
+    if (packages.length > 1) {
+      for (String pkg : packages) {
         classes.addAll(getJobClasses(pkg));
       }
-    }
-    else {
+    } else {
       String relPath = pkgname.replace('.', '/').replace("%20", " ");
 
       // Get a File object for the package
@@ -226,21 +212,28 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       if (resource == null) {
         throw new RuntimeException("Unexpected problem: No resource for " + relPath);
       }
-      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resource.toString() + "'");
+      String resPath = "";
+      try {
+        resPath = URLDecoder.decode(resource.getPath(), "UTF-8");
+      } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+      }
+
+      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resPath + "'");
 
       if (resource.toString().startsWith("jar:")) {
-        processJarfile(resource, pkgname, classes);
+        processJarfile(resPath, pkgname, classes);
       } else {
-        processDirectory(new File(resource.getPath()), pkgname, classes);
+        processDirectory(resPath, pkgname, classes);
       }
     }
 
     return classes;
-
   }
 
-  private void processDirectory(File directory, String pkgname, Set<Class<? extends Job>> classes) {
+  private void processDirectory(String path, String pkgname, Set<Class<? extends Job>> classes) {
 
+    File directory = new File(path);
     logger.debug("Reading Directory '" + directory + "'");
     // Get the list of the files contained in the package
     String[] files = directory.list();
@@ -258,16 +251,16 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       }
       File subdir = new File(directory, fileName);
       if (subdir.isDirectory()) {
-        processDirectory(subdir, pkgname + '.' + fileName, classes);
+        processDirectory(subdir.getPath(), pkgname + '.' + fileName, classes);
       }
     }
   }
 
-  private void processJarfile(URL resource, String pkgname, Set<Class<? extends Job>> classes) {
+  private void processJarfile(String path, String pkgname, Set<Class<? extends Job>> classes) {
 
     String relPath = pkgname.replace('.', '/');
-    String resPath = resource.getPath().replace("%20", " ");
-    String jarPath = resPath.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
+
+    String jarPath = path.replaceFirst("[.]jar[!].*", ".jar").replaceFirst("file:", "");
     logger.debug("Reading JAR file: '" + jarPath + "'");
     JarFile jarFile;
     try {
@@ -280,7 +273,9 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       JarEntry entry = entries.nextElement();
       String entryName = entry.getName();
       String className = null;
-      if (entryName.endsWith(".class") && entryName.startsWith(relPath) && entryName.length() > (relPath.length() + "/".length())) {
+      if (entryName.endsWith(".class")
+          && entryName.startsWith(relPath)
+          && entryName.length() > (relPath.length() + "/".length())) {
         className = entryName.replace('/', '.').replace('\\', '.').replace(".class", "");
       }
       logger.debug("JarEntry '" + entryName + "'  =>  class '" + className + "'");
@@ -290,7 +285,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     }
   }
 
-  private void filterJobClassWithExceptionCatch(String className, Set<Class<? extends Job>> classes) {
+  private void filterJobClassWithExceptionCatch(
+      String className, Set<Class<? extends Job>> classes) {
     try {
 
       Class clazz = loadClass(className);
@@ -304,7 +300,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
         classes.add(clazz);
       }
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Unexpected ClassNotFoundException loading class '" + className + "'");
+      throw new RuntimeException(
+          "Unexpected ClassNotFoundException loading class '" + className + "'");
     }
   }
 
@@ -316,6 +313,8 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   @Override
   public ClassLoader getClassLoader() {
 
-    return (this.bestCandidate == null) ? Thread.currentThread().getContextClassLoader() : this.bestCandidate.getClassLoader();
+    return (this.bestCandidate == null)
+        ? Thread.currentThread().getContextClassLoader()
+        : this.bestCandidate.getClassLoader();
   }
 }

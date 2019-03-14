@@ -1,6 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version = "1.0" ?>
 <job-scheduling-data>
-
 	<schedule>
 
 		<!-- job with cron trigger -->
@@ -32,11 +31,10 @@
 			<simple>
 				<name>SampleJob2-Trigger</name>
 				<job-name>SampleJob2</job-name>
-				<repeat-count>5</repeat-count>
+				<repeat-count>-1</repeat-count>
 				<repeat-interval>5000</repeat-interval>
 			</simple>
 		</trigger>
 
 	</schedule>
-
 </job-scheduling-data>

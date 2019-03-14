@@ -1,20 +1,3 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.core;
 
 import org.knowm.sundial.plugins.AnnotationJobTriggerPlugin;
@@ -26,10 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>
- * An implementation of <code>{@link org.quartz.core.SchedulerFactory}</code> that does all of its work of creating a <code>QuartzScheduler</code>
- * instance.
- * </p>
+ * An implementation of <code>{@link org.quartz.core.SchedulerFactory}</code> that does all of its
+ * work of creating a <code>QuartzScheduler</code> instance.
  *
  * @author James House
  * @author Anthony Eden
@@ -47,9 +28,9 @@ public class SchedulerFactory {
 
   /**
    * @param threadPoolSize
-   * @param String packageName
-   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize and packageName where it looks for
-   *         annotated Job classes
+   * @param packageName
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given
+   *     threadPoolSize and packageName where it looks for annotated Job classes
    * @throws SchedulerException
    */
   public Scheduler getScheduler(int threadPoolSize, String packageName) throws SchedulerException {
@@ -62,7 +43,8 @@ public class SchedulerFactory {
 
   /**
    * @param threadPoolSize
-   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given threadPoolSize
+   * @return Returns a handle to the Scheduler produced by this factory. Initialized with given
+   *     threadPoolSize
    * @throws SchedulerException
    */
   public Scheduler getScheduler(int threadPoolSize) throws SchedulerException {
@@ -73,13 +55,10 @@ public class SchedulerFactory {
   }
 
   /**
-   * <p>
    * Returns a handle to the Scheduler produced by this factory.
-   * </p>
-   * <p>
-   * If one of the <code>initialize</code> methods has not be previously called, then the default (no-arg) <code>initialize()</code> method will be
-   * called by this method.
-   * </p>
+   *
+   * <p>If one of the <code>initialize</code> methods has not be previously called, then the default
+   * (no-arg) <code>initialize()</code> method will be called by this method.
    */
   public Scheduler getScheduler() throws SchedulerException {
 
@@ -113,7 +92,8 @@ public class SchedulerFactory {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     try {
 
-      JobRunShellFactory jrsf = new StandardJobRunShellFactory(); // Create correct run-shell factory...
+      JobRunShellFactory jrsf =
+          new StandardJobRunShellFactory(); // Create correct run-shell factory...
 
       QuartzSchedulerResources quartzSchedulerResources = new QuartzSchedulerResources();
       quartzSchedulerResources.setThreadName("Quartz Scheduler Thread");
@@ -122,8 +102,6 @@ public class SchedulerFactory {
       quartzSchedulerResources.setThreadsInheritInitializersClassLoadContext(false);
       quartzSchedulerResources.setBatchTimeWindow(0L);
       quartzSchedulerResources.setMaxBatchSize(1);
-      quartzSchedulerResources.setInterruptJobsOnShutdown(true);
-      quartzSchedulerResources.setInterruptJobsOnShutdownWithWait(true);
       quartzSchedulerResources.setThreadPool(threadPool);
       threadPool.setThreadNamePrefix("Quartz_Scheduler_Worker");
       threadPool.initialize();
@@ -136,15 +114,16 @@ public class SchedulerFactory {
 
       // Set up any SchedulerPlugins
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin = new XMLSchedulingDataProcessorPlugin();
+      XMLSchedulingDataProcessorPlugin xmlSchedulingDataProcessorPlugin =
+          new XMLSchedulingDataProcessorPlugin();
       xmlSchedulingDataProcessorPlugin.setFailOnFileNotFound(false);
-      xmlSchedulingDataProcessorPlugin.setScanInterval(0);
       quartzSchedulerResources.addSchedulerPlugin(xmlSchedulingDataProcessorPlugin);
 
       ShutdownHookPlugin shutdownHookPlugin = new ShutdownHookPlugin();
       quartzSchedulerResources.addSchedulerPlugin(shutdownHookPlugin);
 
-      AnnotationJobTriggerPlugin annotationJobTriggerPlugin = new AnnotationJobTriggerPlugin(packageName);
+      AnnotationJobTriggerPlugin annotationJobTriggerPlugin =
+          new AnnotationJobTriggerPlugin(packageName);
       quartzSchedulerResources.addSchedulerPlugin(annotationJobTriggerPlugin);
 
       // fire up job store, and runshell factory
@@ -152,7 +131,8 @@ public class SchedulerFactory {
       jobstore.setThreadPoolSize(threadPool.getPoolSize());
 
       // Initialize plugins now that we have a Scheduler instance.
-      xmlSchedulingDataProcessorPlugin.initialize("XMLSchedulingDataProcessorPlugin", quartzScheduler);
+      xmlSchedulingDataProcessorPlugin.initialize(
+          "XMLSchedulingDataProcessorPlugin", quartzScheduler);
       shutdownHookPlugin.initialize("ShutdownHookPlugin", quartzScheduler);
       annotationJobTriggerPlugin.initialize("AnnotationJobTriggerPlugin", quartzScheduler);
 
@@ -164,23 +144,23 @@ public class SchedulerFactory {
 
     } catch (SchedulerException e) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw e;
     } catch (RuntimeException re) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw re;
     } catch (Error re) {
       if (qsInited) {
-        quartzScheduler.shutdown(false);
+        quartzScheduler.shutdown();
       } else if (tpInited) {
-        threadPool.shutdown(false);
+        threadPool.shutdown();
       }
       throw re;
     }

@@ -1,27 +1,11 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.classloading;
 
 import java.io.InputStream;
 import java.net.URL;
 
 /**
- * An interface for classes wishing to provide the service of loading classes and resources within the scheduler...
+ * An interface for classes wishing to provide the service of loading classes and resources within
+ * the scheduler...
  *
  * @author jhouse
  * @author pl47ypus
@@ -29,8 +13,9 @@ import java.net.URL;
 public interface ClassLoadHelper {
 
   /**
-   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to "steal" the class loader off of the calling
-   * thread, which is the thread that is initializing Quartz.
+   * Called to give the ClassLoadHelper a chance to initialize itself, including the opportunity to
+   * "steal" the class loader off of the calling thread, which is the thread that is initializing
+   * Quartz.
    */
   void initialize();
 
@@ -44,7 +29,8 @@ public interface ClassLoadHelper {
   Class loadClass(String name) throws ClassNotFoundException;
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
    *
    * @param name name of the desired resource
    * @return a java.net.URL object
@@ -52,7 +38,8 @@ public interface ClassLoadHelper {
   URL getResource(String name);
 
   /**
-   * Finds a resource with a given name. This method returns null if no resource with this name is found.
+   * Finds a resource with a given name. This method returns null if no resource with this name is
+   * found.
    *
    * @param name name of the desired resource
    * @return a java.io.InputStream object
@@ -65,5 +52,4 @@ public interface ClassLoadHelper {
    * @return the class-loader user be the helper.
    */
   ClassLoader getClassLoader();
-
 }

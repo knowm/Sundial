@@ -1,31 +1,14 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.knowm.sundial;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.knowm.sundial.exceptions.RequiredParameterException;
 import org.quartz.core.JobExecutionContext;
 import org.quartz.triggers.CronTrigger;
 
 /**
- * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and any key/value pairs the user wishes to add.
+ * The JobContext is a Map that contains key value pairs from the Quartz Job's JobDataMap object and
+ * any key/value pairs the user wishes to add.
  *
  * @author timothy.molter
  */
@@ -51,15 +34,17 @@ public class JobContext {
 
     for (Object mapKey : jobExecutionContext.getMergedJobDataMap().keySet()) {
       // logger.debug("added key: " + (String) mapKey);
-      // logger.debug("added value: " + (String) jobExecutionContext.getMergedJobDataMap().get(mapKey));
+      // logger.debug("added value: " + (String)
+      // jobExecutionContext.getMergedJobDataMap().get(mapKey));
       map.put((String) mapKey, jobExecutionContext.getMergedJobDataMap().get(mapKey));
     }
     map.put(KEY_JOB_NAME, jobExecutionContext.getJobDetail().getName());
     map.put(KEY_TRIGGER_NAME, (jobExecutionContext.getTrigger().getName()));
     if (jobExecutionContext.getTrigger() instanceof CronTrigger) {
-      map.put(KEY_TRIGGER_CRON_EXPRESSION, ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
+      map.put(
+          KEY_TRIGGER_CRON_EXPRESSION,
+          ((CronTrigger) jobExecutionContext.getTrigger()).getCronExpression());
     }
-
   }
 
   /**
@@ -131,5 +116,4 @@ public class JobContext {
 
     return get(KEY_TRIGGER_CRON_EXPRESSION);
   }
-
 }

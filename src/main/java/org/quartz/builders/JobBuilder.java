@@ -1,24 +1,6 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.builders;
 
 import java.util.UUID;
-
 import org.quartz.jobs.Job;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
@@ -56,9 +38,7 @@ public class JobBuilder {
 
   private JobDataMap jobDataMap = new JobDataMap();
 
-  private JobBuilder() {
-
-  }
+  private JobBuilder() {}
 
   /**
    * Create a JobBuilder with which to define a <code>JobDetail</code>.
@@ -71,7 +51,8 @@ public class JobBuilder {
   }
 
   /**
-   * Create a JobBuilder with which to define a <code>JobDetail</code>, and set the class name of the <code>Job</code> to be executed.
+   * Create a JobBuilder with which to define a <code>JobDetail</code>, and set the class name of
+   * the <code>Job</code> to be executed.
    *
    * @return a new JobBuilder
    */
@@ -108,9 +89,9 @@ public class JobBuilder {
 
   /**
    * Use a <code>String</code> to identify the JobDetail.
-   * <p>
-   * If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique JobKey will be generated.
-   * </p>
+   *
+   * <p>If none of the 'withIdentity' methods are set on the JobBuilder, then a random, unique
+   * JobKey will be generated.
    *
    * @param key the Job's JobKey
    * @return the updated JobBuilder
@@ -135,7 +116,8 @@ public class JobBuilder {
   }
 
   /**
-   * Set the class which will be instantiated and executed when a Trigger fires that is associated with this JobDetail.
+   * Set the class which will be instantiated and executed when a Trigger fires that is associated
+   * with this JobDetail.
    *
    * @param jobClass a class implementing the Job interface.
    * @return the updated JobBuilder
@@ -148,8 +130,8 @@ public class JobBuilder {
   }
 
   /**
-   * The default behavior is to veto any job is currently running concurrent. However, concurrent jobs can be created by setting the 'Concurrency' to
-   * true
+   * The default behavior is to veto any job is currently running concurrent. However, concurrent
+   * jobs can be created by setting the 'Concurrency' to true
    *
    * @param isConcurrencyAllowed
    * @return the updated JobBuilder
@@ -171,5 +153,4 @@ public class JobBuilder {
     this.jobDataMap = newJobDataMap; // set new map as the map to use
     return this;
   }
-
 }

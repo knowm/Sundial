@@ -1,24 +1,6 @@
-/**
- * Copyright 2015 Knowm Inc. (http://knowm.org) and contributors.
- * Copyright 2013-2015 Xeiam LLC (http://xeiam.com) and contributors.
- * Copyright 2001-2011 Terracotta Inc. (http://terracotta.org).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.quartz.builders;
 
 import java.util.Date;
-
 import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.SimpleTrigger;
@@ -49,9 +31,7 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   private int repeatCount = 0;
   private int misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_SMART_POLICY;
 
-  private SimpleTriggerBuilder() {
-
-  }
+  private SimpleTriggerBuilder() {}
 
   /**
    * Create a SimpleScheduleBuilder.
@@ -64,8 +44,8 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * Build the actual Trigger -- NOT intended to be invoked by end users, but will rather be invoked by a TriggerBuilder which this ScheduleBuilder is
-   * given to.
+   * Build the actual Trigger -- NOT intended to be invoked by end users, but will rather be invoked
+   * by a TriggerBuilder which this ScheduleBuilder is given to.
    */
   @Override
   public OperableTrigger instantiate() {
@@ -92,7 +72,8 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * Specify a the number of time the trigger will repeat - total number of firings will be this number + 1.
+   * Specify a the number of time the trigger will repeat - total number of firings will be this
+   * number + 1.
    *
    * @param repeatCount the number of seconds at which the trigger should repeat.
    * @return the updated SimpleScheduleBuilder
@@ -120,12 +101,12 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_FIRE_NOW} instruction.
+   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_FIRE_NOW}
+   * instruction.
    *
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_FIRE_NOW
    */
-
   public SimpleTriggerBuilder withMisfireHandlingInstructionFireNow() {
 
     misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW;
@@ -133,7 +114,8 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT} instruction.
+   * If the Trigger misfires, use the {@link
+   * SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT} instruction.
    *
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_EXISTING_COUNT
@@ -145,7 +127,8 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT} instruction.
+   * If the Trigger misfires, use the {@link
+   * SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT} instruction.
    *
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT
@@ -157,62 +140,66 @@ public class SimpleTriggerBuilder extends TriggerBuilder {
   }
 
   /**
-   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT} instruction.
+   * If the Trigger misfires, use the {@link
+   * SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT} instruction.
    *
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT
    */
   public SimpleTriggerBuilder withMisfireHandlingInstructionNowWithExistingCount() {
 
-    misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT;
+    misfireInstruction =
+        SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT;
     return this;
   }
 
   /**
-   * If the Trigger misfires, use the {@link SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT} instruction.
+   * If the Trigger misfires, use the {@link
+   * SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT} instruction.
    *
    * @return the updated SimpleScheduleBuilder
    * @see SimpleTrigger#MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT
    */
   public SimpleTriggerBuilder withMisfireHandlingInstructionNowWithRemainingCount() {
 
-    misfireInstruction = SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT;
+    misfireInstruction =
+        SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_REPEAT_COUNT;
     return this;
   }
 
   public SimpleTriggerBuilder withIdentity(String name) {
-    return (SimpleTriggerBuilder)super.withIdentity(name);
+    return (SimpleTriggerBuilder) super.withIdentity(name);
   }
 
   public SimpleTriggerBuilder withDescription(String description) {
-    return (SimpleTriggerBuilder)super.withDescription(description);
+    return (SimpleTriggerBuilder) super.withDescription(description);
   }
 
   public SimpleTriggerBuilder withPriority(int priority) {
-    return (SimpleTriggerBuilder)super.withPriority(priority);
+    return (SimpleTriggerBuilder) super.withPriority(priority);
   }
 
   public SimpleTriggerBuilder modifiedByCalendar(String calendarName) {
-    return (SimpleTriggerBuilder)super.modifiedByCalendar(calendarName);
+    return (SimpleTriggerBuilder) super.modifiedByCalendar(calendarName);
   }
 
   public SimpleTriggerBuilder startNow() {
-    return (SimpleTriggerBuilder)super.startNow();
+    return (SimpleTriggerBuilder) super.startNow();
   }
 
   public SimpleTriggerBuilder startAt(Date startTime) {
-    return (SimpleTriggerBuilder)super.startAt(startTime);
+    return (SimpleTriggerBuilder) super.startAt(startTime);
   }
 
   public SimpleTriggerBuilder endAt(Date endTime) {
-    return (SimpleTriggerBuilder)super.endAt(endTime);
+    return (SimpleTriggerBuilder) super.endAt(endTime);
   }
 
   public SimpleTriggerBuilder forJob(String jobName) {
-    return (SimpleTriggerBuilder)super.forJob(jobName);
+    return (SimpleTriggerBuilder) super.forJob(jobName);
   }
 
   public SimpleTriggerBuilder usingJobData(JobDataMap newJobDataMap) {
-    return (SimpleTriggerBuilder)super.usingJobData(newJobDataMap);
+    return (SimpleTriggerBuilder) super.usingJobData(newJobDataMap);
   }
 }
