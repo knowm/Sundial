@@ -255,7 +255,7 @@ For snapshots, add the following to your pom.xml file:
 
 ## Cron Expressions in jobs.xml
 
-See the Cron Trigger tutorial over at [quartz-scheduler.org](http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/crontrigger).
+See the Cron Trigger tutorial over at [quartz-scheduler.org](http://www.quartz-scheduler.org/documentation/quartz-2.2.2/tutorials/crontrigger).
 Here are a few examples:  
 
 Expression | Meaning
