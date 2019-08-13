@@ -1,7 +1,10 @@
 package org.quartz.classloading;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A <code>ClassLoadHelper</code> that uses either the loader of it's own class (<code>
@@ -47,6 +50,23 @@ class LoadingLoaderClassLoadHelper implements ClassLoadHelper {
   public URL getResource(String name) {
 
     return getClassLoader().getResource(name);
+  }
+
+  /**
+   * Finds all resources with a given name. This method returns empty list if no resource with this
+   * name is found.
+   *
+   * @param name name of the desired resource
+   * @return a java.net.URL list
+   */
+  @Override
+  public List<URL> getResources(String name) {
+
+    try {
+      return Collections.list(getClassLoader().getResources(name));
+    } catch (IOException e) {
+      return Collections.emptyList();
+    }
   }
 
   /**
