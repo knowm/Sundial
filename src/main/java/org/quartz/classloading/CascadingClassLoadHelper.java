@@ -118,7 +118,7 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
    * found.
    *
    * @param name name of the desired resource
-   * @return a java.net.URL array
+   * @return a java.net.URL object
    */
   @Override
   public URL getResource(String name) {
