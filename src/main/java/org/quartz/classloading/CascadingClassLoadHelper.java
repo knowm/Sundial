@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -153,6 +154,41 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
   }
 
   /**
+   * Finds all resources with a given name. This method returns empty list if no resource with this
+   * name is found.
+   *
+   * @param name name of the desired resource
+   * @return a java.net.URL list
+   */
+  @Override
+  public List<URL> getResources(String name) {
+
+    List<URL> result = null;
+
+    if (bestCandidate != null) {
+      result = bestCandidate.getResources(name);
+      if (result == null || result.isEmpty()) {
+        bestCandidate = null;
+      }
+    }
+
+    ClassLoadHelper loadHelper = null;
+
+    Iterator<ClassLoadHelper> iter = loadHelpers.iterator();
+    while (iter.hasNext()) {
+      loadHelper = iter.next();
+
+      result = loadHelper.getResources(name);
+      if (result != null && !result.isEmpty()) {
+        break;
+      }
+    }
+
+    bestCandidate = loadHelper;
+    return result;
+  }
+
+  /**
    * Finds a resource with a given name. This method returns null if no resource with this name is
    * found.
    *
@@ -208,23 +244,25 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
       String relPath = pkgname.replace('.', '/').replace("%20", " ");
 
       // Get a File object for the package
-      URL resource = getResource(relPath);
-      if (resource == null) {
+      List<URL> resources = getResources(relPath);
+      if (resources.isEmpty()) {
         throw new RuntimeException("Unexpected problem: No resource for " + relPath);
       }
-      String resPath = "";
-      try {
-        resPath = URLDecoder.decode(resource.getPath(), "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        e.printStackTrace();
-      }
+      for (URL resource : resources) {
+        String resPath = "";
+        try {
+          resPath = URLDecoder.decode(resource.getPath(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          e.printStackTrace();
+        }
 
-      logger.info("Package: '" + pkgname + "' becomes Resource: '" + resPath + "'");
+        logger.info("Package: '" + pkgname + "' becomes Resource: '" + resPath + "'");
 
-      if (resource.toString().startsWith("jar:")) {
-        processJarfile(resPath, pkgname, classes);
-      } else {
-        processDirectory(resPath, pkgname, classes);
+        if (resource.toString().startsWith("jar:")) {
+          processJarfile(resPath, pkgname, classes);
+        } else {
+          processDirectory(resPath, pkgname, classes);
+        }
       }
     }
 
