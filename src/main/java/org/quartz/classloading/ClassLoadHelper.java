@@ -2,6 +2,7 @@ package org.quartz.classloading;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * An interface for classes wishing to provide the service of loading classes and resources within
@@ -36,6 +37,15 @@ public interface ClassLoadHelper {
    * @return a java.net.URL object
    */
   URL getResource(String name);
+
+  /**
+   * Finds all resources with a given name. This method returns empty list if no resource with this
+   * name is found.
+   *
+   * @param name name of the desired resource
+   * @return a java.net.URL list
+   */
+  List<URL> getResources(String name);
 
   /**
    * Finds a resource with a given name. This method returns null if no resource with this name is
