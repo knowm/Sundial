@@ -11,6 +11,8 @@ else
     mvn clean verify --settings target/travis/settings.xml;
 fi"
 
+dist: trusty
+
 jdk:
   - openjdk11
 
