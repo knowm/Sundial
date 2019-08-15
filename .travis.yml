@@ -14,7 +14,7 @@ fi"
 dist: trusty
 
 jdk:
-  - openjdk11
+  - oraclejdk8
 
 # whitelist
 branches:
