@@ -21,7 +21,7 @@ uses a ThreadLocal wrapper for each job containing a HashMap for job key-value p
  * [x] or define jobs and triggers programmatically
  * [x] Cron Triggers
  * [x] Simple Triggers
- * [x] Java 6 and up
+ * [x] Java 7 and up
  * [x] Depends only on slf4j
 
 ## Create a Job Class
@@ -212,7 +212,7 @@ Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 
 #### Dependencies
 
-* org.slf4j.slf4j-api-1.7.26
+* org.slf4j.slf4j-api-1.7.32
 
 ### Maven
 
@@ -224,7 +224,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.1</version>
+    <version>2.2.2</version>
 </dependency>
 ```
 
@@ -240,7 +240,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.2-SNAPSHOT</version>
+    <version>2.2.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -269,6 +269,5 @@ Expression | Meaning
 Please report any bugs or submit feature requests to [Sundial's Github issue tracker](https://github.com/knowm/Sundial/issues).  
 
 ## Continuous Integration
-[![Build Status](https://travis-ci.org/knowm/Sundial.png?branch=develop)](https://travis-ci.org/timmolter/Sundial.png)  
-[Build History](https://travis-ci.org/knowm/Sundial/builds)  
+[![Java CI with Maven on Push](https://github.com/knowm/Sundial/actions/workflows/maven_on_push.yml/badge.svg)](https://github.com/knowm/Sundial/actions/workflows/maven_on_push.yml)
 
