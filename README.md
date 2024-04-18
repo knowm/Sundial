@@ -224,7 +224,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.4</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -240,7 +240,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.5-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ```
 
