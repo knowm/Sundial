@@ -4,7 +4,7 @@
 	<name>Sundial</name>
 	<groupId>org.knowm</groupId>
 	<artifactId>sundial</artifactId>
-	<version>2.2.4-SNAPSHOT</version>
+	<version>2.2.4</version>
 	<packaging>bundle</packaging>
 	<description>A Lightweight Job Scheduling Framework forked from Quartz</description>
 	<url>http://knowm.org/open-source/sundial</url>
@@ -39,7 +39,7 @@
 		<connection>scm:git:git@github.com:knowm/Sundial.git</connection>
 		<developerConnection>scm:git:git@github.com:knowm/Sundial.git</developerConnection>
 		<url>git@github.com:knowm/Sundial.git</url>
-		<tag>HEAD</tag>
+		<tag>sundial-2.2.4</tag>
 	</scm>
 
 	<ciManagement>
