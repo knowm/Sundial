@@ -247,7 +247,8 @@ For snapshots, add the following to your pom.xml file:
 ## Building
 
     mvn clean package  
-    mvn javadoc:javadoc  
+    mvn javadoc:javadoc
+    mvn com.spotify.fmt:fmt-maven-plugin:format
 
 ### Dependency Updates
 

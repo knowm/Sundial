@@ -8,7 +8,9 @@ import org.quartz.jobs.InterruptableJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** @author timmolter */
+/**
+ * @author timmolter
+ */
 public abstract class Job extends JobContainer implements InterruptableJob {
 
   private final Logger logger = LoggerFactory.getLogger(Job.class);

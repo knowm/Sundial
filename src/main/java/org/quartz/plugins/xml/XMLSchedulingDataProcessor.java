@@ -235,8 +235,14 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
    * @param systemId system ID.
    */
   private void processFile(String fileName)
-      throws ValidationException, ParserConfigurationException, SAXException, IOException,
-          SchedulerException, ClassNotFoundException, ParseException, XPathException {
+      throws ValidationException,
+          ParserConfigurationException,
+          SAXException,
+          IOException,
+          SchedulerException,
+          ClassNotFoundException,
+          ParseException,
+          XPathException {
 
     prepForProcessing();
 

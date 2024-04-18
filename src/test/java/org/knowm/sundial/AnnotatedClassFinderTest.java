@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.quartz.classloading.CascadingClassLoadHelper;
 
-/** @author timmolter */
+/**
+ * @author timmolter
+ */
 public class AnnotatedClassFinderTest {
 
   private static final Set<String> EXPECTED_JOBS =
