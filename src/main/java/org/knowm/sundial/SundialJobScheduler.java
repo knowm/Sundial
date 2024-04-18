@@ -4,6 +4,7 @@ import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
 import static org.quartz.builders.JobBuilder.newJobBuilder;
 import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
+import jakarta.servlet.ServletContext;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.servlet.ServletContext;
 import org.knowm.sundial.exceptions.SundialSchedulerException;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;

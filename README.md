@@ -21,7 +21,7 @@ uses a ThreadLocal wrapper for each job containing a HashMap for job key-value p
  * [x] or define jobs and triggers programmatically
  * [x] Cron Triggers
  * [x] Simple Triggers
- * [x] Java 7 and up
+ * [x] Java 8 and up
  * [x] Depends only on slf4j
 
 ## Create a Job Class
@@ -224,7 +224,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.3</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
@@ -240,7 +240,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>2.3.1-SNAPSHOT</version>
 </dependency>
 ```
 
