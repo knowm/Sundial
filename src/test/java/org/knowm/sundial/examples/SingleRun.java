@@ -2,7 +2,9 @@ package org.knowm.sundial.examples;
 
 import org.knowm.sundial.SundialJobScheduler;
 
-/** @author timmolter */
+/**
+ * @author timmolter
+ */
 public class SingleRun {
 
   public static void main(String[] args) {

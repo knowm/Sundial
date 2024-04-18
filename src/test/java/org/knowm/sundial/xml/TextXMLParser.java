@@ -5,7 +5,9 @@ import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.classloading.ClassLoadHelper;
 import org.quartz.plugins.xml.XMLSchedulingDataProcessor;
 
-/** @author timmolter */
+/**
+ * @author timmolter
+ */
 public class TextXMLParser {
 
   @Test

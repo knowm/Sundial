@@ -167,13 +167,17 @@ public class SundialJobScheduler {
     return globalLock;
   }
 
-  /** @return the ServletContext */
+  /**
+   * @return the ServletContext
+   */
   public static ServletContext getServletContext() {
 
     return servletContext;
   }
 
-  /** @param servletContext the ServletContext to set */
+  /**
+   * @param servletContext the ServletContext to set
+   */
   public static void setServletContext(ServletContext servletContext) {
 
     SundialJobScheduler.servletContext = servletContext;

@@ -84,25 +84,33 @@ public class TriggerFiredBundle implements java.io.Serializable {
     return jobIsRecovering;
   }
 
-  /** @return Returns the fireTime. */
+  /**
+   * @return Returns the fireTime.
+   */
   public Date getFireTime() {
 
     return fireTime;
   }
 
-  /** @return Returns the nextFireTime. */
+  /**
+   * @return Returns the nextFireTime.
+   */
   public Date getNextFireTime() {
 
     return nextFireTime;
   }
 
-  /** @return Returns the prevFireTime. */
+  /**
+   * @return Returns the prevFireTime.
+   */
   public Date getPrevFireTime() {
 
     return prevFireTime;
   }
 
-  /** @return Returns the scheduledFireTime. */
+  /**
+   * @return Returns the scheduledFireTime.
+   */
   public Date getScheduledFireTime() {
 
     return scheduledFireTime;

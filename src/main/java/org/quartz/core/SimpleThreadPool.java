@@ -122,13 +122,17 @@ public class SimpleThreadPool implements ThreadPool {
     return threadNamePrefix;
   }
 
-  /** @return Returns the threadsInheritContextClassLoaderOfInitializingThread. */
+  /**
+   * @return Returns the threadsInheritContextClassLoaderOfInitializingThread.
+   */
   public boolean isThreadsInheritContextClassLoaderOfInitializingThread() {
 
     return inheritLoader;
   }
 
-  /** @param inheritLoader The threadsInheritContextClassLoaderOfInitializingThread to set. */
+  /**
+   * @param inheritLoader The threadsInheritContextClassLoaderOfInitializingThread to set.
+   */
   public void setThreadsInheritContextClassLoaderOfInitializingThread(boolean inheritLoader) {
 
     this.inheritLoader = inheritLoader;
@@ -144,13 +148,17 @@ public class SimpleThreadPool implements ThreadPool {
     this.inheritGroup = inheritGroup;
   }
 
-  /** @return Returns the value of makeThreadsDaemons. */
+  /**
+   * @return Returns the value of makeThreadsDaemons.
+   */
   public boolean isMakeThreadsDaemons() {
 
     return makeThreadsDaemons;
   }
 
-  /** @param makeThreadsDaemons The value of makeThreadsDaemons to set. */
+  /**
+   * @param makeThreadsDaemons The value of makeThreadsDaemons to set.
+   */
   public void setMakeThreadsDaemons(boolean makeThreadsDaemons) {
 
     this.makeThreadsDaemons = makeThreadsDaemons;

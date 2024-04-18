@@ -212,7 +212,7 @@ Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 
 #### Dependencies
 
-* org.slf4j.slf4j-api-1.7.32
+* org.slf4j.slf4j-api-2.0.12
 
 ### Maven
 
@@ -224,7 +224,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3</version>
 </dependency>
 ```
 
@@ -240,14 +240,15 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.2.3-SNAPSHOT</version>
+    <version>2.2.4-SNAPSHOT</version>
 </dependency>
 ```
 
 ## Building
 
     mvn clean package  
-    mvn javadoc:javadoc  
+    mvn javadoc:javadoc
+    mvn com.spotify.fmt:fmt-maven-plugin:format
 
 ### Dependency Updates
 
