@@ -107,8 +107,7 @@ public class XMLSchedulingDataProcessor implements ErrorHandler {
   /**
    * Constructor for JobSchedulingDataLoader.
    *
-   * @param classLoadHelper
-   * @param clh class-loader helper to share with digester.
+   * @param classLoadHelper class-loader helper.
    * @throws ParserConfigurationException if the XML parser cannot be configured as needed.
    */
   public XMLSchedulingDataProcessor(ClassLoadHelper classLoadHelper)

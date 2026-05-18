@@ -118,7 +118,7 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
    * automatically deleted.
    *
    * @see #REPEAT_INDEFINITELY
-   * @exception IllegalArgumentException if repeatCount is < 0
+   * @exception IllegalArgumentException if repeatCount is &lt; 0
    */
   public void setRepeatCount(int repeatCount) {
 
@@ -140,7 +140,7 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
    * Set the the time interval (in milliseconds) at which the <code>SimpleTrigger</code> should
    * repeat.
    *
-   * @exception IllegalArgumentException if repeatInterval is <= 0
+   * @exception IllegalArgumentException if repeatInterval is &lt;= 0
    */
   public void setRepeatInterval(long repeatInterval) {
 
@@ -380,7 +380,6 @@ public class SimpleTriggerImpl extends AbstractTrigger implements SimpleTrigger 
    * <p>The value returned is not guaranteed to be valid until after the <code>Trigger</code> has
    * been added to the scheduler.
    *
-   * @see TriggerUtils#computeFireTimesBetween(Trigger, Calendar, Date, Date)
    */
   @Override
   public Date getNextFireTime() {

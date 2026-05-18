@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
+
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerException;
@@ -134,8 +135,8 @@ public class RAMJobStore implements JobStore {
    *
    * @param newJob The <code>Job</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Job</code> existing in the <code>
-   *     JobStore</code> with the same name & group should be over-written.
-   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name/group already
+   *     JobStore</code> with the same name should be over-written.
+   * @throws ObjectAlreadyExistsException if a <code>Job</code> with the same name already
    *     exists, and replaceExisting is set to false.
    */
   @Override
@@ -170,7 +171,7 @@ public class RAMJobStore implements JobStore {
    * Remove (delete) the <code>{@link org.quartz.jobs.Job}</code> with the given name, and any
    * <code>{@link org.quartz.triggers.Trigger}</code> s that reference it.
    *
-   * @return <code>true</code> if a <code>Job</code> with the given name & group was found and
+   * @return <code>true</code> if a <code>Job</code> with the given name was found and
    *     removed from the store.
    */
   @Override
@@ -197,10 +198,9 @@ public class RAMJobStore implements JobStore {
    *
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>
-   *     JobStore</code> with the same name & group should be over-written.
-   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already
+   *     JobStore</code> with the same name should be over-written.
+   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name already
    *     exists, and replaceExisting is set to false.
-   * @see #pauseTriggerGroup(SchedulingContext, String)
    */
   @Override
   public void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting)
@@ -263,8 +263,7 @@ public class RAMJobStore implements JobStore {
   }
 
   /**
-   * @see org.quartz.core.JobStore#replaceTrigger(org.quartz.core.SchedulingContext,
-   *     java.lang.String, java.lang.String, org.quartz.triggers.Trigger)
+   * @see org.quartz.core.JobStore#replaceTrigger(String, OperableTrigger)
    */
   @Override
   public boolean replaceTrigger(String triggerKey, OperableTrigger newTrigger)
@@ -442,7 +441,7 @@ public class RAMJobStore implements JobStore {
    * Get a handle to the next trigger to be fired, and mark it as 'reserved' by the calling
    * scheduler.
    *
-   * @see #releaseAcquiredTrigger(SchedulingContext, Trigger)
+   * @see #releaseAcquiredTrigger(OperableTrigger)
    */
   @Override
   public List<OperableTrigger> acquireNextTriggers(

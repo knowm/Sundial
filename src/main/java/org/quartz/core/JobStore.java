@@ -2,6 +2,7 @@ package org.quartz.core;
 
 import java.util.List;
 import java.util.Set;
+
 import org.quartz.exceptions.JobPersistenceException;
 import org.quartz.exceptions.ObjectAlreadyExistsException;
 import org.quartz.exceptions.SchedulerConfigException;
@@ -78,7 +79,7 @@ public interface JobStore {
    * <p>If removal of the <code>Job</code> results in an empty group, the group should be removed
    * from the <code>JobStore</code>'s list of known group names.
    *
-   * @return <code>true</code> if a <code>Job</code> with the given name & group was found and
+   * @return <code>true</code> if a <code>Job</code> with the given name was found and
    *     removed from the store.
    */
   boolean removeJob(String jobKey) throws JobPersistenceException;
@@ -96,8 +97,8 @@ public interface JobStore {
    *
    * @param newTrigger The <code>Trigger</code> to be stored.
    * @param replaceExisting If <code>true</code>, any <code>Trigger</code> existing in the <code>
-   *     JobStore</code> with the same name & group should be over-written.
-   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name/group already
+   *     JobStore</code> with the same name should be over-written.
+   * @throws ObjectAlreadyExistsException if a <code>Trigger</code> with the same name already
    *     exists, and replaceExisting is set to false.
    */
   void storeTrigger(OperableTrigger newTrigger, boolean replaceExisting)

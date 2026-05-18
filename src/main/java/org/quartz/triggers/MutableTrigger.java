@@ -1,6 +1,7 @@
 package org.quartz.triggers;
 
 import java.util.Date;
+
 import org.quartz.core.Calendar;
 import org.quartz.jobs.JobDataMap;
 
@@ -63,7 +64,6 @@ public interface MutableTrigger extends Trigger {
    * Set the time at which the <code>Trigger</code> should quit repeating - regardless of any
    * remaining repeats (based on the trigger's particular repeat settings).
    *
-   * @see TriggerUtils#computeEndTimeToAllowParticularNumberOfFirings(Trigger, Calendar, int)
    */
   public void setEndTime(Date endTime);
 
@@ -76,7 +76,6 @@ public interface MutableTrigger extends Trigger {
    * <p>If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.
    *
    * @see #MISFIRE_INSTRUCTION_SMART_POLICY
-   * @see #updateAfterMisfire(Calendar)
    * @see SimpleTrigger
    * @see CronTrigger
    */

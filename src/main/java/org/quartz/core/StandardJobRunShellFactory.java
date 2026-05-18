@@ -5,11 +5,10 @@ import org.quartz.exceptions.SchedulerException;
 
 /**
  * Responsible for creating the instances of a {@link JobRunShell} to be used within the
- * <class>{@link org.quartz.QuartzScheduler} </code> instance. It will create a standard {@link
- * JobRunShell} unless the job class has the {@link ExecuteInJTATransaction} annotation in which
- * case it will create a {@link JTAJobRunShell}.
+ * {@link org.quartz.QuartzScheduler} instance. It will create a standard {@link JobRunShell}
+ * for each job execution.
  *
- * <p>This implementation does not re-use any objects, it simply makes a new JTAJobRunShell each
+ * <p>This implementation does not re-use any objects, it simply makes a new JobRunShell each
  * time <code>borrowJobRunShell()</code> is called.
  *
  * @author James House

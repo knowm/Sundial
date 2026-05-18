@@ -7,11 +7,11 @@ import org.quartz.triggers.SimpleTrigger;
 import org.quartz.triggers.SimpleTriggerImpl;
 
 /**
- * <code>SimpleScheduleBuilder</code> is a {@link ScheduleBuilder} that defines strict/literal interval-based schedules for <code>Trigger</code>s.
+ * <code>SimpleScheduleBuilder</code> defines strict/literal interval-based schedules for <code>Trigger</code>s.
  * <p>
  * Quartz provides a builder-style API for constructing scheduling-related entities via a Domain-Specific Language (DSL). The DSL can best be utilized
  * through the usage of static imports of the methods on the classes <code>TriggerBuilder</code>, <code>JobBuilder</code>, <code>DateBuilder</code>,
- * <code>JobKey</code>, <code>TriggerKey</code> and the various <code>ScheduleBuilder</code> implementations.
+ * <code>JobKey</code>, <code>TriggerKey</code> and the various schedule builder implementations.
  * </p>
  * <p>
  * Client code can then use the DSL to write code such as this:

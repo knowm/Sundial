@@ -2,6 +2,7 @@ package org.quartz.builders;
 
 import java.util.Date;
 import java.util.UUID;
+
 import org.quartz.core.Calendar;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.triggers.OperableTrigger;
@@ -170,12 +171,12 @@ public abstract class TriggerBuilder {
   }
 
   /**
-   * Set the {@link ScheduleBuilder} that will be used to define the Trigger's schedule.
+   * Set the trigger implementation that will be used to define the Trigger's schedule.
    *
-   * <p>The particular <code>SchedulerBuilder</code> used will dictate the concrete type of Trigger
+   * <p>The particular trigger implementation used will dictate the concrete type of Trigger
    * that is produced by the TriggerBuilder.
    *
-   * @param scheduleBuilder the SchedulerBuilder to use.
+   * @param operableTrigger the trigger implementation to use.
    * @return the updated TriggerBuilder
    */
   public TriggerBuilder withTriggerImplementation(OperableTrigger operableTrigger) {
