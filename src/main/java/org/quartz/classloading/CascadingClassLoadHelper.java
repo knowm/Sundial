@@ -3,10 +3,11 @@ package org.quartz.classloading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Modifier;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -249,16 +250,23 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
         throw new RuntimeException("Unexpected problem: No resource for " + relPath);
       }
       for (URL resource : resources) {
-        String resPath = "";
-        try {
-          resPath = URLDecoder.decode(resource.getPath(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-          e.printStackTrace();
+        String resPath;
+        boolean isJar = resource.toString().startsWith("jar:");
+        if (isJar) {
+          resPath = URLDecoder.decode(resource.getPath(), StandardCharsets.UTF_8);
+        } else {
+          try {
+            // Using toURI() correctly handles URL-encoded characters (e.g. spaces
+            // as %20) and Windows drive-letter paths (e.g. /C:/Users/...)
+            resPath = new File(resource.toURI()).getAbsolutePath();
+          } catch (URISyntaxException e) {
+            resPath = URLDecoder.decode(resource.getPath(), StandardCharsets.UTF_8);
+          }
         }
 
         logger.info("Package: '" + pkgname + "' becomes Resource: '" + resPath + "'");
 
-        if (resource.toString().startsWith("jar:")) {
+        if (isJar) {
           processJarfile(resPath, pkgname, classes);
         } else {
           processDirectory(resPath, pkgname, classes);
@@ -275,6 +283,10 @@ public class CascadingClassLoadHelper implements ClassLoadHelper {
     logger.debug("Reading Directory '" + directory + "'");
     // Get the list of the files contained in the package
     String[] files = directory.list();
+    if (files == null) {
+      logger.warn("Directory '{}' does not exist or could not be read - check for spaces in path", directory);
+      return;
+    }
     for (int i = 0; i < files.length; i++) {
       String fileName = files[i];
       String className = null;
