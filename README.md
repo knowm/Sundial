@@ -87,6 +87,37 @@ SundialJobScheduler.startScheduler(executor, "org.knowm.sundial.jobs");
 
 The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
 
+## Dependency Injection (Guice, Spring, etc.)
+
+By default Sundial creates job instances via plain reflection (`new MyJob()`). This means fields annotated with `@Inject` or `@Autowired` are **not** populated — the DI container never sees the object.
+
+**Dependency Injection** is a pattern where the framework (Guice, Spring, etc.) is responsible for constructing objects and wiring their dependencies. For scheduled jobs this matters when a job needs a service, repository, or any other managed bean injected into it.
+
+You can plug in any DI container by supplying a custom `JobFactory` after the scheduler starts:
+
+```java
+// Guice example
+Injector injector = Guice.createInjector(new MyAppModule());
+
+SundialJobScheduler.startScheduler("org.knowm.sundial.jobs");
+SundialJobScheduler.setJobFactory((bundle, scheduler) ->
+    injector.getInstance(bundle.getJobDetail().getJobClass()));
+```
+
+```java
+// Spring example
+@Bean
+public CommandLineRunner schedulerStarter(ApplicationContext ctx) {
+  return args -> {
+    SundialJobScheduler.startScheduler("org.knowm.sundial.jobs");
+    SundialJobScheduler.setJobFactory((bundle, scheduler) ->
+        (Job) ctx.getBean(bundle.getJobDetail().getJobClass()));
+  };
+}
+```
+
+Each time a trigger fires, Sundial calls your factory to produce a fresh job instance, so the DI container can inject a new set of dependencies per execution.
+
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
 ```xml

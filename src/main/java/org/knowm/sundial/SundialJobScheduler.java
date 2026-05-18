@@ -24,6 +24,7 @@ import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
+import org.quartz.jobs.JobFactory;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
@@ -189,6 +190,26 @@ public class SundialJobScheduler {
       }
     }
     return scheduler;
+  }
+
+  /**
+   * Sets a custom {@link JobFactory} on the scheduler. Use this to integrate with a dependency
+   * injection framework (e.g. Guice, Spring) so that job instances are created by the DI container
+   * rather than by plain reflection.
+   *
+   * <p>Must be called after {@code createScheduler} / {@code startScheduler}.
+   *
+   * @param jobFactory the factory to use for producing job instances
+   * @throws SundialSchedulerException if the scheduler has not been created yet or the factory is
+   *     null
+   */
+  public static void setJobFactory(JobFactory jobFactory) throws SundialSchedulerException {
+
+    try {
+      getScheduler().setJobFactory(jobFactory);
+    } catch (SchedulerException e) {
+      throw new SundialSchedulerException("ERROR SETTING JOB FACTORY!!!", e);
+    }
   }
 
   /**
