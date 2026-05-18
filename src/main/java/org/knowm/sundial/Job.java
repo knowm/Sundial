@@ -36,6 +36,9 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
     } catch (RequiredParameterException e) {
     } catch (JobInterruptException e) {
+      logger.debug(
+          "Job [{}] interrupted.",
+          jobExecutionContext.getJobDetail().getName());
     } catch (Exception e) {
       logger.error(
           String.format(

@@ -222,6 +222,32 @@ For an example see `SampleJob9.java`. In a loop within the Job you should just a
 
 If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`.
 
+### Self-interruption with `JobInterruptException`
+
+A job can also stop itself early by throwing `JobInterruptException` from within `doRun()`. This is useful when the job detects a condition that means it should not continue (e.g. nothing to process, a prerequisite failed, a count threshold was reached).
+
+```java
+public class HelloJob extends Job {
+
+  private int count = 0;
+
+  @Override
+  public void doRun() throws JobInterruptException {
+
+    System.out.println("Hello Job #" + (++count));
+
+    if (count >= 3) {
+      // Stop this execution early. The trigger will still fire again on schedule.
+      throw new JobInterruptException();
+    }
+  }
+}
+```
+
+Throwing `JobInterruptException` stops the **current execution** of the job cleanly — the `finally` block (and `cleanup()`) still runs. It does **not** remove the trigger or prevent future executions. To also stop future executions, call `SundialJobScheduler.stopJob(jobName)` or `SundialJobScheduler.removeTrigger(triggerName)` before throwing.
+
+The interrupted execution is logged at DEBUG level as: `Job [HelloJob] interrupted.`
+
 ### Immediate interruption with `InterruptingJob`
 
 If your job blocks on I/O or other interruptible operations (e.g. `Thread.sleep()`, `InputStream.read()`, `CountDownLatch.await()`), it may never reach a `checkTerminated()` call. In that case, extend `InterruptingJob` instead of `Job`:
