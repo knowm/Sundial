@@ -12,6 +12,9 @@
 .classpath
 .project
 
+# VS Code
+.vscode/
+
 # Generated
 target/
 javadoc/
