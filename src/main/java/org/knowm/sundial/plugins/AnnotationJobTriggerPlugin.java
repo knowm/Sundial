@@ -7,8 +7,10 @@ import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 import java.text.ParseException;
 import java.util.Set;
 import java.util.TimeZone;
+
 import org.knowm.sundial.Job;
 import org.knowm.sundial.annotations.CronTrigger;
+import org.knowm.sundial.annotations.ManualTrigger;
 import org.knowm.sundial.annotations.SimpleTrigger;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.SchedulerException;
@@ -17,7 +19,6 @@ import org.quartz.jobs.JobDetail;
 import org.quartz.plugins.SchedulerPlugin;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -121,6 +122,28 @@ public class AnnotationJobTriggerPlugin implements SchedulerPlugin {
             logger.info("Scheduled job {} with trigger {}", job, trigger);
           } catch (Exception e) {
             logger.warn("ANNOTATED JOB + TRIGGER NOT ADDED!", e);
+          }
+        }
+        ManualTrigger manualTrigger = jobClass.getAnnotation(ManualTrigger.class);
+        if (manualTrigger != null) {
+
+          JobDataMap jobDataMap = new JobDataMap();
+
+          if (manualTrigger.jobDataMap() != null && manualTrigger.jobDataMap().length > 0) {
+            addToJobDataMap(jobDataMap, manualTrigger.jobDataMap());
+          }
+
+          JobDetail jobDetail =
+              newJobBuilder(jobClass)
+                  .withIdentity(jobClass.getSimpleName())
+                  .isConcurrencyAllowed(manualTrigger.isConcurrencyAllowed())
+                  .usingJobData(jobDataMap)
+                  .build();
+          try {
+            scheduler.addJob(jobDetail);
+            logger.info("Registered manual job: {}", jobDetail);
+          } catch (Exception e) {
+            logger.warn("MANUAL JOB NOT ADDED!", e);
           }
         }
       }

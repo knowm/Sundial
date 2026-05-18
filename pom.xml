@@ -167,7 +167,7 @@
 					<quiet>true</quiet>
 					<skip>false</skip>
 					<doclint>none</doclint>
-					<source>7</source>
+					<source>8</source>
 				</configuration>
 			</plugin>
 			<!-- for deploying to Maven Central -->
