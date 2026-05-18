@@ -247,7 +247,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
@@ -255,15 +255,15 @@ For snapshots, add the following to your pom.xml file:
 
 ```xml
 <repository>
-  <id>sonatype-oss-snapshot</id>
+  <id>central-portal-snapshots</id>
   <snapshots/>
-  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 </repository>
 
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.5.0-SNAPSHOT</version>
 </dependency>
 ```
 
