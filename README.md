@@ -212,11 +212,39 @@ new SampleJobAction().run();
 
 ## Job Termination
 
-To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
+To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. Sundial provides two mechanisms for stopping a running job:
+
+### Cooperative termination with `checkTerminated()`
+
+This is the default approach. It works by setting a flag that the job should stop; the job is responsible for polling that flag. In any long-running job that you anticipate the need to terminate, call `checkTerminated()` at an appropriate location (e.g. inside a loop).
 
 For an example see `SampleJob9.java`. In a loop within the Job you should just add a call to `checkTerminated();`.
 
-If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`. 
+If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`.
+
+### Immediate interruption with `InterruptingJob`
+
+If your job blocks on I/O or other interruptible operations (e.g. `Thread.sleep()`, `InputStream.read()`, `CountDownLatch.await()`), it may never reach a `checkTerminated()` call. In that case, extend `InterruptingJob` instead of `Job`:
+
+```java
+public class SampleJob10 extends InterruptingJob {
+
+  @Override
+  public void doRun() throws JobInterruptException {
+
+    try {
+      Thread.sleep(60_000); // or any blocking I/O
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt(); // preserve interrupt status
+      logger.info("Job was interrupted.");
+    }
+  }
+}
+```
+
+When `SundialJobScheduler.stopJob("SampleJob10")` is called, `InterruptingJob` will call `Thread.interrupt()` on the executing thread, immediately unblocking it from the blocking call. You must handle `InterruptedException` and re-interrupt the thread so the interrupt status is preserved.
+
+See `SampleJob10.java` for a full example.
 
 ## Concurrent Job Execution
 
