@@ -22,7 +22,7 @@ uses a ThreadLocal wrapper for each job containing a HashMap for job key-value p
  * [x] Cron Triggers
  * [x] Simple Triggers
  * [x] Manual Triggers (register jobs with no automatic trigger, run on demand)
- * [x] Java 8 and up
+ * [x] Java 17 and up
  * [x] Depends only on slf4j
 
 ## Create a Job Class
