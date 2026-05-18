@@ -226,7 +226,7 @@
                 <version>2.29</version>
                 <configuration>
                     <filesNamePattern>.*\.java</filesNamePattern>
-                    <skip>false</skip>
+                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

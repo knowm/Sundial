@@ -76,6 +76,17 @@ public static void main(String[] args) {
 ```
 If you need a bigger thread pool (default size is 10) use `startScheduler(int threadPoolSize, String annotatedJobsPackageName)` instead.
 
+## Or, Provide Your Own ExecutorService
+
+If you want full control over the thread pool (e.g. to share an existing executor, set custom thread factories, or use a virtual-thread executor), you can pass your own `ExecutorService` directly:
+
+```java
+ExecutorService executor = Executors.newFixedThreadPool(20);
+SundialJobScheduler.startScheduler(executor, "org.knowm.sundial.jobs");
+```
+
+The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
+
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
 ```xml
