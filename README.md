@@ -21,7 +21,8 @@ uses a ThreadLocal wrapper for each job containing a HashMap for job key-value p
  * [x] or define jobs and triggers programmatically
  * [x] Cron Triggers
  * [x] Simple Triggers
- * [x] Java 8 and up
+ * [x] Manual Triggers (register jobs with no automatic trigger, run on demand)
+ * [x] Java 17 and up
  * [x] Depends only on slf4j
 
 ## Create a Job Class
@@ -41,6 +42,28 @@ public class SampleJob extends org.knowm.sundial.Job {
 ```
 ```java
 @SimpleTrigger(repeatInterval = 30, timeUnit = TimeUnit.SECONDS)
+```
+
+## ...or with ManualTrigger Annotation
+
+Use `@ManualTrigger` to register a job with the scheduler on startup without any automatic trigger. The job will only run when explicitly started via `SundialJobScheduler.startJob()` or the admin task endpoint.
+
+```java
+@ManualTrigger
+public class SampleJob extends org.knowm.sundial.Job {
+
+  @Override
+  public void doRun() throws JobInterruptException {
+    // Do something interesting...
+  }
+}
+```
+
+Optionally allow concurrent execution or provide a job data map:
+
+```java
+@ManualTrigger(isConcurrencyAllowed = true, jobDataMap = { "KEY_1:VALUE_1", "KEY_2:1000" })
+public class SampleJob extends org.knowm.sundial.Job { ... }
 ```
 
 ## Start Sundial Job Scheduler
@@ -224,7 +247,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
 </dependency>
 ```
 
@@ -232,15 +255,15 @@ For snapshots, add the following to your pom.xml file:
 
 ```xml
 <repository>
-  <id>sonatype-oss-snapshot</id>
+  <id>central-portal-snapshots</id>
   <snapshots/>
-  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 </repository>
 
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.5.0-SNAPSHOT</version>
 </dependency>
 ```
 
