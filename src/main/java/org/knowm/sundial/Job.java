@@ -46,8 +46,11 @@ public abstract class Job extends JobContainer implements InterruptableJob {
               jobExecutionContext.getJobDetail().getName(), e.getMessage()),
           e);
     } finally {
-      cleanup();
-      destroyContext(); // remove the JobContext from the ThreadLocal
+      try {
+        cleanup();
+      } finally {
+        destroyContext(); // remove the JobContext from the ThreadLocal
+      }
     }
   }
 
