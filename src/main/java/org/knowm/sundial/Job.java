@@ -69,7 +69,10 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
   /**
    * Override and place any code in here that should be called no matter what after the Job runs or
-   * throws an exception.
+   * throws an exception. The JobContext is still available here.
+   *
+   * <p>Unlike exceptions thrown from setup() or doRun(), which are caught and logged, an exception
+   * thrown from cleanup() propagates out of execute() to the scheduler.
    */
   public void cleanup() {}
 
