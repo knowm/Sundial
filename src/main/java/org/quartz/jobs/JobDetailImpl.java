@@ -1,6 +1,7 @@
 package org.quartz.jobs;
 
 import java.util.Arrays;
+
 import org.quartz.builders.JobBuilder;
 import org.quartz.core.Scheduler;
 
@@ -62,9 +63,8 @@ public class JobDetailImpl implements Cloneable, java.io.Serializable, JobDetail
    * Create a <code>JobDetail</code> with no specified name or group, and the default settings of
    * all the other properties.
    *
-   * <p>Note that the {@link #setName(String)},{@link #setGroup(String)}and {@link
-   * #setJobClass(Class)}methods must be called before the job can be placed into a {@link
-   * Scheduler}
+   * <p>Note that the {@link #setName(String)}, {@link #setJobClass(Class)} methods must be called
+   * before the job can be placed into a {@link Scheduler}
    */
   public JobDetailImpl() {
 

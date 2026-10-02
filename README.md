@@ -76,6 +76,48 @@ public static void main(String[] args) {
 ```
 If you need a bigger thread pool (default size is 10) use `startScheduler(int threadPoolSize, String annotatedJobsPackageName)` instead.
 
+## Or, Provide Your Own ExecutorService
+
+If you want full control over the thread pool (e.g. to share an existing executor, set custom thread factories, or use a virtual-thread executor), you can pass your own `ExecutorService` directly:
+
+```java
+ExecutorService executor = Executors.newFixedThreadPool(20);
+SundialJobScheduler.startScheduler(executor, "org.knowm.sundial.jobs");
+```
+
+The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
+
+## Dependency Injection (Guice, Spring, etc.)
+
+By default Sundial creates job instances via plain reflection (`new MyJob()`). This means fields annotated with `@Inject` or `@Autowired` are **not** populated — the DI container never sees the object.
+
+**Dependency Injection** is a pattern where the framework (Guice, Spring, etc.) is responsible for constructing objects and wiring their dependencies. For scheduled jobs this matters when a job needs a service, repository, or any other managed bean injected into it.
+
+You can plug in any DI container by supplying a custom `JobFactory` after the scheduler starts:
+
+```java
+// Guice example
+Injector injector = Guice.createInjector(new MyAppModule());
+
+SundialJobScheduler.startScheduler("org.knowm.sundial.jobs");
+SundialJobScheduler.setJobFactory((bundle, scheduler) ->
+    injector.getInstance(bundle.getJobDetail().getJobClass()));
+```
+
+```java
+// Spring example
+@Bean
+public CommandLineRunner schedulerStarter(ApplicationContext ctx) {
+  return args -> {
+    SundialJobScheduler.startScheduler("org.knowm.sundial.jobs");
+    SundialJobScheduler.setJobFactory((bundle, scheduler) ->
+        (Job) ctx.getBean(bundle.getJobDetail().getJobClass()));
+  };
+}
+```
+
+Each time a trigger fires, Sundial calls your factory to produce a fresh job instance, so the DI container can inject a new set of dependencies per execution.
+
 ## Alternatively, Put an XML File Called jobs.xml on Classpath
 
 ```xml
@@ -212,11 +254,65 @@ new SampleJobAction().run();
 
 ## Job Termination
 
-To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. The Job termination mechanism works by setting a flag that the Job should be terminated, but it is up to the logic in the Job to decide at what point termination should occur. Therefore, in any long-running job that you anticipate the need to terminate, put the method call `checkTerminated()` at an appropriate location.
+To terminate a Job asynchronously, you can call the `SundialJobScheduler.stopJob(String jobName)` method. Sundial provides two mechanisms for stopping a running job:
+
+### Cooperative termination with `checkTerminated()`
+
+This is the default approach. It works by setting a flag that the job should stop; the job is responsible for polling that flag. In any long-running job that you anticipate the need to terminate, call `checkTerminated()` at an appropriate location (e.g. inside a loop).
 
 For an example see `SampleJob9.java`. In a loop within the Job you should just add a call to `checkTerminated();`.
 
-If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`. 
+If you try to shutdown the SundialScheduler and it just hangs, it's probably because you have a Job defined with an infinite loop with no `checkTerminated();` call. You may see a log message like: `Waiting for Job to shutdown: SampleJob9 : SampleJob9-trigger`.
+
+### Self-interruption with `JobInterruptException`
+
+A job can also stop itself early by throwing `JobInterruptException` from within `doRun()`. This is useful when the job detects a condition that means it should not continue (e.g. nothing to process, a prerequisite failed, a count threshold was reached).
+
+```java
+public class HelloJob extends Job {
+
+  private int count = 0;
+
+  @Override
+  public void doRun() throws JobInterruptException {
+
+    System.out.println("Hello Job #" + (++count));
+
+    if (count >= 3) {
+      // Stop this execution early. The trigger will still fire again on schedule.
+      throw new JobInterruptException();
+    }
+  }
+}
+```
+
+Throwing `JobInterruptException` stops the **current execution** of the job cleanly — the `finally` block (and `cleanup()`) still runs. It does **not** remove the trigger or prevent future executions. To also stop future executions, call `SundialJobScheduler.stopJob(jobName)` or `SundialJobScheduler.removeTrigger(triggerName)` before throwing.
+
+The interrupted execution is logged at DEBUG level as: `Job [HelloJob] interrupted.`
+
+### Immediate interruption with `InterruptingJob`
+
+If your job blocks on I/O or other interruptible operations (e.g. `Thread.sleep()`, `InputStream.read()`, `CountDownLatch.await()`), it may never reach a `checkTerminated()` call. In that case, extend `InterruptingJob` instead of `Job`:
+
+```java
+public class SampleJob10 extends InterruptingJob {
+
+  @Override
+  public void doRun() throws JobInterruptException {
+
+    try {
+      Thread.sleep(60_000); // or any blocking I/O
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt(); // preserve interrupt status
+      logger.info("Job was interrupted.");
+    }
+  }
+}
+```
+
+When `SundialJobScheduler.stopJob("SampleJob10")` is called, `InterruptingJob` will call `Thread.interrupt()` on the executing thread, immediately unblocking it from the blocking call. You must handle `InterruptedException` and re-interrupt the thread so the interrupt status is preserved.
+
+See `SampleJob10.java` for a full example.
 
 ## Concurrent Job Execution
 
@@ -235,7 +331,7 @@ Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 
 #### Dependencies
 
-* org.slf4j.slf4j-api-2.0.12
+* org.slf4j.slf4j-api-2.0.18
 
 ### Maven
 
@@ -247,7 +343,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
@@ -263,7 +359,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+    <version>2.5.1-SNAPSHOT</version>
 </dependency>
 ```
 

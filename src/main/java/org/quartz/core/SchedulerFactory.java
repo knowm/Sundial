@@ -1,5 +1,8 @@
 package org.quartz.core;
 
+import java.util.concurrent.ExecutorService;
+
+import org.knowm.sundial.ExecutorServiceThreadPool;
 import org.knowm.sundial.plugins.AnnotationJobTriggerPlugin;
 import org.quartz.QuartzScheduler;
 import org.quartz.exceptions.SchedulerException;
@@ -25,6 +28,23 @@ public class SchedulerFactory {
 
   private int threadPoolSize = 10; // default size is 10
   private String packageName = null;
+  private ExecutorService executorService = null; // optional user-provided executor
+
+  /**
+   * @param executorService an existing ExecutorService to use for job execution. The caller is
+   *     responsible for its lifecycle — Sundial will not shut it down.
+   * @param packageName
+   * @return Returns a handle to the Scheduler produced by this factory.
+   * @throws SchedulerException
+   */
+  public Scheduler getScheduler(ExecutorService executorService, String packageName)
+      throws SchedulerException {
+
+    this.executorService = executorService;
+    this.packageName = packageName;
+
+    return getScheduler();
+  }
 
   /**
    * @param threadPoolSize
@@ -71,11 +91,13 @@ public class SchedulerFactory {
 
   private Scheduler instantiate() throws SchedulerException {
 
-    // Setup SimpleThreadPool
+    // Setup thread pool
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //
-    SimpleThreadPool threadPool = new SimpleThreadPool();
-    threadPool.setThreadCount(threadPoolSize);
+    ExecutorServiceThreadPool threadPool =
+        executorService != null
+            ? new ExecutorServiceThreadPool(executorService)
+            : new ExecutorServiceThreadPool(threadPoolSize);
 
     // Setup RAMJobStore
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,7 +125,6 @@ public class SchedulerFactory {
       quartzSchedulerResources.setBatchTimeWindow(0L);
       quartzSchedulerResources.setMaxBatchSize(1);
       quartzSchedulerResources.setThreadPool(threadPool);
-      threadPool.setThreadNamePrefix("Quartz_Scheduler_Worker");
       threadPool.initialize();
       tpInited = true;
 

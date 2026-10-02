@@ -24,11 +24,7 @@ public class XMLSchedulingDataProcessorPlugin implements SchedulerPlugin {
 
   private String fileName = XMLSchedulingDataProcessor.QUARTZ_XML_DEFAULT_FILE_NAME;
 
-  /**
-   * Constructor
-   *
-   * @param classLoadHelper
-   */
+  /** Constructor */
   public XMLSchedulingDataProcessorPlugin() {}
 
   /** Get this plugin's <code>Scheduler</code>. Set as part of initialize(). */

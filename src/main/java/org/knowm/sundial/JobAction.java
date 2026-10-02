@@ -11,8 +11,11 @@ public abstract class JobAction extends JobContainer {
   /** Call this method to start the Action */
   public void run() {
 
-    doRun();
-    cleanup();
+    try {
+      doRun();
+    } finally {
+      cleanup();
+    }
   }
 
   /**

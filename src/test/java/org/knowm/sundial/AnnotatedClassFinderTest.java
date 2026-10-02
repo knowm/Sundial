@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ public class AnnotatedClassFinderTest {
                 "SampleJob7",
                 "SampleJob8",
                 "SampleJob9",
+                "SampleJob10",
                 "Concrete"
               }));
 

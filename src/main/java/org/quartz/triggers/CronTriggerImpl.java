@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
 import org.quartz.core.JobExecutionContext;
 import org.quartz.core.Scheduler;
 import org.quartz.exceptions.JobExecutionException;
@@ -160,7 +161,6 @@ public class CronTriggerImpl extends AbstractTrigger implements CronTrigger {
    * <p>The value returned is not guaranteed to be valid until after the <code>Trigger</code> has
    * been added to the scheduler.
    *
-   * @see TriggerUtils#computeFireTimesBetween(Trigger, org.quartz.core.Calendar , Date, Date)
    */
   @Override
   public Date getNextFireTime() {

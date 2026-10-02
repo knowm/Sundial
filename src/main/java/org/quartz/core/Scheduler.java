@@ -3,6 +3,7 @@ package org.quartz.core;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
 import org.quartz.classloading.CascadingClassLoadHelper;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
@@ -210,7 +211,7 @@ public interface Scheduler {
    *
    * @param triggerName identity of the trigger to replace
    * @param newTrigger The new <code>Trigger</code> to be stored.
-   * @return <code>null</code> if a <code>Trigger</code> with the given name & group was not found
+   * @return <code>null</code> if a <code>Trigger</code> with the given name was not found
    *     and removed from the store, otherwise the first fire time of the newly scheduled trigger.
    */
   Date rescheduleJob(String triggerName, OperableTrigger newTrigger) throws SchedulerException;
@@ -242,8 +243,8 @@ public interface Scheduler {
    * {@link org.quartz.jobs.JobDetail}</code>.
    *
    * <p>The returned Trigger objects will be snap-shots of the actual stored triggers. If you wish
-   * to modify a trigger, you must re-store the trigger afterward (e.g. see {@link
-   * #rescheduleJob(TriggerKey, Trigger)}).
+   * to modify a trigger, you must re-store the trigger afterward (e.g. see
+   * {@link #rescheduleJob(String, OperableTrigger)}).
    */
   List<Trigger> getTriggersOfJob(String jobKey) throws SchedulerException;
 
@@ -251,8 +252,8 @@ public interface Scheduler {
    * Get the <code>{@link JobDetail}</code> for the <code>Job</code> instance with the given key.
    *
    * <p>The returned JobDetail object will be a snap-shot of the actual stored JobDetail. If you
-   * wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see {@link
-   * #addJob(JobDetail, boolean)}).
+   * wish to modify the JobDetail, you must re-store the JobDetail afterward (e.g. see
+   * {@link #addJob(JobDetail)}).
    */
   JobDetail getJobDetail(String jobKey) throws SchedulerException;
 
@@ -260,8 +261,8 @@ public interface Scheduler {
    * Get the <code>{@link Trigger}</code> instance with the given key.
    *
    * <p>The returned Trigger object will be a snap-shot of the actual stored trigger. If you wish to
-   * modify the trigger, you must re-store the trigger afterward (e.g. see {@link
-   * #rescheduleJob(TriggerKey, Trigger)}).
+   * modify the trigger, you must re-store the trigger afterward (e.g. see
+   * {@link #rescheduleJob(String, OperableTrigger)}).
    */
   Trigger getTrigger(String triggerKey) throws SchedulerException;
 
@@ -269,7 +270,6 @@ public interface Scheduler {
    * Delete the identified <code>Job</code> from the Scheduler - and any associated <code>Trigger
    * </code>s.
    *
-   * @return true if the Job was found and deleted.
    * @throws SchedulerException if there is an internal Scheduler error.
    */
   void deleteJob(String jobKey) throws SchedulerException;

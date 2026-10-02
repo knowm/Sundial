@@ -8,7 +8,7 @@ import org.quartz.triggers.Trigger;
 /**
  * An exception that is thrown to indicate that an attempt to store a new object (i.e. <code>
  * {@link org.quartz.jobs.JobDetail}</code>, <code>{@link Trigger}</code> or <code>{@link Calendar}
- * </code>) in a <code>{@link Scheduler}</code> failed, because one with the same name & group
+ * </code>) in a <code>{@link Scheduler}</code> failed, because one with the same name
  * already exists.
  *
  * @author James House

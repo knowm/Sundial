@@ -3,6 +3,7 @@ package org.quartz.triggers;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
+
 import org.quartz.builders.TriggerBuilder;
 import org.quartz.core.Calendar;
 import org.quartz.core.Scheduler;
@@ -12,7 +13,7 @@ import org.quartz.jobs.JobDataMap;
  * The base interface with properties common to all <code>Trigger</code>s - use {@link
  * TriggerBuilder} to instantiate an actual Trigger.
  *
- * <p><code>Triggers</code>s have a {@link TriggerKey} associated with them, which should uniquely
+ * <p><code>Trigger</code>s have a name associated with them, which should uniquely
  * identify them within a single <code>{@link Scheduler}</code>.
  *
  * <p><code>Trigger</code>s are the 'mechanism' by which <code>Job</code>s are scheduled. Many
@@ -156,7 +157,6 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * <p>The value returned is not guaranteed to be valid until after the <code>Trigger</code> has
    * been added to the scheduler.
    *
-   * @see TriggerUtils#computeFireTimesBetween(Trigger, Calendar, Date, Date)
    */
   public Date getNextFireTime();
 
@@ -189,7 +189,6 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
    * <p>If not explicitly set, the default value is <code>MISFIRE_INSTRUCTION_SMART_POLICY</code>.
    *
    * @see #MISFIRE_INSTRUCTION_SMART_POLICY
-   * @see #updateAfterMisfire(Calendar)
    * @see SimpleTrigger
    * @see CronTrigger
    */

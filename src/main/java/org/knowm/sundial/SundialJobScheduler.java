@@ -4,7 +4,6 @@ import static org.quartz.builders.CronTriggerBuilder.cronTriggerBuilder;
 import static org.quartz.builders.JobBuilder.newJobBuilder;
 import static org.quartz.builders.SimpleTriggerBuilder.simpleTriggerBuilder;
 
-import jakarta.servlet.ServletContext;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+
 import org.knowm.sundial.exceptions.SundialSchedulerException;
 import org.quartz.builders.CronTriggerBuilder;
 import org.quartz.builders.SimpleTriggerBuilder;
@@ -23,10 +24,13 @@ import org.quartz.core.SchedulerFactory;
 import org.quartz.exceptions.SchedulerException;
 import org.quartz.jobs.JobDataMap;
 import org.quartz.jobs.JobDetail;
+import org.quartz.jobs.JobFactory;
 import org.quartz.triggers.OperableTrigger;
 import org.quartz.triggers.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * Main entry-point to the Sundial scheduler
@@ -72,6 +76,60 @@ public class SundialJobScheduler {
       throws SundialSchedulerException {
 
     startScheduler(10, annotatedJobsPackageName);
+  }
+
+  /**
+   * Starts the Sundial Scheduler using a user-provided {@link ExecutorService} for job execution.
+   * The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
+   *
+   * @param executorService the executor to use for running jobs
+   */
+  public static void startScheduler(ExecutorService executorService)
+      throws SundialSchedulerException {
+
+    startScheduler(executorService, null);
+  }
+
+  /**
+   * Starts the Sundial Scheduler using a user-provided {@link ExecutorService} for job execution.
+   * The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
+   *
+   * @param executorService the executor to use for running jobs
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages
+   *     to scan for Jobs.
+   */
+  public static void startScheduler(ExecutorService executorService, String annotatedJobsPackageName)
+      throws SundialSchedulerException {
+
+    try {
+      createScheduler(executorService, annotatedJobsPackageName);
+      getScheduler().start();
+    } catch (SchedulerException e) {
+      throw new SundialSchedulerException("COULD NOT START SUNDIAL SCHEDULER!!!", e);
+    }
+  }
+
+  /**
+   * Creates the Sundial Scheduler using a user-provided {@link ExecutorService} for job execution.
+   * The caller is responsible for the executor's lifecycle — Sundial will not shut it down.
+   *
+   * @param executorService the executor to use for running jobs
+   * @param annotatedJobsPackageName A comma(,) or colon(:) can be used to specify multiple packages
+   *     to scan for Jobs.
+   */
+  public static Scheduler createScheduler(
+      ExecutorService executorService, String annotatedJobsPackageName)
+      throws SundialSchedulerException {
+
+    if (scheduler == null) {
+      try {
+        scheduler =
+            new SchedulerFactory().getScheduler(executorService, annotatedJobsPackageName);
+      } catch (SchedulerException e) {
+        throw new SundialSchedulerException("COULD NOT CREATE SUNDIAL SCHEDULER!!!", e);
+      }
+    }
+    return scheduler;
   }
 
   /**
@@ -132,6 +190,26 @@ public class SundialJobScheduler {
       }
     }
     return scheduler;
+  }
+
+  /**
+   * Sets a custom {@link JobFactory} on the scheduler. Use this to integrate with a dependency
+   * injection framework (e.g. Guice, Spring) so that job instances are created by the DI container
+   * rather than by plain reflection.
+   *
+   * <p>Must be called after {@code createScheduler} / {@code startScheduler}.
+   *
+   * @param jobFactory the factory to use for producing job instances
+   * @throws SundialSchedulerException if the scheduler has not been created yet or the factory is
+   *     null
+   */
+  public static void setJobFactory(JobFactory jobFactory) throws SundialSchedulerException {
+
+    try {
+      getScheduler().setJobFactory(jobFactory);
+    } catch (SchedulerException e) {
+      throw new SundialSchedulerException("ERROR SETTING JOB FACTORY!!!", e);
+    }
   }
 
   /**

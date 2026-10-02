@@ -31,10 +31,14 @@ public abstract class Job extends JobContainer implements InterruptableJob {
 
       initContextContainer(jobExecutionContext);
 
+      setup();
       doRun();
 
     } catch (RequiredParameterException e) {
     } catch (JobInterruptException e) {
+      logger.debug(
+          "Job [{}] interrupted.",
+          jobExecutionContext.getJobDetail().getName());
     } catch (Exception e) {
       logger.error(
           String.format(
@@ -42,8 +46,11 @@ public abstract class Job extends JobContainer implements InterruptableJob {
               jobExecutionContext.getJobDetail().getName(), e.getMessage()),
           e);
     } finally {
-      cleanup();
-      destroyContext(); // remove the JobContext from the ThreadLocal
+      try {
+        cleanup();
+      } finally {
+        destroyContext(); // remove the JobContext from the ThreadLocal
+      }
     }
   }
 
@@ -56,8 +63,16 @@ public abstract class Job extends JobContainer implements InterruptableJob {
   }
 
   /**
+   * Override and place any code in here that should be called before doRun().
+   */
+  public void setup() {}
+
+  /**
    * Override and place any code in here that should be called no matter what after the Job runs or
-   * throws an exception.
+   * throws an exception. The JobContext is still available here.
+   *
+   * <p>Unlike exceptions thrown from setup() or doRun(), which are caught and logged, an exception
+   * thrown from cleanup() propagates out of execute() to the scheduler.
    */
   public void cleanup() {}
 

@@ -13,7 +13,6 @@ import org.quartz.exceptions.SchedulerException;
  *
  * @see org.quartz.core.Scheduler#setJobFactory(JobFactory)
  * @see org.quartz.jobs.SimpleJobFactory
- * @see org.quartz.simpl.PropertySettingJobFactory
  * @author James House
  */
 public interface JobFactory {

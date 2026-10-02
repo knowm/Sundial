@@ -1,6 +1,6 @@
 Sundial is developed by Knowm Inc. members and the open-source community.
 
-We thank all of our contributors: https://github.com/timmolter/sundial/graphs/contributors 
+We thank all of our contributors: https://github.com/knowm/Sundial/graphs/contributors 
 
 For the detailed history of contributions of a given file, try
 
@@ -17,6 +17,7 @@ The following list of authors was automatically generated from the Sundial proje
     git log --format='%aN' | sort -u
 
 Alex Nugent
+bensynapse
 Carlo Dapor
 dependabot-preview[bot]
 dependabot[bot]
