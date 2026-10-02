@@ -331,7 +331,7 @@ Download Jar: http://knowm.org/open-source/sundial/sundial-change-log/
 
 #### Dependencies
 
-* org.slf4j.slf4j-api-2.0.12
+* org.slf4j.slf4j-api-2.0.18
 
 ### Maven
 
@@ -343,7 +343,7 @@ Add the Sundial library as a dependency to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
 </dependency>
 ```
 
@@ -359,7 +359,7 @@ For snapshots, add the following to your pom.xml file:
 <dependency>
     <groupId>org.knowm</groupId>
     <artifactId>sundial</artifactId>
-    <version>2.5.0-SNAPSHOT</version>
+    <version>2.5.1-SNAPSHOT</version>
 </dependency>
 ```
 
